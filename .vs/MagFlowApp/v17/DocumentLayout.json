@@ -1,10 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "F:\\Projekty\\MagFlowApp\\",
+  "WorkspaceRootPath": "F:\\MagFlow\\MagFlowApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4C18EC53-274A-4FA7-9A2A-8967E5E6CDC1}|MagFlow.API\\MagFlow.API.csproj|f:\\projekty\\magflowapp\\magflow.api\\magflow.api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
-      "RelativeMoniker": "D:0:0:{4C18EC53-274A-4FA7-9A2A-8967E5E6CDC1}|MagFlow.API\\MagFlow.API.csproj|solutionrelative:magflow.api\\magflow.api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+      "AbsoluteMoniker": "D:0:0:{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}|MagFlow.Web\\MagFlow.Web.csproj|f:\\magflow\\magflowapp\\magflow.web\\components\\pages\\weather.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}|MagFlow.Web\\MagFlow.Web.csproj|solutionrelative:magflow.web\\components\\pages\\weather.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}|MagFlow.Web\\MagFlow.Web.csproj|f:\\magflow\\magflowapp\\magflow.web\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}|MagFlow.Web\\MagFlow.Web.csproj|solutionrelative:magflow.web\\components\\pages\\home.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}|MagFlow.Web\\MagFlow.Web.csproj|f:\\magflow\\magflowapp\\magflow.web\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}|MagFlow.Web\\MagFlow.Web.csproj|solutionrelative:magflow.web\\components\\app.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,13 +35,40 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "MagFlow.API",
-              "DocumentMoniker": "F:\\Projekty\\MagFlowApp\\MagFlow.API\\MagFlow.API.csproj",
-              "RelativeDocumentMoniker": "MagFlow.API\\MagFlow.API.csproj",
-              "ToolTip": "F:\\Projekty\\MagFlowApp\\MagFlow.API\\MagFlow.API.csproj",
-              "RelativeToolTip": "MagFlow.API\\MagFlow.API.csproj",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-07-07T21:21:22.933Z",
+              "Title": "Weather.razor",
+              "DocumentMoniker": "F:\\MagFlow\\MagFlowApp\\MagFlow.Web\\Components\\Pages\\Weather.razor",
+              "RelativeDocumentMoniker": "MagFlow.Web\\Components\\Pages\\Weather.razor",
+              "ToolTip": "F:\\MagFlow\\MagFlowApp\\MagFlow.Web\\Components\\Pages\\Weather.razor",
+              "RelativeToolTip": "MagFlow.Web\\Components\\Pages\\Weather.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-07T21:32:53.895Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Home.razor",
+              "DocumentMoniker": "F:\\MagFlow\\MagFlowApp\\MagFlow.Web\\Components\\Pages\\Home.razor",
+              "RelativeDocumentMoniker": "MagFlow.Web\\Components\\Pages\\Home.razor",
+              "ToolTip": "F:\\MagFlow\\MagFlowApp\\MagFlow.Web\\Components\\Pages\\Home.razor",
+              "RelativeToolTip": "MagFlow.Web\\Components\\Pages\\Home.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-07T21:32:50.931Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "App.razor",
+              "DocumentMoniker": "F:\\MagFlow\\MagFlowApp\\MagFlow.Web\\Components\\App.razor",
+              "RelativeDocumentMoniker": "MagFlow.Web\\Components\\App.razor",
+              "ToolTip": "F:\\MagFlow\\MagFlowApp\\MagFlow.Web\\Components\\App.razor",
+              "RelativeToolTip": "MagFlow.Web\\Components\\App.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-07-07T21:32:46.846Z",
               "EditorCaption": ""
             }
           ]
