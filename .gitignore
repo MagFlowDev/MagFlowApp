@@ -52,12 +52,4 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
-.vs/MagFlowApp/FileContentIndex/4c846ab9-2c84-44d7-b310-5575eef54fdb.vsidx
-.vs/MagFlowApp/FileContentIndex/8a0760eb-0041-4546-94c2-d773b53d12bd.vsidx
-.vs/MagFlowApp/FileContentIndex/90d753ae-5602-477c-8c31-2070bbd95615.vsidx
-.vs/MagFlowApp/FileContentIndex/bd64acef-170e-4f1b-ac8a-e4c8bd3038b4.vsidx
-.vs/MagFlowApp/FileContentIndex/c9c9d41e-28cf-4236-abfd-9a23cc1206b3.vsidx
-.vs/MagFlowApp/FileContentIndex/f673550b-ce32-47ea-9f60-835a3ab249db.vsidx
-.vs/MagFlowApp/FileContentIndex/90d753ae-5602-477c-8c31-2070bbd95615.vsidx
-*.vsidx
-/.vs/MagFlowApp/FileContentIndex
+/.vs
