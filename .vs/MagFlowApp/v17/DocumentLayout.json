@@ -1,0 +1,78 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "F:\\Projekty\\MagFlowApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4C18EC53-274A-4FA7-9A2A-8967E5E6CDC1}|MagFlow.API\\MagFlow.API.csproj|f:\\projekty\\magflowapp\\magflow.api\\magflow.api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{4C18EC53-274A-4FA7-9A2A-8967E5E6CDC1}|MagFlow.API\\MagFlow.API.csproj|solutionrelative:magflow.api\\magflow.api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{f6c90d9a-1aa8-32e5-baac-467b7262213c}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MagFlow.API",
+              "DocumentMoniker": "F:\\Projekty\\MagFlowApp\\MagFlow.API\\MagFlow.API.csproj",
+              "RelativeDocumentMoniker": "MagFlow.API\\MagFlow.API.csproj",
+              "ToolTip": "F:\\Projekty\\MagFlowApp\\MagFlow.API\\MagFlow.API.csproj",
+              "RelativeToolTip": "MagFlow.API\\MagFlow.API.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-07-07T21:21:22.933Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
