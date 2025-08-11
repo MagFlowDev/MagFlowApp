@@ -1,4 +1,5 @@
 ﻿using MagFlow.Web.Components;
+using Serilog;
 
 namespace MagFlow.Web.Extensions
 {
@@ -8,6 +9,8 @@ namespace MagFlow.Web.Extensions
 
         public static WebApplication UseMagFlowPipeline(this WebApplication app)
         {
+            app.UseSerilogRequestLogging();
+
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(LICENSE_KEY);
 
             if (!app.Environment.IsDevelopment())

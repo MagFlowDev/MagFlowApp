@@ -16,7 +16,7 @@
 
   <Target Name="ReadAndBumpPatch" BeforeTargets="BeforeBuild">
 	<ReadLinesFromFile File="$(PatchFile)">
-		<Output TaskParameter="Lines" ItemName="_PatchLine"/>
+		<Output TaskParameter="Lines" ItemName="_PatchLine" />
 	</ReadLinesFromFile>
 
 	<PropertyGroup>
@@ -34,6 +34,12 @@
   </Target>
 	
   <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+    <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     <PackageReference Include="Syncfusion.Blazor.Buttons" Version="30.2.4" />
     <PackageReference Include="Syncfusion.Blazor.Navigations" Version="30.2.4" />
     <PackageReference Include="Syncfusion.Blazor.Themes" Version="30.2.4" />
