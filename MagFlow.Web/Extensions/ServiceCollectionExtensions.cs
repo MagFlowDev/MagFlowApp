@@ -1,4 +1,6 @@
-﻿using Syncfusion.Blazor;
+﻿using MagFlow.Web.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Syncfusion.Blazor;
 
 namespace MagFlow.Web.Extensions
 {
@@ -10,6 +12,17 @@ namespace MagFlow.Web.Extensions
             
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            services.AddMagFlowHealthChecks();
+
+            return services;
+        }
+
+        private static IServiceCollection AddMagFlowHealthChecks(this IServiceCollection services)
+        {
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy(), tags: new[] { "live" })
+                .AddCheck<SqlServerPingHealthCheck>("sql", tags: new[] { "ready" });
 
             return services;
         }
