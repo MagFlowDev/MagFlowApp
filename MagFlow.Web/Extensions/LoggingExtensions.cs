@@ -20,6 +20,7 @@ namespace MagFlow.Web.Extensions
                    .ReadFrom.Services(sp)
                    .Enrich.FromLogContext()
                    .Enrich.WithThreadId()
+                   .Enrich.WithEnvironmentName()
                    .WriteTo.Console()
                    .WriteTo.File(
                         path: Path.Combine(logsDir, "magflow-.log"),
