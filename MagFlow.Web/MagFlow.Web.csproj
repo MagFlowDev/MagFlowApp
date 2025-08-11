@@ -1,9 +1,42 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
+  <PropertyGroup>  
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<PatchFile>Properties/VersionPatch.txt</PatchFile>
+	<AutoIncrementPatch Condition="'$(AutoIncrementPatch)'==''">$(Configuration.Equals('Release'))</AutoIncrementPatch>
   </PropertyGroup>
+
+  <Target Name="EnsurePatchFile" BeforeTargets="BeforeBuild">
+	<MakeDir Directories="$([System.IO.Path]::GetDirectoryName('$(PatchFile)'))" />
+	<WriteLinesToFile File="$(PatchFile)" Lines="0" Overwrite="false" Condition="!Exists('$(PatchFile)')" />
+  </Target>
+
+
+  <Target Name="ReadAndBumpPatch" BeforeTargets="BeforeBuild">
+	<ReadLinesFromFile File="$(PatchFile)">
+		<Output TaskParameter="Lines" ItemName="_PatchLine"/>
+	</ReadLinesFromFile>
+
+	<PropertyGroup>
+		<_Patch>$([System.Int32]::Parse('%(_PatchLine.Identity)'))</_Patch>
+		<_NewPatch Condition="'$(AutoIncrementPatch)'=='True'">$([MSBuild]::Add($(_Patch), 1))</_NewPatch>
+		<_NewPatch Condition="'$(AutoIncrementPatch)'!='True'">$(_Patch)</_NewPatch>
+
+		<VersionPatch>$(_NewPatch)</VersionPatch>
+		<Version>$(VersionMajor).$(VersionMinor).$(VersionPatch)</Version>
+		<FileVersion>$(Version)</FileVersion>
+		<InformationalVersion>$(Version)</InformationalVersion>
+	</PropertyGroup>
+
+	<WriteLinesToFile File="$(PatchFile)" Lines="$(_NewPatch)" Overwrite="true" Condition="'$(AutoIncrementPatch)'=='True'" />
+  </Target>
+	
+  <ItemGroup>
+    <PackageReference Include="Syncfusion.Blazor.Buttons" Version="30.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Navigations" Version="30.2.4" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="30.2.4" />
+  </ItemGroup>
 
 </Project>
