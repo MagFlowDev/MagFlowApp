@@ -10,4 +10,10 @@
     <Folder Include="Mappers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MagFlow.DAL\MagFlow.DAL.csproj" />
+    <ProjectReference Include="..\MagFlow.Domain\MagFlow.Domain.csproj" />
+    <ProjectReference Include="..\MagFlow.Shared\MagFlow.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

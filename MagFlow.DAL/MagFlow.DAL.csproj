@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MagFlow.Domain\MagFlow.Domain.csproj" />
+    <ProjectReference Include="..\MagFlow.EF\MagFlow.EF.csproj" />
+  </ItemGroup>
+
 </Project>

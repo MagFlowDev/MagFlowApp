@@ -1,5 +1,12 @@
 <Project>
  <PropertyGroup>
    <LangVersion>preview</LangVersion>
+   <VersionMajor>1</VersionMajor>
+   <VersionMinor>0</VersionMinor>
+   <VersionPatch>0</VersionPatch>
+   <Version>$(VersionMajor).$(VersionMinor).$(VersionPatch)</Version>
+   <FileVersion>$(Version)</FileVersion>
+   <AssemblyVersion>$(VersionMajor).$(VersionMinor).0.0</AssemblyVersion>
+   <InformationalVersion>$(Version)</InformationalVersion>
  </PropertyGroup>
 </Project>

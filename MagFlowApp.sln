@@ -15,12 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagFlow.Domain", "MagFlow.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagFlow.Shared", "MagFlow.Shared\MagFlow.Shared.csproj", "{58086459-6415-4F25-8E4E-6B32D99ED86D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagFlow.Web", "MagFlow.Web\MagFlow.Web.csproj", "{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementy rozwiązania", "Elementy rozwiązania", "{8FB176BD-0036-D269-15EA-F86E90622887}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagFlow.Web", "MagFlow.Web\MagFlow.Web.csproj", "{3C2A8BE2-B007-4404-AD38-D29B8B2DE77D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,7 +29,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4C18EC53-274A-4FA7-9A2A-8967E5E6CDC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C18EC53-274A-4FA7-9A2A-8967E5E6CDC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C18EC53-274A-4FA7-9A2A-8967E5E6CDC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C18EC53-274A-4FA7-9A2A-8967E5E6CDC1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF3C1B28-4C83-4734-B89A-601979768DF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -52,10 +51,10 @@ Global
 		{58086459-6415-4F25-8E4E-6B32D99ED86D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58086459-6415-4F25-8E4E-6B32D99ED86D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58086459-6415-4F25-8E4E-6B32D99ED86D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A5053A0-5DDB-4B2C-9EAE-AC420FA1DB76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C2A8BE2-B007-4404-AD38-D29B8B2DE77D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C2A8BE2-B007-4404-AD38-D29B8B2DE77D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C2A8BE2-B007-4404-AD38-D29B8B2DE77D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C2A8BE2-B007-4404-AD38-D29B8B2DE77D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
