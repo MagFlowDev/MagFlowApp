@@ -3,6 +3,7 @@ name: Build & Deploy DocFX
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   pages: write
@@ -24,13 +25,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET (10 preview + 9)
- 	uses: actions/setup-dotnet@v4
-  	with:
-    	  dotnet-version: |
-      	    10.0.x
-      	    9.0.x
-    	  dotnet-quality: 'preview'
+      - name: Setup .NET (10 preview + 8)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            10.0.x
+            8.0.x
+          dotnet-quality: preview
 
       - name: Install DocFX
         run: dotnet tool update -g docfx
@@ -50,7 +51,6 @@ jobs:
           DIR=$(dirname "$FILE")
           echo "Zawartość katalogu z docfx.json:"
           ls -la "$DIR"
-          # zapis do zmiennych dla kolejnych kroków
           echo "DOCFX_CONFIG=$FILE" >> $GITHUB_ENV
           echo "DOCFX_DIR=$DIR" >> $GITHUB_ENV
 
