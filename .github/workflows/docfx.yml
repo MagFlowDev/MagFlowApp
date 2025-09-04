@@ -44,9 +44,12 @@ jobs:
             echo "❌ Nie znaleziono docfx.json w repo"; exit 1
           fi
           echo "✅ Znaleziony config: $FILE"
+          DIR=$(dirname "$FILE")
+          echo "Zawartość katalogu z docfx.json:"
+          ls -la "$DIR"
+          # zapis do zmiennych dla kolejnych kroków
           echo "DOCFX_CONFIG=$FILE" >> $GITHUB_ENV
-          echo "DOCFX_DIR=$(dirname "$FILE")" >> $GITHUB_ENV
-          ls -la "$DOCFX_DIR"
+          echo "DOCFX_DIR=$DIR" >> $GITHUB_ENV
 
       - name: Build DocFX site
         run: docfx "$DOCFX_CONFIG"
