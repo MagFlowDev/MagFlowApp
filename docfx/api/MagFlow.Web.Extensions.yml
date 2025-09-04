@@ -1,0 +1,37 @@
+### YamlMime:ManagedReference
+items:
+- uid: MagFlow.Web.Extensions
+  commentId: N:MagFlow.Web.Extensions
+  id: MagFlow.Web.Extensions
+  children:
+  - MagFlow.Web.Extensions.LoggingExtensions
+  - MagFlow.Web.Extensions.ServiceCollectionExtensions
+  - MagFlow.Web.Extensions.WebApplicationExtensions
+  langs:
+  - csharp
+  - vb
+  name: MagFlow.Web.Extensions
+  nameWithType: MagFlow.Web.Extensions
+  fullName: MagFlow.Web.Extensions
+  type: Namespace
+  assemblies:
+  - MagFlow.Web
+references:
+- uid: MagFlow.Web.Extensions.LoggingExtensions
+  commentId: T:MagFlow.Web.Extensions.LoggingExtensions
+  href: MagFlow.Web.Extensions.LoggingExtensions.html
+  name: LoggingExtensions
+  nameWithType: LoggingExtensions
+  fullName: MagFlow.Web.Extensions.LoggingExtensions
+- uid: MagFlow.Web.Extensions.ServiceCollectionExtensions
+  commentId: T:MagFlow.Web.Extensions.ServiceCollectionExtensions
+  href: MagFlow.Web.Extensions.ServiceCollectionExtensions.html
+  name: ServiceCollectionExtensions
+  nameWithType: ServiceCollectionExtensions
+  fullName: MagFlow.Web.Extensions.ServiceCollectionExtensions
+- uid: MagFlow.Web.Extensions.WebApplicationExtensions
+  commentId: T:MagFlow.Web.Extensions.WebApplicationExtensions
+  href: MagFlow.Web.Extensions.WebApplicationExtensions.html
+  name: WebApplicationExtensions
+  nameWithType: WebApplicationExtensions
+  fullName: MagFlow.Web.Extensions.WebApplicationExtensions
