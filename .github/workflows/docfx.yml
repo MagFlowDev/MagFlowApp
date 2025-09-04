@@ -1,4 +1,4 @@
-name: Build & Deploy DocFX (MagFlowApp/docfx)
+name: Build & Deploy DocFX
 
 on:
   push:
@@ -19,9 +19,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: MagFlowApp
 
     steps:
       - name: Checkout
@@ -36,7 +33,7 @@ jobs:
         run: dotnet tool update -g docfx
 
       - name: Build DocFX site
-        run: docfx docfx/docfx.json
+        run: docfx MagFlowApp/docfx/docfx.json
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
