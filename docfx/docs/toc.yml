@@ -1,6 +1,4 @@
-- name: Introduction
+- name: Wprowadzenie
   href: introduction.md
-- name: Getting Started
-  href: getting-started.md
-- name: Coding Standards
+- name: Zasady kodowania
   href: coding-standards.md
