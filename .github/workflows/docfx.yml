@@ -5,9 +5,9 @@ on:
     branches: [ main ]
 
 permissions:
-  actions: read
   pages: write
   id-token: write
+  actions: read
 
 concurrency:
   group: "pages"
@@ -15,10 +15,10 @@ concurrency:
 
 jobs:
   publish-docs:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -27,18 +27,34 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.x
+          dotnet-version: 8.x
 
       - name: Install DocFX
         run: dotnet tool update -g docfx
 
-      - name: Build DocFX site
-        run: docfx MagFlowApp/docfx/docfx.json
+      - name: Add .NET tools to PATH
+        run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-      - name: Upload artifact
+      - name: Locate docfx.json (auto-detect)
+        run: |
+          set -e
+          echo "PWD: $(pwd)"
+          FILE=$(find . -type f -name docfx.json | head -n 1)
+          if [ -z "$FILE" ]; then
+            echo "❌ Nie znaleziono docfx.json w repo"; exit 1
+          fi
+          echo "✅ Znaleziony config: $FILE"
+          echo "DOCFX_CONFIG=$FILE" >> $GITHUB_ENV
+          echo "DOCFX_DIR=$(dirname "$FILE")" >> $GITHUB_ENV
+          ls -la "$DOCFX_DIR"
+
+      - name: Build DocFX site
+        run: docfx "$DOCFX_CONFIG"
+
+      - name: Upload artifact (_site)
         uses: actions/upload-pages-artifact@v3
         with:
-          path: MagFlowApp/docfx/_site
+          path: ${{ env.DOCFX_DIR }}/_site
 
       - name: Deploy to GitHub Pages
         id: deployment
