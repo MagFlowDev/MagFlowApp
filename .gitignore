@@ -54,3 +54,6 @@ TestResult.xml
 nunit-*.xml
 .vs/
 .vs/MagFlowApp/
+
+# Documentation files
+docfx/_site/

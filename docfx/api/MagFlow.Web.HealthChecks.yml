@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: MagFlow.Web.HealthChecks
+  commentId: N:MagFlow.Web.HealthChecks
+  id: MagFlow.Web.HealthChecks
+  children:
+  - MagFlow.Web.HealthChecks.SqlServerPingHealthCheck
+  langs:
+  - csharp
+  - vb
+  name: MagFlow.Web.HealthChecks
+  nameWithType: MagFlow.Web.HealthChecks
+  fullName: MagFlow.Web.HealthChecks
+  type: Namespace
+  assemblies:
+  - MagFlow.Web
+references:
+- uid: MagFlow.Web.HealthChecks.SqlServerPingHealthCheck
+  commentId: T:MagFlow.Web.HealthChecks.SqlServerPingHealthCheck
+  href: MagFlow.Web.HealthChecks.SqlServerPingHealthCheck.html
+  name: SqlServerPingHealthCheck
+  nameWithType: SqlServerPingHealthCheck
+  fullName: MagFlow.Web.HealthChecks.SqlServerPingHealthCheck

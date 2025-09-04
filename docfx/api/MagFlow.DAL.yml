@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: MagFlow.DAL
+  commentId: N:MagFlow.DAL
+  id: MagFlow.DAL
+  children:
+  - MagFlow.DAL.Class1
+  langs:
+  - csharp
+  - vb
+  name: MagFlow.DAL
+  nameWithType: MagFlow.DAL
+  fullName: MagFlow.DAL
+  type: Namespace
+  assemblies:
+  - MagFlow.DAL
+references:
+- uid: MagFlow.DAL.Class1
+  commentId: T:MagFlow.DAL.Class1
+  href: MagFlow.DAL.Class1.html
+  name: Class1
+  nameWithType: Class1
+  fullName: MagFlow.DAL.Class1

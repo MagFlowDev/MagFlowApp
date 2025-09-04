@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: MagFlow.Shared.Constants
+  commentId: N:MagFlow.Shared.Constants
+  id: MagFlow.Shared.Constants
+  children:
+  - MagFlow.Shared.Constants.DatabaseConstants
+  langs:
+  - csharp
+  - vb
+  name: MagFlow.Shared.Constants
+  nameWithType: MagFlow.Shared.Constants
+  fullName: MagFlow.Shared.Constants
+  type: Namespace
+  assemblies:
+  - MagFlow.Shared
+references:
+- uid: MagFlow.Shared.Constants.DatabaseConstants
+  commentId: T:MagFlow.Shared.Constants.DatabaseConstants
+  href: MagFlow.Shared.Constants.DatabaseConstants.html
+  name: DatabaseConstants
+  nameWithType: DatabaseConstants
+  fullName: MagFlow.Shared.Constants.DatabaseConstants
