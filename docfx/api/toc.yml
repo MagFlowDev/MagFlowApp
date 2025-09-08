@@ -1,58 +1,43 @@
-### YamlMime:TableOfContent
-items:
-- uid: MagFlow.DAL
-  name: MagFlow.DAL
-  type: Namespace
+- name: MagFlow.DAL
   items:
-  - uid: MagFlow.DAL.Class1
-    name: Class1
-    type: Class
-- uid: MagFlow.Domain
-  name: MagFlow.Domain
-  type: Namespace
+    - name: MagFlow
+      uid: MagFlow
+      items:
+        - name: DAL
+          uid: MagFlow.DAL
+- name: MagFlow.Domain
   items:
-  - uid: MagFlow.Domain.Class1
-    name: Class1
-    type: Class
-- uid: MagFlow.EF
-  name: MagFlow.EF
-  type: Namespace
+    - name: MagFlow
+      uid: MagFlow
+      items:
+        - name: Domain
+          uid: MagFlow.Domain
+- name: MagFlow.EF
   items:
-  - uid: MagFlow.EF.Class1
-    name: Class1
-    type: Class
-- uid: MagFlow.Shared.Constants
-  name: MagFlow.Shared.Constants
-  type: Namespace
+    - name: MagFlow
+      uid: MagFlow
+      items:
+        - name: EF
+          uid: MagFlow.EF
+- name: MagFlow.Shared
   items:
-  - uid: MagFlow.Shared.Constants.DatabaseConstants
-    name: DatabaseConstants
-    type: Class
-- uid: MagFlow.Web
-  name: MagFlow.Web
-  type: Namespace
+    - name: MagFlow
+      uid: MagFlow
+      items:
+        - name: Shared
+          uid: MagFlow.Shared
+          items:
+            - name: Constants
+              uid: MagFlow.Shared.Constants
+- name: MagFlow.Web
   items:
-  - uid: MagFlow.Web.Class
-    name: Class
-    type: Class
-- uid: MagFlow.Web.Extensions
-  name: MagFlow.Web.Extensions
-  type: Namespace
-  items:
-  - uid: MagFlow.Web.Extensions.LoggingExtensions
-    name: LoggingExtensions
-    type: Class
-  - uid: MagFlow.Web.Extensions.ServiceCollectionExtensions
-    name: ServiceCollectionExtensions
-    type: Class
-  - uid: MagFlow.Web.Extensions.WebApplicationExtensions
-    name: WebApplicationExtensions
-    type: Class
-- uid: MagFlow.Web.HealthChecks
-  name: MagFlow.Web.HealthChecks
-  type: Namespace
-  items:
-  - uid: MagFlow.Web.HealthChecks.SqlServerPingHealthCheck
-    name: SqlServerPingHealthCheck
-    type: Class
-memberLayout: SamePage
+    - name: MagFlow
+      uid: MagFlow
+      items:
+        - name: Web
+          uid: MagFlow.Web
+          items:
+            - name: Extensions
+              uid: MagFlow.Web.Extensions
+            - name: HealthChecks
+              uid: MagFlow.Web.HealthChecks
