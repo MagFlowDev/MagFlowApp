@@ -1,24 +1,30 @@
 name: DocFX – Generate API YAML & TOC
 
 on:
-  push:
-    branches: [ main ]
+  # Ręczne odpalenie
   workflow_dispatch:
+  # Auto po mergu PR do main
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
 
 permissions:
-  contents: write    # potrzebne do commit/push
+  contents: write
   actions: read
 
 jobs:
   generate-api:
+    # Biegnij tylko, gdy PR został zmergowany albo to manualne uruchomienie
+    if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout (full history for commits)
+      - name: Checkout (full history)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # Jeśli targetujesz net10 – zostaw 10 + preview; jeśli wystarczy net8, możesz zostawić tylko 8.0.x
       - name: Setup .NET (10 preview + 8)
         uses: actions/setup-dotnet@v4
         with:
@@ -38,13 +44,11 @@ jobs:
         run: |
           set -e
           FILE=$(find . -type f -name docfx.json | head -n 1)
-          if [ -z "$FILE" ]; then
-            echo "❌ docfx.json not found"; exit 1
-          fi
+          [ -z "$FILE" ] && echo "docfx.json not found" && exit 1
           DIR=$(dirname "$FILE")
           echo "DOCFX_CONFIG=$FILE" >> $GITHUB_ENV
           echo "DOCFX_DIR=$DIR" >> $GITHUB_ENV
-          echo "Config: $FILE"
+          echo "Using $FILE"
           ls -la "$DIR"
 
       - name: Generate metadata (api/*.yml)
@@ -57,32 +61,31 @@ jobs:
 
           const dir = process.env.DOCFX_DIR || '.';
           const apiDir = path.join(dir, 'api');
+          const docsDir = path.join(dir, 'docs');
+          const docsTocPath = path.join(docsDir, 'toc.yml');
 
           if (!fs.existsSync(apiDir)) {
             console.log('No api/ dir – skipping');
             process.exit(0);
           }
 
+          // Zbierz namespace'y z api/*.yml (tylko type: Namespace) + assembly
           const files = fs.readdirSync(apiDir).filter(f => f.endsWith('.yml') && f !== 'toc.yml');
-
           const nsItems = [];
           for (const f of files) {
             const txt = fs.readFileSync(path.join(apiDir, f), 'utf8');
             const uid = (txt.match(/^uid:\s*(.+)$/m) || txt.match(/\n- uid:\s*(.+)$/m))?.[1]?.trim();
             const asm = (txt.match(/^\s*assemblies:\s*\n\s*-\s*([A-Za-z0-9_.-]+)/m) || [])[1]?.trim();
             const typ = (txt.match(/^\s*type:\s*([A-Za-z]+)/m) || [])[1];
-
-            // tylko przestrzenie nazw
-            if (!uid || (typ && typ !== 'Namespace')) continue;
-
+            if (!uid || (typ && typ !== 'Namespace')) continue; // tylko namespaces
             nsItems.push({ uid, asm: asm || '(Unknown)' });
           }
 
-          // grupowanie po assembly
+          // Grupowanie po assembly
           const byAsm = {};
           for (const it of nsItems) (byAsm[it.asm] ??= []).push(it.uid);
 
-          // budowa drzewa po kropkach
+          // Budowa drzewa po kropkach
           function nest(names) {
             const root = {};
             for (const n of names.sort()) {
@@ -98,7 +101,7 @@ jobs:
             function toItems(node) {
               if (!node.children) return [];
               return Object.values(node.children)
-                .sort((a,b) => a.uid.localeCompare(b.uid))
+                .sort((a, b) => a.uid.localeCompare(b.uid))
                 .map(e => {
                   const childItems = toItems(e);
                   const item = { name: e.uid.split('.').pop(), uid: e.uid };
@@ -109,38 +112,107 @@ jobs:
             return toItems(root);
           }
 
-          const toc = Object.keys(byAsm).sort().map(asm => ({
+          // 1) Zbuduj api/toc.yml (Assembly -> Namespaces)
+          const tocApi = Object.keys(byAsm).sort().map(asm => ({
             name: asm,
             items: nest(byAsm[asm])
           }));
 
-          // generator YAML
           function yaml(items, ind = '') {
             return items.map(it => {
               let s = `${ind}- name: ${it.name}\n`;
               if (it.uid) s += `${ind}  uid: ${it.uid}\n`;
+              if (it.href) s += `${ind}  href: ${it.href}\n`;
               if (it.items?.length) s += `${ind}  items:\n` + yaml(it.items, ind + '    ');
               return s;
             }).join('');
           }
 
-          const out = yaml(toc);
-          fs.writeFileSync(path.join(apiDir, 'toc.yml'), out, 'utf8');
+          const apiTocYaml = yaml(tocApi);
+          fs.writeFileSync(path.join(apiDir, 'toc.yml'), apiTocYaml, 'utf8');
           console.log('✅ api/toc.yml generated');
+
+          // 2) Wygeneruj blok do docs/toc.yml w postaci:
+          // --- BEGIN AUTO API ---
+          // - name: API
+          //   items:
+          //     - name: <Assembly>
+          //       items:
+          //         - name: <NamespaceRoot>
+          //           uid: <NamespaceRoot>
+          //           items: [...]
+          // --- END AUTO API ---
+
+          // Konwersja tocApi (assembly->namespaceTree) do sekcji "API"
+          function flattenToApiSection(tocApi) {
+            // Dla każdego assembly przerabiamy items (namespace tree) na identyczne, tylko zachowujemy uid na poziomie namespaces
+            const items = tocApi.map(asm => {
+              return {
+                name: asm.name,
+                items: asm.items
+              };
+            });
+            return { name: 'API', items };
+          }
+
+          const apiSection = flattenToApiSection(tocApi);
+
+          function yamlApiSection(section, ind = '') {
+            let s = `${ind}- name: ${section.name}\n`;
+            if (section.uid) s += `${ind}  uid: ${section.uid}\n`;
+            if (section.items?.length) {
+              s += `${ind}  items:\n`;
+              s += yaml(section.items, ind + '    ');
+            }
+            return s;
+          }
+
+          const AUTO_BEGIN = '# --- BEGIN AUTO API ---';
+          const AUTO_END   = '# --- END AUTO API ---';
+          const autoBlock = `${AUTO_BEGIN}\n${yamlApiSection(apiSection)}\n${AUTO_END}\n`;
+
+          // Upewnij się, że istnieje docs/toc.yml
+          if (!fs.existsSync(docsDir)) fs.mkdirSync(docsDir, { recursive: true });
+          if (!fs.existsSync(docsTocPath)) {
+            const minimal = [
+              '- name: Home',
+              '  href: ../index.md',
+              '- name: Wprowadzenie',
+              '  href: index.md',
+              '- name: Zasady kodowania',
+              '  href: engineering/Coding-Standards.md',
+              '', AUTO_BEGIN, '- name: API', '  items:', AUTO_END, ''
+            ].join('\n');
+            fs.writeFileSync(docsTocPath, minimal, 'utf8');
+          }
+
+          // Wstaw/aktualizuj blok w docs/toc.yml
+          const current = fs.readFileSync(docsTocPath, 'utf8');
+          let updated;
+          if (current.includes(AUTO_BEGIN) && current.includes(AUTO_END)) {
+            updated = current.replace(
+              new RegExp(`${AUTO_BEGIN}[\\s\\S]*?${AUTO_END}`),
+              autoBlock.trim()
+            );
+          } else {
+            updated = (current.trimEnd() + '\n\n' + autoBlock).replace(/\n{3,}/g, '\n\n');
+          }
+          fs.writeFileSync(docsTocPath, updated, 'utf8');
+          console.log('✅ docs/toc.yml updated with API section');
           NODE
 
-      - name: Generate hierarchical API TOC
+      - name: Generate hierarchical API TOC & inject docs TOC
         run: node generate-toc.js
 
-      - name: Commit & push api changes
+      - name: Commit & push api/docs toc changes
         run: |
           set -e
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "${DOCFX_DIR}/api"
+          git add "${DOCFX_DIR}/api" "${DOCFX_DIR}/docs/toc.yml"
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "docs(api): regenerate API YAML & TOC [skip ci]"
+            git commit -m "docs(api): regenerate API YAML & inject docs TOC [skip ci]"
             git push
           fi
