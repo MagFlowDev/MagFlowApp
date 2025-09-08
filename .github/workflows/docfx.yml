@@ -1,9 +1,14 @@
 name: Build & Deploy DocFX
 
 on:
-  workflow_run:
-    workflows: ["DocFX – Generate API YAML & TOC"]
-    types: [completed]
+  # Ręczne odpalenie
+  workflow_dispatch:
+  # Auto po mergu PR do main
+  pull_request:
+    branches: [ main ]
+  # workflow_run:
+  #   workflows: ["DocFX – Generate API YAML & TOC"]
+  #   types: [completed]
 
 permissions:
   pages: write

@@ -4,9 +4,9 @@ on:
   # Ręczne odpalenie
   workflow_dispatch:
   # Auto po mergu PR do main
-  pull_request:
-    branches: [ main ]
-    types: [ closed ]
+  # pull_request:
+  #   branches: [ main ]
+  #   types: [ closed ]
 
 permissions:
   contents: write
