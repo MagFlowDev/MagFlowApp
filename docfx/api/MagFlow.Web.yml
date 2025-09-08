@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: MagFlow.Web
+  commentId: N:MagFlow.Web
+  id: MagFlow.Web
+  children:
+  - MagFlow.Web.Class
+  langs:
+  - csharp
+  - vb
+  name: MagFlow.Web
+  nameWithType: MagFlow.Web
+  fullName: MagFlow.Web
+  type: Namespace
+  assemblies:
+  - MagFlow.Web
+references:
+- uid: MagFlow.Web.Class
+  commentId: T:MagFlow.Web.Class
+  href: MagFlow.Web.Class.html
+  name: Class
+  nameWithType: Class
+  fullName: MagFlow.Web.Class

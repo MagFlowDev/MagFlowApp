@@ -28,6 +28,13 @@ items:
   - uid: MagFlow.Shared.Constants.DatabaseConstants
     name: DatabaseConstants
     type: Class
+- uid: MagFlow.Web
+  name: MagFlow.Web
+  type: Namespace
+  items:
+  - uid: MagFlow.Web.Class
+    name: Class
+    type: Class
 - uid: MagFlow.Web.Extensions
   name: MagFlow.Web.Extensions
   type: Namespace

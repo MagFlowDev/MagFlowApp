@@ -13,6 +13,8 @@
   "MagFlow.Shared.Constants.DatabaseConstants.COMPANYDB_NAME_TEMPLATE": "MagFlow.Shared.Constants.DatabaseConstants.yml",
   "MagFlow.Shared.Constants.DatabaseConstants.COREDB": "MagFlow.Shared.Constants.DatabaseConstants.yml",
   "MagFlow.Shared.Constants.DatabaseConstants.COREDB_NAME": "MagFlow.Shared.Constants.DatabaseConstants.yml",
+  "MagFlow.Web": "MagFlow.Web.yml",
+  "MagFlow.Web.Class": "MagFlow.Web.Class.yml",
   "MagFlow.Web.Extensions": "MagFlow.Web.Extensions.yml",
   "MagFlow.Web.Extensions.LoggingExtensions": "MagFlow.Web.Extensions.LoggingExtensions.yml",
   "MagFlow.Web.Extensions.LoggingExtensions.AddMagFlowLogging(Microsoft.AspNetCore.Builder.WebApplicationBuilder)": "MagFlow.Web.Extensions.LoggingExtensions.yml",

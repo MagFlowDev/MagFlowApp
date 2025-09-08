@@ -1,0 +1,61 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install DocFX
+        run: dotnet tool install -g docfx
+
+      - name: Restore .NET
+        run: dotnet restore MagFlowApp/MagFlowApp.sln
+
+      - name: Generate metadata
+        run: docfx metadata MagFlowApp/docfx/docfx.json
+
+      - name: Generate hierarchical API TOC
+        run: |
+          node -e "
+          const fs=require('fs'), path=require('path');
+          const apiDir = 'MagFlowApp/docfx/api';
+          if (!fs.existsSync(apiDir)) process.exit(0);
+          const files = fs.readdirSync(apiDir).filter(f => f.endsWith('.yml') && f !== 'toc.yml');
+          const nsItems=[];
+          for (const f of files) {
+            const txt=fs.readFileSync(path.join(apiDir,f),'utf8');
+            const uidMatch = txt.match(/^uid:\s*(.+)$/m) || txt.match(/\n- uid:\s*(.+)$/m);
+            const asmMatch = txt.match(/^\s*assemblies:\s*\n\s*-\s*([A-Za-z0-9_.-]+)/m);
+            const typeMatch = txt.match(/^\s*type:\s*([A-Za-z]+)/m);
+            if (!uidMatch) continue;
+            if (typeMatch && typeMatch[1] !== 'Namespace') continue;
+            nsItems.push({ uid: uidMatch[1].trim(), asm: asmMatch ? asmMatch[1].trim() : '(Unknown)' });
+          }
+          const byAsm={};
+          for (const it of nsItems){ (byAsm[it.asm]??=[]).push(it.uid); }
+          function nest(names){
+            const root={};
+            for(const n of names.sort()){
+              const parts=n.split('.'); let node=root; let acc='';
+              for(const p of parts){ acc=acc?acc+'.'+p:p; node.children??={}; node.children[acc]??={uid:acc,children:{}}; node=node.children[acc]; }
+            }
+            function toItems(node){
+              if(!node.children) return [];
+              return Object.values(node.children).sort((a,b)=>a.uid.localeCompare(b.uid))
+                .map(e=>({name:e.uid.split('.').slice(-1)[0],uid:e.uid,items:toItems(e)}));
+            }
+            return toItems(root);
+          }
+          const toc=Object.keys(byAsm).sort().map(asm=>({name:asm,items:nest(byAsm[asm])}));
+          const yaml=(items,indent='')=>items.map(it=>{
+            let s=`${indent}- name: ${it.name}\n`;
+            if(it.uid) s+=`${indent}  uid: ${it.uid}\n`;
+            if(it.items?.length) s+=`${indent}  items:\n`+yaml(it.items,indent+'    ');
+            return s;
+          }).join('');
+          fs.writeFileSync(path.join(apiDir,'toc.yml'),yaml(toc));
+          console.log('✅ Wygenerowano api/toc.yml');
+          "
+
+      - name: Build site
+        run: docfx build MagFlowApp/docfx/docfx.json
