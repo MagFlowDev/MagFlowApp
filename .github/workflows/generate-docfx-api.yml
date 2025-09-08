@@ -3,12 +3,6 @@ name: DocFX – Generate API YAML & TOC
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'MagFlowApp/**/*.cs'
-      - 'MagFlowApp/**/*.csproj'
-      - 'MagFlowApp/*.sln'
-      - 'MagFlowApp/docfx/**'
-      - '.github/workflows/docfx-generate-api.yml'
   workflow_dispatch:
 
 permissions:
