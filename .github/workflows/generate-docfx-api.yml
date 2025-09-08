@@ -50,45 +50,87 @@ jobs:
       - name: Generate metadata (api/*.yml)
         run: docfx metadata "$DOCFX_CONFIG"
 
-      - name: Generate hierarchical API TOC (api/toc.yml)
+      - name: Write generate-toc.js
         run: |
-          node -e "
-          const fs=require('fs'), path=require('path');
-          const apiDir = path.join(process.env.DOCFX_DIR,'api');
-          if (!fs.existsSync(apiDir)) { console.log('No api/ dir – skipping'); process.exit(0); }
-          const files = fs.readdirSync(apiDir).filter(f => f.endsWith('.yml') && f!=='toc.yml');
-          const nsItems=[];
-          for (const f of files) {
-            const t=fs.readFileSync(path.join(apiDir,f),'utf8');
-            const uid=(t.match(/^uid:\s*(.+)$/m)||t.match(/\n- uid:\s*(.+)$/m))?.[1]?.trim();
-            const asm=(t.match(/^\s*assemblies:\s*\n\s*-\s*([A-Za-z0-9_.-]+)/m)||[])[1]?.trim();
-            const typ=(t.match(/^\s*type:\s*([A-Za-z]+)/m)||[])[1];
-            if (!uid || (typ && typ!=='Namespace')) continue;   // tylko namespace’y
-            nsItems.push({ uid, asm: asm||'(Unknown)' });
+          cat > generate-toc.js <<'NODE'
+          const fs = require('fs'), path = require('path');
+
+          const dir = process.env.DOCFX_DIR || '.';
+          const apiDir = path.join(dir, 'api');
+
+          if (!fs.existsSync(apiDir)) {
+            console.log('No api/ dir – skipping');
+            process.exit(0);
           }
-          const byAsm={}; for (const it of nsItems) (byAsm[it.asm]??=[]).push(it.uid);
-          function nest(names){
-            const root={};
-            for(const n of names.sort()){
-              const parts=n.split('.'); let node=root; let acc='';
-              for(const p of parts){ acc=acc?acc+'.'+p:p; node.children??={}; node.children[acc]??={uid:acc,children:{}}; node=node.children[acc]; }
+
+          const files = fs.readdirSync(apiDir).filter(f => f.endsWith('.yml') && f !== 'toc.yml');
+
+          const nsItems = [];
+          for (const f of files) {
+            const txt = fs.readFileSync(path.join(apiDir, f), 'utf8');
+            const uid = (txt.match(/^uid:\s*(.+)$/m) || txt.match(/\n- uid:\s*(.+)$/m))?.[1]?.trim();
+            const asm = (txt.match(/^\s*assemblies:\s*\n\s*-\s*([A-Za-z0-9_.-]+)/m) || [])[1]?.trim();
+            const typ = (txt.match(/^\s*type:\s*([A-Za-z]+)/m) || [])[1];
+
+            // tylko przestrzenie nazw
+            if (!uid || (typ && typ !== 'Namespace')) continue;
+
+            nsItems.push({ uid, asm: asm || '(Unknown)' });
+          }
+
+          // grupowanie po assembly
+          const byAsm = {};
+          for (const it of nsItems) (byAsm[it.asm] ??= []).push(it.uid);
+
+          // budowa drzewa po kropkach
+          function nest(names) {
+            const root = {};
+            for (const n of names.sort()) {
+              const parts = n.split('.');
+              let node = root, acc = '';
+              for (const p of parts) {
+                acc = acc ? acc + '.' + p : p;
+                node.children ??= {};
+                node.children[acc] ??= { uid: acc, children: {} };
+                node = node.children[acc];
+              }
             }
-            function toItems(node){
-              if(!node.children) return [];
-              return Object.values(node.children).sort((a,b)=>a.uid.localeCompare(b.uid))
-                .map(e=>({name:e.uid.split('.').pop(),uid:e.uid,items:toItems(e)}))
-                .map(e=>{ if(!e.items.length) delete e.items; return e; });
+            function toItems(node) {
+              if (!node.children) return [];
+              return Object.values(node.children)
+                .sort((a,b) => a.uid.localeCompare(b.uid))
+                .map(e => {
+                  const childItems = toItems(e);
+                  const item = { name: e.uid.split('.').pop(), uid: e.uid };
+                  if (childItems.length) item.items = childItems;
+                  return item;
+                });
             }
             return toItems(root);
           }
-          const toc=Object.keys(byAsm).sort().map(asm=>({name:asm,items:nest(byAsm[asm])}));
-          const yaml=(items,ind='')=>items.map(it=>{
-            let s=`${ind}- name: ${it.name}\n`; if(it.uid) s+=`${ind}  uid: ${it.uid}\n`;
-            if(it.items?.length) s+=`${ind}  items:\n`+yaml(it.items,ind+'    '); return s;
-          }).join('');
-          fs.writeFileSync(path.join(apiDir,'toc.yml'), yaml(toc));
+
+          const toc = Object.keys(byAsm).sort().map(asm => ({
+            name: asm,
+            items: nest(byAsm[asm])
+          }));
+
+          // generator YAML
+          function yaml(items, ind = '') {
+            return items.map(it => {
+              let s = `${ind}- name: ${it.name}\n`;
+              if (it.uid) s += `${ind}  uid: ${it.uid}\n`;
+              if (it.items?.length) s += `${ind}  items:\n` + yaml(it.items, ind + '    ');
+              return s;
+            }).join('');
+          }
+
+          const out = yaml(toc);
+          fs.writeFileSync(path.join(apiDir, 'toc.yml'), out, 'utf8');
           console.log('✅ api/toc.yml generated');
-          "
+          NODE
+
+      - name: Generate hierarchical API TOC
+        run: node generate-toc.js
 
       - name: Commit & push api changes
         run: |
