@@ -5,7 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<NoWarn>$(NoWarn);1591</NoWarn>	  
+	<NoWarn>$(NoWarn);1591</NoWarn>
+	<Configurations>Debug;Release;Test</Configurations>	  
   </PropertyGroup>
 
 </Project>
