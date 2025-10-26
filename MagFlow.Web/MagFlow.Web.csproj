@@ -8,6 +8,7 @@
 	<NoWarn>$(NoWarn);1591</NoWarn>	  
 	<PatchFile>Properties/VersionPatch.txt</PatchFile>
 	<AutoIncrementPatch Condition="'$(AutoIncrementPatch)'==''">$(Configuration.Equals('Release'))</AutoIncrementPatch>
+	<Configurations>Debug;Release;Test</Configurations>
   </PropertyGroup>
 
   <Target Name="EnsurePatchFile" BeforeTargets="BeforeBuild">

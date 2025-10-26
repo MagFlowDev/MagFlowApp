@@ -11,3 +11,7 @@ app.UseMagFlowPipeline();
 app.Run();
 
 Log.CloseAndFlush();
+
+#if TEST
+
+#endif
