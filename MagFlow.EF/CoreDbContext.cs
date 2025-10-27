@@ -20,6 +20,9 @@ namespace MagFlow.EF
         public DbSet<UserNotification> UserNotifications { get; set; }
         public DbSet<UserSession> UserSessions { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<EventLog> EventLogs { get; set; }
+        public DbSet<CompanyModule> CompanyModules { get; set; }
+        public DbSet<Module> Modules { get; set; }
 
         public CoreDbContext(string connectionString) : base(BuildOptions(connectionString))
         {
@@ -68,10 +71,16 @@ namespace MagFlow.EF
 
             builder.Entity<CompanyUser>().HasOne(c => c.Company).WithMany(u => u.Users);
             builder.Entity<CompanyUser>().HasOne(u => u.User).WithMany(c => c.Companies);
-
             builder.Entity<ApplicationUser>().HasMany(l => l.AuditLogs).WithOne(u => u.User);
+            builder.Entity<ApplicationUser>().HasMany(l => l.EventLogs).WithOne(u => u.User);
             builder.Entity<ApplicationUser>().HasMany(n => n.Notifications).WithOne(u => u.User);
             builder.Entity<ApplicationUser>().HasMany(s => s.Sessions).WithOne(u => u.User);
+            builder.Entity<UserNotification>().HasOne(n => n.Notification);
+            builder.Entity<AuditLog>().HasMany(lc => lc.Changes).WithOne(l => l.AuditLog);
+            builder.Entity<Company>().HasMany(m => m.Modules).WithOne(c => c.Company);
+            builder.Entity<CompanyModule>().HasMany(p => p.ModulePricings).WithOne(m => m.CompanyModule);
+            builder.Entity<CompanyModule>().HasOne(m => m.Module).WithMany(c => c.CompanyModules);
+            builder.Entity<Module>().HasMany(p => p.Pricings).WithOne(m => m.Module);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

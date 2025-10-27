@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MagFlow.Shared\MagFlow.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
