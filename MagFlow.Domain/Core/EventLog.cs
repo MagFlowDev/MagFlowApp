@@ -3,24 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.Serialization;
 using System.Text;
 
 namespace MagFlow.Domain.Core
 {
-    public class AuditLog
+    public class EventLog
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public Guid UserId { get; set; }
         [Required]
-        public string EntityName { get; set; }
+        public Enums.EventLogLevel Level { get; set; }
         [Required]
-        public Guid RelatedEntityId { get; set; }
+        public Enums.EventLogCategory Category { get; set; }
         [Required]
-        public Enums.AuditLogAction Action { get; set; }
+        public string Message { get; set; }
+        public string? Details { get; set; }
         [Required]
         public DateTime OccuredAt { get; set; }
         [Required]
@@ -30,7 +28,5 @@ namespace MagFlow.Domain.Core
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser? User { get; set; }
-
-        public ICollection<AuditLogChange> Changes { get; set; }
     }
 }

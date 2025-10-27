@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MagFlow.BLL\MagFlow.BLL.csproj" />
+    <ProjectReference Include="..\MagFlow.Domain\MagFlow.Domain.csproj" />
     <ProjectReference Include="..\MagFlow.Shared\MagFlow.Shared.csproj" />
   </ItemGroup>
 
