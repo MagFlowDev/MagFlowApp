@@ -16,8 +16,8 @@ items:
   source:
     remote:
       path: MagFlow.Web/Extensions/WebApplicationExtensions.cs
-      branch: mateusz
-      repo: https://github.com/MagFlowDev/MagFlowApp.git
+      branch: main
+      repo: https://github.com/MagFlowDev/MagFlowApp
     id: WebApplicationExtensions
     path: ../MagFlow.Web/Extensions/WebApplicationExtensions.cs
     startLine: 7
@@ -52,8 +52,8 @@ items:
   source:
     remote:
       path: MagFlow.Web/Extensions/WebApplicationExtensions.cs
-      branch: mateusz
-      repo: https://github.com/MagFlowDev/MagFlowApp.git
+      branch: main
+      repo: https://github.com/MagFlowDev/MagFlowApp
     id: UseMagFlowPipeline
     path: ../MagFlow.Web/Extensions/WebApplicationExtensions.cs
     startLine: 11

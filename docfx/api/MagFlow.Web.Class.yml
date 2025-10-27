@@ -15,8 +15,8 @@ items:
   source:
     remote:
       path: MagFlow.Web/Class.cs
-      branch: mateusz
-      repo: https://github.com/MagFlowDev/MagFlowApp.git
+      branch: main
+      repo: https://github.com/MagFlowDev/MagFlowApp
     id: Class
     path: ../MagFlow.Web/Class.cs
     startLine: 2

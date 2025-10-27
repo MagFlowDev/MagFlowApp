@@ -17,8 +17,8 @@ items:
   source:
     remote:
       path: MagFlow.Web/HealthChecks/SqlServerPingHealthCheck.cs
-      branch: mateusz
-      repo: https://github.com/MagFlowDev/MagFlowApp.git
+      branch: main
+      repo: https://github.com/MagFlowDev/MagFlowApp
     id: SqlServerPingHealthCheck
     path: ../MagFlow.Web/HealthChecks/SqlServerPingHealthCheck.cs
     startLine: 6
@@ -53,8 +53,8 @@ items:
   source:
     remote:
       path: MagFlow.Web/HealthChecks/SqlServerPingHealthCheck.cs
-      branch: mateusz
-      repo: https://github.com/MagFlowDev/MagFlowApp.git
+      branch: main
+      repo: https://github.com/MagFlowDev/MagFlowApp
     id: .ctor
     path: ../MagFlow.Web/HealthChecks/SqlServerPingHealthCheck.cs
     startLine: 9
@@ -85,8 +85,8 @@ items:
   source:
     remote:
       path: MagFlow.Web/HealthChecks/SqlServerPingHealthCheck.cs
-      branch: mateusz
-      repo: https://github.com/MagFlowDev/MagFlowApp.git
+      branch: main
+      repo: https://github.com/MagFlowDev/MagFlowApp
     id: CheckHealthAsync
     path: ../MagFlow.Web/HealthChecks/SqlServerPingHealthCheck.cs
     startLine: 12
