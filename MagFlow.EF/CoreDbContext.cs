@@ -15,6 +15,11 @@ namespace MagFlow.EF
         public DbSet<ApplicationUserLogin> UserLogins {  get; set; }
         public DbSet<ApplicationRoleClaim> RoleClaims {  get; set; }
         public DbSet<ApplicationUserToken> UserTokens {  get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<CompanyUser> CompanyUsers { get; set; }
+        public DbSet<UserNotification> UserNotifications { get; set; }
+        public DbSet<UserSession> UserSessions { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
         public CoreDbContext(string connectionString) : base(BuildOptions(connectionString))
         {
@@ -56,6 +61,17 @@ namespace MagFlow.EF
             {
                 entity.ToTable(name: "UserTokens");
             });
+            builder.Entity<CompanyUser>().HasKey(e => new
+            {
+                e.UserId, e.CompanyId
+            });
+
+            builder.Entity<CompanyUser>().HasOne(c => c.Company).WithMany(u => u.Users);
+            builder.Entity<CompanyUser>().HasOne(u => u.User).WithMany(c => c.Companies);
+
+            builder.Entity<ApplicationUser>().HasMany(l => l.AuditLogs).WithOne(u => u.User);
+            builder.Entity<ApplicationUser>().HasMany(n => n.Notifications).WithOne(u => u.User);
+            builder.Entity<ApplicationUser>().HasMany(s => s.Sessions).WithOne(u => u.User);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
