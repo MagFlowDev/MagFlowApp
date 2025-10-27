@@ -17,7 +17,7 @@ namespace MagFlow.Domain.Core
         [Required]
         public DateTime CreatedAt { get; set; }
         [Required]
-        public Guid DefaultCompanyId { get; set; }
+        public Guid? DefaultCompanyId { get; set; }
         [Required]
         public bool IsActive { get; set; }
 
