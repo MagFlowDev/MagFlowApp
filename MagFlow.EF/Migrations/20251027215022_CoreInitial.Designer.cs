@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MagFlow.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20251027195936_Update2")]
-    partial class Update2
+    [Migration("20251027215022_CoreInitial")]
+    partial class CoreInitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -756,13 +756,13 @@ namespace MagFlow.EF.Migrations
                     b.HasOne("MagFlow.Domain.Core.Company", "Company")
                         .WithMany("Users")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Core.ApplicationUser", "User")
                         .WithMany("Companies")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("Company");

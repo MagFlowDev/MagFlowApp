@@ -69,8 +69,8 @@ namespace MagFlow.EF
                 e.UserId, e.CompanyId
             });
 
-            builder.Entity<CompanyUser>().HasOne(c => c.Company).WithMany(u => u.Users);
-            builder.Entity<CompanyUser>().HasOne(u => u.User).WithMany(c => c.Companies);
+            builder.Entity<CompanyUser>().HasOne(c => c.Company).WithMany(u => u.Users).OnDelete(DeleteBehavior.ClientCascade);
+            builder.Entity<CompanyUser>().HasOne(u => u.User).WithMany(c => c.Companies).OnDelete(DeleteBehavior.ClientCascade);
             builder.Entity<ApplicationUser>().HasMany(l => l.AuditLogs).WithOne(u => u.User);
             builder.Entity<ApplicationUser>().HasMany(l => l.EventLogs).WithOne(u => u.User);
             builder.Entity<ApplicationUser>().HasMany(n => n.Notifications).WithOne(u => u.User);
