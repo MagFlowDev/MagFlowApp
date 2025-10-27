@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MagFlow.EF.Migrations.CompanyDb
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20251027120530_CompanyInitial")]
+    [Migration("20251027151445_CompanyInitial")]
     partial class CompanyInitial
     {
         /// <inheritdoc />

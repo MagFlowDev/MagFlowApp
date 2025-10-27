@@ -1,5 +1,6 @@
 ﻿using MagFlow.Domain.Core;
 using MagFlow.EF;
+using MagFlow.Shared.Models.Settings;
 using MagFlow.Web.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,25 +18,25 @@ namespace MagFlow.Web.Extensions
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
-            string coreConnectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=Core;User Id=sa;Password=Password1!;TrustServerCertificate=True";
-            string companyConnectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=Company;User Id=sa;Password=Password1!;TrustServerCertificate=True";
+            services.RegisterScopes();
 
             services.AddDbContext<CoreDbContext>(options =>
-                options.UseSqlServer(coreConnectionString));
+                options.UseSqlServer(AppSettings.ConnectionStrings.CoreDb));
             services.AddDbContext<CompanyDbContext>(options =>
-                options.UseSqlServer(companyConnectionString));
+                options.UseSqlServer(AppSettings.ConnectionStrings.CompanyDb));
 
             services.AddAuthentication(o =>
             {
                 o.DefaultScheme = IdentityConstants.ApplicationScheme;
                 o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
-            .AddIdentityCookies(o => { });
-            services.AddIdentity<ApplicationUser, ApplicationRole>(o =>
+            .AddIdentityCookies();
+            services.AddIdentityCore<ApplicationUser>(options =>
             {
-                o.Stores.MaxLengthForKeys = 128;
-                o.SignIn.RequireConfirmedEmail = true;
+                options.Stores.MaxLengthForKeys = 128;
+                options.SignIn.RequireConfirmedEmail = true;
             })
+            .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<CoreDbContext>()
             .AddDefaultTokenProviders();
 
@@ -50,6 +51,11 @@ namespace MagFlow.Web.Extensions
                 .AddCheck<SqlServerPingHealthCheck>("sql", tags: new[] { "ready" });
 
             return services;
+        }
+
+        private static void RegisterScopes(this IServiceCollection services)
+        {
+
         }
     }
 }
