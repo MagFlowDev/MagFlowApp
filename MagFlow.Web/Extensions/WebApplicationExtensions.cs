@@ -28,8 +28,10 @@ namespace MagFlow.Web.Extensions
             }
 
             app.UseHttpsRedirection();
-
             app.UseAntiforgery();
+
+            app.UseAuthorization();
+            app.UseAuthorization();
 
             app.MapStaticAssets();
             app.MapRazorComponents<App>()

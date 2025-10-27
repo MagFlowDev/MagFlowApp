@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MagFlow.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20251027120459_CoreInitial")]
+    [Migration("20251027151410_CoreInitial")]
     partial class CoreInitial
     {
         /// <inheritdoc />
