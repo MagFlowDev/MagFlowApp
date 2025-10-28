@@ -1,4 +1,8 @@
-﻿using MagFlow.Domain.Core;
+﻿using MagFlow.BLL.Services;
+using MagFlow.BLL.Services.Interfaces;
+using MagFlow.DAL.Repositories;
+using MagFlow.DAL.Repositories.Interfaces;
+using MagFlow.Domain.Core;
 using MagFlow.EF;
 using MagFlow.Shared.Models.Settings;
 using MagFlow.Web.HealthChecks;
@@ -19,11 +23,7 @@ namespace MagFlow.Web.Extensions
                 .AddInteractiveServerComponents();
 
             services.RegisterScopes();
-
-            services.AddDbContext<CoreDbContext>(options =>
-                options.UseSqlServer(AppSettings.ConnectionStrings.CoreDb));
-            services.AddDbContext<CompanyDbContext>(options =>
-                options.UseSqlServer(AppSettings.ConnectionStrings.CompanyDb));
+            services.ConfigureDbContext();
 
             services.AddAuthentication(o =>
             {
@@ -53,9 +53,26 @@ namespace MagFlow.Web.Extensions
             return services;
         }
 
+        private static void ConfigureDbContext(this IServiceCollection services)
+        {
+            services.AddDbContextFactory<CoreDbContext, CoreDbContextFactory>();
+            services.AddDbContextFactory<CompanyDbContext, CompanyDbContextFactory>();
+        }
+
         private static void RegisterScopes(this IServiceCollection services)
         {
+            services.RegisterRepositories();
+            services.RegisterServices();
+        }
 
+        private static void RegisterServices(this IServiceCollection services)
+        {
+            services.AddScoped<IUserService, UserService>();
+        }
+
+        private static void RegisterRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }
