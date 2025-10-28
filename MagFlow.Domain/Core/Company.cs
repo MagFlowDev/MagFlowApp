@@ -16,6 +16,8 @@ namespace MagFlow.Domain.Core
         [Required]
         public string NormalizedName { get; set; }
         [Required]
+        public string ConnectionString { get; set; }
+        [Required]
         public string NIP {  get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }

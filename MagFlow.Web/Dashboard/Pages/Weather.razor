@@ -1,5 +1,9 @@
 ﻿@page "/weather"
+
+@using Microsoft.AspNetCore.Authorization
 @using Syncfusion.Blazor.Buttons
+
+@attribute [Authorize]
 
 <PageTitle>Weather</PageTitle>
 
