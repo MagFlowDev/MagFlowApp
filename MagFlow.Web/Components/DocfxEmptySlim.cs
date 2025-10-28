@@ -1,3 +1,0 @@
-﻿namespace MagFlow.Web.Components
-{
-}

@@ -1,6 +1,7 @@
 ﻿using MagFlow.Domain.Core;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 
 namespace MagFlow.EF
@@ -86,6 +87,8 @@ namespace MagFlow.EF
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
+
+            optionsBuilder.ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
         }
 
         private static DbContextOptions<CoreDbContext> BuildOptions(string connectionString)
