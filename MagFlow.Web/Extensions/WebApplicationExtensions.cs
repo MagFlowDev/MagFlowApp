@@ -1,7 +1,12 @@
-﻿using MagFlow.Web.Components;
+﻿using MagFlow.BLL.Helpers;
+using MagFlow.Domain.Core;
+using MagFlow.EF;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace MagFlow.Web.Extensions
 {
@@ -38,12 +43,10 @@ namespace MagFlow.Web.Extensions
                 .AddInteractiveServerRenderMode();
 
             app.MapMagFlowHealthChecks();
-            
+
+            Task.Run(async () => await app.SeedDatabase());
             return app;
         }
-
-
-
 
 
         private static WebApplication MapMagFlowHealthChecks(this WebApplication app)
@@ -80,6 +83,38 @@ namespace MagFlow.Web.Extensions
                     })
             });
             return context.Response.WriteAsync(json);
+        }
+
+        private static async Task SeedDatabase(this WebApplication app)
+        {
+            ILogger? logger = null;
+            try
+            {   
+                using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    var loggerFactory = serviceScope.ServiceProvider.GetService<ILoggerFactory>();
+                    if (loggerFactory != null)
+                        logger = loggerFactory.CreateLogger($"{nameof(MagFlow)}.{nameof(MagFlow.Web)}.{nameof(MagFlow.Web.Extensions.WebApplicationExtensions)}");
+                    var coreDbContextFactory = serviceScope.ServiceProvider.GetService<ICoreDbContextFactory>();
+                    var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<ApplicationRole>>();
+                    var userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+
+                    if (coreDbContextFactory != null && roleManager != null && userManager != null)
+                    {
+                        using(var coreDbContext = coreDbContextFactory.CreateDbContext())
+                        {
+                            await coreDbContext.Database.MigrateAsync();
+                            await DbSeeder.Seed(coreDbContext, roleManager, userManager, loggerFactory);
+                        }
+                        roleManager.Dispose();
+                        userManager.Dispose();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger?.LogError(ex.Message);
+            }
         }
     }
 }

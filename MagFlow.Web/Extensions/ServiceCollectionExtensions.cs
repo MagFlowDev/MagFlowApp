@@ -18,27 +18,12 @@ namespace MagFlow.Web.Extensions
         public static IServiceCollection AddMagFlowServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSyncfusionBlazor();
-            
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
             services.RegisterScopes();
             services.ConfigureDbContext();
-
-            services.AddAuthentication(o =>
-            {
-                o.DefaultScheme = IdentityConstants.ApplicationScheme;
-                o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            })
-            .AddIdentityCookies();
-            services.AddIdentityCore<ApplicationUser>(options =>
-            {
-                options.Stores.MaxLengthForKeys = 128;
-                options.SignIn.RequireConfirmedEmail = true;
-            })
-            .AddRoles<ApplicationRole>()
-            .AddEntityFrameworkStores<CoreDbContext>()
-            .AddDefaultTokenProviders();
+            services.ConfigureAuthorization();
 
             services.AddMagFlowHealthChecks();
             return services;
@@ -57,12 +42,56 @@ namespace MagFlow.Web.Extensions
         {
             services.AddDbContextFactory<CoreDbContext, CoreDbContextFactory>();
             services.AddDbContextFactory<CompanyDbContext, CompanyDbContextFactory>();
+
+            services.AddScoped<ICoreDbContextFactory, CoreDbContextFactory>();
+            services.AddScoped<ICompanyDbContextFactory, CompanyDbContextFactory>();
+        }
+
+        private static void ConfigureAuthorization(this IServiceCollection services)
+        {
+            services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = IdentityConstants.ApplicationScheme;
+                o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            })
+            .AddIdentityCookies();
+            services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.Stores.MaxLengthForKeys = 128;
+                options.SignIn.RequireConfirmedEmail = true;
+            })
+            .AddRoles<ApplicationRole>()
+            .AddEntityFrameworkStores<CoreDbContext>()
+            .AddDefaultTokenProviders();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/auth/login";
+                options.LogoutPath = "/auth/logout";
+                options.AccessDeniedPath = "/auth/denied";
+
+                options.Cookie.MaxAge = TimeSpan.FromHours(12);
+                options.SlidingExpiration = true;
+
+                options.Cookie.Name = "MagFlow.Auth";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+            });
+            services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.FromMinutes(30);
+            });
+            services.AddAuthorization();
+            services.AddCascadingAuthenticationState();
         }
 
         private static void RegisterScopes(this IServiceCollection services)
         {
             services.RegisterRepositories();
             services.RegisterServices();
+
+            services.AddScoped<UserManager<ApplicationUser>>();
+            services.AddScoped<RoleManager<ApplicationRole>>();
         }
 
         private static void RegisterServices(this IServiceCollection services)

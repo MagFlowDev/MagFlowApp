@@ -66,5 +66,12 @@
     <ProjectReference Include="..\MagFlow.Domain\MagFlow.Domain.csproj" />
     <ProjectReference Include="..\MagFlow.Shared\MagFlow.Shared.csproj" />
   </ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="Lobby\" />
+    <Folder Include="Modules\" />
+    <Folder Include="Health\" />
+    <Folder Include="Shared\Components\" />
+  </ItemGroup>
 
 </Project>
