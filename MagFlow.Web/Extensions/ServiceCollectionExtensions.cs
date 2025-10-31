@@ -6,6 +6,7 @@ using MagFlow.DAL.Repositories.Interfaces;
 using MagFlow.Domain.Core;
 using MagFlow.EF;
 using MagFlow.Shared.Models.Settings;
+using MagFlow.Web.Auth;
 using MagFlow.Web.HealthChecks;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -87,6 +88,7 @@ namespace MagFlow.Web.Extensions
             services.AddCascadingAuthenticationState();
             services.AddScoped<UserManager<ApplicationUser>>();
             services.AddScoped<RoleManager<ApplicationRole>>();
+            services.AddScoped<IdentityRedirectManager>();
             services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
         }
 
