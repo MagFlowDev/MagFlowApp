@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.Services;
+﻿using MagFlow.BLL.Helpers;
+using MagFlow.BLL.Services;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories;
 using MagFlow.DAL.Repositories.Interfaces;
@@ -6,6 +7,7 @@ using MagFlow.Domain.Core;
 using MagFlow.EF;
 using MagFlow.Shared.Models.Settings;
 using MagFlow.Web.HealthChecks;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -83,6 +85,9 @@ namespace MagFlow.Web.Extensions
             });
             services.AddAuthorization();
             services.AddCascadingAuthenticationState();
+            services.AddScoped<UserManager<ApplicationUser>>();
+            services.AddScoped<RoleManager<ApplicationRole>>();
+            services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
         }
 
         private static void RegisterScopes(this IServiceCollection services)
@@ -90,8 +95,6 @@ namespace MagFlow.Web.Extensions
             services.RegisterRepositories();
             services.RegisterServices();
 
-            services.AddScoped<UserManager<ApplicationUser>>();
-            services.AddScoped<RoleManager<ApplicationRole>>();
         }
 
         private static void RegisterServices(this IServiceCollection services)
