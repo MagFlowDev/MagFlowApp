@@ -3,6 +3,8 @@ using MagFlow.Shared.Models.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace MagFlow.Web.Helpers
 {
@@ -10,12 +12,25 @@ namespace MagFlow.Web.Helpers
     {
         public static void MapEndpoints(this WebApplication app)
         {
-            app.MapLogin();
+            ArgumentNullException.ThrowIfNull(app);
+
+            app.MapAuth();
         }
 
-        private static void MapLogin(this WebApplication app)
+        public static IEndpointConventionBuilder MapAuth(this IEndpointRouteBuilder endpoints)
         {
-            
+            var authGroup = endpoints.MapGroup("/Auth");
+
+            authGroup.MapPost("/Logout", async (
+               ClaimsPrincipal user,
+               [FromServices] SignInManager<ApplicationUser> signInManager,
+               [FromForm] string returnUrl) =>
+            {
+                await signInManager.SignOutAsync();
+                return TypedResults.LocalRedirect($"~/{returnUrl}");
+            });
+
+            return authGroup;
         }
     }
 }

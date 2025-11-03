@@ -9,9 +9,9 @@ builder.Services.AddMagFlowServices(builder.Configuration);
 
 var app = builder.Build();
 app.UseMagFlowPipeline();
-app.MapEndpoints();
 await app.InitializeDatabase();
 
+app.MapEndpoints();
 app.Run();
 
 Log.CloseAndFlush();

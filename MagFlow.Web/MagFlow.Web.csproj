@@ -74,9 +74,5 @@
     <ProjectReference Include="..\MagFlow.Domain\MagFlow.Domain.csproj" />
     <ProjectReference Include="..\MagFlow.Shared\MagFlow.Shared.csproj" />
   </ItemGroup>
-	
-  <ItemGroup>
-    <Folder Include="Pages\Shared\" />
-  </ItemGroup>
 
 </Project>
