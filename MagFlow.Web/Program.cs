@@ -9,6 +9,7 @@ builder.Services.AddMagFlowServices(builder.Configuration);
 
 var app = builder.Build();
 app.UseMagFlowPipeline();
+app.MapEndpoints();
 await app.SeedDatabase();
 
 app.Run();

@@ -16,7 +16,7 @@ namespace MagFlow.Shared.Models.Auth
         [Required]
         public string LastName { get; set; } = "";
 
-        [Required, DataType(DataType.Password), StringLength(8)]
+        [Required, DataType(DataType.Password), StringLength(maximumLength: 100, MinimumLength = 8)]
         public string Password { get; set; } = "";
 
         [Required, DataType(DataType.Password)]

@@ -33,12 +33,14 @@ namespace MagFlow.Web.Extensions
             }
 
             app.UseHttpsRedirection();
+            app.MapStaticAssets();
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseAntiforgery();
 
-            app.UseAuthorization();
-            app.UseAuthorization();
-
-            app.MapStaticAssets();
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
 
