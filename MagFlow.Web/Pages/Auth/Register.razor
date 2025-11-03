@@ -5,6 +5,7 @@
 @using System.Text.Encodings.Web
 @using MagFlow.Domain.Core
 @using MagFlow.Shared.Models.Auth
+@using MagFlow.Web.Auth
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 
@@ -82,6 +83,7 @@
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
+        user.CreatedAt = DateTime.UtcNow;
         var result = await UserManager.CreateAsync(user, Input.Password);
 
         if (!result.Succeeded)

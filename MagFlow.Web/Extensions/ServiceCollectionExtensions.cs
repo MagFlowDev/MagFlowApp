@@ -1,4 +1,5 @@
 ﻿using MagFlow.BLL.Helpers;
+using MagFlow.BLL.Helpers.Auth;
 using MagFlow.BLL.Services;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories;
@@ -26,7 +27,6 @@ namespace MagFlow.Web.Extensions
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
-            services.AddHttpContextAccessor();
             services.RegisterScopes();
             services.ConfigureDbContext();
             services.ConfigureAuthorization();
@@ -69,20 +69,34 @@ namespace MagFlow.Web.Extensions
 
         private static void ConfigureAuthorization(this IServiceCollection services)
         {
+            services.AddCascadingAuthenticationState();
+            services.AddScoped<IdentityUserAccessor>();
+            services.AddScoped<IdentityRedirectManager>();
+            services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+            services.AddScoped<UserManager<ApplicationUser>>();
+            services.AddScoped<RoleManager<ApplicationRole>>();
+            services.AddScoped<SignInManager<ApplicationUser>>();
+            services.AddScoped<IEmailSender<ApplicationUser>>(sp => sp.GetRequiredService<IEmailService>());
+            services.AddScoped<IUserStore<ApplicationUser>, FactoryUserStore>();
+            services.AddScoped<IRoleStore<ApplicationRole>, FactoryRoleStore>();
+
             services.AddAuthentication(o =>
-            {
-                o.DefaultScheme = IdentityConstants.ApplicationScheme;
-                o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            })
-            .AddIdentityCookies();
+                {
+                    o.DefaultScheme = IdentityConstants.ApplicationScheme;
+                    o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                })
+                .AddIdentityCookies();
             services.AddIdentityCore<ApplicationUser>(options =>
-            {
-                options.Stores.MaxLengthForKeys = 128;
-                options.SignIn.RequireConfirmedEmail = true;
-            })
-            .AddRoles<ApplicationRole>()
-            .AddEntityFrameworkStores<CoreDbContext>()
-            .AddDefaultTokenProviders();
+                {
+                    options.Stores.MaxLengthForKeys = 128;
+                    options.SignIn.RequireConfirmedEmail = true;
+                })
+                .AddRoles<ApplicationRole>()
+                .AddEntityFrameworkStores<CoreDbContext>()
+                .AddUserManager<UserManager<ApplicationUser>>()
+                .AddRoleManager<RoleManager<ApplicationRole>>()
+                .AddSignInManager()
+                .AddDefaultTokenProviders();
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Auth/Login";
@@ -102,16 +116,6 @@ namespace MagFlow.Web.Extensions
             {
                 options.ValidationInterval = TimeSpan.FromMinutes(30);
             });
-            services.AddAuthorization();
-            services.AddCascadingAuthenticationState();
-            services.AddScoped<UserManager<ApplicationUser>>();
-            services.AddScoped<SignInManager<ApplicationUser>>();
-            services.AddScoped<RoleManager<ApplicationRole>>();
-            services.AddScoped<IdentityRedirectManager>();
-            services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
-            services.AddScoped<IEmailSender<ApplicationUser>>(sp => sp.GetRequiredService<IEmailService>());
-            services.AddScoped<IUserStore<ApplicationUser>, FactoryUserStore>();
-            services.AddScoped<IRoleStore<ApplicationRole>, FactoryRoleStore>();
         }
 
         private static void RegisterScopes(this IServiceCollection services)
@@ -125,7 +129,6 @@ namespace MagFlow.Web.Extensions
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IAuthService, AuthService>();
         }
 
         private static void RegisterRepositories(this IServiceCollection services)

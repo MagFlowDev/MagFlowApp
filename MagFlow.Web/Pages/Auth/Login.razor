@@ -4,13 +4,15 @@
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Domain.Core
 @using MagFlow.Shared.Models.Auth
+@using MagFlow.Web.Auth
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+@inject SignInManager<ApplicationUser> SignInManager
 @inject HttpClient HttpClient
-@inject IAuthService AuthService
 
 <PageTitle>Logowanie</PageTitle>
 
@@ -79,6 +81,11 @@
     {
         Input ??= new();
         editContext = new EditContext(Input);
+
+        if (HttpContext != null && HttpMethods.IsGet(HttpContext.Request.Method))
+        {
+            
+        }
     }
 
     public async Task LoginUser()
@@ -87,12 +94,13 @@
         {
             return;
         }
-        var response = await HttpClient.PostAsJsonAsync("/login", Input);
+        //var response = await HttpClient.PostAsJsonAsync("/login", Input);
+        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
-        if (response.IsSuccessStatusCode)
+        if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
-            NavigationManager.NavigateTo("/", true);
+            RedirectManager.RedirectTo(ReturnUrl);
         }
         else
         {

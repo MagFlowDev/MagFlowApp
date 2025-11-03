@@ -35,6 +35,14 @@
 
 	<WriteLinesToFile File="$(PatchFile)" Lines="$(_NewPatch)" Overwrite="true" Condition="'$(AutoIncrementPatch)'=='True'" />
   </Target>
+
+
+  <ItemGroup>
+    <Compile Remove="Health\**" />
+    <Content Remove="Health\**" />
+    <EmbeddedResource Remove="Health\**" />
+    <None Remove="Health\**" />
+  </ItemGroup>
 	
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
@@ -68,10 +76,7 @@
   </ItemGroup>
 	
   <ItemGroup>
-    <Folder Include="Lobby\" />
-    <Folder Include="Modules\" />
-    <Folder Include="Health\" />
-    <Folder Include="Shared\Components\" />
+    <Folder Include="Pages\Shared\" />
   </ItemGroup>
 
 </Project>
