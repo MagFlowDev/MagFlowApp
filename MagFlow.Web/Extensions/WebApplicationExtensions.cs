@@ -33,10 +33,8 @@ namespace MagFlow.Web.Extensions
             }
 
             app.UseHttpsRedirection();
-            app.UseAntiforgery();
 
-            app.UseAuthorization();
-            app.UseAuthorization();
+            app.UseAntiforgery();
 
             app.MapStaticAssets();
             app.MapRazorComponents<App>()
@@ -46,7 +44,7 @@ namespace MagFlow.Web.Extensions
             return app;
         }
 
-        public static async Task SeedDatabase(this WebApplication app)
+        public static async Task InitializeDatabase(this WebApplication app)
         {
             ILogger? logger = null;
             try
@@ -64,7 +62,7 @@ namespace MagFlow.Web.Extensions
                     {
                         using (var coreDbContext = coreDbContextFactory.CreateDbContext())
                         {
-                            await DbSeeder.Seed(coreDbContext, roleManager, userManager, loggerFactory);
+                            await DbInitializer.Initialize(coreDbContext, roleManager, userManager, loggerFactory);
                         }
                         roleManager.Dispose();
                         userManager.Dispose();

@@ -1,25 +1,27 @@
 ﻿@page "/auth/login"
 
 @using System.ComponentModel.DataAnnotations
+@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Domain.Core
 @using MagFlow.Shared.Models.Auth
+@using MagFlow.Web.Auth
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 
-@inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject HttpClient HttpClient
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>Logowanie</PageTitle>
 
-<h1>Log in</h1>
+<h3>Logowanie</h3>
+
 <div class="row">
     <div class="col-lg-6">
         <section>
-            <StatusMessage Message="@errorMessage" />
-            <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
+            <EditForm EditContext="editContext" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
                 <h2>Use a local account to log in.</h2>
                 <hr />
@@ -78,12 +80,11 @@
     protected override async Task OnInitializedAsync()
     {
         Input ??= new();
-
         editContext = new EditContext(Input);
 
-        if (HttpMethods.IsGet(HttpContext.Request.Method))
+        if (HttpContext != null && HttpMethods.IsGet(HttpContext.Request.Method))
         {
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+            
         }
     }
 
@@ -93,17 +94,13 @@
         {
             return;
         }
-        SignInResult result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        //var response = await HttpClient.PostAsJsonAsync("/login", Input);
+        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
             RedirectManager.RedirectTo(ReturnUrl);
-        }
-        else if (result.IsLockedOut)
-        {
-            Logger.LogWarning("User account locked out.");
-            RedirectManager.RedirectTo("Account/Lockout");
         }
         else
         {
