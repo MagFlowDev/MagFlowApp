@@ -1,11 +1,18 @@
 ﻿@using MagFlow.Web.Pages.Dashboard.Pages
+@using MagFlow.Web.Pages.LandingPage
 @using Microsoft.AspNetCore.Components.Authorization
-<Router AppAssembly="typeof(Program).Assembly">
-    <Found Context="routeData">
-        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Pages.Layouts.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
-    </Found>
-    <NotFound>
-        <NotFound/>
-    </NotFound>
-</Router>
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(Program).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Pages.Layouts.MainLayout)" >
+                <NotAuthorized>
+                    <LandingPage/>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <NotFound/>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
