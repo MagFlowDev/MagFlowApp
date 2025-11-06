@@ -53,18 +53,24 @@ namespace MagFlow.Web.Extensions
                 .WithTracing(tracing =>
                 {
                     tracing
+                        .AddHttpClientInstrumentation()
                         .AddAspNetCoreInstrumentation()
                         .SetResourceBuilder(ResourceBuilder.CreateDefault()
                             .AddService("MagFlow")
-                            .AddTelemetrySdk());
+                            .AddTelemetrySdk())
+                        .AddSource("MagFlowActivitySource")
+                        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
                 })
                 .WithMetrics(metrics =>
                 {
                     metrics
+                        .AddHttpClientInstrumentation()
                         .AddAspNetCoreInstrumentation()
+                        .AddMeter("MagFlowMetrics")
                         .SetResourceBuilder(ResourceBuilder.CreateDefault()
                             .AddService("MagFlow")
-                            .AddTelemetrySdk());
+                            .AddTelemetrySdk())
+                        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
                 });
 
             services.AddMagFlowHealthChecks();

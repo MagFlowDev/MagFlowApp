@@ -6,6 +6,16 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum OrderStatus
+        {
+            Unknown
+        }
+
+        public enum ContractorType
+        {
+            Unknown
+        }
+
         public enum Currency
         {
             PLN = 0,
