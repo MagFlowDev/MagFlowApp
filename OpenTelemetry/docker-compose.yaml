@@ -1,0 +1,65 @@
+version: "2"
+services:
+  # back-ends
+  # http://localhost:9411/zipkin
+  zipkin-all-in-one:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    networks:
+      - telemetrics
+
+  # http://localhost:16686/
+  jaeger-all-in-one:
+    image: jaegertracing/all-in-one:1.46
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "4318:4317"
+      - "16686:16686"
+    networks:
+      - telemetrics
+
+  # http://localhost:9090/
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - telemetrics
+
+  # http://localhost:5341/
+  seq:
+    container_name: seq
+    image: datalust/seq:preview
+    ports:
+      - "5341:80"
+      - "5342:5342"
+      - "45341:45341"
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINPASSWORD=Antigua@123
+    networks:
+      - telemetrics
+
+  # OpenTelemetry Collector
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+      - ./output:/etc/output:rw # Store the logs
+    ports:
+      - "8888:8888"   # Prometheus metrics exposed by the collector
+      - "8889:8889"   # Prometheus exporter metrics
+      - "4317:4317"   # OTLP gRPC receiver
+    depends_on:
+      - zipkin-all-in-one
+    networks:
+      - telemetrics
+      
+networks:
+  telemetrics:

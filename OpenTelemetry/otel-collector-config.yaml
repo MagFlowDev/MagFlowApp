@@ -1,0 +1,67 @@
+# Configure receivers
+# We only need otlp protocol on grpc, but you can use http, zipkin, jaeger, aws, etc.
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+# Configure exporters
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+
+  debug:
+
+  zipkin:
+    endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
+    format: proto
+
+  otlphttp/jaeger:
+    endpoint: "http://jaeger-all-in-one:4318"
+    tls:
+      insecure: true
+
+  otlphttp/seq:
+    endpoint: "http://seq:5341/ingest/otlp"
+    tls:
+      insecure: true
+
+  file:
+    path: /etc/output/logs.json
+
+# Configure processors (batch, sampling, filtering, hashing sensitive data, etc.)
+# https://opentelemetry.io/docs/collector/configuration/#processors
+processors:
+  batch:
+
+# Configure pipelines. Pipeline defines a path the data follows in the Collector
+# starting from reception, then further processing or modification and finally
+# exiting the Collector via exporters.
+# https://opentelemetry.io/docs/collector/configuration/#service
+# https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/design.md#pipelines
+service:
+  telemetry:
+    metrics:
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, zipkin, otlphttp/jaeger]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, prometheus]
+    logs:
+      receivers: [otlp]
+      processors: []
+      exporters: [debug, file, otlphttp/seq]
