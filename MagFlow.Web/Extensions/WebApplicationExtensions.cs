@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace MagFlow.Web.Extensions
@@ -39,6 +41,32 @@ namespace MagFlow.Web.Extensions
             app.MapStaticAssets();
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
+
+            var activitySource = new ActivitySource("MyApplicationActivitySource");
+            var meter = new Meter("MyApplicationMetrics");
+            var requestCounter = meter.CreateCounter<int>("compute_requests");
+            var httpClient = new HttpClient();
+
+            app.MapGet("/test", async (ILogger<Program> logger) =>
+            {
+                requestCounter.Add(1);
+
+                using (var activity = activitySource.StartActivity("Get data"))
+                {
+                    // Add data the the activity
+                    // You can see these data in Zipkin
+                    activity?.AddTag("sample", "value");
+
+                    // Http calls are tracked by AddHttpClientInstrumentation
+                    var str1 = await httpClient.GetStringAsync("https://example.com");
+                    var str2 = await httpClient.GetStringAsync("https://www.meziantou.net");
+
+                    logger.LogInformation("Response1 length: {Length}", str1.Length);
+                    logger.LogInformation("Response2 length: {Length}", str2.Length);
+                }
+
+                return Results.Ok();
+            });
 
             app.MapMagFlowHealthChecks();
             return app;

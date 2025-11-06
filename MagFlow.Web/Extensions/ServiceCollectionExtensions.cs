@@ -49,29 +49,7 @@ namespace MagFlow.Web.Extensions
                 };
             });
 
-            services.AddOpenTelemetry()
-                .WithTracing(tracing =>
-                {
-                    tracing
-                        .AddHttpClientInstrumentation()
-                        .AddAspNetCoreInstrumentation()
-                        .SetResourceBuilder(ResourceBuilder.CreateDefault()
-                            .AddService("MagFlow")
-                            .AddTelemetrySdk())
-                        .AddSource("MagFlowActivitySource")
-                        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
-                })
-                .WithMetrics(metrics =>
-                {
-                    metrics
-                        .AddHttpClientInstrumentation()
-                        .AddAspNetCoreInstrumentation()
-                        .AddMeter("MagFlowMetrics")
-                        .SetResourceBuilder(ResourceBuilder.CreateDefault()
-                            .AddService("MagFlow")
-                            .AddTelemetrySdk())
-                        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
-                });
+            services.ConfigureOpenTelemetry();
 
             services.AddMagFlowHealthChecks();
             return services;
@@ -161,6 +139,35 @@ namespace MagFlow.Web.Extensions
         private static void RegisterRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+        }
+
+        private static void ConfigureOpenTelemetry(this IServiceCollection services)
+        {
+            if (AppSettings.OtelSettings?.Address == null)
+                return;
+            services.AddOpenTelemetry()
+               .WithTracing(tracing =>
+               {
+                   tracing
+                       .AddSource("MagFlowActivitySource")
+                       .AddAspNetCoreInstrumentation()
+                       .AddHttpClientInstrumentation()
+                       .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                           .AddService("MagFlow")
+                           .AddTelemetrySdk())
+                       .AddOtlpExporter(options => options.Endpoint = new Uri(AppSettings.OtelSettings.Address));
+               })
+               .WithMetrics(metrics =>
+               {
+                   metrics
+                       .AddMeter("MagFlowMetrics")
+                       .AddAspNetCoreInstrumentation()
+                       .AddHttpClientInstrumentation()
+                       .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                           .AddService("MagFlow")
+                           .AddTelemetrySdk())
+                       .AddOtlpExporter(options => options.Endpoint = new Uri(AppSettings.OtelSettings.Address));
+               });
         }
     }
 }
