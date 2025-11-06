@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Syncfusion.Blazor;
 
 namespace MagFlow.Web.Extensions
@@ -45,6 +48,30 @@ namespace MagFlow.Web.Extensions
                     BaseAddress = new Uri(navigationManager.BaseUri)
                 };
             });
+
+            services.AddOpenTelemetry()
+                .WithTracing(tracing =>
+                {
+                    tracing
+                        .AddHttpClientInstrumentation()
+                        .AddAspNetCoreInstrumentation()
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                            .AddService("MagFlow")
+                            .AddTelemetrySdk())
+                        .AddSource("MagFlowActivitySource")
+                        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
+                })
+                .WithMetrics(metrics =>
+                {
+                    metrics
+                        .AddHttpClientInstrumentation()
+                        .AddAspNetCoreInstrumentation()
+                        .AddMeter("MagFlowMetrics")
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                            .AddService("MagFlow")
+                            .AddTelemetrySdk())
+                        .AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
+                });
 
             services.AddMagFlowHealthChecks();
             return services;
