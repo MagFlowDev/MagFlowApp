@@ -4,8 +4,9 @@
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        NavigationManager.NavigateTo("/Home");
+        if(firstRender)
+            NavigationManager.NavigateTo("/Home", replace: true);
     }
 }
