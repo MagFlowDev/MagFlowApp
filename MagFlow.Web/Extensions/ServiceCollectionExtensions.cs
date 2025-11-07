@@ -6,6 +6,7 @@ using MagFlow.DAL.Repositories;
 using MagFlow.DAL.Repositories.Interfaces;
 using MagFlow.Domain.Core;
 using MagFlow.EF;
+using MagFlow.EF.MultiTenancy;
 using MagFlow.Shared.Models.Settings;
 using MagFlow.Web.Auth;
 using MagFlow.Web.HealthChecks;
@@ -50,6 +51,7 @@ namespace MagFlow.Web.Extensions
             });
 
             services.ConfigureOpenTelemetry();
+            services.AddHttpContextAccessor();
 
             services.AddMagFlowHealthChecks();
             return services;
@@ -66,10 +68,12 @@ namespace MagFlow.Web.Extensions
 
         private static void ConfigureDbContext(this IServiceCollection services)
         {
-            services.AddDbContextFactory<CoreDbContext, CoreDbContextFactory>();
-            services.AddDbContextFactory<CompanyDbContext, CompanyDbContextFactory>();
+            services.AddScoped<ITenantProvider, TenantProvider>();
+            services.AddScoped<ICompanyContext, CompanyContext>();
             services.AddScoped<ICoreDbContextFactory, CoreDbContextFactory>();
             services.AddScoped<ICompanyDbContextFactory, CompanyDbContextFactory>();
+            services.AddDbContextFactory<CoreDbContext, CoreDbContextFactory>();
+            //services.AddDbContextFactory<CompanyDbContext, CompanyDbContextFactory>();
         }
 
         private static void ConfigureAuthorization(this IServiceCollection services)
@@ -132,6 +136,7 @@ namespace MagFlow.Web.Extensions
 
         private static void RegisterServices(this IServiceCollection services)
         {
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmailService, EmailService>();
         }
@@ -143,7 +148,7 @@ namespace MagFlow.Web.Extensions
 
         private static void ConfigureOpenTelemetry(this IServiceCollection services)
         {
-            if (AppSettings.OtelSettings?.Address == null)
+            if (AppSettings.OtelSettings == null || !AppSettings.OtelSettings.Enabled || string.IsNullOrEmpty(AppSettings.OtelSettings.Address))
                 return;
             services.AddOpenTelemetry()
                .WithTracing(tracing =>

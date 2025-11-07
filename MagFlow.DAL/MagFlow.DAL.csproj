@@ -14,4 +14,8 @@
     <ProjectReference Include="..\MagFlow.EF\MagFlow.EF.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+
 </Project>

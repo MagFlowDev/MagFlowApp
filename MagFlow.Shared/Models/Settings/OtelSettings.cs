@@ -11,6 +11,7 @@ namespace MagFlow.Shared.Models.Settings
     /// </summary>
     public class OtelSettings
     {
+        public bool Enabled { get; set; }
         public string Address { get; set; }
     }
 }

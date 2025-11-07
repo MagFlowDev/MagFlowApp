@@ -12,8 +12,7 @@
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
-@inject SignInManager<ApplicationUser> SignInManager
-@inject HttpClient HttpClient
+@inject IAuthService AuthService
 
 <PageTitle>Logowanie</PageTitle>
 
@@ -95,8 +94,7 @@
         {
             return;
         }
-        //var response = await HttpClient.PostAsJsonAsync("/login", Input);
-        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        var result = await AuthService.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe);
 
         if (result.Succeeded)
         {
