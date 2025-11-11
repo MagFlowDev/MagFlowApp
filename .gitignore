@@ -58,3 +58,6 @@ nunit-*.xml
 
 # Documentation files
 docfx/_site/
+
+# MacOs
+.idea/
