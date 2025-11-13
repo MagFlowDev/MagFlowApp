@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.Helpers;
+﻿using MagFlow.BLL.ApplicationMonitor;
+using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Helpers.Auth;
 using MagFlow.BLL.Services;
 using MagFlow.BLL.Services.Interfaces;
@@ -53,6 +54,8 @@ namespace MagFlow.Web.Extensions
             services.ConfigureOpenTelemetry();
             services.AddHttpContextAccessor();
 
+            services.AddHostedService<ApplicationMonitorHostedService>();
+
             services.AddMagFlowHealthChecks();
             return services;
         }
@@ -99,6 +102,11 @@ namespace MagFlow.Web.Extensions
                 {
                     options.Stores.MaxLengthForKeys = 128;
                     options.SignIn.RequireConfirmedEmail = true;
+                    options.Lockout = new LockoutOptions()
+                    {
+                        MaxFailedAccessAttempts = 10,
+                        DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1)
+                    };
                 })
                 .AddRoles<ApplicationRole>()
                 .AddEntityFrameworkStores<CoreDbContext>()

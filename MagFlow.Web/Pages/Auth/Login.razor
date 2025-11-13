@@ -84,7 +84,7 @@
 
         if (HttpContext != null && HttpMethods.IsGet(HttpContext.Request.Method))
         {
-            
+
         }
     }
 
@@ -98,11 +98,12 @@
 
         if (result.Succeeded)
         {
-            Logger.LogInformation("User logged in.");
+            Logger.LogInformation($"User {Input.Email} logged in via IPv4 address: {HttpContext?.Connection?.RemoteIpAddress?.ToString()}");
             RedirectManager.RedirectTo(ReturnUrl);
         }
         else
         {
+            Logger.LogWarning($"Invalid login attempt from IPv4 address: {HttpContext?.Connection?.RemoteIpAddress?.ToString()}");
             errorMessage = "Error: Invalid login attempt.";
         }
     }
