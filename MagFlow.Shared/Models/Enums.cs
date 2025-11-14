@@ -6,6 +6,13 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum OverallState
+        {
+            Unknown = 0,
+            Operative = 1,
+            Inoperative = 2,
+        }
+
         public enum OrderStatus
         {
             Unknown
