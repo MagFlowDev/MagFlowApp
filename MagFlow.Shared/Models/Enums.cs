@@ -6,6 +6,28 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum Condition
+        {
+            Unknown
+        }
+        
+        public enum ProcessOriginType
+        {
+            Unknown
+        }
+        
+        public enum IODirection
+        {
+            In,
+            Out
+        }
+
+        public enum DocDirection
+        {
+            In,
+            Out
+        }
+        
         public enum OverallState
         {
             Unknown = 0,
@@ -13,6 +35,16 @@ namespace MagFlow.Shared.Models
             Inoperative = 2,
         }
 
+        public enum DocumentStatus
+        {
+            Unknown
+        }
+        
+        public enum ProcessStatus
+        {
+            Unknown
+        }
+        
         public enum OrderStatus
         {
             Unknown

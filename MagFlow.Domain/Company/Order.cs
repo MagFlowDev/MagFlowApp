@@ -20,7 +20,6 @@ namespace MagFlow.Domain.Company
         public int OrderTypeId { get; set; }
         [Required]
         public string OrderNumber { get; set; }
-        [Required]
         public string? ClientOrderNumber { get; set; }
         [Required]
         public Enums.OrderStatus Status { get; set; }

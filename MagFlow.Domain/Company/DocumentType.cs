@@ -1,15 +1,10 @@
-﻿using MagFlow.Shared.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MagFlow.Shared.Models;
 
 namespace MagFlow.Domain.Company
 {
-    public class OrderType
+    public class DocumentType
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,15 +14,10 @@ namespace MagFlow.Domain.Company
         [Required]
         public string Name { get; set; }
         [Required]
-        public Enums.ContractorType ContractorType { get; set; }
+        public Enums.DocDirection Direction { get; set; }
         [Required]
-        public DateTime CreatedAt { get; set; }
-        [Required]
-        public Guid CreatedById { get; set; }
+        public bool IsFinancial { get; set; }
         [Required]
         public bool IsActive { get; set; }
-
-        [ForeignKey(nameof(CreatedById))]
-        public User? CreatedBy { get; set; }
     }
 }
