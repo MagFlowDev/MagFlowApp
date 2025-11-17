@@ -1,3 +1,4 @@
+using MagFlow.BLL.Extensions;
 using MagFlow.Web.Extensions;
 using MagFlow.Web.Helpers;
 using OpenTelemetry.Logs;

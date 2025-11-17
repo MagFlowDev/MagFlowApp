@@ -1,33 +1,35 @@
-﻿using MagFlow.Shared.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MagFlow.Shared.Models;
 
 namespace MagFlow.Domain.Company
 {
-    public class OrderType
+    public class Process
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public string Code { get; set; }
+        public string? Description { get; set; }
         [Required]
-        public string Name { get; set; }
+        public Enums.ProcessOriginType OriginType { get; set; }
         [Required]
-        public Enums.ContractorType ContractorType { get; set; }
+        public int OrderId { get; set; }
+        [Required]
+        public Enums.ProcessStatus Status { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
         [Required]
         public Guid CreatedById { get; set; }
-        [Required]
-        public bool IsActive { get; set; }
-
+        public DateTime? ClosedAt { get; set; }
+        public Guid? ClosedById { get; set; }
+        
+        [ForeignKey(nameof(OrderId))]
+        public Order? Order { get; set; }
         [ForeignKey(nameof(CreatedById))]
         public User? CreatedBy { get; set; }
+        [ForeignKey(nameof(ClosedById))]
+        public User? ClosedBy { get; set; }
     }
 }

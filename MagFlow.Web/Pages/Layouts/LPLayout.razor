@@ -4,19 +4,28 @@
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 
-<div class="main">
-    <div class="control-container">
-        <SfAppBar ColorMode="AppBarColor.Primary">
-            <SfButton CssClass="e-inherit" IconCss="e-icons e-home"></SfButton>
-            <AppBarSpacer></AppBarSpacer>
-            <SfButton CssClass="e-inherit" IconCss="e-icons e-cut"></SfButton>
-            <AppBarSpacer></AppBarSpacer>
-            <SfButton CssClass="e-inherit" IconCss="e-icons e-user" OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))"></SfButton>
-        </SfAppBar>
-    </div>
-    <div class="content">
-        @Body
-    </div>
+<div class="page">
+    <ErrorBoundary>
+        <ChildContent>
+            <div class="main">
+                <div class="control-container">
+                    <SfAppBar ColorMode="AppBarColor.Primary">
+                        <SfButton CssClass="e-inherit" IconCss="e-icons e-home"></SfButton>
+                        <AppBarSpacer></AppBarSpacer>
+                        <SfButton CssClass="e-inherit" IconCss="e-icons e-cut"></SfButton>
+                        <AppBarSpacer></AppBarSpacer>
+                        <SfButton CssClass="e-inherit" IconCss="e-icons e-user" OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))"></SfButton>
+                    </SfAppBar>
+                </div>
+                <div class="content">
+                    @Body
+                </div>
+            </div>
+        </ChildContent>
+        <ErrorContent Context="exception">
+            <ErrorPage Exception="exception" />
+        </ErrorContent>
+    </ErrorBoundary>
 </div>
 
 @code {
