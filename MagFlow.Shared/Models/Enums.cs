@@ -6,6 +6,21 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum RemovalReason
+        {
+            Unknown
+        }
+        
+        public enum ValueType
+        {
+            Unknown
+        }
+        
+        public enum ImpactType
+        {
+            Unknown
+        }
+        
         public enum Condition
         {
             Unknown
@@ -26,6 +41,11 @@ namespace MagFlow.Shared.Models
         {
             In,
             Out
+        }
+
+        public enum ItemStatus
+        {
+            Unknown
         }
         
         public enum OverallState
