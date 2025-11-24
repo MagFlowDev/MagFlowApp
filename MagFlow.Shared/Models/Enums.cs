@@ -6,6 +6,13 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum Result
+        {
+            Unknown,
+            Error,
+            Success
+        }
+
         public enum RemovalReason
         {
             Unknown

@@ -4,6 +4,8 @@ using MagFlow.BLL.Helpers.Auth;
 using MagFlow.BLL.Services;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories;
+using MagFlow.DAL.Repositories.Core;
+using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.DAL.Repositories.Interfaces;
 using MagFlow.Domain.Core;
 using MagFlow.EF;
@@ -152,6 +154,7 @@ namespace MagFlow.Web.Extensions
         private static void RegisterRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
         }
 
         private static void ConfigureOpenTelemetry(this IServiceCollection services)
