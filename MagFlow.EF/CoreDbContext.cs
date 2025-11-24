@@ -49,6 +49,24 @@ namespace MagFlow.EF
             builder.Entity<ApplicationUserRole>(entity =>
             {
                 entity.ToTable(name: "UserRoles");
+
+                var roleId = (Microsoft.EntityFrameworkCore.Metadata.Internal.Property)entity.Metadata.FindProperty("RoleId");
+                var roleIdFk = entity.Metadata.FindForeignKeys(roleId).Single();
+                entity.Metadata.RemoveForeignKey(roleIdFk);
+                var roleId1 = entity.Metadata.FindProperty("RoleId1");
+                var roleId1Fk = entity.Metadata.FindForeignKeys(roleId1).Single();
+                var applicationRolePk = builder.Entity<ApplicationRole>().Metadata.FindPrimaryKey();
+                roleId1Fk.SetProperties(new List<Microsoft.EntityFrameworkCore.Metadata.Internal.Property> { roleId }, applicationRolePk);
+                entity.Metadata.RemoveProperty(roleId1);
+
+                var userId = (Microsoft.EntityFrameworkCore.Metadata.Internal.Property)entity.Metadata.FindProperty("UserId");
+                var userIdFk = entity.Metadata.FindForeignKeys(userId).Single();
+                entity.Metadata.RemoveForeignKey(userIdFk);
+                var userId1 = entity.Metadata.FindProperty("UserId1");
+                var userId1Fk = entity.Metadata.FindForeignKeys(userId1).Single();
+                var applicationUserPk = builder.Entity<ApplicationUser>().Metadata.FindPrimaryKey();
+                userId1Fk.SetProperties(new List<Microsoft.EntityFrameworkCore.Metadata.Internal.Property> { userId }, applicationUserPk);
+                entity.Metadata.RemoveProperty(userId1);
             });
             builder.Entity<ApplicationUserClaim>(entity =>
             {
@@ -77,6 +95,8 @@ namespace MagFlow.EF
             builder.Entity<ApplicationUser>().HasMany(l => l.EventLogs).WithOne(u => u.User);
             builder.Entity<ApplicationUser>().HasMany(n => n.Notifications).WithOne(u => u.User);
             builder.Entity<ApplicationUser>().HasMany(s => s.Sessions).WithOne(u => u.User);
+            builder.Entity<ApplicationUser>().HasMany(r => r.Roles).WithOne(u => u.User);
+            builder.Entity<ApplicationRole>().HasMany(u => u.Users).WithOne(r => r.Role);
             builder.Entity<UserNotification>().HasOne(n => n.Notification);
             builder.Entity<AuditLog>().HasMany(lc => lc.Changes).WithOne(l => l.AuditLog);
             builder.Entity<Company>().HasMany(m => m.Modules).WithOne(c => c.Company);

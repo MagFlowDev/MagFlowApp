@@ -3,26 +3,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.Company
 {
-    public class MachineFunction
+    public class ProductType
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
+        public string Code { get; set; }
+        [Required]
         public string Name { get; set; }
         [Required]
-        public string Code { get; set; }
-        public string? Description { get; set; }
-        [Required]
-        public DateTime CreatedAt { get; set; }
-        [Required]
-        public Guid CreatedById { get; set; }
+        public bool IsBasic { get; set; }
         [Required]
         public bool IsActive { get; set; }
-        
-        [ForeignKey(nameof(CreatedById))]
-        public User? CreatedBy { get; set; }
-
-        public ICollection<MachineParameterImpact> Impacts { get; set; }
     }
 }

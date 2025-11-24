@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MagFlow.Shared.Models;
 
 namespace MagFlow.Domain.Company
 {
-    public class MachineFunction
+    public class FunctionParameter
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -12,17 +13,13 @@ namespace MagFlow.Domain.Company
         public string Name { get; set; }
         [Required]
         public string Code { get; set; }
+        [Required]
+        public Enums.ValueType ValueType { get; set; }
+        [Required]
+        public int UnitId { get; set; }
         public string? Description { get; set; }
-        [Required]
-        public DateTime CreatedAt { get; set; }
-        [Required]
-        public Guid CreatedById { get; set; }
-        [Required]
-        public bool IsActive { get; set; }
         
-        [ForeignKey(nameof(CreatedById))]
-        public User? CreatedBy { get; set; }
-
-        public ICollection<MachineParameterImpact> Impacts { get; set; }
+        [ForeignKey(nameof(UnitId))]
+        public Unit? Unit { get; set; }
     }
 }

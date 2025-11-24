@@ -32,6 +32,9 @@ namespace MagFlow.Domain.Company
         public Machine? Machine { get; set; }
         [ForeignKey(nameof(MachineFunctionId))]
         public MachineFunction? MachineFunction { get; set; }
+
+        public ICollection<ProcessStepIO> StepIO { get; set; }
+        public ICollection<ProcessStepParameter> Parameters { get; set; }
         
     }
 }

@@ -1,15 +1,11 @@
 ﻿using MagFlow.Domain.Core;
-using MagFlow.EF;
 using MagFlow.EF.Seeds.Company;
 using MagFlow.EF.Seeds.Core;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace MagFlow.BLL.Helpers
+namespace MagFlow.EF
 {
     public static class DbInitializer
     {
@@ -18,7 +14,7 @@ namespace MagFlow.BLL.Helpers
             UserManager<ApplicationUser> userManager, 
             ILoggerFactory? loggerFactory)
         {
-            ILogger? logger = loggerFactory?.CreateLogger($"{nameof(MagFlow)}.{nameof(BLL)}.{nameof(Helpers)}.{nameof(DbInitializer)}");
+            ILogger? logger = loggerFactory?.CreateLogger($"{typeof(DbInitializer).FullName}");
             try
             {
                 logger?.LogInformation("Database initializing process started...");
@@ -37,7 +33,6 @@ namespace MagFlow.BLL.Helpers
 
         private static async Task MigrateCompanies(CoreDbContext coreDbContext, ILogger? logger)
         {
-
             var companies = await coreDbContext.Companies.ToListAsync();
             foreach(var company in companies)
             {

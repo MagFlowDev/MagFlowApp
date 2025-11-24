@@ -31,5 +31,8 @@ namespace MagFlow.Domain.Company
         public User? CreatedBy { get; set; }
         [ForeignKey(nameof(ClosedById))]
         public User? ClosedBy { get; set; }
+
+        public ICollection<ProcessDocument> Documents { get; set; }
+        public ICollection<ProcessStep> Steps { get; set; }
     }
 }

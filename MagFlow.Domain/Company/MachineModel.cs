@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.Company
 {
-    public class MachineFunction
+    public class MachineModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -12,6 +12,8 @@ namespace MagFlow.Domain.Company
         public string Name { get; set; }
         [Required]
         public string Code { get; set; }
+        [Required]
+        public string Manufacturer { get; set; }
         public string? Description { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
@@ -23,6 +25,8 @@ namespace MagFlow.Domain.Company
         [ForeignKey(nameof(CreatedById))]
         public User? CreatedBy { get; set; }
 
-        public ICollection<MachineParameterImpact> Impacts { get; set; }
+        public ICollection<Machine> Machines { get; set; }
+        public ICollection<MachineModelFunction> Functions { get; set; }
+        public ICollection<MachineModelParameter> Parameters { get; set; }
     }
 }

@@ -8,6 +8,25 @@ namespace MagFlow.Domain.Company
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int ProcessId { get; set; }
+        [Required]
+        public int MachineModelId { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Code { get; set; }
+        public string? Location { get; set; }
+        [Required]
+        public DateTime InstallationDate { get; set; }
+        [Required]
+        public DateTime CreatedAt { get; set; }
+        [Required]
+        public Guid CreatedById { get; set; }
+        [Required]
+        public bool IsActive { get; set; }
+        
+        [ForeignKey(nameof(MachineModelId))]
+        public MachineModel? MachineModel { get; set; }
+        [ForeignKey(nameof(CreatedById))]
+        public User? CreatedBy { get; set; }
     }
 }

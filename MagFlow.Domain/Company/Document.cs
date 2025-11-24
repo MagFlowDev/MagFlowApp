@@ -44,5 +44,14 @@ namespace MagFlow.Domain.Company
         public Document? RelatedDocument { get; set; }
         [ForeignKey(nameof(DocumentTypeId))]
         public DocumentType? DocumentType { get; set; }
+        [ForeignKey(nameof(CreatedById))]
+        public User? CreatedBy { get; set; }
+        [ForeignKey(nameof(ConfirmedById))]
+        public User? ConfirmedBy { get; set; }
+
+
+        public ICollection<OrderDocument> Orders { get; set; }
+        public ICollection<ProcessDocument> Processes { get; set; }
+        public ICollection<DocumentItem> Items { get; set; }
     }
 }

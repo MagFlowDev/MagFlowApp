@@ -29,5 +29,6 @@ namespace MagFlow.Domain.Core
         public ICollection<UserNotification> Notifications { get; set; }
         public ICollection<AuditLog> AuditLogs { get; set; }
         public ICollection<EventLog> EventLogs { get; set; }
+        public ICollection<ApplicationUserRole> Roles { get; set; }
     }
 }
