@@ -5,11 +5,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MagFlow.Shared.Constants;
 
 namespace MagFlow.EF.Seeds.Core
 {
     public class RoleSeeder : ICoreSeeder
     {
+        private string[] roles = new[]
+        {
+            AppRoles.Foreman,
+            AppRoles.Operator,
+            AppRoles.Auditor,
+            AppRoles.Supervisor,
+            AppRoles.CompanyAdmin,
+            AppRoles.SysAdmin,
+            AppRoles.SuperAdmin
+        };
+        
         public void Seed(CoreDbContext context)
         {
             Task.Run(async () => await SeedAsync(context, CancellationToken.None));
@@ -50,6 +62,22 @@ namespace MagFlow.EF.Seeds.Core
                 }
             }
 
+            foreach (var role in roles.Where(x => x != AppRoles.SuperAdmin))
+            {
+                var dbRole = await context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == role.ToUpper());
+                if (dbRole == null)
+                {
+                    dbRole = new ApplicationRole
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = role.ToString(),
+                        NormalizedName = role.ToUpper()
+                    };
+                    await context.ApplicationRoles.AddAsync(dbRole);
+                    seed = true;
+                }
+            }
+            
             if (seed)
                 await context.SaveChangesAsync();
         }
