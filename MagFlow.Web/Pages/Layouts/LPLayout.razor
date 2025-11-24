@@ -8,15 +8,51 @@
     <ErrorBoundary>
         <ChildContent>
             <div class="main">
-                <div class="control-container">
-                    <SfAppBar ColorMode="AppBarColor.Primary">
-                        <SfButton CssClass="e-inherit" IconCss="e-icons e-home"></SfButton>
-                        <AppBarSpacer></AppBarSpacer>
-                        <SfButton CssClass="e-inherit" IconCss="e-icons e-cut"></SfButton>
-                        <AppBarSpacer></AppBarSpacer>
-                        <SfButton CssClass="e-inherit" IconCss="e-icons e-user" OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))"></SfButton>
-                    </SfAppBar>
-                </div>
+                <nav class="control-container" style="border-bottom: 1px solid #DEE2E6; background: #FFF; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08); height: 64px;">
+                    <div style="width: 100%; height: 100%; padding-left: 12px; padding-right: 12px; justify-content: space-between; align-items: center; display: inline-flex">
+                        <SfAppBar ColorMode="AppBarColor.Inherit" CssClass="justify-content-start align-items-center d-md-flex border-0">
+                            <a href="/" style="justify-content: flex-start; align-items: center; gap: 16px; display: inline-flex">
+                                <div style="width: 40px; height: 40px; padding-right: 0.01px; background: #0D6EFD; border-radius: 6px; justify-content: center; align-items: center; display: flex">
+                                    <div style="width: 17.48px; height: 30px; position: relative">
+                                        <div style="left: 0px; top: 0px; position: absolute; color: white; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 30px; word-wrap: break-word">M</div>
+                                    </div>
+                                </div>
+                                <div style="width: 134px; height: 42px; position: relative">
+                                    <div style="width: 136px; left: 0px; top: 0.50px; position: absolute; color: #212529; font-size: 28px; font-family: Inter; font-weight: 700; line-height: 42px; letter-spacing: 0.38px; word-wrap: break-word">MagFlow</div>
+                                </div>
+                            </a>
+                            <AppBarSpacer></AppBarSpacer>
+                            <div style="justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
+                                <SfTab>
+                                    <TabItems>
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Home"></TabHeader>
+                                            </ChildContent>
+                                        </TabItem>
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Product Features"></TabHeader>
+                                            </ChildContent>
+                                        </TabItem>
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Pricing"></TabHeader>
+                                            </ChildContent>
+                                        </TabItem>
+                                        <TabItem>
+                                            <ChildContent>
+                                                <TabHeader Text="Contact"></TabHeader>
+                                            </ChildContent>
+                                        </TabItem>
+                                    </TabItems>
+                                </SfTab>
+                            </div>
+                            <AppBarSpacer></AppBarSpacer>
+                            <SfButton CssClass="rounded-button" IsPrimary="true" OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))">Sign In</SfButton>
+                        </SfAppBar>
+                    </div>
+                </nav>
                 <div class="content">
                     @Body
                 </div>
@@ -29,74 +65,15 @@
 </div>
 
 @code {
-    private List<ColorData> AppBarColors { get; set; } = new List<ColorData>() {
-        new ColorData { ColorMode = "Light", ColorClass = " e-light", AppBarColorMode = AppBarColor.Light, IsPrimary = true, LoginClass = "login" },
-        new ColorData { ColorMode = "Dark", ColorClass = " e-dark", AppBarColorMode = AppBarColor.Dark, IsPrimary = false, LoginClass = "e-inherit login" },
-        new ColorData { ColorMode = "Primary", ColorClass = " e-primary", AppBarColorMode = AppBarColor.Primary, IsPrimary = false, LoginClass = "e-inherit login" },
-        new ColorData { ColorMode = "Inherit", ColorClass = "", AppBarColorMode = AppBarColor.Inherit, IsPrimary = true, LoginClass = "login" }
-    };
-    private ColorData AppBar { get; set; } = new ColorData { ColorMode = "Light", ColorClass = " e-light", AppBarColorMode = AppBarColor.Light, IsPrimary = true, LoginClass = "login" };
-    public class ColorData
-    {
-        public string ColorMode { get; set; }
-        public string ColorClass { get; set; }
-        public AppBarColor AppBarColorMode { get; set; }
-        public string InputFocus { get; set; }
-        public bool IsPrimary { get; set; }
-        public string LoginClass { get; set; }
-    }
+    
 }
 <style>
-    .appbar-control-section .e-dropdown-btn.e-inherit,
-    .appbar-control-section .e-btn.e-inherit.home {
-        margin: 0 5px;
-    }
-
-    .appbar-control-section .e-appbar .e-appbar-separator {
-        margin: 0 10px;
-    }
-
-    .appbar-control-section .e-appbar-icon-menu {
-        display: none;
-    }
-
-    @@media screen and (max-width: 480px) {
-        .appbar-control-section .e-appbar-icon-menu {
-            display: block;
-        }
-
-        .appbar-control-section .login,
-        .appbar-control-section .e-appbar-separator,
-        .appbar-control-section .e-dropdown-btn.e-inherit.e-appbar-menu,
-        .appbar-control-section .e-menu-container.e-inherit.e-appbar-menu,
-        .appbar-control-section .e-menu-container.e-inherit.e-appbar-icon-menu .e-menu .e-menu-item .e-caret,
-        .appbar-control-section .e-btn.e-inherit.e-appbar-menu {
-            display: none;
-        }
-
-        .appbar-control-section .e-menu-container.e-inherit.e-appbar-icon-menu ul .e-menu-item.e-menu-caret-icon {
-            padding: 0 8px;
-        }
-
-        .appbar-control-section .e-menu-container.e-inherit ul .e-menu-item .e-menu-icon {
-            margin-right: 0;
-        }
-
-        .appbar-control-section .e-menu-container.e-inherit {
-            margin: 0 10px;
-        }
-
-        .fabric .appbar-control-section .e-menu-container.e-inherit ul.e-menu:not(.e-vertical),
-        .fabric-dark .appbar-control-section .e-menu-container.e-inherit ul.e-menu:not(.e-vertical) {
-            padding: 0;
-        }
-
-        .appbar-control-section .e-input-group.e-control-wrapper.e-inherit {
-            margin-left: 10px;
-        }
-
-        .appbar-control-section .menu {
-            margin-bottom: 3px;
-        }
+    .rounded-button {
+        font-size: 16px;
+        font-family: Helvetica Neue;
+        font-weight: 400;
+        line-height: 24px;
+        word-wrap: break-word;
+        border-radius: 1000px;
     }
 </style>
