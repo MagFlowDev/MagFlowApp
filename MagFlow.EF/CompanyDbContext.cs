@@ -1,4 +1,5 @@
 ﻿using MagFlow.Domain.Company;
+using MagFlow.Shared.Models.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
@@ -33,6 +34,7 @@ namespace MagFlow.EF
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<OrderType> OrderTypes { get; set; }
         public DbSet<Process> Processes { get; set; }
+        public DbSet<ProcessDocument> ProcessDocuments { get; set; }
         public DbSet<ProcessStep> ProcessSteps { get; set; }
         public DbSet<ProcessStepIO> ProcessStepIO { get; set; }
         public DbSet<ProcessStepParameter> ProcessStepParameters { get; set; }
@@ -54,9 +56,39 @@ namespace MagFlow.EF
         {
         }
 
+        public CompanyDbContext() : base(BuildOptions(AppSettings.ConnectionStrings.CompanyDb))
+        {
+
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+
+            builder.Entity<Contractor>().HasMany(c => c.Orders).WithOne(o => o.Contractor);
+            builder.Entity<Contractor>().HasMany(c => c.Documents).WithOne(d => d.Contractor);
+            builder.Entity<Document>().HasMany(d => d.Orders).WithOne(o => o.Document);
+            builder.Entity<Document>().HasMany(d => d.Items).WithOne(i => i.DocumentHeader);
+            builder.Entity<Document>().HasMany(d => d.Processes).WithOne(p => p.Document);
+            builder.Entity<Item>().HasMany(i => i.Parameters).WithOne(p => p.Item);
+            builder.Entity<MachineFunction>().HasMany(m => m.Impacts).WithOne(i => i.MachineFunction);
+            builder.Entity<MachineModel>().HasMany(m => m.Machines).WithOne(x => x.MachineModel);
+            builder.Entity<MachineModel>().HasMany(m => m.Functions).WithOne(f => f.MachineModel);
+            builder.Entity<MachineModel>().HasMany(m => m.Parameters).WithOne(p => p.MachineModel);
+            builder.Entity<MachineModelFunction>().HasMany(m => m.Parameters).WithOne(p => p.MachineModelFunction);
+            builder.Entity<MachineModelFunction>().HasMany(m => m.Products).WithOne(p => p.MachineModelFunction);
+            builder.Entity<MachineParameter>().HasMany(m => m.Impacts).WithOne(i => i.MachineParameter);
+            builder.Entity<Order>().HasMany(o => o.Deliveries).WithOne(d => d.Order);
+            builder.Entity<Order>().HasMany(o => o.Documents).WithOne(d => d.Order);
+            builder.Entity<Order>().HasMany(o => o.Items).WithOne(i => i.Order);
+            builder.Entity<Process>().HasMany(p => p.Documents).WithOne(d => d.Process);
+            builder.Entity<Process>().HasMany(p => p.Steps).WithOne(s => s.Process);
+            builder.Entity<Product>().HasMany(c => c.Components).WithOne(p => p.Product);
+            builder.Entity<Product>().HasMany(c => c.Parameters).WithOne(p => p.Product);
+            builder.Entity<Product>().HasMany(c => c.Conversions).WithOne(p => p.Product);
+            builder.Entity<Warehouse>().HasMany(w => w.Storages).WithOne(s => s.Warehouse);
+            builder.Entity<Warehouse>().HasMany(w => w.Items).WithOne(i => i.Warehouse);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

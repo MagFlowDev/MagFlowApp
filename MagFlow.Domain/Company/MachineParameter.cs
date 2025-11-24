@@ -21,5 +21,7 @@ namespace MagFlow.Domain.Company
         
         [ForeignKey(nameof(UnitId))]
         public Unit? Unit { get; set; }
+
+        public ICollection<MachineParameterImpact> Impacts { get; set; }
     }
 }

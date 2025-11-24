@@ -55,5 +55,7 @@ namespace MagFlow.Domain.Company
         public User? CreatedBy { get; set; }
         [ForeignKey(nameof(RemovedById))]
         public User? RemovedBy { get; set; }
+
+        public ICollection<ItemParameter> Parameters { get; set; }
     }
 }

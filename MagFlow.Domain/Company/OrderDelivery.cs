@@ -31,5 +31,7 @@ namespace MagFlow.Domain.Company
         public Contractor? Supplier { get; set; }
         [ForeignKey(nameof(CreatedById))]
         public User? CreatedBy { get; set; }
+
+        public ICollection<OrderDeliveryItem> Items { get; set; }
     }
 }

@@ -33,5 +33,8 @@ namespace MagFlow.Domain.Company
         
         [ForeignKey(nameof(CreatedById))]
         public User? CreatedBy { get; set; }
+
+        public ICollection<Order> Orders { get; set; }
+        public ICollection<Document> Documents { get; set; }
     }
 }

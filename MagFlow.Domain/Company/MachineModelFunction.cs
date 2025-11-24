@@ -18,5 +18,9 @@ namespace MagFlow.Domain.Company
         public MachineModel? MachineModel { get; set; }
         [ForeignKey(nameof(MachineFunctionId))]
         public MachineFunction? MachineFunction { get; set; }
+
+        public ICollection<MachineFunctionParameter> Parameters { get; set; }
+        public ICollection<MachineFunctionProduct> Products { get; set; }
+
     }
 }

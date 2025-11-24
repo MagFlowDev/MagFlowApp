@@ -39,5 +39,9 @@ namespace MagFlow.Domain.Company
         public Unit? Unit { get; set; }
         [ForeignKey(nameof(CreatedById))]
         public User? CreatedBy { get; set; }
+
+        public ICollection<ProductComponent> Components { get; set; }
+        public ICollection<ProductParameter> Parameters { get; set; }
+        public ICollection<ProductUnitConversion> Conversions { get; set; }
     }
 }

@@ -24,5 +24,9 @@ namespace MagFlow.Domain.Company
         
         [ForeignKey(nameof(CreatedById))]
         public User? CreatedBy { get; set; }
+
+        public ICollection<Machine> Machines { get; set; }
+        public ICollection<MachineModelFunction> Functions { get; set; }
+        public ICollection<MachineModelParameter> Parameters { get; set; }
     }
 }

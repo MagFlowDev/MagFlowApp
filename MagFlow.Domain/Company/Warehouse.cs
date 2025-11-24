@@ -16,5 +16,7 @@ namespace MagFlow.Domain.Company
         [Required]
         public bool IsActive { get; set; }
         
+        public ICollection<Item> Items { get; set; }
+        public ICollection<WarehouseStorage> Storages { get; set; }
     }
 }

@@ -41,5 +41,9 @@ namespace MagFlow.Domain.Company
         public User? CreatedBy { get; set; }
         [ForeignKey(nameof(ConfirmedById))]
         public User? ConfirmedBy { get; set; }
+
+        public ICollection<OrderDelivery> Deliveries { get; set; }
+        public ICollection<OrderDocument> Documents { get; set; }
+        public ICollection<OrderItem> Items { get; set; }
     }
 }

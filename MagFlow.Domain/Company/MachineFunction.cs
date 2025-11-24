@@ -22,5 +22,7 @@ namespace MagFlow.Domain.Company
         
         [ForeignKey(nameof(CreatedById))]
         public User? CreatedBy { get; set; }
+
+        public ICollection<MachineParameterImpact> Impacts { get; set; }
     }
 }
