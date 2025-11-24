@@ -2,6 +2,6 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ActiveDebugProfile>https</ActiveDebugProfile>
-    <NameOfLastUsedPublishProfile>WindowsRelease</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>F:\MagFlow\MagFlowApp\MagFlow.Web\Properties\PublishProfiles\WindowsRelease.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
