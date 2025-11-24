@@ -89,6 +89,8 @@ namespace MagFlow.EF
             builder.Entity<Product>().HasMany(c => c.Conversions).WithOne(p => p.Product);
             builder.Entity<Warehouse>().HasMany(w => w.Storages).WithOne(s => s.Warehouse);
             builder.Entity<Warehouse>().HasMany(w => w.Items).WithOne(i => i.Warehouse);
+
+            
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

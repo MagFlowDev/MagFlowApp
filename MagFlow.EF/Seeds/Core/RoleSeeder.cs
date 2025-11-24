@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MagFlow.Domain.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,33 @@ namespace MagFlow.EF.Seeds.Core
             var superAdminRole = await context.ApplicationRoles.FirstOrDefaultAsync(r => r.NormalizedName == "SUPERADMIN");
             if (superAdminRole == null)
             {
-                
+                superAdminRole = new ApplicationRole
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "SuperAdmin",
+                    NormalizedName = "SUPERADMIN"
+                };
+                await context.ApplicationRoles.AddAsync(superAdminRole);
+                var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
+                if (adminUser != null)
+                {
+                    ApplicationUserRole superAdmin = new ApplicationUserRole { RoleId = superAdminRole.Id, UserId = adminUser.Id };
+                    await context.UserRoles.AddAsync(superAdmin);
+                }
+                seed = true;
+            }
+            else
+            {
+                var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
+                if(adminUser != null)
+                {
+                    if(!await context.UserRoles.AnyAsync(x => x.UserId == adminUser.Id && x.RoleId == superAdminRole.Id))
+                    {
+                        ApplicationUserRole superAdmin = new ApplicationUserRole { RoleId = superAdminRole.Id, UserId = adminUser.Id };
+                        await context.UserRoles.AddAsync(superAdmin);
+                        seed = true;
+                    }
+                }
             }
 
             if (seed)
