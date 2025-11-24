@@ -90,7 +90,46 @@ namespace MagFlow.EF
             builder.Entity<Warehouse>().HasMany(w => w.Storages).WithOne(s => s.Warehouse);
             builder.Entity<Warehouse>().HasMany(w => w.Items).WithOne(i => i.Warehouse);
 
-            
+            builder.Entity<CustomParameter>().HasOne(x => x.Unit).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<FunctionParameter>().HasOne(x => x.Unit).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<MachineParameter>().HasOne(x => x.Unit).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<MachineParameterImpact>().HasOne(x => x.Unit).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Product>().HasOne(x => x.Unit).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<ProductUnitConversion>().HasOne(x => x.FromUnit).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<ProductUnitConversion>().HasOne(x => x.ToUnit).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<MachineModelFunction>().HasOne(x => x.MachineModel).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<MachineFunctionParameter>().HasOne(x => x.MachineModelFunction).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<MachineFunctionParameter>().HasOne(x => x.FunctionParameter).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<MachineFunctionProduct>().HasOne(x => x.MachineModelFunction).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Machine>().HasOne(x => x.MachineModel).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Order>().HasOne(x => x.OrderType).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Order>().HasOne(x => x.Contractor).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<OrderDelivery>().HasOne(x => x.Order).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<OrderDelivery>().HasOne(x => x.Document).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<OrderDeliveryItem>().HasOne(x => x.OrderDelivery).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<OrderItem>().HasOne(x => x.Order).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Document>().HasOne(x => x.DocumentType).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<ProductComponent>().HasOne(x => x.Product).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<ProductComponent>().HasOne(x => x.Component).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Product>().HasOne(x => x.Type).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.Product).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.Warehouse).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.Storage).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.RemovedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Contractor>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Document>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Machine>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<MachineFunction>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<MachineModel>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Order>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<OrderDelivery>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<OrderType>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Process>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Product>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Document>().HasOne(x => x.ConfirmedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Order>().HasOne(x => x.ConfirmedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

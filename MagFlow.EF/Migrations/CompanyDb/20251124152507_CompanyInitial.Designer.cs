@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MagFlow.EF.Migrations.CompanyDb
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20251124115439_Update1")]
-    partial class Update1
+    [Migration("20251124152507_CompanyInitial")]
+    partial class CompanyInitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,7 +172,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ConfirmedById");
+
                     b.HasIndex("ContractorId");
+
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("DocumentTypeId");
 
@@ -388,6 +392,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int>("WarehouseId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("WarehouseId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
@@ -399,6 +406,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasIndex("StorageId");
 
                     b.HasIndex("WarehouseId");
+
+                    b.HasIndex("WarehouseId1");
 
                     b.ToTable("Items");
                 });
@@ -460,6 +469,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int>("MachineModelId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MachineModelId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -469,6 +481,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("MachineModelId");
+
+                    b.HasIndex("MachineModelId1");
 
                     b.ToTable("Machines");
                 });
@@ -529,6 +543,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int>("MachineModelFunctionId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MachineModelFunctionId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("MaxValue")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -545,6 +562,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasIndex("FunctionParameterId");
 
                     b.HasIndex("MachineModelFunctionId");
+
+                    b.HasIndex("MachineModelFunctionId1");
 
                     b.ToTable("MachineFunctionParameters");
                 });
@@ -566,6 +585,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int>("MachineModelFunctionId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MachineModelFunctionId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
@@ -575,6 +597,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasKey("Id");
 
                     b.HasIndex("MachineModelFunctionId");
+
+                    b.HasIndex("MachineModelFunctionId1");
 
                     b.HasIndex("ProductId");
 
@@ -634,6 +658,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int>("MachineModelId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("MachineModelId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
@@ -642,6 +669,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasIndex("MachineFunctionId");
 
                     b.HasIndex("MachineModelId");
+
+                    b.HasIndex("MachineModelId1");
 
                     b.ToTable("MachineModelFunctions");
                 });
@@ -761,6 +790,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int>("ContractorId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ContractorId1")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -788,6 +820,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasIndex("ConfirmedById");
 
                     b.HasIndex("ContractorId");
+
+                    b.HasIndex("ContractorId1");
 
                     b.HasIndex("CreatedById");
 
@@ -822,6 +856,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("OrderId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
@@ -832,6 +869,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasIndex("DocumentId");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("OrderId1");
 
                     b.HasIndex("SupplierId");
 
@@ -849,6 +888,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int>("OrderDeliveryId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("OrderDeliveryId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("OrderItemId")
                         .HasColumnType("int");
 
@@ -859,6 +901,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasKey("Id");
 
                     b.HasIndex("OrderDeliveryId");
+
+                    b.HasIndex("OrderDeliveryId1");
 
                     b.HasIndex("OrderItemId");
 
@@ -905,6 +949,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("OrderId1")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
@@ -923,6 +970,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("OrderId1");
 
                     b.HasIndex("ProductId");
 
@@ -1218,6 +1267,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductId1")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Quantity")
                         .HasPrecision(8, 2)
                         .HasColumnType("decimal(8,2)");
@@ -1227,6 +1279,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasIndex("ComponentId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("ProductId1");
 
                     b.ToTable("ProductComponents");
                 });
@@ -1416,7 +1470,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
@@ -1427,7 +1481,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Unit");
@@ -1435,14 +1489,25 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.Company.Document", b =>
                 {
+                    b.HasOne("MagFlow.Domain.Company.User", "ConfirmedBy")
+                        .WithMany()
+                        .HasForeignKey("ConfirmedById")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("MagFlow.Domain.Company.Contractor", "Contractor")
                         .WithMany("Documents")
                         .HasForeignKey("ContractorId");
 
+                    b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("MagFlow.Domain.Company.DocumentType", "DocumentType")
                         .WithMany()
                         .HasForeignKey("DocumentTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.Order", "Order")
@@ -1461,7 +1526,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .WithMany()
                         .HasForeignKey("WarehouseToId");
 
+                    b.Navigation("ConfirmedBy");
+
                     b.Navigation("Contractor");
+
+                    b.Navigation("CreatedBy");
 
                     b.Navigation("DocumentType");
 
@@ -1512,7 +1581,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Unit");
@@ -1523,28 +1592,34 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.User", "RemovedBy")
                         .WithMany()
-                        .HasForeignKey("RemovedById");
+                        .HasForeignKey("RemovedById")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MagFlow.Domain.Company.WarehouseStorage", "Storage")
                         .WithMany()
-                        .HasForeignKey("StorageId");
+                        .HasForeignKey("StorageId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MagFlow.Domain.Company.Warehouse", "Warehouse")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("MagFlow.Domain.Company.Warehouse", null)
+                        .WithMany("Items")
+                        .HasForeignKey("WarehouseId1");
 
                     b.Navigation("CreatedBy");
 
@@ -1581,14 +1656,18 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.MachineModel", "MachineModel")
-                        .WithMany("Machines")
+                        .WithMany()
                         .HasForeignKey("MachineModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("MagFlow.Domain.Company.MachineModel", null)
+                        .WithMany("Machines")
+                        .HasForeignKey("MachineModelId1");
 
                     b.Navigation("CreatedBy");
 
@@ -1600,7 +1679,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
@@ -1611,14 +1690,18 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.FunctionParameter", "FunctionParameter")
                         .WithMany()
                         .HasForeignKey("FunctionParameterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.MachineModelFunction", "MachineModelFunction")
-                        .WithMany("Parameters")
+                        .WithMany()
                         .HasForeignKey("MachineModelFunctionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("MagFlow.Domain.Company.MachineModelFunction", null)
+                        .WithMany("Parameters")
+                        .HasForeignKey("MachineModelFunctionId1");
 
                     b.Navigation("FunctionParameter");
 
@@ -1628,10 +1711,14 @@ namespace MagFlow.EF.Migrations.CompanyDb
             modelBuilder.Entity("MagFlow.Domain.Company.MachineFunctionProduct", b =>
                 {
                     b.HasOne("MagFlow.Domain.Company.MachineModelFunction", "MachineModelFunction")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("MachineModelFunctionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("MagFlow.Domain.Company.MachineModelFunction", null)
+                        .WithMany("Products")
+                        .HasForeignKey("MachineModelFunctionId1");
 
                     b.HasOne("MagFlow.Domain.Company.Product", "Product")
                         .WithMany()
@@ -1649,7 +1736,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
@@ -1664,10 +1751,14 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.MachineModel", "MachineModel")
-                        .WithMany("Functions")
+                        .WithMany()
                         .HasForeignKey("MachineModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("MagFlow.Domain.Company.MachineModel", null)
+                        .WithMany("Functions")
+                        .HasForeignKey("MachineModelId1");
 
                     b.Navigation("MachineFunction");
 
@@ -1698,7 +1789,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Unit");
@@ -1721,7 +1812,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("MachineFunction");
@@ -1735,24 +1826,29 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 {
                     b.HasOne("MagFlow.Domain.Company.User", "ConfirmedBy")
                         .WithMany()
-                        .HasForeignKey("ConfirmedById");
+                        .HasForeignKey("ConfirmedById")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MagFlow.Domain.Company.Contractor", "Contractor")
-                        .WithMany("Orders")
+                        .WithMany()
                         .HasForeignKey("ContractorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("MagFlow.Domain.Company.Contractor", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("ContractorId1");
 
                     b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.OrderType", "OrderType")
                         .WithMany()
                         .HasForeignKey("OrderTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("ConfirmedBy");
@@ -1769,20 +1865,24 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.Document", "Document")
                         .WithMany()
                         .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.Order", "Order")
-                        .WithMany("Deliveries")
+                        .WithMany()
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("MagFlow.Domain.Company.Order", null)
+                        .WithMany("Deliveries")
+                        .HasForeignKey("OrderId1");
 
                     b.HasOne("MagFlow.Domain.Company.Contractor", "Supplier")
                         .WithMany()
@@ -1802,10 +1902,14 @@ namespace MagFlow.EF.Migrations.CompanyDb
             modelBuilder.Entity("MagFlow.Domain.Company.OrderDeliveryItem", b =>
                 {
                     b.HasOne("MagFlow.Domain.Company.OrderDelivery", "OrderDelivery")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("OrderDeliveryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("MagFlow.Domain.Company.OrderDelivery", null)
+                        .WithMany("Items")
+                        .HasForeignKey("OrderDeliveryId1");
 
                     b.HasOne("MagFlow.Domain.Company.OrderItem", "OrderItem")
                         .WithMany()
@@ -1840,10 +1944,14 @@ namespace MagFlow.EF.Migrations.CompanyDb
             modelBuilder.Entity("MagFlow.Domain.Company.OrderItem", b =>
                 {
                     b.HasOne("MagFlow.Domain.Company.Order", "Order")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("MagFlow.Domain.Company.Order", null)
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId1");
 
                     b.HasOne("MagFlow.Domain.Company.Product", "Product")
                         .WithMany()
@@ -1861,7 +1969,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
@@ -1876,7 +1984,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.Order", "Order")
@@ -1981,19 +2089,19 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.ProductType", "Type")
                         .WithMany()
                         .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
@@ -2008,14 +2116,18 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.Product", "Component")
                         .WithMany()
                         .HasForeignKey("ComponentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.Product", "Product")
-                        .WithMany("Components")
+                        .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("MagFlow.Domain.Company.Product", null)
+                        .WithMany("Components")
+                        .HasForeignKey("ProductId1");
 
                     b.Navigation("Component");
 
@@ -2046,7 +2158,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.Unit", "FromUnit")
                         .WithMany()
                         .HasForeignKey("FromUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MagFlow.Domain.Company.Product", "Product")
@@ -2058,7 +2170,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasOne("MagFlow.Domain.Company.Unit", "ToUnit")
                         .WithMany()
                         .HasForeignKey("ToUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("FromUnit");

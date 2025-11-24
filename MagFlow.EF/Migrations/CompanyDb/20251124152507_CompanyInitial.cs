@@ -6,100 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MagFlow.EF.Migrations.CompanyDb
 {
     /// <inheritdoc />
-    public partial class Update1 : Migration
+    public partial class CompanyInitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Address",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "City",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Code",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<string>(
-                name: "ContactEmail",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "ContactPerson",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "ContactPhone",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Country",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "CreatedAt",
-                table: "Contractors",
-                type: "datetime2",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
-
-            migrationBuilder.AddColumn<Guid>(
-                name: "CreatedById",
-                table: "Contractors",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
-
-            migrationBuilder.AddColumn<bool>(
-                name: "IsActive",
-                table: "Contractors",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
-
-            migrationBuilder.AddColumn<string>(
-                name: "NIP",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Name",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<string>(
-                name: "Note",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "PostalCode",
-                table: "Contractors",
-                type: "nvarchar(max)",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "DocumentTypes",
                 columns: table => new
@@ -193,8 +104,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_CustomParameters_Units_UnitId",
                         column: x => x.UnitId,
                         principalTable: "Units",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -216,8 +126,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_FunctionParameters_Units_UnitId",
                         column: x => x.UnitId,
                         principalTable: "Units",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -239,8 +148,38 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_MachineParameters_Units_UnitId",
                         column: x => x.UnitId,
                         principalTable: "Units",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Contractors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NIP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContactPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContactEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContactPerson = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Contractors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Contractors_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -263,8 +202,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_MachineFunctions_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -288,8 +226,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_MachineModels_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -312,8 +249,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_OrderTypes_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -342,20 +278,17 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_Products_ProductTypes_TypeId",
                         column: x => x.TypeId,
                         principalTable: "ProductTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Products_Units_UnitId",
                         column: x => x.UnitId,
                         principalTable: "Units",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Products_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -412,8 +345,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_MachineParameterImpacts_Units_UnitId",
                         column: x => x.UnitId,
                         principalTable: "Units",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -424,7 +356,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MachineModelId = table.Column<int>(type: "int", nullable: false),
                     MachineFunctionId = table.Column<int>(type: "int", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MachineModelId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -439,8 +372,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_MachineModelFunctions_MachineModels_MachineModelId",
                         column: x => x.MachineModelId,
                         principalTable: "MachineModels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MachineModelFunctions_MachineModels_MachineModelId1",
+                        column: x => x.MachineModelId1,
+                        principalTable: "MachineModels",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -483,7 +420,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     InstallationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    MachineModelId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -492,14 +430,17 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_Machines_MachineModels_MachineModelId",
                         column: x => x.MachineModelId,
                         principalTable: "MachineModels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Machines_MachineModels_MachineModelId1",
+                        column: x => x.MachineModelId1,
+                        principalTable: "MachineModels",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Machines_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -518,7 +459,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ConfirmedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ConfirmedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContractorId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -527,14 +469,17 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_Orders_Contractors_ContractorId",
                         column: x => x.ContractorId,
                         principalTable: "Contractors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Orders_Contractors_ContractorId1",
+                        column: x => x.ContractorId1,
+                        principalTable: "Contractors",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_OrderTypes_OrderTypeId",
                         column: x => x.OrderTypeId,
                         principalTable: "OrderTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Users_ConfirmedById",
                         column: x => x.ConfirmedById,
@@ -544,8 +489,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_Orders_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -558,7 +502,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     ComponentId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsRequired = table.Column<bool>(type: "bit", nullable: false)
+                    IsRequired = table.Column<bool>(type: "bit", nullable: false),
+                    ProductId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -567,14 +512,17 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_ProductComponents_Products_ComponentId",
                         column: x => x.ComponentId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ProductComponents_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProductComponents_Products_ProductId1",
+                        column: x => x.ProductId1,
+                        principalTable: "Products",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -629,14 +577,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_ProductUnitConversions_Units_FromUnitId",
                         column: x => x.FromUnitId,
                         principalTable: "Units",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ProductUnitConversions_Units_ToUnitId",
                         column: x => x.ToUnitId,
                         principalTable: "Units",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -666,7 +612,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     PurchasePrice = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
                     SellPrice = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
                     VatRate = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
-                    Currency = table.Column<int>(type: "int", nullable: true)
+                    Currency = table.Column<int>(type: "int", nullable: true),
+                    WarehouseId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -675,14 +622,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_Items_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Items_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Items_Users_RemovedById",
                         column: x => x.RemovedById,
@@ -697,8 +642,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_Items_Warehouses_WarehouseId",
                         column: x => x.WarehouseId,
                         principalTable: "Warehouses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_Warehouses_WarehouseId1",
+                        column: x => x.WarehouseId1,
+                        principalTable: "Warehouses",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -713,7 +662,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     MaxValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DefaultValue = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsRequired = table.Column<bool>(type: "bit", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MachineModelFunctionId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -722,14 +672,17 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_MachineFunctionParameters_FunctionParameters_FunctionParameterId",
                         column: x => x.FunctionParameterId,
                         principalTable: "FunctionParameters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MachineFunctionParameters_MachineModelFunctions_MachineModelFunctionId",
                         column: x => x.MachineModelFunctionId,
                         principalTable: "MachineModelFunctions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MachineFunctionParameters_MachineModelFunctions_MachineModelFunctionId1",
+                        column: x => x.MachineModelFunctionId1,
+                        principalTable: "MachineModelFunctions",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -742,7 +695,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Direction = table.Column<int>(type: "int", nullable: false),
                     IsRequired = table.Column<bool>(type: "bit", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MachineModelFunctionId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -751,8 +705,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_MachineFunctionProducts_MachineModelFunctions_MachineModelFunctionId",
                         column: x => x.MachineModelFunctionId,
                         principalTable: "MachineModelFunctions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_MachineFunctionProducts_MachineModelFunctions_MachineModelFunctionId1",
+                        column: x => x.MachineModelFunctionId1,
+                        principalTable: "MachineModelFunctions",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_MachineFunctionProducts_Products_ProductId",
                         column: x => x.ProductId,
@@ -796,8 +754,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_Documents_DocumentTypes_DocumentTypeId",
                         column: x => x.DocumentTypeId,
                         principalTable: "DocumentTypes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Documents_Documents_RelatedDocumentId",
                         column: x => x.RelatedDocumentId,
@@ -807,6 +764,16 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_Documents_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Documents_Users_ConfirmedById",
+                        column: x => x.ConfirmedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Documents_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Documents_Warehouses_WarehouseFromId",
@@ -832,7 +799,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     Price = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
                     VatRate = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
                     Currency = table.Column<int>(type: "int", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OrderId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -841,8 +809,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_OrderItems_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Orders_OrderId1",
+                        column: x => x.OrderId1,
+                        principalTable: "Orders",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OrderItems_Products_ProductId",
                         column: x => x.ProductId,
@@ -885,8 +857,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_Processes_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -975,7 +946,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OrderId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -990,20 +962,22 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_OrderDeliveries_Documents_DocumentId",
                         column: x => x.DocumentId,
                         principalTable: "Documents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OrderDeliveries_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OrderDeliveries_Orders_OrderId1",
+                        column: x => x.OrderId1,
+                        principalTable: "Orders",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OrderDeliveries_Users_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -1105,7 +1079,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderDeliveryId = table.Column<int>(type: "int", nullable: false),
                     OrderItemId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false)
+                    Quantity = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
+                    OrderDeliveryId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -1114,8 +1089,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_OrderDeliveryItems_OrderDeliveries_OrderDeliveryId",
                         column: x => x.OrderDeliveryId,
                         principalTable: "OrderDeliveries",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_OrderDeliveryItems_OrderDeliveries_OrderDeliveryId1",
+                        column: x => x.OrderDeliveryId1,
+                        principalTable: "OrderDeliveries",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OrderDeliveryItems_OrderItems_OrderItemId",
                         column: x => x.OrderItemId,
@@ -1210,9 +1189,19 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Documents_ConfirmedById",
+                table: "Documents",
+                column: "ConfirmedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Documents_ContractorId",
                 table: "Documents",
                 column: "ContractorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Documents_CreatedById",
+                table: "Documents",
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Documents_DocumentTypeId",
@@ -1280,6 +1269,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Items_WarehouseId1",
+                table: "Items",
+                column: "WarehouseId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MachineFunctionParameters_FunctionParameterId",
                 table: "MachineFunctionParameters",
                 column: "FunctionParameterId");
@@ -1290,9 +1284,19 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "MachineModelFunctionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MachineFunctionParameters_MachineModelFunctionId1",
+                table: "MachineFunctionParameters",
+                column: "MachineModelFunctionId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MachineFunctionProducts_MachineModelFunctionId",
                 table: "MachineFunctionProducts",
                 column: "MachineModelFunctionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MachineFunctionProducts_MachineModelFunctionId1",
+                table: "MachineFunctionProducts",
+                column: "MachineModelFunctionId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MachineFunctionProducts_ProductId",
@@ -1313,6 +1317,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "IX_MachineModelFunctions_MachineModelId",
                 table: "MachineModelFunctions",
                 column: "MachineModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MachineModelFunctions_MachineModelId1",
+                table: "MachineModelFunctions",
+                column: "MachineModelId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MachineModelParameters_MachineModelId",
@@ -1355,6 +1364,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "MachineModelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Machines_MachineModelId1",
+                table: "Machines",
+                column: "MachineModelId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderDeliveries_CreatedById",
                 table: "OrderDeliveries",
                 column: "CreatedById");
@@ -1370,6 +1384,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderDeliveries_OrderId1",
+                table: "OrderDeliveries",
+                column: "OrderId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderDeliveries_SupplierId",
                 table: "OrderDeliveries",
                 column: "SupplierId");
@@ -1378,6 +1397,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "IX_OrderDeliveryItems_OrderDeliveryId",
                 table: "OrderDeliveryItems",
                 column: "OrderDeliveryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderDeliveryItems_OrderDeliveryId1",
+                table: "OrderDeliveryItems",
+                column: "OrderDeliveryId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderDeliveryItems_OrderItemId",
@@ -1400,6 +1424,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId1",
+                table: "OrderItems",
+                column: "OrderId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_ProductId",
                 table: "OrderItems",
                 column: "ProductId");
@@ -1413,6 +1442,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "IX_Orders_ContractorId",
                 table: "Orders",
                 column: "ContractorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_ContractorId1",
+                table: "Orders",
+                column: "ContractorId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CreatedById",
@@ -1500,6 +1534,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductComponents_ProductId1",
+                table: "ProductComponents",
+                column: "ProductId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductParameters_ParameterId",
                 table: "ProductParameters",
                 column: "ParameterId");
@@ -1543,23 +1582,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "IX_WarehouseStorages_WarehouseId",
                 table: "WarehouseStorages",
                 column: "WarehouseId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Contractors_Users_CreatedById",
-                table: "Contractors",
-                column: "CreatedById",
-                principalTable: "Users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Contractors_Users_CreatedById",
-                table: "Contractors");
-
             migrationBuilder.DropTable(
                 name: "DocumentItems");
 
@@ -1663,70 +1690,13 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "Orders");
 
             migrationBuilder.DropTable(
+                name: "Contractors");
+
+            migrationBuilder.DropTable(
                 name: "OrderTypes");
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Contractors_CreatedById",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "Address",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "City",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "Code",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "ContactEmail",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "ContactPerson",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "ContactPhone",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "Country",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "CreatedAt",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "CreatedById",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "IsActive",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "NIP",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "Name",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "Note",
-                table: "Contractors");
-
-            migrationBuilder.DropColumn(
-                name: "PostalCode",
-                table: "Contractors");
         }
     }
 }
