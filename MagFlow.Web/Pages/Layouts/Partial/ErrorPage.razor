@@ -1,7 +1,28 @@
-﻿
-<p>@Exception?.Message</p>
+﻿@inject ILogger<ErrorPage> Logger
+
+<p>@ErrorMessage</p>
+<p>Click the button below to refresh website</p>
+<input type="button" />
 
 @code {
     [Parameter]
     public Exception? Exception { get; set; }
+
+    string ErrorMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Exception == null)
+        {
+            var errorId = Guid.NewGuid();
+            Logger.LogError($"Unknown error (ErrorId: {errorId})");
+            ErrorMessage = $"Unknown error (ErrorId: {errorId})";
+        }
+        else
+        {
+            var errorId = Guid.NewGuid();
+            Logger.LogError(Exception, $"Error message (ErrorId: {errorId}): {Exception.Message}");
+            ErrorMessage = $"An error occurred. Please contact with system administrator - serwis@magflow.pl - and provide error id: {errorId}\n";
+        }
+    }
 }
