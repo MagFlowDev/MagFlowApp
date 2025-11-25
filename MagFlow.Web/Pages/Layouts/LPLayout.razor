@@ -3,12 +3,13 @@
 @using Syncfusion.Blazor.SplitButtons
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JS
 
 <div class="page">
     <ErrorBoundary>
         <ChildContent>
             <div class="main">
-                <nav class="control-container" style="border-bottom: 1px solid #DEE2E6; background: #FFF; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08); height: 64px;">
+                <nav class="control-container sticky-nav">
                     <div style="width: 100%; height: 100%; padding-left: 12px; padding-right: 12px; justify-content: space-between; align-items: center; display: inline-flex">
                         <SfAppBar ColorMode="AppBarColor.Inherit" CssClass="justify-content-start align-items-center d-md-flex border-0">
                             <a href="/" style="justify-content: flex-start; align-items: center; gap: 16px; display: inline-flex">
@@ -21,38 +22,52 @@
                                     <div style="width: 136px; left: 0px; top: 0.50px; position: absolute; color: #212529; font-size: 28px; font-family: Inter; font-weight: 700; line-height: 42px; letter-spacing: 0.38px; word-wrap: break-word">MagFlow</div>
                                 </div>
                             </a>
-                            <AppBarSpacer></AppBarSpacer>
-                            <div style="justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex">
-                                <SfTab>
-                                    <TabItems>
-                                        <TabItem>
-                                            <ChildContent>
-                                                <TabHeader Text="Home"></TabHeader>
-                                            </ChildContent>
-                                        </TabItem>
-                                        <TabItem>
-                                            <ChildContent>
-                                                <TabHeader Text="Product Features"></TabHeader>
-                                            </ChildContent>
-                                        </TabItem>
-                                        <TabItem>
-                                            <ChildContent>
-                                                <TabHeader Text="Pricing"></TabHeader>
-                                            </ChildContent>
-                                        </TabItem>
-                                        <TabItem>
-                                            <ChildContent>
-                                                <TabHeader Text="Contact"></TabHeader>
-                                            </ChildContent>
-                                        </TabItem>
-                                    </TabItems>
-                                </SfTab>
+                            <div class="d-md-flex justify-content-between align-items-center w-100">
+                                <div></div>
+                                <div class="desktop-tabs">
+                                    <SfTab CssClass="underline-tabs" SelectedItemChanged="OnTabChanged">
+                                        <TabItems>
+                                            <TabItem>
+                                                <ChildContent>
+                                                    <TabHeader Text="Start"></TabHeader>
+                                                </ChildContent>
+                                            </TabItem>
+                                            <TabItem>
+                                                <ChildContent>
+                                                    <TabHeader Text="Product Features"></TabHeader>
+                                                </ChildContent>
+                                            </TabItem>
+                                            <TabItem>
+                                                <ChildContent>
+                                                    <TabHeader Text="Pricing"></TabHeader>
+                                                </ChildContent>
+                                            </TabItem>
+                                            <TabItem>
+                                                <ChildContent>
+                                                    <TabHeader Text="Contact"></TabHeader>
+                                                </ChildContent>
+                                            </TabItem>
+                                        </TabItems>
+                                    </SfTab>
+                                </div>
+                                <div class="mobile-menu-trigger" @onclick="ToggleMobileMenu">
+                                    <span class="e-icons e-menu"></span>
+                                </div>
+                                <div></div>
                             </div>
-                            <AppBarSpacer></AppBarSpacer>
-                            <SfButton CssClass="rounded-button" IsPrimary="true" OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))">Sign In</SfButton>
+                            <SfButton CssClass="rounded-button"  IsPrimary="true" OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))">Sign In</SfButton>
                         </SfAppBar>
                     </div>
                 </nav>
+                @if (IsMobileMenuOpen)
+                {
+                    <div class="mobile-menu">
+                        <button @onclick='async () => await ScrollToSection("start")'>Start</button>
+                        <button @onclick='async () => await ScrollToSection("features")'>Product Features</button>
+                        <button @onclick='async () => await ScrollToSection("pricing")'>Pricing</button>
+                        <button @onclick='async () => await ScrollToSection("contact")'>Contact</button>
+                    </div>
+                }
                 <div class="content">
                     @Body
                 </div>
@@ -65,15 +80,41 @@
 </div>
 
 @code {
-    
+    bool IsMobileMenuOpen = false;
+
+    void ToggleMobileMenu()
+    {
+        IsMobileMenuOpen = !IsMobileMenuOpen;
+    }
+
+    async Task OnTabChanged(int index)
+    {
+        switch(index) 
+        {
+            case 0: await ScrollToSection("start"); break;
+            case 1: await ScrollToSection("features"); break;
+            case 2: await ScrollToSection("pricing"); break;
+            case 3: await ScrollToSection("contact"); break;
+            default:break;
+        }
+    }
+
+    async Task ScrollToSection(string id)
+    {
+        await JS.InvokeVoidAsync("blazorScrollTo", id);
+        IsMobileMenuOpen = false;
+    }
 }
 <style>
-    .rounded-button {
+    .rounded-button.e-btn,
+    .rounded-button.e-btn * {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
         font-size: 16px;
-        font-family: Helvetica Neue;
         font-weight: 400;
         line-height: 24px;
         word-wrap: break-word;
         border-radius: 1000px;
+        padding: 0 12px;
+        height: 38px;
     }
 </style>
