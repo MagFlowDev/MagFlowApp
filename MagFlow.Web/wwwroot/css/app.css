@@ -1,5 +1,7 @@
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
+    font-family: Inter;
+    font-style: normal;
 }
 
 a, .btn-link {
@@ -94,6 +96,11 @@ h1:focus {
     border-bottom: 1px solid #E5E5E5;
 }
 
+.desktop-logo {
+    display: flex !important;
+    align-items: center;
+}
+
 .mobile-menu button:last-child {
     border-bottom: none;
 }
@@ -104,10 +111,15 @@ h1:focus {
         display: none !important;
     }
 
+    .desktop-logo {
+        display: none !important;
+    }
+
     .mobile-menu-trigger {
         display: flex !important;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+        width: 100%;
     }
 
     .mobile-menu {
