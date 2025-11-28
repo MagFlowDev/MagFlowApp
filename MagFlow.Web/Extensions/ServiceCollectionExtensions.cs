@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MudBlazor.Services;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -27,6 +28,7 @@ namespace MagFlow.Web.Extensions
         public static IServiceCollection AddMagFlowServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSyncfusionBlazor();
+            services.AddMudServices();
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 

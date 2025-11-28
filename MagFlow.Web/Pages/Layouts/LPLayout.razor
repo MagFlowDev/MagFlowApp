@@ -32,22 +32,22 @@
                                         <TabItems>
                                             <TabItem>
                                                 <ChildContent>
-                                                    <TabHeader Text="Start"></TabHeader>
+                                                    <TabHeader Text="@Localizer[Langs.Start]"></TabHeader>
                                                 </ChildContent>
                                             </TabItem>
                                             <TabItem>
                                                 <ChildContent>
-                                                    <TabHeader Text="Moduły systemu"></TabHeader>
+                                                    <TabHeader Text="@Localizer[Langs.SystemModules]"></TabHeader>
                                                 </ChildContent>
                                             </TabItem>
                                             <TabItem>
                                                 <ChildContent>
-                                                    <TabHeader Text="Oferta cenowa"></TabHeader>
+                                                    <TabHeader Text="@Localizer[Langs.Pricing]"></TabHeader>
                                                 </ChildContent>
                                             </TabItem>
                                             <TabItem>
                                                 <ChildContent>
-                                                    <TabHeader Text="Kontakt"></TabHeader>
+                                                    <TabHeader Text="@Localizer[Langs.Contact]"></TabHeader>
                                                 </ChildContent>
                                             </TabItem>
                                         </TabItems>
@@ -69,17 +69,17 @@
                                 </div>
                                 <div></div>
                             </div>
-                            <SfButton CssClass="rounded-button"  IsPrimary="true" OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))">Sign In</SfButton>
+                            <SfButton CssClass="rounded-button"  IsPrimary="true" OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))">@Localizer[Langs.SignIn]</SfButton>
                         </SfAppBar>
                     </div>
                 </nav>
                 @if (IsMobileMenuOpen)
                 {
                     <div class="mobile-menu">
-                        <button @onclick='async () => await ScrollToSection("start")'>Start</button>
-                        <button @onclick='async () => await ScrollToSection("features")'>Product Features</button>
-                        <button @onclick='async () => await ScrollToSection("pricing")'>Pricing</button>
-                        <button @onclick='async () => await ScrollToSection("contact")'>Contact</button>
+                        <button @onclick='async () => await ScrollToSection("start")'>@Localizer[Langs.Start]</button>
+                        <button @onclick='async () => await ScrollToSection("modules")'>@Localizer[Langs.SystemModules]</button>
+                        <button @onclick='async () => await ScrollToSection("pricing")'>@Localizer[Langs.Pricing]</button>
+                        <button @onclick='async () => await ScrollToSection("contact")'>@Localizer[Langs.Contact]</button>
                     </div>
                 }
                 <div class="content">
@@ -108,7 +108,7 @@
         switch(index) 
         {
             case 0: await ScrollToSection("start"); break;
-            case 1: await ScrollToSection("features"); break;
+            case 1: await ScrollToSection("modules"); break;
             case 2: await ScrollToSection("pricing"); break;
             case 3: await ScrollToSection("contact"); break;
             default:break;
@@ -133,7 +133,7 @@
             scrollSpyController = await JS.InvokeAsync<IJSObjectReference>(
                 "startScrollSpy",
                 objRef,
-                new[] { "start", "features", "pricing", "contact" }
+                new[] { "start", "modules", "pricing", "contact" }
             );
         }
     }

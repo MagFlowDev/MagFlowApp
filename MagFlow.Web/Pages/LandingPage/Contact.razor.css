@@ -1,0 +1,36 @@
+﻿/* --- HERO LAYOUT --- */
+.hero-container {
+    padding: 60px 110px 0 110px;
+}
+
+.hero-content {
+    gap: 48px;
+}
+
+.hero-text {
+    max-width: 576px;
+    gap: 32px;
+}
+
+.hero-headline {
+    gap: 24px;
+}
+
+.hero-title {
+    color: #212529;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 67px;
+    letter-spacing: 0.219px;
+}
+
+.hero-title-highlight {
+    color: #0D6EFD;
+    text-decoration: none;
+}
+
+.hero-description {
+    font-size: 16px;
+    color: #495057;
+    line-height: 27px;
+}

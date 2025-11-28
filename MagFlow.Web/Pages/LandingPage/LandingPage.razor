@@ -3,152 +3,22 @@
 @layout LPLayout
 
 <section id="start">
-    <div style="padding: 60px 109.5px 0 109.5px;" class="d-md-flex flex-column align-items-center flex-shrink-0 align-self-stretch">
-        <div style="padding-bottom: 8.5px; gap: 48px" class="d-md-flex justify-content-center align-items-center align-self-stretch">
-            <div style="padding-top: 48px; gap:48px; max-width: 576px;" class="d-md-flex flex-column align-items-start">
-                <div style="gap: 24px;" class="d-md-flex flex-column align-items-start align-self-start">
-                    <div style="padding: 1px 0.5px 0 0.5px;" class="d-md-flex justify-content-center align-items-center align-self-stretch">
-                        <h1 style="color: #212529; font-size: 64px; font-style: normal; font-weight: 700; line-height: 67px; letter-spacing: 0.219px">
-                            @Localizer[Langs.ManufacturingExcellence] <a style="color: #0D6EFD">@Localizer[Langs.StartsHere]</a>
-                        </h1>
-                    </div>
-                    <div style="padding-right: 39px" class="d-md-flex align-items-center align-self-stretch">
-                        <p style="color: #495057; font-size: 16px; font-style: normal; font-weight: 400; line-height: 27.2px; letter-spacing: -0.312px;">Najbardziej zaufany na świecie system zarządzania produkcją (MES). Przekształć swoje operacje, wyeliminuj marnotrawstwo i osiągnij doskonałość operacyjną dzięki niezawodności klasy korporacyjnej.</p>
-                    </div>
-                </div>
-                <div style="height: 44px; gap: 16px;" class="d-md-flex align-items-center align-self-start">
-                    <div style="gap: 16px;" class="d-md-flex align-items-center">
-                        <SfButton style="padding: 0 12px; height: 44px; gap: 12px; background: #212529; border-color: #212529; border-radius: 6px;">
-                            Okres próbny
-                            </SfButton>
-                        <SfButton CssClass="e-outline" style="padding: 0 12px; height: 44px; gap: 12px; color: #6C757D; border-color: #6C757D; border-radius: 6px;">
-                            Zaplanuj demo
-                        </SfButton>
-                    </div>
-                </div>
-                <div style="height: 24px; gap: 24px;" class="align-self-stretch d-md-flex">
-                    <div style="height: 24px; gap: 8px;" class="d-md-flex align-items-center">
-                        <SfIcon IconCss="bi bi-check-circle" style="color: #198754"></SfIcon>
-                        <a style="color: rgba(33,37,41,0.75); font-size: 16px; font-weight: 500; line-height: 24px; letter-spacing: -0.312px;">14-dniowy okres próbny</a>
-                    </div>
-                    <div style="height: 24px; gap: 8px;" class="d-md-flex align-items-center">
-                        <SfIcon IconCss="bi bi-check-circle" style="color: #198754"></SfIcon>
-                        <a style="color: rgba(33,37,41,0.75); font-size: 16px; font-weight: 500; line-height: 24px; letter-spacing: -0.312px;">Brak opłat wdrożeniowych</a>
-                    </div>
-                    <div style="height: 24px; gap: 8px;" class="d-md-flex align-items-center">
-                        <SfIcon IconCss="bi bi-check-circle" style="color: #198754"></SfIcon>
-                        <a style="color: rgba(33,37,41,0.75); font-size: 16px; font-weight: 500; line-height: 24px; letter-spacing: -0.312px;">Bezpieczeństwo klasy enterprise</a>
-                    </div>
-                </div>
-            </div>
-            <div style="width: 522px; height: 392px; position: relative">
-                <div class="d-md-flex flex-column align-items-center" style="width: 522px; height: 392px; padding: 1px; border-radius: 16px; border: 1px solid #dee2e6; background: #f8f9fa; box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.18); overflow: hidden;">
-                    <div class="align-self-stretch flex-shrink-0" style="height: 390px; background: url('/img/landingpage/ImageWithFallback.png') lightgray 50% / cover no-repeat;"></div>
-                </div>
-
-                @* ROI *@
-                <div style="padding: 18px 21px; 
-                            border-radius: 8px; 
-                            border: 1px solid #dee2e6; 
-                            background: #fff; 
-                            position: absolute;
-                            top: 16px;
-                            left: 16px;
-                            text-align: center;
-                            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);" 
-                     class="d-md-flex justify-content-center align-items-center">
-                     <div class="d-md-flex align-items-center flex-shrink-0" style="gap: 8px;">
-                         <div class="d-md-flex flex-column align-items-start" style="flex: 1 0 0; gap: 4px;">
-                            <div style="color:#0D6EFD; font-size:16px; font-weight:700;" class="d-md-flex justify-content-center align-items-center align-self-stretch">ROI 340%</div>
-                            <div style="color:#495057; font-size:14px; font-weight:400" class="d-md-flex justify-content-center align-items-center align-self-stretch">Avg. First Year</div>
-                         </div>
-                     </div>
-                </div>
-                
-                @* Users *@
-                <div style="padding: 18px 21px;
-                            border-radius: 8px;
-                            border: 1px solid #dee2e6;
-                            background: #fff;
-                            position: absolute;
-                            right: 16px;
-                            top: 160px;
-                            text-align: center;
-                            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);"
-                     class="d-md-flex justify-content-center align-items-center">
-                    <div class="d-md-flex align-items-center flex-shrink-0" style="gap: 8px;">
-                        <div class="d-md-flex flex-column align-items-start" style="flex: 1 0 0; gap: 4px;">
-                            <div style="color:#0D6EFD; font-size:16px; font-weight:700;" class="d-md-flex justify-content-center align-items-center align-self-stretch">50K+</div>
-                            <div style="color:#495057; font-size:14px; font-weight:400" class="d-md-flex justify-content-center align-items-center align-self-stretch">Global Users</div>
-                        </div>
-                    </div>
-                </div>
-
-                @* SLA *@
-                <div style="padding: 18px 21px;
-                            border-radius: 8px;
-                            border: 1px solid #dee2e6;
-                            background: #fff;
-                            position: absolute;
-                            bottom: 16px;
-                            left: 16px;
-                            text-align: center;
-                            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);"
-                     class="d-md-flex justify-content-center align-items-center">
-                    <div class="d-md-flex align-items-center flex-shrink-0" style="gap: 8px;">
-                        <div class="d-md-flex flex-column align-items-start" style="flex: 1 0 0; gap: 4px;">
-                            <div style="color:#0D6EFD; font-size:16px; font-weight:700;" class="d-md-flex justify-content-center align-items-center align-self-stretch">99.98%</div>
-                            <div style="color:#495057; font-size:14px; font-weight:400" class="d-md-flex justify-content-center align-items-center align-self-stretch">SLA Uptime</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <Start/>
 </section>
 
 
-<section id="features">
-    <div style="padding: 100px 70px;">
-    Integer enim justo, auctor ut lacus sit amet, auctor placerat quam. Cras vehicula lorem in dui pulvinar auctor ac non dui. Morbi quis augue at ante accumsan feugiat eu in tortor. Vestibulum ex arcu, mattis at facilisis sit amet, elementum ut elit. Cras malesuada justo sit amet orci aliquam, et feugiat justo eleifend. Pellentesque vel pulvinar justo, eu volutpat sem. Duis ut ex vitae lacus ullamcorper dictum. Sed dictum a libero id vulputate. Etiam pharetra lorem ut ante auctor porta. Fusce sit amet neque ac mi efficitur rutrum vel non nisi. Nam sit amet est est. Aenean ultrices tempor massa, a mattis quam congue ut.
-
-    Donec consequat ac tortor ut mollis. Morbi interdum ante quis porttitor porta. Curabitur nibh leo, rutrum quis maximus vitae, rhoncus aliquet enim. Vivamus iaculis massa eget euismod convallis. Donec facilisis purus quis suscipit luctus. Donec fermentum ipsum ut ipsum blandit, id molestie lacus gravida. Donec id urna dapibus, rhoncus elit eget, cursus quam. Aliquam ex enim, pretium vitae fermentum vitae, interdum eu felis. Mauris in ullamcorper nisi, nec ultrices turpis. Vestibulum vitae dictum ante. Donec condimentum, elit non eleifend consectetur, velit lacus ultrices neque, nec varius elit erat vitae orci. Ut enim odio, lacinia sed lacus a, gravida molestie velit.
-
-    Duis non libero ipsum. Ut ut velit imperdiet, hendrerit quam sed, laoreet nisi. Vivamus tristique lorem ut ligula euismod, eu accumsan odio posuere. Curabitur ultricies neque sed metus ultrices tincidunt. Etiam elementum, orci ac consectetur porttitor, urna turpis cursus dui, at ultricies libero nulla ac nunc. Mauris a massa nunc. Fusce placerat metus sit amet ante tincidunt, vel convallis lorem rhoncus. Aliquam posuere, nunc vitae ullamcorper blandit, ex nunc dapibus tellus, sit amet vehicula ante lacus sed magna. Nullam non purus pulvinar, convallis libero ut, eleifend erat. Nulla convallis porttitor est vitae mollis. Vivamus ut vestibulum nisi, sed convallis nunc. Suspendisse consequat auctor lorem, sed porttitor sapien consequat sed. Donec non augue pretium, placerat leo vel, rutrum odio. Vivamus ultrices tincidunt justo non viverra. Aenean sagittis velit ac est vehicula hendrerit ut at lorem.
-
-    Pellentesque sed mi fermentum, dapibus risus id, ullamcorper eros. Suspendisse potenti. Pellentesque ut quam egestas, pretium elit ut, cursus enim. Aenean ullamcorper est eget felis semper cursus. Suspendisse ultrices nisl ut neque malesuada, in mattis arcu imperdiet. Curabitur nec felis id dui egestas lacinia. Aenean iaculis nibh ac ex finibus porta. Praesent ex quam, eleifend non tincidunt vel, eleifend sed erat. Phasellus lorem nisi, accumsan at libero sed, lacinia condimentum nulla. Etiam id enim eu nisi fermentum suscipit in in risus. Nullam ultricies sollicitudin quam id tempus. Etiam a lectus ut leo ultricies gravida. Etiam congue venenatis ultricies. Integer varius suscipit mi eu fermentum.
-    </div>
+<section id="modules">
+    <Modules/>
 </section>
 
 
 <section id="pricing">
-    <div style="padding: 100px 177px 151px 177px">
-    Proin maximus egestas ipsum, at tincidunt ligula tempor quis. Nunc eget porttitor est. Fusce nibh massa, sodales in justo vitae, congue ullamcorper urna. Morbi sit amet tortor id ex sodales feugiat. Praesent euismod felis in finibus ornare. Morbi placerat vestibulum eros, at tempor dui semper sed. Nulla lacus neque, venenatis ut ligula at, egestas sodales tortor. Fusce urna libero, feugiat eget ultrices venenatis, lobortis sed tortor. Nam erat ligula, bibendum et pretium non, viverra ut tellus. Proin id nulla volutpat purus dignissim faucibus eget nec mi. Cras bibendum, eros sed laoreet luctus, nulla ex porta purus, a volutpat libero purus nec arcu. Suspendisse ultrices, nunc at laoreet consequat, nibh elit porttitor ipsum, posuere rutrum erat ex et enim. Sed euismod ullamcorper risus ut gravida.
-
-    Proin orci libero, dictum sit amet risus vel, tristique tincidunt leo. Etiam fermentum nec purus vitae dignissim. Nullam quis enim nulla. Integer non egestas libero, a euismod felis. Suspendisse quis vehicula nisi. Donec turpis lorem, sollicitudin feugiat diam quis, pulvinar condimentum felis. Donec quis metus ut purus vulputate egestas sed eu quam. Nullam in convallis purus. Nullam dui turpis, lacinia quis augue eget, hendrerit egestas nibh. Duis eget luctus felis. Curabitur vitae malesuada massa, a semper quam. Aenean sit amet orci vitae justo vulputate dictum tincidunt et est. Aliquam tincidunt nunc vel lacus semper, mollis mollis orci dignissim.
-
-    Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla faucibus nisi tellus, at porta arcu dignissim ut. Praesent velit nunc, consectetur sit amet luctus eget, tristique ut dui. Fusce eu lacus ligula. Phasellus tempor neque magna, sit amet pretium sapien efficitur eget. In posuere molestie placerat. Nunc faucibus risus ut purus tristique, et efficitur nunc efficitur. Sed vel felis finibus, dapibus arcu vitae, ultrices nisl. Mauris eget turpis tristique, rutrum erat sed, dapibus dui. Fusce vulputate consectetur purus vehicula rutrum. Pellentesque enim lectus, pharetra ac libero et, faucibus pretium ligula. Etiam sed accumsan dolor.
-    </div>
+   <Pricing/>
 </section>
 
 
 <section id="contact">
-    <div>
-    Interdum et malesuada fames ac ante ipsum primis in faucibus. Morbi sodales placerat massa quis rhoncus. Nam et magna quis nibh maximus lobortis. Suspendisse fringilla quam dignissim quam luctus suscipit sed sit amet risus. In sit amet maximus risus. Praesent tempor euismod orci sed accumsan. Vestibulum vel metus magna. Aenean sollicitudin dolor at ultrices tempor. Maecenas finibus consequat augue vitae ultrices.
-
-    Phasellus dignissim cursus est mattis cursus. Cras quis auctor est, sit amet dignissim neque. Nulla facilisi. Cras laoreet posuere enim sit amet ornare. Sed quis ante dolor. Donec eget aliquam est. Sed malesuada enim velit, a malesuada quam dictum eget. Aliquam erat volutpat. Nullam et pellentesque orci, eget finibus eros. In nunc massa, dapibus quis turpis sit amet, sodales tempus urna. Suspendisse potenti. Duis non dapibus libero, a hendrerit nisi. Morbi efficitur tortor et maximus rhoncus. Nulla id fermentum ante.
-
-    Fusce ac convallis leo, ut tempus est. Aenean pellentesque libero ante, vel varius diam viverra at. Ut vel euismod justo, et consequat leo. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis rutrum pharetra justo non viverra. Aenean nec euismod dui. Phasellus placerat neque magna, a gravida libero ultrices a. Nullam ullamcorper posuere augue, at mattis lectus semper elementum. Vivamus vel tristique neque, eu aliquet ante. Aenean eleifend, metus nec ultrices commodo, sapien lectus posuere lorem, at rutrum est dolor non erat. Pellentesque malesuada sem elit, eget placerat metus eleifend eu. Integer turpis nunc, dignissim vitae risus et, auctor tempor est. Pellentesque mauris nisl, dignissim id aliquet quis, pellentesque eu velit. Morbi porttitor, dolor ut cursus dapibus, lacus ante facilisis justo, a porta mauris magna ut metus.
-
-    Fusce eu pharetra lorem. Etiam leo diam, sollicitudin sit amet fringilla viverra, consectetur quis nisi. Phasellus ultrices sed ex eu tincidunt. Vivamus nibh libero, porttitor vel ornare in, tincidunt et est. Fusce at feugiat turpis, ac aliquam mi. Mauris ut tempor turpis. Etiam vel nibh tempus, tincidunt velit nec, interdum sem. Etiam in cursus augue. Aenean scelerisque sem ut elit blandit efficitur. Mauris dignissim varius mattis. Praesent egestas ornare luctus. Fusce in sapien sit amet diam iaculis rhoncus sit amet id leo. Praesent semper pretium turpis. Suspendisse elementum sit amet nibh sit amet porttitor. Suspendisse ut ipsum eget metus bibendum mollis quis mollis augue.
-    
-    Integer enim justo, auctor ut lacus sit amet, auctor placerat quam. Cras vehicula lorem in dui pulvinar auctor ac non dui. Morbi quis augue at ante accumsan feugiat eu in tortor. Vestibulum ex arcu, mattis at facilisis sit amet, elementum ut elit. Cras malesuada justo sit amet orci aliquam, et feugiat justo eleifend. Pellentesque vel pulvinar justo, eu volutpat sem. Duis ut ex vitae lacus ullamcorper dictum. Sed dictum a libero id vulputate. Etiam pharetra lorem ut ante auctor porta. Fusce sit amet neque ac mi efficitur rutrum vel non nisi. Nam sit amet est est. Aenean ultrices tempor massa, a mattis quam congue ut.
-
-    Donec consequat ac tortor ut mollis. Morbi interdum ante quis porttitor porta. Curabitur nibh leo, rutrum quis maximus vitae, rhoncus aliquet enim. Vivamus iaculis massa eget euismod convallis. Donec facilisis purus quis suscipit luctus. Donec fermentum ipsum ut ipsum blandit, id molestie lacus gravida. Donec id urna dapibus, rhoncus elit eget, cursus quam. Aliquam ex enim, pretium vitae fermentum vitae, interdum eu felis. Mauris in ullamcorper nisi, nec ultrices turpis. Vestibulum vitae dictum ante. Donec condimentum, elit non eleifend consectetur, velit lacus ultrices neque, nec varius elit erat vitae orci. Ut enim odio, lacinia sed lacus a, gravida molestie velit.
-
-    Duis non libero ipsum. Ut ut velit imperdiet, hendrerit quam sed, laoreet nisi. Vivamus tristique lorem ut ligula euismod, eu accumsan odio posuere. Curabitur ultricies neque sed metus ultrices tincidunt. Etiam elementum, orci ac consectetur porttitor, urna turpis cursus dui, at ultricies libero nulla ac nunc. Mauris a massa nunc. Fusce placerat metus sit amet ante tincidunt, vel convallis lorem rhoncus. Aliquam posuere, nunc vitae ullamcorper blandit, ex nunc dapibus tellus, sit amet vehicula ante lacus sed magna. Nullam non purus pulvinar, convallis libero ut, eleifend erat. Nulla convallis porttitor est vitae mollis. Vivamus ut vestibulum nisi, sed convallis nunc. Suspendisse consequat auctor lorem, sed porttitor sapien consequat sed. Donec non augue pretium, placerat leo vel, rutrum odio. Vivamus ultrices tincidunt justo non viverra. Aenean sagittis velit ac est vehicula hendrerit ut at lorem.
-
-    </div>
+    <Contact/>
 </section>
 
 

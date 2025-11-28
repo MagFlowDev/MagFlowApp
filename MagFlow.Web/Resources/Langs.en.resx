@@ -117,10 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="14DayTrial" xml:space="preserve">
+    <value>14-day trial period</value>
+  </data>
+  <data name="Automation" xml:space="preserve">
+    <value>Automation</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="EnterpriseSecurity" xml:space="preserve">
+    <value>Enterprise security</value>
+  </data>
+  <data name="LessManualWork" xml:space="preserve">
+    <value>Less manual work</value>
+  </data>
+  <data name="LP_Section_Start_Text1" xml:space="preserve">
+    <value>A modern MES designed for manufacturers looking to streamline operations, organize workflows, and eliminate everyday production chaos. It brings greater clarity to your processes, improves team coordination, and supports more efficient management across the entire production cycle — from planning to execution.</value>
+  </data>
   <data name="ManufacturingExcellence" xml:space="preserve">
     <value>Manufacturing excellence</value>
   </data>
+  <data name="NoSetupFees" xml:space="preserve">
+    <value>No setup fees</value>
+  </data>
+  <data name="Optimization" xml:space="preserve">
+    <value>Optimization</value>
+  </data>
+  <data name="PlanDemo" xml:space="preserve">
+    <value>Schedule a demo</value>
+  </data>
+  <data name="Pricing" xml:space="preserve">
+    <value>Pricing</value>
+  </data>
+  <data name="RBACAccess" xml:space="preserve">
+    <value>RBAC access</value>
+  </data>
+  <data name="Security" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>Sign In</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
   <data name="StartsHere" xml:space="preserve">
     <value>starts here</value>
+  </data>
+  <data name="StreamlinedProcesses" xml:space="preserve">
+    <value>Streamlined processes</value>
+  </data>
+  <data name="SystemModules" xml:space="preserve">
+    <value>Modules</value>
+  </data>
+  <data name="TrialPeriod" xml:space="preserve">
+    <value>Trial period</value>
   </data>
 </root>

@@ -5,6 +5,7 @@ using MagFlow.Domain.Core;
 using Microsoft.AspNetCore.Identity;
 using System.Globalization;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace MagFlow.Web.Middlewares
 {
@@ -19,8 +20,8 @@ namespace MagFlow.Web.Middlewares
 
         public async Task InvokeAsync(HttpContext context, IUserService userService)
         {
-            bool userLanguageSelected = false;
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            CultureInfo? culture = null;
             if(!string.IsNullOrEmpty(userId))
             {
                 Guid.TryParse(userId, out Guid userGuid);
@@ -29,27 +30,34 @@ namespace MagFlow.Web.Middlewares
                 if(lang != null)
                 {
                     var language = lang?.ToLanguageCode()!;
-                    var culture = new CultureInfo(language);
-
-                    CultureInfo.DefaultThreadCurrentCulture = culture;
-                    CultureInfo.DefaultThreadCurrentUICulture = culture;
-                    userLanguageSelected = true;
+                    culture = new CultureInfo(language);
                 }
             }
 
-            if (!userLanguageSelected)
+            if (culture == null)
             {
                 var userLanguages = context.Request.Headers["Accept-Language"].ToString();
                 if (!string.IsNullOrWhiteSpace(userLanguages))
                 {
                     var preferredLanguage = userLanguages.Split(',')[0];
                     var language = LanguageMapper.GetAvailableLanguageByCode(preferredLanguage);
-                    var culture = new CultureInfo(language);
-
-                    CultureInfo.DefaultThreadCurrentCulture = culture;
-                    CultureInfo.DefaultThreadCurrentUICulture = culture;
+                    culture = new CultureInfo(language);
+                    culture.NumberFormat.NumberDecimalSeparator = ".";
+                }
+                else
+                {
+                    culture = new CultureInfo("pl-PL");
                 }
             }
+
+            culture.NumberFormat.NumberDecimalSeparator = ".";
+            culture.DateTimeFormat.LongDatePattern = "dddd, dd MMMM yyyy";
+            culture.DateTimeFormat.ShortDatePattern = "yyyy-MM-dd";
+            culture.DateTimeFormat.FullDateTimePattern = "yyyy-MM-dd HH:mm:ss";
+            culture.DateTimeFormat.LongTimePattern = "HH:mm:ss";
+            culture.DateTimeFormat.ShortTimePattern = "HH:mm";
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
 
             await _next(context);
         }
