@@ -51,8 +51,11 @@ namespace MagFlow.Web.Middlewares
             }
 
             culture.NumberFormat.NumberDecimalSeparator = ".";
-            culture.DateTimeFormat.LongDatePattern = "yyyy-MM-dd HH:mm";
+            culture.DateTimeFormat.LongDatePattern = "dddd, dd MMMM yyyy";
             culture.DateTimeFormat.ShortDatePattern = "yyyy-MM-dd";
+            culture.DateTimeFormat.FullDateTimePattern = "yyyy-MM-dd HH:mm:ss";
+            culture.DateTimeFormat.LongTimePattern = "HH:mm:ss";
+            culture.DateTimeFormat.ShortTimePattern = "HH:mm";
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
 

@@ -1,0 +1,74 @@
+﻿@using Syncfusion.Blazor.Buttons
+
+<div class="hero-container d-md-flex flex-column align-items-center">
+    <div class="hero-content d-md-flex justify-content-center align-items-center">
+
+        <div class="hero-text d-md-flex flex-column">
+            <div class="hero-headline">
+                <h1 class="hero-title">
+                    @Localizer[Langs.ManufacturingExcellence]
+                    <a class="hero-title-highlight">@Localizer[Langs.StartsHere]</a>
+                </h1>
+
+                <p class="hero-description">
+                    @Localizer[Langs.LP_Section_Start_Text1]
+                </p>
+            </div>
+
+            <div class="hero-buttons d-flex">
+                <SfButton CssClass="btn-dark-base">
+                    @Localizer[Langs.TrialPeriod]
+                </SfButton>
+
+                <SfButton CssClass="btn-outline-base" >
+                    @Localizer[Langs.PlanDemo]
+                </SfButton>
+            </div>
+
+            <div class="hero-features d-flex">
+                <div class="hero-feature">
+                    <SfIcon IconCss="bi bi-check-circle" style="color: #198754"></SfIcon>
+                    <span>@Localizer[Langs._14DayTrial]</span>
+                </div>
+
+                <div class="hero-feature">
+                    <SfIcon IconCss="bi bi-check-circle" style="color: #198754"></SfIcon>
+                    <span>@Localizer[Langs.NoSetupFees]</span>
+                </div>
+
+                <div class="hero-feature">
+                    <SfIcon IconCss="bi bi-check-circle" style="color: #198754"></SfIcon>
+                    <span>@Localizer[Langs.EnterpriseSecurity]</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-image-wrapper">
+            <div class="hero-image"></div>
+
+            @* ROI *@
+            <div class="metric-card" style="top:16px; left:16px;">
+                <div class="metric-value">@Localizer[Langs.Optimization]</div>
+                <div class="metric-label">@Localizer[Langs.StreamlinedProcesses]</div>
+            </div>
+
+            @* Users *@
+            <div class="metric-card" style="top:160px; right:16px;">
+                <div class="metric-value">@Localizer[Langs.Automation]</div>
+                <div class="metric-label">@Localizer[Langs.LessManualWork]</div>
+            </div>
+
+            @* SLA *@
+            <div class="metric-card" style="bottom:16px; left:16px;">
+                <div class="metric-value">@Localizer[Langs.Security]</div>
+                <div class="metric-label">@Localizer[Langs.RBACAccess]</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+
+}
