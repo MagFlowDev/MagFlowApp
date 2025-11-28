@@ -35,6 +35,10 @@ namespace MagFlow.EF.Seeds.Core
                     PasswordHash = "AQAAAAIAAYagAAAAENh7VI3HK8k9lJGj9Pu+j7BbKIxrHDpO4lJZkfPBfWBBF0kO+V2y4S5eNTNLIFjJDg==",
                     SecurityStamp = "RAI3U53B22DPXJN3GUCLAAPS2HWIYYFP",
                     ConcurrencyStamp = "111922fa-b149-4843-83c7-580ae89b42c4",
+                    UserSettings = new ApplicationUserSettings
+                    {
+                        Language = Shared.Models.Enums.Language.Polish
+                    }
                 };
                 await context.ApplicationUsers.AddAsync(adminUser);
                 var superAdminRole = await context.ApplicationRoles.FirstOrDefaultAsync(r => r.NormalizedName == "SUPERADMIN");

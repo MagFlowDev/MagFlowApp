@@ -13,9 +13,9 @@ namespace MagFlow.DAL.Repositories.Company
 {
     public abstract class BaseCompanyRepository<TEntity, TLogger> : IRepository<TEntity> where TEntity : class where TLogger : class
     {
-        private readonly ICoreDbContextFactory _coreContextFactory;
-        private readonly ICompanyDbContextFactory _companyContextFactory;
-        private readonly ILogger<TLogger> _logger;
+        protected readonly ICoreDbContextFactory _coreContextFactory;
+        protected readonly ICompanyDbContextFactory _companyContextFactory;
+        protected readonly ILogger<TLogger> _logger;
 
         public BaseCompanyRepository(ICoreDbContextFactory coreContextFactory,
             ICompanyDbContextFactory companyContextFactory,
@@ -26,7 +26,7 @@ namespace MagFlow.DAL.Repositories.Company
             _logger = logger;
         }
 
-        public Enums.Result Add(TEntity entity)
+        public virtual Enums.Result Add(TEntity entity)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public async Task<Enums.Result> AddAsync(TEntity entity)
+        public virtual async Task<Enums.Result> AddAsync(TEntity entity)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public Enums.Result AddMany(IEnumerable<TEntity> entities)
+        public virtual Enums.Result AddMany(IEnumerable<TEntity> entities)
         {
             try
             {
@@ -80,7 +80,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public async Task<Enums.Result> AddManyAsync(IEnumerable<TEntity> entities)
+        public virtual async Task<Enums.Result> AddManyAsync(IEnumerable<TEntity> entities)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public bool Any(Expression<Func<TEntity, bool>> predicate)
+        public virtual bool Any(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -130,7 +130,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public int Count(Expression<Func<TEntity, bool>> predicate)
+        public virtual int Count(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -146,7 +146,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -162,7 +162,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public Enums.Result Delete(TEntity entity)
+        public virtual Enums.Result Delete(TEntity entity)
         {
             try
             {
@@ -180,7 +180,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public async Task<Enums.Result> DeleteAsync(TEntity entity)
+        public virtual async Task<Enums.Result> DeleteAsync(TEntity entity)
         {
             try
             {
@@ -198,7 +198,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public Enums.Result DeleteMany(Expression<Func<TEntity, bool>> predicate)
+        public virtual Enums.Result DeleteMany(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -219,7 +219,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public async Task<Enums.Result> DeleteManyAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<Enums.Result> DeleteManyAsync(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -240,7 +240,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public TEntity? Get(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity? Get(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -257,7 +257,7 @@ namespace MagFlow.DAL.Repositories.Company
         }
 
 
-        public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -273,7 +273,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null)
+        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null)
         {
             try
             {
@@ -292,7 +292,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null)
         {
             try
             {
@@ -311,7 +311,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public TEntity? GetById(object id)
+        public virtual TEntity? GetById(object id)
         {
             try
             {
@@ -327,7 +327,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public async Task<TEntity?> GetByIdAsync(object id)
+        public virtual async Task<TEntity?> GetByIdAsync(object id)
         {
             try
             {
@@ -343,7 +343,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public Enums.Result Update(TEntity entity)
+        public virtual Enums.Result Update(TEntity entity)
         {
             try
             {
@@ -361,7 +361,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public async Task<Enums.Result> UpdateAsync(TEntity entity)
+        public virtual async Task<Enums.Result> UpdateAsync(TEntity entity)
         {
             try
             {
@@ -379,7 +379,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public IQueryable<TEntity>? Find(Expression<Func<TEntity, bool>> predicate)
+        public virtual IQueryable<TEntity>? Find(Expression<Func<TEntity, bool>> predicate)
         {
             try
             {
@@ -395,7 +395,7 @@ namespace MagFlow.DAL.Repositories.Company
             }
         }
 
-        public DbSet<TEntity>? GetSet(bool tracking = true, bool ignoreAutoInclude = false)
+        public virtual DbSet<TEntity>? GetSet(bool tracking = true, bool ignoreAutoInclude = false)
         {
             try
             {

@@ -95,6 +95,7 @@ namespace MagFlow.EF
             builder.Entity<ApplicationUser>().HasMany(l => l.EventLogs).WithOne(u => u.User);
             builder.Entity<ApplicationUser>().HasMany(n => n.Notifications).WithOne(u => u.User);
             builder.Entity<ApplicationUser>().HasMany(s => s.Sessions).WithOne(u => u.User);
+            builder.Entity<ApplicationUser>().HasOne(s => s.UserSettings).WithOne(u => u.User);
             builder.Entity<ApplicationUser>().HasMany(r => r.Roles).WithOne(u => u.User);
             builder.Entity<ApplicationRole>().HasMany(u => u.Users).WithOne(r => r.Role);
             builder.Entity<UserNotification>().HasOne(n => n.Notification);

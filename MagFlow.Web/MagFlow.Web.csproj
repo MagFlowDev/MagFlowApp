@@ -85,5 +85,26 @@
     <ProjectReference Include="..\MagFlow.Domain\MagFlow.Domain.csproj" />
     <ProjectReference Include="..\MagFlow.Shared\MagFlow.Shared.csproj" />
   </ItemGroup>
+	
+  <ItemGroup>
+    <Compile Update="Resources\Langs.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Langs.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+	
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Langs.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Langs.pl.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Langs.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Langs.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 
 </Project>

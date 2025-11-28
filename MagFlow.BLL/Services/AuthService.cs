@@ -46,6 +46,7 @@ namespace MagFlow.BLL.Services
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(Claims.CompanyClaim, user.DefaultCompanyId.Value.ToString())
                 };
 

@@ -9,8 +9,4 @@
 	<Configurations>Debug;Release;Test</Configurations>	  
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-  </ItemGroup>
-
 </Project>

@@ -24,6 +24,8 @@ namespace MagFlow.Domain.Core
         [ForeignKey(nameof(DefaultCompanyId))]
         public Company? DefaultCompany { get; set; }
 
+        public ApplicationUserSettings? UserSettings { get; set; }
+
         public ICollection<CompanyUser> Companies { get; set; }
         public ICollection<UserSession> Sessions { get; set; }
         public ICollection<UserNotification> Notifications { get; set; }
