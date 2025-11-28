@@ -6,6 +6,12 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum Language
+        {
+            Polish,
+            English
+        }
+
         public enum Result
         {
             Unknown,

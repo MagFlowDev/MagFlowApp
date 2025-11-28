@@ -3,10 +3,8 @@ using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Helpers.Auth;
 using MagFlow.BLL.Services;
 using MagFlow.BLL.Services.Interfaces;
-using MagFlow.DAL.Repositories;
 using MagFlow.DAL.Repositories.Core;
 using MagFlow.DAL.Repositories.Core.Interfaces;
-using MagFlow.DAL.Repositories.Interfaces;
 using MagFlow.Domain.Core;
 using MagFlow.EF;
 using MagFlow.EF.MultiTenancy;
@@ -16,8 +14,6 @@ using MagFlow.Web.HealthChecks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -55,6 +51,7 @@ namespace MagFlow.Web.Extensions
 
             services.ConfigureOpenTelemetry();
             services.AddHttpContextAccessor();
+            services.AddLocalization();
 
             services.AddHostedService<ApplicationMonitorHostedService>();
 
