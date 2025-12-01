@@ -47,6 +47,7 @@ namespace MagFlow.BLL.Services.Heartbeat
         {
             var notifications = await _notificationService.GetCurrentSystemNotificationsAsync();
             // await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", new { Message = "tekst", Timestamp = DateTime.UtcNow });
+            await Task.Delay(2000);
             await _appNotificationService.NotifyAllAsync("test message");
         }
 

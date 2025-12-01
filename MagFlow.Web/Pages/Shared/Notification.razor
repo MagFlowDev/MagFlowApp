@@ -11,7 +11,7 @@
         <ul>
             @foreach (var m in _messages)
             {
-                <li>@m.Timestamp.ToLocalTime(): @m.Message</li>
+                <li>@m.Type @m.Timestamp.ToLocalTime(): @m.Message</li>
             }
         </ul>
     }

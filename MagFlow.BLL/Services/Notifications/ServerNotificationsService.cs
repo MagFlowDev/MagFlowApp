@@ -5,7 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using MagFlow.Shared.Models;
 
 namespace MagFlow.BLL.Services.Notifications
 {
@@ -20,13 +23,14 @@ namespace MagFlow.BLL.Services.Notifications
 
         public Task NotifyAllAsync(string message)
         {
-            var payload = new { Message = message, Timestamp = DateTime.UtcNow };
-            return _hubContext.Clients.All.SendAsync("ReceiveNotification", payload);
+            var payload = new { Message = message, Timestamp = DateTime.UtcNow, Type = Enums.NotificationType.System };
+            var serialized = JsonSerializer.Serialize(payload);
+            return _hubContext.Clients.All.SendAsync("ReceiveNotification", serialized);
         }
 
         public Task NotifyUserAsync(string userId, string message)
         {
-            var payload = new { Message = message, Timestamp = DateTime.UtcNow };
+            var payload = new { Message = message, Timestamp = DateTime.UtcNow, Type = Enums.NotificationType.User };
             return _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", payload);
         }
     }
