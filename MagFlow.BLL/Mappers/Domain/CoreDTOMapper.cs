@@ -28,5 +28,20 @@ namespace MagFlow.BLL.Mappers.Domain
                 Language = applicationUserSettings?.Language ?? Shared.Models.Enums.Language.Polish,
             };
         }
+
+        public static NotificationDTO ToDTO(this SystemNotification systemNotification)
+        {
+            return new NotificationDTO()
+            {
+                Id = systemNotification.Id,
+                Title = systemNotification.Notification?.Title ?? "",
+                Message = systemNotification.Notification?.Message ?? ""
+            };
+        }
+
+        public static List<NotificationDTO> ToDTO(this ICollection<SystemNotification> systemNotifications)
+        {
+            return systemNotifications.Select(x => x.ToDTO()).ToList();
+        }
     }
 }

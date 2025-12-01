@@ -148,12 +148,14 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddSingleton<INotificationService, NotificationService>();
         }
 
         private static void RegisterRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
         }
 
         private static void ConfigureOpenTelemetry(this IServiceCollection services)

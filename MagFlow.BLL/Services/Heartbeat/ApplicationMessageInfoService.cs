@@ -39,6 +39,7 @@ namespace MagFlow.BLL.Services.Heartbeat
         public void Dispose()
         {
             _subscription?.Dispose();
+            _appMonitorService.RemoveConnectedService(ServiceId.ApplicationMessageInfoServiceId);
         }
     }
 }
