@@ -3,7 +3,7 @@
 <Project>
   <PropertyGroup>
     <_PublishTargetUrl>F:\MagFlow\MagFlowApp\MagFlow.Web\bin\Release\net10.0\publish\</_PublishTargetUrl>
-    <History>True|2025-11-26T23:18:16.2623966Z||;True|2025-11-25T22:57:20.9776545+01:00||;True|2025-11-24T19:40:42.1310412+01:00||;</History>
+    <History>True|2025-11-28T21:52:32.6633752Z||;True|2025-11-27T00:18:16.2623966+01:00||;True|2025-11-25T22:57:20.9776545+01:00||;True|2025-11-24T19:40:42.1310412+01:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

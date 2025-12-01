@@ -8,19 +8,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagFlow.BLL.Services
+namespace MagFlow.BLL.Services.Notifications
 {
     public class NotificationService : INotificationService
     {
-        public int RID { get; set; }
-
         private readonly INotificationRepository _notificationRepository;
 
         public NotificationService(INotificationRepository notificationRepository)
         {
             _notificationRepository = notificationRepository;
             Random random = new Random();
-            RID = random.Next();
         }
 
         public async Task<List<NotificationDTO>> GetCurrentSystemNotificationsAsync()

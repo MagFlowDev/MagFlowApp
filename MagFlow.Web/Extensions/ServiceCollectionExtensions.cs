@@ -1,8 +1,10 @@
 ﻿using MagFlow.BLL.ApplicationMonitor;
 using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Helpers.Auth;
+using MagFlow.BLL.Hubs;
 using MagFlow.BLL.Services;
 using MagFlow.BLL.Services.Interfaces;
+using MagFlow.BLL.Services.Notifications;
 using MagFlow.DAL.Repositories.Core;
 using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.Domain.Core;
@@ -14,6 +16,7 @@ using MagFlow.Web.HealthChecks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MudBlazor.Services;
 using OpenTelemetry.Metrics;
@@ -27,6 +30,7 @@ namespace MagFlow.Web.Extensions
     {
         public static IServiceCollection AddMagFlowServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSignalR();
             services.AddSyncfusionBlazor();
             services.AddMudServices();
             services.AddRazorComponents()
@@ -50,6 +54,8 @@ namespace MagFlow.Web.Extensions
                     BaseAddress = new Uri(navigationManager.BaseUri)
                 };
             });
+            services.AddSingleton<IServerNotificationService, ServerNotificationsService>();
+            services.AddSingleton<IUserIdProvider, HubUserIdProvider>();
 
             services.ConfigureOpenTelemetry();
             services.AddHttpContextAccessor();
@@ -77,7 +83,6 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<ICoreDbContextFactory, CoreDbContextFactory>();
             services.AddScoped<ICompanyDbContextFactory, CompanyDbContextFactory>();
             services.AddDbContextFactory<CoreDbContext, CoreDbContextFactory>();
-            //services.AddDbContextFactory<CompanyDbContext, CompanyDbContextFactory>();
         }
 
         private static void ConfigureAuthorization(this IServiceCollection services)
@@ -140,7 +145,6 @@ namespace MagFlow.Web.Extensions
         {
             services.RegisterRepositories();
             services.RegisterServices();
-
         }
 
         private static void RegisterServices(this IServiceCollection services)
@@ -148,7 +152,8 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEmailService, EmailService>();
-            services.AddSingleton<INotificationService, NotificationService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<ClientNotificationService>();
         }
 
         private static void RegisterRepositories(this IServiceCollection services)

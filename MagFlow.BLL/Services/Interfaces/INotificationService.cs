@@ -10,6 +10,5 @@ namespace MagFlow.BLL.Services.Interfaces
     public interface INotificationService
     {
         Task<List<NotificationDTO>> GetCurrentSystemNotificationsAsync();
-        int RID { get; set; }
     }
 }

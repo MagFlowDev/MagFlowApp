@@ -1,4 +1,5 @@
 ﻿using MagFlow.BLL.Helpers;
+using MagFlow.BLL.Hubs;
 using MagFlow.Domain.Core;
 using MagFlow.EF;
 using MagFlow.Web.Middlewares;
@@ -43,6 +44,8 @@ namespace MagFlow.Web.Extensions
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
 
+            app.MapHubs();
+
             app.UseMiddleware<RequestLocalizationMiddleware>();
 
             app.MapMagFlowHealthChecks();
@@ -78,6 +81,13 @@ namespace MagFlow.Web.Extensions
             {
                 logger?.LogError(ex.Message);
             }
+        }
+
+        private static WebApplication MapHubs(this WebApplication app)
+        {
+            app.MapHub<NotificationHub>("/hubs/notifications");
+
+            return app;
         }
 
         private static WebApplication MapMagFlowHealthChecks(this WebApplication app)

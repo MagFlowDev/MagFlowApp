@@ -1,0 +1,41 @@
+﻿@using MagFlow.BLL.Services.Notifications
+@inject ClientNotificationService ClientNotificationService
+
+<div class="notifications">
+    @if (_messages.Count == 0)
+    {
+        <div class="no-notifications">Brak powiadomień</div>
+    }
+    else
+    {
+        <ul>
+            @foreach (var m in _messages)
+            {
+                <li>@m.Timestamp.ToLocalTime(): @m.Message</li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    private readonly List<NotificationMessage> _messages = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ClientNotificationService.OnNotificationReceived += OnNotification;
+        await ClientNotificationService.StartAsync();
+    }
+
+    private void OnNotification(NotificationMessage msg)
+    {
+        _messages.Insert(0, msg);
+        if (_messages.Count > 50) _messages.RemoveAt(_messages.Count - 1);
+        InvokeAsync(StateHasChanged);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        ClientNotificationService.OnNotificationReceived -= OnNotification;
+        await ClientNotificationService.StopAsync();
+    }
+}
