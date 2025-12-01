@@ -112,7 +112,10 @@ namespace MagFlow.Shared.Models
 
         public enum NotificationType
         {
-            Unknown
+            Unknown,
+            System,
+            User,
+            Company
         }
 
         public enum NotificationEntityType

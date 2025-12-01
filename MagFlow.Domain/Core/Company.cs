@@ -26,5 +26,6 @@ namespace MagFlow.Domain.Core
 
         public ICollection<CompanyUser> Users { get; set; }
         public ICollection<CompanyModule> Modules { get; set; }
+        public ICollection<CompanyNotification> Notifications { get; set; }
     }
 }

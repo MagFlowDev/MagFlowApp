@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using MagFlow.BLL.Extensions;
 using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Services.Heartbeat;
+using MagFlow.BLL.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,6 +42,8 @@ namespace MagFlow.BLL.ApplicationMonitor
                     .ConfigureLogging(loggingBuilder => loggingBuilder.AddModuleLogging(_serviceProvider,_configuration,"monitor"))
                     .ConfigureServices((hostContext, services) =>
                     {
+                        services.AddSignalR();
+                        services.AddSingleton(sp => _serviceProvider.GetRequiredService<IServerNotificationService>());
                         services.AddScoped<ApplicationMessageInfoService>();
                         services.AddHostedService<MagFlowMonitorHostedService>();
                     })

@@ -1,7 +1,14 @@
 ﻿using Autofac;
 using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Services.Heartbeat;
+using MagFlow.BLL.Services.Interfaces;
+using MagFlow.BLL.Services.Notifications;
+using MagFlow.DAL.Repositories.Core;
+using MagFlow.DAL.Repositories.Core.Interfaces;
+using MagFlow.EF;
+using MagFlow.EF.MultiTenancy;
 using MagFlow.Shared.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +39,24 @@ namespace MagFlow.BLL.ApplicationMonitor
                 .SingleInstance();
 
             builder.RegisterType<MagFlowMonitorHostedService>().AsSelf().SingleInstance();
+
+            builder.RegisterType<TenantProvider>().As<ITenantProvider>().SingleInstance();
+            builder.RegisterType<CompanyContext>().As<ICompanyContext>().SingleInstance();
+            builder.RegisterType<CoreDbContextFactory>().As<ICoreDbContextFactory>().SingleInstance();
+            builder.RegisterType<CompanyDbContextFactory>().As<ICompanyDbContextFactory>().SingleInstance();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+            RegisterRepositories(builder);
+            RegisterServices(builder);
+        }
+
+        private void RegisterRepositories(Autofac.ContainerBuilder builder)
+        {
+            builder.RegisterType<NotificationRepository>().As<INotificationRepository>().SingleInstance();
+        }
+
+        private void RegisterServices(Autofac.ContainerBuilder builder)
+        {
+            builder.RegisterType<NotificationService>().As<INotificationService>().SingleInstance();
         }
     }
 }
