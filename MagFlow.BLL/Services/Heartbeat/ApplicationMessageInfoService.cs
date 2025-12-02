@@ -42,14 +42,21 @@ namespace MagFlow.BLL.Services.Heartbeat
                 return;
 
             Task.Run(async () => await DisplaySystemNotifications());
+            Task.Run(async () => await DisplayCompanyNotifications());
         }
 
         private async Task DisplaySystemNotifications()
         {
             var notifications = await _notificationService.GetCurrentSystemNotificationsAsync();
-            // await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", new { Message = "tekst", Timestamp = DateTime.UtcNow });
-            await Task.Delay(2000);
-            await _serverNotificationService.NotifyAllAsync("","test message", Enums.NotificationType.System);
+            var notification = notifications.OrderByDescending(exp => exp.ExpireAt).FirstOrDefault();
+            if (notification == null)
+                return;
+            await _serverNotificationService.NotifyAllAsync(notification.Title, notification.Message, Enums.NotificationType.System, notification.ExpireAt);
+        }
+
+        private async Task DisplayCompanyNotifications()
+        {
+            
         }
 
         public void Dispose()

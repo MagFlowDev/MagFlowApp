@@ -1,25 +1,23 @@
 ﻿@using MagFlow.BLL.Services.Notifications
+@using MagFlow.Shared.Models
 @inject ClientNotificationService ClientNotificationService
 @implements IAsyncDisposable
 
-<div class="notifications">
-    @if (_messages.Count == 0)
-    {
-        <div class="no-notifications">Brak powiadomień</div>
-    }
-    else
-    {
-        <ul>
-            @foreach (var m in _messages)
-            {
-                <li>@m.Type @m.Timestamp.ToLocalTime(): @m.Message</li>
-            }
-        </ul>
-    }
-</div>
+@if (_last != null)
+{
+    <div class="notification-bar @GetCssClass(_last)">
+        @if (!string.IsNullOrEmpty(_last.Title))
+        {
+            <strong>@_last.Title</strong>
+    
+            <br />
+        }
+        @_last.Message
+    </div>
+}
 
 @code {
-    private readonly List<NotificationMessage> _messages = new();
+    private NotificationMessage? _last;
 
     protected override async Task OnInitializedAsync()
     {
@@ -27,12 +25,18 @@
         await ClientNotificationService.StartAsync();
     }
 
-    private void OnNotification(NotificationMessage msg)
+    private void OnNotification(NotificationMessage message)
     {
-        _messages.Insert(0, msg);
-        if (_messages.Count > 50) _messages.RemoveAt(_messages.Count - 1);
+        _last = message;
         InvokeAsync(StateHasChanged);
     }
+
+    private string GetCssClass(NotificationMessage n)
+        => n.Type switch
+        {
+            Enums.NotificationType.System => "notification-system",
+            _ => "notification-info"
+        };
 
     public async ValueTask DisposeAsync()
     {

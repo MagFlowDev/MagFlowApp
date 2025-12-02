@@ -7,29 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagFlow.BLL.Mappers.Domain
+namespace MagFlow.BLL.Mappers.Domain.Core
 {
-    public static class CoreDTOMapper
+    public static class NotificationMapper
     {
-        public static UserDTO ToDTO(this ApplicationUser applicationUser)
-        {
-            return new UserDTO()
-            {
-                Id = applicationUser.Id,
-                FirstName = applicationUser.FirstName,
-                LastName = applicationUser.LastName,
-                Settings = ToDTO(applicationUser.UserSettings)
-            };
-        }
-
-        public static UserSettingsDTO ToDTO(this ApplicationUserSettings? applicationUserSettings)
-        {
-            return new UserSettingsDTO()
-            {
-                Language = applicationUserSettings?.Language ?? Shared.Models.Enums.Language.Polish,
-            };
-        }
-
         public static NotificationDTO ToDTO(this SystemNotification systemNotification)
         {
             return new NotificationDTO()
@@ -37,7 +18,8 @@ namespace MagFlow.BLL.Mappers.Domain
                 Id = systemNotification.Id,
                 Title = systemNotification.Notification?.Title ?? "",
                 Message = systemNotification.Notification?.Message ?? "",
-                Type = Enums.NotificationType.System
+                Type = Enums.NotificationType.System,
+                ExpireAt = systemNotification.ExpireAt
             };
         }
 

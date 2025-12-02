@@ -13,5 +13,6 @@ namespace MagFlow.Shared.DTOs.Core
         public string Title { get; set; }
         public string Message { get; set; }
         public Enums.NotificationType Type { get; set; }
+        public DateTime? ExpireAt { get; set; }
     }
 }
