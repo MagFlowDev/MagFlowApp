@@ -1,6 +1,7 @@
 ﻿using MagFlow.BLL.ApplicationMonitor;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Shared.Constants;
+using MagFlow.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,17 +13,17 @@ namespace MagFlow.BLL.Services.Heartbeat
 {
     public class ApplicationMessageInfoService : IHeartbeatService
     {
-        private readonly IServerNotificationService _appNotificationService;
+        private readonly IServerNotificationService _serverNotificationService;
         private readonly INotificationService _notificationService;
         private IApplicationMonitorService _appMonitorService;
         private IDisposable _subscription;
 
         public ApplicationMessageInfoService(IApplicationMonitorService appMonitorService,
-            IServerNotificationService appNotificationService,
+            IServerNotificationService serverNotificationService,
             INotificationService notificationService)
         {
             _appMonitorService = appMonitorService;
-            _appNotificationService = appNotificationService;
+            _serverNotificationService = serverNotificationService;
             _notificationService = notificationService;
             _subscription = new CompositeDisposable(
                 _appMonitorService.ConnectedServiceHeartbeat.Subscribe(Heartbeat));
@@ -48,7 +49,7 @@ namespace MagFlow.BLL.Services.Heartbeat
             var notifications = await _notificationService.GetCurrentSystemNotificationsAsync();
             // await _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", new { Message = "tekst", Timestamp = DateTime.UtcNow });
             await Task.Delay(2000);
-            await _appNotificationService.NotifyAllAsync("test message");
+            await _serverNotificationService.NotifyAllAsync("","test message", Enums.NotificationType.System);
         }
 
         public void Dispose()

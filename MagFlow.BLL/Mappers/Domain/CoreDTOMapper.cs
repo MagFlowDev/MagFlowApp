@@ -1,5 +1,6 @@
 ﻿using MagFlow.Domain.Core;
 using MagFlow.Shared.DTOs.Core;
+using MagFlow.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,8 @@ namespace MagFlow.BLL.Mappers.Domain
             {
                 Id = systemNotification.Id,
                 Title = systemNotification.Notification?.Title ?? "",
-                Message = systemNotification.Notification?.Message ?? ""
+                Message = systemNotification.Notification?.Message ?? "",
+                Type = Enums.NotificationType.System
             };
         }
 

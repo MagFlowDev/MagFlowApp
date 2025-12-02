@@ -44,7 +44,7 @@ namespace MagFlow.BLL.ApplicationMonitor
                     {
                         services.AddSignalR();
                         services.AddSingleton(sp => _serviceProvider.GetRequiredService<IServerNotificationService>());
-                        services.AddScoped<ApplicationMessageInfoService>();
+                        RegisterHeartbeatServices(services);
                         services.AddHostedService<MagFlowMonitorHostedService>();
                     })
                     .ConfigureContainer<Autofac.ContainerBuilder>(builder =>
@@ -69,6 +69,13 @@ namespace MagFlow.BLL.ApplicationMonitor
                 }
                 await Task.Delay(1000 * 60);
             }
+        }
+
+        private IServiceCollection RegisterHeartbeatServices(IServiceCollection services)
+        {
+            services.AddScoped<ApplicationMessageInfoService>();
+
+            return services;
         }
     }
 }

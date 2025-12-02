@@ -1,5 +1,7 @@
 ﻿using MagFlow.BLL.Hubs;
 using MagFlow.BLL.Services.Interfaces;
+using MagFlow.Domain.Company;
+using MagFlow.Shared.Models;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using MagFlow.Shared.Models;
 
 namespace MagFlow.BLL.Services.Notifications
 {
@@ -21,17 +22,23 @@ namespace MagFlow.BLL.Services.Notifications
             _hubContext = hubContext;
         }
 
-        public Task NotifyAllAsync(string message)
+        public Task NotifyAllAsync(string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null)
         {
-            var payload = new { Message = message, Timestamp = DateTime.UtcNow, Type = Enums.NotificationType.System };
+            var payload = new { Title = title, Message = message, Timestamp = DateTime.UtcNow, Type = type, ExpireAt = ExpireAt };
             var serialized = JsonSerializer.Serialize(payload);
             return _hubContext.Clients.All.SendAsync("ReceiveNotification", serialized);
         }
 
-        public Task NotifyUserAsync(string userId, string message)
+        public Task NotifyUserAsync(string userId, string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null)
         {
-            var payload = new { Message = message, Timestamp = DateTime.UtcNow, Type = Enums.NotificationType.User };
+            var payload = new { Title = title, Message = message, Timestamp = DateTime.UtcNow, Type = type, ExpireAt = ExpireAt };
             return _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", payload);
+        }
+
+        public Task NotifyUsersAsync(List<string> userIds, string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null)
+        {
+            var payload = new { Title = title, Message = message, Timestamp = DateTime.UtcNow, Type = type, ExpireAt = ExpireAt };
+            return _hubContext.Clients.Users(userIds).SendAsync("ReceiveNotification", payload);
         }
     }
 }
