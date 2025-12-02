@@ -140,3 +140,23 @@ h1:focus {
 .sticky-nav > div {
     height: 100%;
 }
+
+.notification-bar {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #1976d2;
+    color: white;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 2000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.notification-system {
+    background: #f39c12;
+}
+
+.notification-info {
+    background: #3498db;
+}

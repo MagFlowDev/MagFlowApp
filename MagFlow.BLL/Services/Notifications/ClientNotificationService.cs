@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using MagFlow.Shared.Constants;
+using MagFlow.Shared.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
@@ -7,11 +9,10 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using MagFlow.Shared.Models;
 
 namespace MagFlow.BLL.Services.Notifications
 {
-    public record NotificationMessage(string Message, DateTime Timestamp, Enums.NotificationType Type);
+    public record NotificationMessage(string Title, string Message, DateTime Timestamp, Enums.NotificationType Type, DateTime? ExpireAt);
 
     public class ClientNotificationService : IAsyncDisposable
     {
@@ -32,7 +33,7 @@ namespace MagFlow.BLL.Services.Notifications
                 return Task.CompletedTask;
 
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl(_navigationManager.ToAbsoluteUri("/hubs/notifications"))
+                .WithUrl(_navigationManager.ToAbsoluteUri(APP_URL.NOTIFICATION_HUB))
                 .WithAutomaticReconnect()
                 .Build();
 
@@ -43,13 +44,16 @@ namespace MagFlow.BLL.Services.Notifications
                     if (payload?.GetType().GetProperty("Message")?.GetValue(payload) is not null)
                     {
                         var msg = payload?.GetType().GetProperty("Message")?.GetValue(payload)?.ToString() ?? payload?.ToString() ?? string.Empty;
+                        var title = payload?.GetType().GetProperty("Title")?.GetValue(payload)?.ToString() ?? string.Empty;
                         var tsObj = payload?.GetType().GetProperty("Timestamp")?.GetValue(payload);
                         var typeObj = payload?.GetType().GetProperty("Type")?.GetValue(payload);
+                        var expireObj = payload?.GetType().GetProperty("ExpireAt")?.GetValue(payload);
                         var ts = tsObj is DateTime dt ? dt : DateTime.UtcNow;
+                        DateTime? expire = expireObj is DateTime edt ? edt : null;
                         Enums.NotificationType type = Enums.NotificationType.Unknown;
                         if(typeObj is Enums.NotificationType t)
                             Enum.TryParse(typeObj.ToString(), out type);    
-                        OnNotificationReceived?.Invoke(new NotificationMessage(msg, ts, type));
+                        OnNotificationReceived?.Invoke(new NotificationMessage(title, msg, ts, type, expire));
                     }
                     else
                     {
@@ -64,7 +68,7 @@ namespace MagFlow.BLL.Services.Notifications
                 }
                 catch
                 {
-                    OnNotificationReceived?.Invoke(new NotificationMessage(payload?.ToString() ?? string.Empty, DateTime.UtcNow, Enums.NotificationType.Unknown));
+                    OnNotificationReceived?.Invoke(new NotificationMessage(string.Empty, payload?.ToString() ?? string.Empty, DateTime.UtcNow, Enums.NotificationType.Unknown, null));
                 }
             });
 

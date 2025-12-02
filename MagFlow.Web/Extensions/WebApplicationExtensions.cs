@@ -2,6 +2,7 @@
 using MagFlow.BLL.Hubs;
 using MagFlow.Domain.Core;
 using MagFlow.EF;
+using MagFlow.Shared.Constants;
 using MagFlow.Web.Middlewares;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
@@ -85,7 +86,7 @@ namespace MagFlow.Web.Extensions
 
         private static WebApplication MapHubs(this WebApplication app)
         {
-            app.MapHub<NotificationHub>("/hubs/notifications");
+            app.MapHub<NotificationHub>(APP_URL.NOTIFICATION_HUB);
 
             return app;
         }

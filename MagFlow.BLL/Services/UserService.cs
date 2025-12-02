@@ -1,4 +1,5 @@
 ﻿using MagFlow.BLL.Mappers.Domain;
+using MagFlow.BLL.Mappers.Domain.Core;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.Shared.DTOs.Core;

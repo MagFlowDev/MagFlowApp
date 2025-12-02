@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagFlow.BLL.Mappers.Domain
+namespace MagFlow.BLL.Mappers.Domain.Core
 {
-    public static class CoreDTOMapper
+    public static class UserMapper
     {
         public static UserDTO ToDTO(this ApplicationUser applicationUser)
         {
@@ -27,21 +27,6 @@ namespace MagFlow.BLL.Mappers.Domain
             {
                 Language = applicationUserSettings?.Language ?? Shared.Models.Enums.Language.Polish,
             };
-        }
-
-        public static NotificationDTO ToDTO(this SystemNotification systemNotification)
-        {
-            return new NotificationDTO()
-            {
-                Id = systemNotification.Id,
-                Title = systemNotification.Notification?.Title ?? "",
-                Message = systemNotification.Notification?.Message ?? ""
-            };
-        }
-
-        public static List<NotificationDTO> ToDTO(this ICollection<SystemNotification> systemNotifications)
-        {
-            return systemNotifications.Select(x => x.ToDTO()).ToList();
         }
     }
 }
