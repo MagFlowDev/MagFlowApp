@@ -1,4 +1,6 @@
 ﻿using MagFlow.Domain.Core;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,9 +21,10 @@ namespace MagFlow.EF.Seeds.Core
             var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
             if (adminUser == null)
             {
+                var password = new PasswordHasher<ApplicationUser>();
                 adminUser = new ApplicationUser
                 {
-                    Id = new Guid("3594E385-7A0A-41E7-5B87-08DE1BD4DEF0"),
+                    Id = Guid.NewGuid(),
                     FirstName = "Admin",
                     LastName = "Magflow",
                     CreatedAt = DateTime.UtcNow,
@@ -32,14 +35,14 @@ namespace MagFlow.EF.Seeds.Core
                     Email = "admin@magflow.com",
                     NormalizedEmail = "ADMIN@MAGFLOW.COM",
                     EmailConfirmed = true,
-                    PasswordHash = "AQAAAAIAAYagAAAAENh7VI3HK8k9lJGj9Pu+j7BbKIxrHDpO4lJZkfPBfWBBF0kO+V2y4S5eNTNLIFjJDg==",
-                    SecurityStamp = "RAI3U53B22DPXJN3GUCLAAPS2HWIYYFP",
-                    ConcurrencyStamp = "111922fa-b149-4843-83c7-580ae89b42c4",
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
                     UserSettings = new ApplicationUserSettings
                     {
                         Language = Shared.Models.Enums.Language.Polish
                     }
                 };
+                adminUser.PasswordHash = password.HashPassword(adminUser, "Password1!");
+                
                 await context.ApplicationUsers.AddAsync(adminUser);
                 var superAdminRole = await context.ApplicationRoles.FirstOrDefaultAsync(r => r.NormalizedName == "SUPERADMIN");
                 if (superAdminRole != null)
