@@ -1,13 +1,16 @@
 ﻿using MagFlow.Domain.Core;
+using MagFlow.EF.Seeds.Company;
 using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Helpers.Generators;
 using MagFlow.Shared.Models.Enumerators;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MagFlow.EF.Seeds.Core
 {
@@ -20,6 +23,7 @@ namespace MagFlow.EF.Seeds.Core
 
         public async Task SeedAsync(CoreDbContext context, CancellationToken cancellationToken)
         {
+            List<string> seededDbConnectionStrings = new List<string>();
             bool seed = false;
 
             var now = DateTime.UtcNow;
@@ -38,6 +42,7 @@ namespace MagFlow.EF.Seeds.Core
                 };
                 await context.Companies.AddAsync(testCompany);
                 seed = true;
+                seededDbConnectionStrings.Add(testCompany.ConnectionString);
             }
             var demoCompany = await context.Companies.FirstOrDefaultAsync(c => c.NormalizedName.Equals("DEMO"));
             if (demoCompany == null)
@@ -65,6 +70,7 @@ namespace MagFlow.EF.Seeds.Core
                     }
                 }
                 seed = true;
+                seededDbConnectionStrings.Add(demoCompany.ConnectionString);
             }
             else
             {
@@ -86,9 +92,27 @@ namespace MagFlow.EF.Seeds.Core
                 }
             }
 
-
             if (seed)
                 await context.SaveChangesAsync();
+
+            if(seededDbConnectionStrings.Any())
+            {
+                foreach(var connectionString in seededDbConnectionStrings)
+                {
+                    try
+                    {
+                        using (var companyDbContext = new CompanyDbContext(connectionString))
+                        {
+                            await companyDbContext.Database.MigrateAsync();
+                            await CompanyDbSeeder.SeedAsync(companyDbContext, CancellationToken.None);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                }
+            }
         }
     }
 }
