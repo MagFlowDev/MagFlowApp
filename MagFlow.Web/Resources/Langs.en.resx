@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="14DayTrial" xml:space="preserve">
+  <data name="_14DayTrial" xml:space="preserve">
     <value>14-day trial period</value>
   </data>
   <data name="Automation" xml:space="preserve">
@@ -173,5 +173,86 @@
   </data>
   <data name="TrialPeriod" xml:space="preserve">
     <value>Trial period</value>
+  </data>
+  <data name="ModuleContractorsTitle" xml:space="preserve">
+    <value>Contractors</value>
+  </data>
+  <data name="ModuleDocumentsTitle" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="ModuleLogisticsTitle" xml:space="preserve">
+    <value>Logistics</value>
+  </data>
+  <data name="ModuleMachinesTitle" xml:space="preserve">
+    <value>Machines</value>
+  </data>
+  <data name="ModuleOrdersTitle" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="ModuleProcessesTitle" xml:space="preserve">
+    <value>Production Processes</value>
+  </data>
+  <data name="ModuleProdPlanTitle" xml:space="preserve">
+    <value>Production Planning</value>
+  </data>
+  <data name="ModuleReportsTitle" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="ModuleUsersTitle" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="ModuleWarehousesTitle" xml:space="preserve">
+    <value>Warehouse</value>
+  </data>
+  <data name="ModuleWaresTitle" xml:space="preserve">
+    <value>Wares</value>
+  </data>
+  <data name="ModuleWorktimeTitle" xml:space="preserve">
+    <value>Work Records</value>
+  </data>
+  <data name="ModuleOrdersDesc" xml:space="preserve">
+    <value>Streamline the entire order handling process with fast creation, tracking, and execution of customer and supplier orders in one place.</value>
+  </data>
+  <data name="ModuleDocumentsDesc" xml:space="preserve">
+    <value>Automate the flow of all warehouse and sales documents, reducing errors and keeping full control over material movements.</value>
+  </data>
+  <data name="ModuleWarehousesDesc" xml:space="preserve">
+    <value>Track inventory levels, movements, and reservations in real time to keep warehouse operations smooth and interruption-free.</value>
+  </data>
+  <data name="ModuleLogisticsDesc" xml:space="preserve">
+    <value>Plan and coordinate transports, shipments, and pickups to ensure fast, predictable, and well-organized logistics.</value>
+  </data>
+  <data name="ModuleWaresDesc" xml:space="preserve">
+    <value>Create complete products cards with custom parameters and history, giving you full visibility into every item in your company.</value>
+  </data>
+  <data name="ModuleProcessesDesc" xml:space="preserve">
+    <value>Model, standardize, and control each step of the production workflow to improve repeatability and product quality.</value>
+  </data>
+  <data name="ModuleProdPlanDesc" xml:space="preserve">
+    <value>Build effective schedules and optimize the use of machines, people, and materials to keep every order on time.</value>
+  </data>
+  <data name="ModuleMachinesDesc" xml:space="preserve">
+    <value>Manage your machine park, workloads, and statuses to maintain high availability and minimize downtime risks.</value>
+  </data>
+  <data name="ModuleWorktimeDesc" xml:space="preserve">
+    <value>Log employee time and activity across shifts and production orders to gain clear visibility into work execution.</value>
+  </data>
+  <data name="ModuleReportsDesc" xml:space="preserve">
+    <value>Get clear reports and key performance indicators that help you make smart operational and strategic decisions.</value>
+  </data>
+  <data name="ModuleUsersDesc" xml:space="preserve">
+    <value>Manage roles and access permissions to align system access with your company structure and maintain security.</value>
+  </data>
+  <data name="ModuleContractorsDesc" xml:space="preserve">
+    <value>Maintain a complete database of customers and suppliers to speed up transactions and strengthen business relationships.</value>
+  </data>
+  <data name="LearnMore" xml:space="preserve">
+    <value>Learn more</value>
+  </data>
+  <data name="CompleteManufacturingSuite" xml:space="preserve">
+    <value>Complete Manufacturing Suite</value>
+  </data>
+  <data name="LP_Section_Module_Text1" xml:space="preserve">
+    <value>Flexible, fully integrated modules that work together to streamline workflows, increase efficiency, and provide complete control over the entire manufacturing process.</value>
   </data>
 </root>
