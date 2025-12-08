@@ -7,9 +7,9 @@ using Serilog;
 using Serilog.Extensions.Logging;
 using System.Runtime.InteropServices;
 
-namespace MagFlow.BLL.Extensions
+namespace MagFlow.BLL.Helpers
 {
-    public static class LoggingExtensions
+    public static class LoggingBuilder
     {
         private static string OutputTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3}] ({EnvironmentName}/{ThreadId}) {SourceContext}: {Message:lj}{NewLine}{Exception}";
 
@@ -66,7 +66,7 @@ namespace MagFlow.BLL.Extensions
             var logsDir = Path.Combine(root, "logs", moduleName);
             Directory.CreateDirectory(logsDir);
 
-            var serilog = Serilog.Log.Logger ?? CreateLoggerConfiguration(moduleName, sp, config).CreateLogger();
+            var serilog = Log.Logger ?? CreateLoggerConfiguration(moduleName, sp, config).CreateLogger();
             ILoggerFactory factory = new LoggerFactory().AddSerilog(serilog);
             SerilogLoggerProvider loggerProvider = new SerilogLoggerProvider((Serilog.ILogger?)factory.CreateLogger<T>());
             return loggerProvider;
@@ -80,7 +80,7 @@ namespace MagFlow.BLL.Extensions
             var logsDir = Path.Combine(root, "logs", moduleName);
             Directory.CreateDirectory(logsDir);
 
-            var loggerConfiguration = new Serilog.LoggerConfiguration()
+            var loggerConfiguration = new LoggerConfiguration()
                 .ReadFrom.Configuration(config)
                    .ReadFrom.Services(sp)
                    .Enrich.FromLogContext()

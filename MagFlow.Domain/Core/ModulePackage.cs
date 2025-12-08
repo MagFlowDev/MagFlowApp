@@ -4,25 +4,25 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MagFlow.Domain.Core
 {
-    public class ModulePricing
+    public class ModulePackage
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         [Required]
-        public Guid ModuleId { get; set; }
+        public Enums.Currency Currency { get; set; }
         [Required]
-        public Enums.Currency Currency {  get; set; }
+        [Precision(8, 2)]
+        public decimal TotalPricePerMonth { get; set; }
         [Required]
-        [Precision(8,2)]
-        public decimal PricePerMonth { get; set; }
-        [Required]
-        [Precision(8,2)]
-        public decimal PricePerYear { get; set; }
+        [Precision(8, 2)]
+        public decimal TotalPricePerYear { get; set; }
         [Required]
         public bool IsActive { get; set; }
         [Required]
@@ -32,9 +32,6 @@ namespace MagFlow.Domain.Core
         [Required]
         public DateTime CreatedAt { get; set; }
 
-        [ForeignKey(nameof(ModuleId))]
-        public Module? Module { get; set; }
-
-        public ICollection<ModulePackage> Packages { get; set; }
+        public ICollection<ModulePricing> Modules { get; set; }
     }
 }

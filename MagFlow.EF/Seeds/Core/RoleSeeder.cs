@@ -6,22 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MagFlow.Shared.Constants;
+using MagFlow.Shared.Models.Enumerators;
 
 namespace MagFlow.EF.Seeds.Core
 {
     public class RoleSeeder : ICoreSeeder
     {
-        private string[] roles = new[]
-        {
-            AppRoles.Foreman,
-            AppRoles.Operator,
-            AppRoles.Auditor,
-            AppRoles.Supervisor,
-            AppRoles.CompanyAdmin,
-            AppRoles.SysAdmin,
-            AppRoles.SuperAdmin
-        };
-        
         public void Seed(CoreDbContext context)
         {
             Task.Run(async () => await SeedAsync(context, CancellationToken.None));
@@ -35,9 +25,9 @@ namespace MagFlow.EF.Seeds.Core
             {
                 superAdminRole = new ApplicationRole
                 {
-                    Id = Guid.NewGuid(),
-                    Name = "SuperAdmin",
-                    NormalizedName = "SUPERADMIN"
+                    Id = AppRole.SuperAdmin.Id,
+                    Name = AppRole.SuperAdmin.Name,
+                    NormalizedName = AppRole.SuperAdmin.Name.ToUpper()
                 };
                 await context.ApplicationRoles.AddAsync(superAdminRole);
                 var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
@@ -62,16 +52,16 @@ namespace MagFlow.EF.Seeds.Core
                 }
             }
 
-            foreach (var role in roles.Where(x => x != AppRoles.SuperAdmin))
+            foreach (var role in Enumeration<Guid>.GetAll<AppRole>().Where(x => x.Id != AppRole.SuperAdmin.Id && x.Name != AppRole.SuperAdmin.Name))
             {
-                var dbRole = await context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == role.ToUpper());
+                var dbRole = await context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == role.Name.ToUpper());
                 if (dbRole == null)
                 {
                     dbRole = new ApplicationRole
                     {
-                        Id = Guid.NewGuid(),
-                        Name = role.ToString(),
-                        NormalizedName = role.ToUpper()
+                        Id = role.Id,
+                        Name = role.Name,
+                        NormalizedName = role.Name.ToUpper()
                     };
                     await context.ApplicationRoles.AddAsync(dbRole);
                     seed = true;
