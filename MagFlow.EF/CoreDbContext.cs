@@ -26,6 +26,7 @@ namespace MagFlow.EF
         public DbSet<EventLog> EventLogs { get; set; }
         public DbSet<CompanyModule> CompanyModules { get; set; }
         public DbSet<Module> Modules { get; set; }
+        public DbSet<ModulePackage> ModulePackages { get; set; }
         public DbSet<SystemNotification> SystemNotifications { get; set; }
 
         public CoreDbContext(string connectionString) : base(BuildOptions(connectionString))
@@ -108,6 +109,7 @@ namespace MagFlow.EF
             builder.Entity<CompanyModule>().HasMany(p => p.ModulePricings).WithOne(m => m.CompanyModule);
             builder.Entity<CompanyModule>().HasOne(m => m.Module).WithMany(c => c.CompanyModules);
             builder.Entity<Module>().HasMany(p => p.Pricings).WithOne(m => m.Module);
+            builder.Entity<ModulePackage>().HasMany(m => m.Modules).WithMany(p => p.Packages);
             builder.Entity<SystemNotification>().HasOne(n => n.Notification);
         }
 

@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace MagFlow.Shared.Models.Enumerators
 {
-    public abstract class Enumeration : IComparable
+    public abstract class Enumeration<I> : IComparable where I : IComparable
     {
         public string Name { get; private set; }
 
-        public int Id { get; private set; }
+        public I Id { get; private set; }
 
-        protected Enumeration(int id, string name) => (Id, Name) = (id, name);
+        protected Enumeration(I id, string name) => (Id, Name) = (id, name);
 
         public override string ToString() => Name;
 
-        public static IEnumerable<T> GetAll<T>() where T : Enumeration =>
+        public static IEnumerable<T> GetAll<T>() where T : Enumeration<I> =>
             typeof(T).GetFields(BindingFlags.Public |
                                 BindingFlags.Static |
                                 BindingFlags.DeclaredOnly)
@@ -26,7 +26,7 @@ namespace MagFlow.Shared.Models.Enumerators
 
         public override bool Equals(object? obj)
         {
-            if (obj is not Enumeration otherValue)
+            if (obj is not Enumeration<I> otherValue)
                 return false;
 
             var typeMatches = GetType().Equals(obj.GetType());
@@ -35,12 +35,11 @@ namespace MagFlow.Shared.Models.Enumerators
             return typeMatches && valueMatches;
         }
 
-
         public int CompareTo(object? obj)
         {
             if (obj is null)
                 return Id.CompareTo(null);
-            return Id.CompareTo(((Enumeration)obj).Id);
+            return Id.CompareTo(((Enumeration<I>)obj).Id);
         }
     }
 }

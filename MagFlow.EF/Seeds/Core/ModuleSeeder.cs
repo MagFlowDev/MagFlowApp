@@ -1,4 +1,5 @@
 ﻿using MagFlow.Domain.Core;
+using MagFlow.Shared.Helpers.Generators;
 using MagFlow.Shared.Models.Enumerators;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,17 +22,21 @@ namespace MagFlow.EF.Seeds.Core
         {
             bool seed = false;
 
-            foreach(var module in Enumeration.GetAll<ModuleType>())
+            var now = DateTime.UtcNow;
+            foreach(var module in Enumeration<Guid>.GetAll<ModuleType>())
             {
                 var dbModule = await context.Modules.FirstOrDefaultAsync(m => m.Name.Equals(module.Name));
                 if (dbModule == null)
                 {
                     dbModule = new Module()
                     {
-                        Id = Guid.NewGuid(),
+                        Id = module.Id,
                         Name = module.Name,
+                        CreatedAt = now,
+                        Code = CodeGenerator.Module_GenerateCode(module.Name),
+                        IsActive = true
                     };
-                    await context.ApplicationRoles.AddAsync(dbRole);
+                    await context.Modules.AddAsync(dbModule);
                     seed = true;
                 }
             }

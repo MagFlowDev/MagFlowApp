@@ -1,6 +1,5 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using MagFlow.BLL.Extensions;
 using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Services.Heartbeat;
 using MagFlow.BLL.Services.Interfaces;

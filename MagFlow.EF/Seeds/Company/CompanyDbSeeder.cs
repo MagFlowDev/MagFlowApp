@@ -18,8 +18,15 @@ namespace MagFlow.EF.Seeds.Company
                     .Where(p => type.IsAssignableFrom(p) && !p.IsInterface);
                 foreach (var iseeder in types)
                 {
-                    var seeder = (ICompanySeeder)Activator.CreateInstance(iseeder);
-                    seeder?.Seed(context);
+                    try
+                    {
+                        var seeder = (ICompanySeeder)Activator.CreateInstance(iseeder);
+                        seeder?.Seed(context);
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
                 }
             }
             catch (Exception ex)
@@ -38,9 +45,16 @@ namespace MagFlow.EF.Seeds.Company
                     .Where(p => type.IsAssignableFrom(p) && !p.IsInterface);
                 foreach (var iseeder in types)
                 {
-                    var seeder = (ICompanySeeder)Activator.CreateInstance(iseeder);
-                    if (seeder != null)
-                        await seeder.SeedAsync(context, cancellationToken);
+                    try
+                    {
+                        var seeder = (ICompanySeeder)Activator.CreateInstance(iseeder);
+                        if (seeder != null)
+                            await seeder.SeedAsync(context, cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }   
                 }
             }
             catch (Exception ex)

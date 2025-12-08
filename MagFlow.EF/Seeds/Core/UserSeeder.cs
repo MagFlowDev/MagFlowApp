@@ -18,9 +18,11 @@ namespace MagFlow.EF.Seeds.Core
         public async Task SeedAsync(CoreDbContext context, CancellationToken cancellationToken)
         {
             bool seed = false;
+            var now = DateTime.UtcNow;
             var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
             if (adminUser == null)
             {
+                var demoCompany = await context.Companies.FirstOrDefaultAsync(u => u.NormalizedName == "DEMO");
                 var password = new PasswordHasher<ApplicationUser>();
                 adminUser = new ApplicationUser
                 {
@@ -28,7 +30,7 @@ namespace MagFlow.EF.Seeds.Core
                     FirstName = "Admin",
                     LastName = "Magflow",
                     CreatedAt = DateTime.UtcNow,
-                    DefaultCompanyId = null,
+                    DefaultCompanyId = demoCompany?.Id,
                     IsActive = true,
                     UserName = "admin@magflow.com",
                     NormalizedUserName = "ADMIN@MAGFLOW.COM",
@@ -49,6 +51,11 @@ namespace MagFlow.EF.Seeds.Core
                 {
                     ApplicationUserRole superAdmin = new ApplicationUserRole { RoleId = superAdminRole.Id, UserId = adminUser.Id };
                     await context.UserRoles.AddAsync(superAdmin);
+                }
+                if (demoCompany != null)
+                {
+                    CompanyUser companyUser = new CompanyUser() { CompanyId = demoCompany.Id, UserId = adminUser.Id, AssignedAt = now };
+                    await context.CompanyUsers.AddAsync(companyUser);
                 }
                 seed = true;
             }
