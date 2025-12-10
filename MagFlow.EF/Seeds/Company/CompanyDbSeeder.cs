@@ -16,11 +16,25 @@ namespace MagFlow.EF.Seeds.Company
                 var types = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(s => s.GetTypes())
                     .Where(p => type.IsAssignableFrom(p) && !p.IsInterface);
+                List<ICompanySeeder> seeders = new List<ICompanySeeder>();
                 foreach (var iseeder in types)
                 {
                     try
                     {
                         var seeder = (ICompanySeeder)Activator.CreateInstance(iseeder);
+                        if(seeder != null)
+                            seeders.Add(seeder);   
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
+                }
+                seeders = seeders.OrderBy(s => s.Step).ToList();
+                foreach (var seeder in seeders)
+                {
+                    try
+                    {
                         seeder?.Seed(context);
                     }
                     catch(Exception ex)
@@ -43,18 +57,32 @@ namespace MagFlow.EF.Seeds.Company
                 var types = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(s => s.GetTypes())
                     .Where(p => type.IsAssignableFrom(p) && !p.IsInterface);
+                List<ICompanySeeder> seeders = new List<ICompanySeeder>();
                 foreach (var iseeder in types)
                 {
                     try
                     {
                         var seeder = (ICompanySeeder)Activator.CreateInstance(iseeder);
                         if (seeder != null)
-                            await seeder.SeedAsync(context, cancellationToken);
+                            seeders.Add(seeder);
                     }
                     catch (Exception ex)
                     {
 
                     }   
+                }
+                seeders = seeders.OrderBy(s => s.Step).ToList();
+                foreach (var seeder in seeders)
+                {
+                    try
+                    {
+                        if (seeder != null)
+                            await seeder.SeedAsync(context, cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
             }
             catch (Exception ex)

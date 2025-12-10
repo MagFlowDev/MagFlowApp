@@ -18,7 +18,7 @@ namespace MagFlow.Domain.Company
         public int? StorageId { get; set; }
         public string? Location { get; set; }
         [Required]
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal Quantity { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
@@ -37,11 +37,11 @@ namespace MagFlow.Domain.Company
         [Required]
         public Enums.ItemStatus Status { get; set; }
         public string? Note { get; set; }
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal? PurchasePrice { get; set; }
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal? SellPrice { get; set; }
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal? VatRate { get; set; }
         public Enums.Currency? Currency { get; set; }
         

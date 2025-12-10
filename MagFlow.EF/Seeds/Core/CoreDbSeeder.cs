@@ -1,4 +1,5 @@
 ﻿using MagFlow.Domain.Core;
+using MagFlow.EF.Seeds.Company;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,14 +17,28 @@ namespace MagFlow.EF.Seeds.Core
                 var types = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(s => s.GetTypes())
                     .Where(p => type.IsAssignableFrom(p) && !p.IsInterface);
+                List<ICoreSeeder> seeders = new List<ICoreSeeder>();
                 foreach (var iseeder in types)
                 {
                     try
                     {
                         var seeder = (ICoreSeeder)Activator.CreateInstance(iseeder);
+                        if(seeder != null )
+                            seeders.Add(seeder);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+                seeders = seeders.OrderBy(s => s.Step).ToList();
+                foreach (var seeder in seeders)
+                {
+                    try
+                    {
                         seeder?.Seed(context);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
 
                     }
@@ -43,11 +58,25 @@ namespace MagFlow.EF.Seeds.Core
                 var types = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(s => s.GetTypes())
                     .Where(p => type.IsAssignableFrom(p) && !p.IsInterface);
+                List<ICoreSeeder> seeders = new List<ICoreSeeder>();
                 foreach (var iseeder in types)
                 {
                     try
                     {
                         var seeder = (ICoreSeeder)Activator.CreateInstance(iseeder);
+                        if (seeder != null)
+                            seeders.Add(seeder);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+                seeders = seeders.OrderBy(s => s.Step).ToList();
+                foreach (var seeder in seeders)
+                {
+                    try
+                    {
                         if (seeder != null)
                             await seeder.SeedAsync(context, cancellationToken);
                     }

@@ -13,6 +13,8 @@ namespace MagFlow.EF.Seeds.Core
 {
     public class ModuleSeeder : ICoreSeeder
     {
+        public int Step => 4;
+
         public void Seed(CoreDbContext context)
         {
             Task.Run(async () => await SeedAsync(context, CancellationToken.None));

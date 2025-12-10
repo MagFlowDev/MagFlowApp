@@ -15,13 +15,13 @@ namespace MagFlow.Domain.Company
         [Required]
         public int ProductId { get; set; }
         [Required]
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal Quantity { get; set; }
         [Required]
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal Price { get; set; }
         [Required]
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal VatRate { get; set; }
         [Required]
         public Enums.Currency Currency { get; set; }
