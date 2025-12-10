@@ -16,6 +16,8 @@ namespace MagFlow.EF.Seeds.Core
 {
     public class CompanySeeder : ICoreSeeder
     {
+        public int Step => 3;
+
         public void Seed(CoreDbContext context)
         {
             Task.Run(async () => await SeedAsync(context, CancellationToken.None));

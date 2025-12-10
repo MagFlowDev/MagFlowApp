@@ -14,7 +14,7 @@ namespace MagFlow.Domain.Company
         [Required]
         public int OrderItemId { get; set; }
         [Required]
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal Quantity { get; set; }
         
         [ForeignKey(nameof(OrderDeliveryId))]

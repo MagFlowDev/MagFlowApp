@@ -25,11 +25,11 @@ namespace MagFlow.Domain.Company
         public DateTime CreatedAt { get; set; }
         [Required]
         public Guid CreatedById { get; set; }
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal? DefaultPurchasePrice { get; set; }
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal? DefaultSellPrice { get; set; }
-        [Precision(8,2)]
+        [Precision(18, 4)]
         public decimal? DefaultVatRate { get; set; }
         public Enums.Currency? Currency { get; set; }
         

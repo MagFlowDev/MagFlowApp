@@ -12,6 +12,8 @@ namespace MagFlow.EF.Seeds.Core
 {
     public class RoleSeeder : ICoreSeeder
     {
+        public int Step => 2;
+
         public void Seed(CoreDbContext context)
         {
             Task.Run(async () => await SeedAsync(context, CancellationToken.None));

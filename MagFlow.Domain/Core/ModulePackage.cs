@@ -18,10 +18,10 @@ namespace MagFlow.Domain.Core
         [Required]
         public Enums.Currency Currency { get; set; }
         [Required]
-        [Precision(8, 2)]
+        [Precision(18, 4)]
         public decimal TotalPricePerMonth { get; set; }
         [Required]
-        [Precision(8, 2)]
+        [Precision(18, 4)]
         public decimal TotalPricePerYear { get; set; }
         [Required]
         public bool IsActive { get; set; }

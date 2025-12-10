@@ -10,9 +10,11 @@ namespace MagFlow.EF.Seeds.Company
 {
     public class UnitSeeder : ICompanySeeder
     {
+        public int Step => 1;
+
         Dictionary<string, string> units = new Dictionary<string, string>()
         {
-            { "Kg", "Kilogram" },
+            { "kg", "kilogram" },
             { "g", "gram" },
             { "mg", "miligram" },
             { "l", "litr" },

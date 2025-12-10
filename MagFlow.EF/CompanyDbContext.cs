@@ -44,6 +44,7 @@ namespace MagFlow.EF
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<ProductUnitConversion> ProductUnitConversions { get; set; }
         public DbSet<Unit> Units { get; set; }
+        public DbSet<UnitConversion> UnitConversions { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<WarehouseStorage> WarehouseStorages { get; set; }
@@ -97,6 +98,8 @@ namespace MagFlow.EF
             builder.Entity<Product>().HasOne(x => x.Unit).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<ProductUnitConversion>().HasOne(x => x.FromUnit).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<ProductUnitConversion>().HasOne(x => x.ToUnit).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<UnitConversion>().HasOne(x => x.FromUnit).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<UnitConversion>().HasOne(x => x.ToUnit).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<MachineModelFunction>().HasOne(x => x.MachineModel).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<MachineFunctionParameter>().HasOne(x => x.MachineModelFunction).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<MachineFunctionParameter>().HasOne(x => x.FunctionParameter).WithMany().OnDelete(DeleteBehavior.NoAction);
