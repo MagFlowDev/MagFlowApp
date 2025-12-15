@@ -18,7 +18,7 @@
 }
 
 .hero-title {
-    color: #212529;
+    color: #272C34;
     font-size: 64px;
     font-weight: 700;
     line-height: 67px;
@@ -36,14 +36,13 @@
     line-height: 27px;
 }
 
-/* --- BUTTONS --- */
 .hero-buttons {
     gap: 16px;
 }
 
 ::deep .e-btn.btn-dark-base {
-    background-color: #212529 !important;
-    border-color: #212529 !important;
+    background-color: #272C34 !important;
+    border-color: #272C34 !important;
     color: #fff !important;
     height: 44px;
     padding: 0 12px;
