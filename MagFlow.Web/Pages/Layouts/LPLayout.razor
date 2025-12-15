@@ -1,77 +1,84 @@
 ﻿@using MagFlow.Web.Pages.Layouts.Partial
 @using MagFlow.Web.Pages.Shared
-@using Syncfusion.Blazor.Buttons
-@using Syncfusion.Blazor.SplitButtons
+@using MudBlazor
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JS
 @implements IDisposable
+
+<MudThemeProvider Theme="_theme"/>
+<MudPopoverProvider />
+
+<MudDialogProvider />
+
+<MudSnackbarProvider />
 
 <div class="page">
     <ErrorBoundary>
         <ChildContent>
             <div class="main">
                 <nav class="control-container sticky-nav">
-                    <div style="width: 100%; height: 100%; padding-left: 12px; padding-right: 12px; justify-content: space-between; align-items: center; display: inline-flex">
-                        <SfAppBar ColorMode="AppBarColor.Inherit" CssClass="justify-content-start align-items-center d-md-flex border-0">
-                            <a href="/" style="justify-content: flex-start; align-items: center; gap: 16px; display: inline-flex" class="desktop-logo">
-                                <div style="width: 40px; height: 40px; padding-right: 0.01px; background: #0D6EFD; border-radius: 6px; justify-content: center; align-items: center; display: flex">
-                                    <div style="width: 17.48px; height: 30px; position: relative">
-                                        <div style="left: 0px; top: 0px; position: absolute; color: white; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 30px; word-wrap: break-word">M</div>
-                                    </div>
+                    <div style="width: 100%; padding-left: 8px; padding-right: 8px;">
+                        <MudAppBar Color="Color.Inherit" Class="lp-appbar">
+                            
+                            <a href="/" class="desktop-logo"
+                               style="display:inline-flex;align-items:center;gap:16px">
+                                <div style="width:40px;height:40px;background:#0D6EFD;border-radius:6px; display:flex;align-items:center;justify-content:center">
+                                    <span style="color:white;font-size:20px;font-weight:700">M</span>
                                 </div>
-                                <div style="width: 134px; height: 42px; position: relative">
-                                    <div style="width: 136px; left: 0px; top: 0.50px; position: absolute; color: #212529; font-size: 28px; font-family: Inter; font-weight: 700; line-height: 42px; letter-spacing: 0.38px; word-wrap: break-word">MagFlow</div>
-                                </div>
+                                <span style="font-size:28px;font-weight:700;color:#212529">
+                                    MagFlow
+                                </span>
                             </a>
-                            <div class="d-md-flex justify-content-between align-items-center w-100">
-                                <div></div>
-                                <div class="desktop-tabs">
-                                    <SfTab CssClass="underline-tabs" 
-                                           SelectedItem="ActiveTab"
-                                           SelectedItemChanged="OnTabChanged">
-                                        <TabItems>
-                                            <TabItem>
-                                                <ChildContent>
-                                                    <TabHeader Text="@Localizer[Langs.Start]"></TabHeader>
-                                                </ChildContent>
-                                            </TabItem>
-                                            <TabItem>
-                                                <ChildContent>
-                                                    <TabHeader Text="@Localizer[Langs.SystemModules]"></TabHeader>
-                                                </ChildContent>
-                                            </TabItem>
-                                            <TabItem>
-                                                <ChildContent>
-                                                    <TabHeader Text="@Localizer[Langs.Pricing]"></TabHeader>
-                                                </ChildContent>
-                                            </TabItem>
-                                            <TabItem>
-                                                <ChildContent>
-                                                    <TabHeader Text="@Localizer[Langs.Contact]"></TabHeader>
-                                                </ChildContent>
-                                            </TabItem>
-                                        </TabItems>
-                                    </SfTab>
+
+                            <MudSpacer />
+                            
+                            <div class="desktop-tabs">
+                                <div class="tabs-wrapper">
+                                    <MudTabs
+                                        ActivePanelIndex="ActiveTab"
+                                        ActivePanelIndexChanged="OnTabChanged"
+                                        SliderColor="Color.Primary"
+                                        Style='@string.Concat("color: ",  _theme.PaletteLight.TextPrimary.Value)'
+                                        Rounded="false"
+                                        Elevation="0">
+
+                                        <MudTabPanel Text="@Localizer[Langs.Start]" />
+                                        <MudTabPanel Text="@Localizer[Langs.SystemModules]" />
+                                        <MudTabPanel Text="@Localizer[Langs.Pricing]" />
+                                        <MudTabPanel Text="@Localizer[Langs.Contact]" />
+
+                                    </MudTabs>
                                 </div>
-                                <div class="mobile-menu-trigger" @onclick="ToggleMobileMenu">
-                                    <span class="e-icons e-menu"></span>
-                                    <div class="flex-grow-1 d-flex justify-content-center" style="margin-left: 8px;">
-                                        <div>
-                                             <a href="/" style="justify-content: flex-start; align-items: center; gap: 16px; display: inline-flex">
-                                                <div style="width: 40px; height: 40px; padding-right: 0.01px; background: #0D6EFD; border-radius: 6px; justify-content: center; align-items: center; display: flex">
-                                                    <div style="width: 17.48px; height: 30px; position: relative">
-                                                        <div style="left: 0px; top: 0px; position: absolute; color: white; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 30px; word-wrap: break-word">M</div>
-                                                    </div>
-                                                </div>
-                                             </a>
-                                        </div>
+                            </div>
+                            
+                            <div class="mobile-menu-trigger" @onclick="ToggleMobileMenu">
+                                <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                                               Color="Color.Dark"
+                                               OnClick="ToggleMobileMenu" />
+                                <div class="flex-grow-1 d-flex justify-content-center" style="margin-left: 8px;">
+                                    <div>
+                                        @* <a href="/" style="justify-content: flex-start; align-items: center; gap: 16px; display: inline-flex"> *@
+                                        @*     <div style="width: 40px; height: 40px; padding-right: 0.01px; background: #0D6EFD; border-radius: 6px; justify-content: center; align-items: center; display: flex"> *@
+                                        @*         <div style="width: 17.48px; height: 30px; position: relative"> *@
+                                        @*             <div style="left: 0px; top: 0px; position: absolute; color: white; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 30px; word-wrap: break-word">M</div> *@
+                                        @*         </div> *@
+                                        @*     </div> *@
+                                        @* </a> *@
                                     </div>
                                 </div>
-                                <div></div>
                             </div>
-                            <SfButton CssClass="rounded-button"  IsPrimary="true" OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))">@Localizer[Langs.SignIn]</SfButton>
-                        </SfAppBar>
+
+                            <MudSpacer />
+                            
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       Class="rounded-button"
+                                       OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))">
+                                @Localizer[Langs.SignIn]
+                            </MudButton>
+
+                        </MudAppBar>
                     </div>
                 </nav>
                 @if (IsMobileMenuOpen)
@@ -83,7 +90,7 @@
                         <button @onclick='async () => await ScrollToSection("contact")'>@Localizer[Langs.Contact]</button>
                     </div>
                 }
-                <div class="content">
+                <div class="lp-content">
                     @Body
                 </div>
             </div>
@@ -95,6 +102,26 @@
 </div>
 
 @code {
+    private readonly MudTheme _theme = new()
+    {
+        PaletteLight = new PaletteLight
+        {
+            Primary = "#0D6EFD",
+            Secondary = "#6C757D",
+            Background = "#FFFFFF",
+            AppbarBackground = "#FFFFFF",
+            TextPrimary = "#272C34",
+            TextSecondary = "#495057"
+        },
+        Typography = new Typography
+        {
+            Button = new ButtonTypography
+            {
+                TextTransform = "none"
+            }
+        }
+    };
+    
     bool IsMobileMenuOpen = false;
 
     void ToggleMobileMenu()
@@ -156,16 +183,3 @@
     }
 
 }
-<style>
-    .rounded-button.e-btn,
-    .rounded-button.e-btn * {
-        font-family: 'Helvetica Neue', Arial, sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 24px;
-        word-wrap: break-word;
-        border-radius: 1000px;
-        padding: 0 12px;
-        height: 38px;
-    }
-</style>

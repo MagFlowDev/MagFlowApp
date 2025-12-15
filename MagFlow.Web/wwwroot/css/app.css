@@ -2,6 +2,8 @@ html, body {
     /*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
     font-family: Inter;
     font-style: normal;
+    margin: 0;
+    width: 100%;
 }
 
 a, .btn-link {
@@ -106,7 +108,6 @@ h1:focus {
 }
 
 @media (max-width: 768px) {
-
     .desktop-tabs {
         display: none !important;
     }
@@ -128,17 +129,18 @@ h1:focus {
 }
 
 .sticky-nav {
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 9999; /* musi byæ wiêksze ni¿ wszystko inne */
+    z-index: 9999;
     background: #FFF;
-    height: 64px;
+    min-height: 64px;
+    max-height: 64px;
     border-bottom: 1px solid #DEE2E6;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
 }
 
-.sticky-nav > div {
-    height: 100%;
+.lp-content {
+    padding-top: 64px;
 }
 
 .notification-bar {
@@ -159,4 +161,8 @@ h1:focus {
 
 .notification-info {
     background: #3498db;
+}
+
+.mud-tab {
+    text-transform: none !important;
 }
