@@ -1,4 +1,4 @@
-﻿@using Syncfusion.Blazor.Buttons
+﻿@using MudBlazor
 
 <div class="hero-container d-md-flex flex-column align-items-center">
     <div class="hero-content d-md-flex justify-content-center align-items-center">
@@ -16,28 +16,36 @@
             </div>
 
             <div class="hero-buttons d-flex">
-                <SfButton CssClass="btn-dark-base">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Dark"
+                           Class="btn-dark-base">
                     @Localizer[Langs.TrialPeriod]
-                </SfButton>
+                </MudButton>
 
-                <SfButton CssClass="btn-outline-base" >
+                <MudButton Variant="Variant.Outlined"
+                           Color="Color.Default"
+                           Style="@string.Concat("color: ", Themes.MAIN.PaletteLight.TextSecondary)"
+                           Class="btn-outline-base">
                     @Localizer[Langs.PlanDemo]
-                </SfButton>
+                </MudButton>
             </div>
 
             <div class="hero-features d-flex">
-                <div class="hero-feature">
-                    <SfIcon IconCss="bi bi-check-circle" style="color: #198754"></SfIcon>
+                 <div class="hero-feature">
+                    <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline"
+                             Color="Color.Success" />
                     <span>@Localizer[Langs._14DayTrial]</span>
                 </div>
 
                 <div class="hero-feature">
-                    <SfIcon IconCss="bi bi-check-circle" style="color: #198754"></SfIcon>
+                    <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline"
+                             Color="Color.Success" />
                     <span>@Localizer[Langs.NoSetupFees]</span>
                 </div>
 
                 <div class="hero-feature">
-                    <SfIcon IconCss="bi bi-check-circle" style="color: #198754"></SfIcon>
+                    <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline"
+                             Color="Color.Success" />
                     <span>@Localizer[Langs.EnterpriseSecurity]</span>
                 </div>
             </div>
