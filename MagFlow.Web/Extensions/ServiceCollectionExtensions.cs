@@ -22,7 +22,6 @@ using MudBlazor.Services;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Syncfusion.Blazor;
 
 namespace MagFlow.Web.Extensions
 {
@@ -31,7 +30,6 @@ namespace MagFlow.Web.Extensions
         public static IServiceCollection AddMagFlowServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSignalR();
-            services.AddSyncfusionBlazor();
             services.AddMudServices();
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();

@@ -17,7 +17,7 @@ namespace MagFlow.Web.Extensions
 {
     public static class WebApplicationExtensions
     {
-        private const string LICENSE_KEY = "Mzk4NzgxM0AzMzMwMmUzMDJlMzAzYjMzMzAzYmR3dGZsa2IwMUdqWkRpdC9idWZuSnV5VFAwNUZGbStvVEFQc1AxSkxXSjA9;Mzk4NzgxNEAzMzMwMmUzMDJlMzAzYjMzMzAzYkFQSFc5bW95Z2J1amVuSUVHdFJKMmF2bGZmTEpjeUIvRm8ySy9XZG5Tcmc9";
+        //private const string LICENSE_KEY = "Mzk4NzgxM0AzMzMwMmUzMDJlMzAzYjMzMzAzYmR3dGZsa2IwMUdqWkRpdC9idWZuSnV5VFAwNUZGbStvVEFQc1AxSkxXSjA9;Mzk4NzgxNEAzMzMwMmUzMDJlMzAzYjMzMzAzYkFQSFc5bW95Z2J1amVuSUVHdFJKMmF2bGZmTEpjeUIvRm8ySy9XZG5Tcmc9";
 
         public static WebApplication UseMagFlowPipeline(this WebApplication app)
         {
@@ -29,7 +29,7 @@ namespace MagFlow.Web.Extensions
                     : (ex is null ? Serilog.Events.LogEventLevel.Information : Serilog.Events.LogEventLevel.Error);
             });
 
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(LICENSE_KEY);
+            //Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(LICENSE_KEY);
 
             if (!app.Environment.IsDevelopment())
             {

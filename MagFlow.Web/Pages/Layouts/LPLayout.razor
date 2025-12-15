@@ -6,7 +6,7 @@
 @inject IJSRuntime JS
 @implements IDisposable
 
-<MudThemeProvider Theme="_theme"/>
+<MudThemeProvider Theme="Themes.MAIN"/>
 <MudPopoverProvider />
 
 <MudDialogProvider />
@@ -39,7 +39,7 @@
                                         ActivePanelIndex="ActiveTab"
                                         ActivePanelIndexChanged="OnTabChanged"
                                         SliderColor="Color.Primary"
-                                        Style='@string.Concat("color: ",  _theme.PaletteLight.TextPrimary.Value)'
+                                        Style='@string.Concat("color: ",  Themes.MAIN.PaletteLight.TextPrimary.Value)'
                                         Rounded="false"
                                         Elevation="0">
 
@@ -58,13 +58,13 @@
                                                OnClick="ToggleMobileMenu" />
                                 <div class="flex-grow-1 d-flex justify-content-center" style="margin-left: 8px;">
                                     <div>
-                                        @* <a href="/" style="justify-content: flex-start; align-items: center; gap: 16px; display: inline-flex"> *@
-                                        @*     <div style="width: 40px; height: 40px; padding-right: 0.01px; background: #0D6EFD; border-radius: 6px; justify-content: center; align-items: center; display: flex"> *@
-                                        @*         <div style="width: 17.48px; height: 30px; position: relative"> *@
-                                        @*             <div style="left: 0px; top: 0px; position: absolute; color: white; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 30px; word-wrap: break-word">M</div> *@
-                                        @*         </div> *@
-                                        @*     </div> *@
-                                        @* </a> *@
+                                        <a href="/" style="justify-content: flex-start; align-items: center; gap: 16px; display: inline-flex">
+                                            <div style="width: 40px; height: 40px; padding-right: 0.01px; background: #0D6EFD; border-radius: 6px; justify-content: center; align-items: center; display: flex">
+                                                <div style="width: 17.48px; height: 30px; position: relative">
+                                                    <div style="left: 0px; top: 0px; position: absolute; color: white; font-size: 20px; font-family: Inter; font-weight: 700; line-height: 30px; word-wrap: break-word">M</div>
+                                                </div>
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -73,7 +73,7 @@
                             
                             <MudButton Variant="Variant.Filled"
                                        Color="Color.Primary"
-                                       Class="rounded-button"
+                                       Class="rounded-pill"
                                        OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))">
                                 @Localizer[Langs.SignIn]
                             </MudButton>
@@ -101,27 +101,7 @@
     </ErrorBoundary>
 </div>
 
-@code {
-    private readonly MudTheme _theme = new()
-    {
-        PaletteLight = new PaletteLight
-        {
-            Primary = "#0D6EFD",
-            Secondary = "#6C757D",
-            Background = "#FFFFFF",
-            AppbarBackground = "#FFFFFF",
-            TextPrimary = "#272C34",
-            TextSecondary = "#495057"
-        },
-        Typography = new Typography
-        {
-            Button = new ButtonTypography
-            {
-                TextTransform = "none"
-            }
-        }
-    };
-    
+@code {   
     bool IsMobileMenuOpen = false;
 
     void ToggleMobileMenu()
@@ -183,3 +163,8 @@
     }
 
 }
+<style>
+    .mud-appbar .mud-toolbar-appbar {
+        height: 64px !important;
+    }
+</style>
