@@ -1,4 +1,5 @@
 ﻿@using MudBlazor
+@inject IJSRuntime JS
 
 <div class="hero-container d-md-flex flex-column align-items-center">
     <div class="hero-content d-md-flex justify-content-center align-items-center">
@@ -18,6 +19,7 @@
             <div class="hero-buttons d-flex">
                 <MudButton Variant="Variant.Filled"
                            Color="Color.Dark"
+                           OnClick="Contact"
                            Class="btn-dark-base">
                     @Localizer[Langs.TrialPeriod]
                 </MudButton>
@@ -25,6 +27,7 @@
                 <MudButton Variant="Variant.Outlined"
                            Color="Color.Default"
                            Style="@string.Concat("color: ", Themes.MAIN.PaletteLight.TextSecondary)"
+                           OnClick="Contact"
                            Class="btn-outline-base">
                     @Localizer[Langs.PlanDemo]
                 </MudButton>
@@ -78,5 +81,8 @@
 
 
 @code {
-
+    async Task Contact()
+    {
+        await JS.InvokeVoidAsync("blazorScrollTo", "contact");
+    }
 }

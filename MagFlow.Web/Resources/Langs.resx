@@ -255,4 +255,34 @@
   <data name="LP_Section_Module_Text1" xml:space="preserve">
     <value>Elastyczne, w pełni zintegrowane moduły, które współpracują ze sobą, aby usprawnić przepływy pracy, zwiększyć efektywność i zapewnić pełną kontrolę nad całym procesem produkcyjnym.</value>
   </data>
+  <data name="CustomPricing" xml:space="preserve">
+    <value>Wycena Indywidualna</value>
+  </data>
+  <data name="LP_Section_Pricing_Text1" xml:space="preserve">
+    <value>Skalowalne rozwiązanie zaprojektowane z myślą o rzeczywistych warunkach produkcyjnych.</value>
+  </data>
+  <data name="RequestAQuote" xml:space="preserve">
+    <value>Zamów wycenę</value>
+  </data>
+  <data name="EnterprisePlan" xml:space="preserve">
+    <value>Plan Enterprise</value>
+  </data>
+  <data name="EnterprisePlanDescription" xml:space="preserve">
+    <value>Kompleksowa platforma do zarządzania produkcją, magazynem i procesami operacyjnymi w jednym systemie.</value>
+  </data>
+  <data name="LP_Section_Pricing_Text2" xml:space="preserve">
+    <value>Zakres funkcjonalny dopasowany do potrzeb firmy</value>
+  </data>
+  <data name="LP_Section_Pricing_Text3" xml:space="preserve">
+    <value>Modułowa struktura umożliwiająca stopniową rozbudowę</value>
+  </data>
+  <data name="LP_Section_Pricing_Text4" xml:space="preserve">
+    <value>Wsparcie przy wdrożeniu i pierwszym uruchomieniu</value>
+  </data>
+  <data name="LP_Section_Pricing_Text5" xml:space="preserve">
+    <value>Pomoc techniczna w trakcie użytkowania systemu</value>
+  </data>
+  <data name="LP_Section_Pricing_Text6" xml:space="preserve">
+    <value>Elastyczne warunki współpracy wraz z rozwojem firmy</value>
+  </data>
 </root>

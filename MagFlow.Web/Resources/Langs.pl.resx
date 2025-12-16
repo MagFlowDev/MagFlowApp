@@ -174,77 +174,77 @@
   <data name="TrialPeriod" xml:space="preserve">
     <value>Okres próbny</value>
   </data>
-  <data name="ModuleContractorsTitle" xml:space="preserve">
-    <value>Kontrahenci</value>
-  </data>
-  <data name="ModuleDocumentsTitle" xml:space="preserve">
-    <value>Dokumenty</value>
-  </data>
-  <data name="ModuleLogisticsTitle" xml:space="preserve">
-    <value>Logistyka</value>
-  </data>
-  <data name="ModuleMachinesTitle" xml:space="preserve">
-    <value>Maszyny</value>
-  </data>
-  <data name="ModuleOrdersTitle" xml:space="preserve">
-    <value>Zamówienia</value>
-  </data>
-  <data name="ModuleProcessesTitle" xml:space="preserve">
-    <value>Procesy Produkcyjne</value>
-  </data>
-  <data name="ModuleProdPlanTitle" xml:space="preserve">
-    <value>Plan Produkcji</value>
-  </data>
-  <data name="ModuleReportsTitle" xml:space="preserve">
-    <value>Raporty</value>
-  </data>
   <data name="ModuleUsersTitle" xml:space="preserve">
     <value>Użytkownicy</value>
   </data>
-  <data name="ModuleWarehousesTitle" xml:space="preserve">
-    <value>Magazyn</value>
-  </data>
-  <data name="ModuleWaresTitle" xml:space="preserve">
-    <value>Towary</value>
-  </data>
-  <data name="ModuleWorktimeTitle" xml:space="preserve">
-    <value>Ewidencja pracy</value>
-  </data>
-  <data name="ModuleOrdersDesc" xml:space="preserve">
-    <value>Usprawnij cały proces obsługi klienta i dostawców dzięki szybkiemu tworzeniu, śledzeniu i realizacji zamówień w jednym miejscu.</value>
-  </data>
-  <data name="ModuleDocumentsDesc" xml:space="preserve">
-    <value>Automatyzuj obieg wszystkich dokumentów magazynowych i sprzedażowych, minimalizując błędy i zyskując pełną kontrolę nad przepływem towarów.</value>
-  </data>
-  <data name="ModuleWarehousesDesc" xml:space="preserve">
-    <value>Monitoruj stany, ruchy i rezerwacje materiałowe w czasie rzeczywistym, aby magazyn zawsze działał płynnie i bez przestojów.</value>
-  </data>
-  <data name="ModuleLogisticsDesc" xml:space="preserve">
-    <value>Planuj i koordynuj transporty, wysyłki i odbiory, aby logistyka Twojej firmy była szybka, przewidywalna i dobrze zorganizowana.</value>
-  </data>
-  <data name="ModuleWaresDesc" xml:space="preserve">
-    <value>Twórz kompletne kartoteki produktów z własnymi parametrami i historią, dzięki czemu zawsze wiesz, czym dysponuje Twoja firma.</value>
-  </data>
-  <data name="ModuleProcessesDesc" xml:space="preserve">
-    <value>Modeluj, standaryzuj i kontroluj każdy etap produkcji, aby zwiększyć powtarzalność i jakość wytwarzania.</value>
-  </data>
-  <data name="ModuleProdPlanDesc" xml:space="preserve">
-    <value>Buduj efektywne harmonogramy oraz optymalizuj wykorzystanie maszyn, ludzi i materiałów, aby zlecenia były realizowane na czas.</value>
-  </data>
-  <data name="ModuleMachinesDesc" xml:space="preserve">
-    <value>Zarządzaj parkiem maszynowym, ich obciążeniem i statusami, aby utrzymać wysoką dostępność i minimalizować ryzyko przestojów.</value>
-  </data>
-  <data name="ModuleWorktimeDesc" xml:space="preserve">
-    <value>Rejestruj czas i aktywność pracowników na zmianach oraz zleceniach, aby zyskać pełną przejrzystość nad realizacją pracy w firmie.</value>
-  </data>
-  <data name="ModuleReportsDesc" xml:space="preserve">
-    <value>Otrzymuj przejrzyste raporty i kluczowe wskaźniki, które pomagają podejmować lepsze decyzje operacyjne i strategiczne.</value>
+  <data name="ModuleContractorsTitle" xml:space="preserve">
+    <value>Kontrahenci</value>
   </data>
   <data name="ModuleUsersDesc" xml:space="preserve">
     <value>Kontroluj dostęp do funkcji systemu i dostosowuj uprawnienia do struktury Twojej firmy, zapewniając bezpieczeństwo i porządek.</value>
   </data>
   <data name="ModuleContractorsDesc" xml:space="preserve">
     <value>Zarządzaj pełną bazą klientów i dostawców, aby szybciej obsługiwać transakcje i budować trwałe relacje biznesowe.</value>
+  </data>
+  <data name="ModuleOrdersTitle" xml:space="preserve">
+    <value>Zamówienia</value>
+  </data>
+  <data name="ModuleOrdersDesc" xml:space="preserve">
+    <value>Usprawnij cały proces obsługi klienta i dostawców dzięki szybkiemu tworzeniu, śledzeniu i realizacji zamówień w jednym miejscu.</value>
+  </data>
+  <data name="ModuleWaresTitle" xml:space="preserve">
+    <value>Towary</value>
+  </data>
+  <data name="ModuleWaresDesc" xml:space="preserve">
+    <value>Twórz kompletne kartoteki produktów z własnymi parametrami i historią, dzięki czemu zawsze wiesz, czym dysponuje Twoja firma.</value>
+  </data>
+  <data name="ModuleWarehousesTitle" xml:space="preserve">
+    <value>Magazyn</value>
+  </data>
+  <data name="ModuleWarehousesDesc" xml:space="preserve">
+    <value>Monitoruj stany, ruchy i rezerwacje materiałowe w czasie rzeczywistym, aby magazyn zawsze działał płynnie i bez przestojów.</value>
+  </data>
+  <data name="ModuleMachinesTitle" xml:space="preserve">
+    <value>Maszyny</value>
+  </data>
+  <data name="ModuleMachinesDesc" xml:space="preserve">
+    <value>Zarządzaj parkiem maszynowym, ich obciążeniem i statusami, aby utrzymać wysoką dostępność i minimalizować ryzyko przestojów.</value>
+  </data>
+  <data name="ModuleDocumentsTitle" xml:space="preserve">
+    <value>Dokumenty</value>
+  </data>
+  <data name="ModuleDocumentsDesc" xml:space="preserve">
+    <value>Automatyzuj obieg wszystkich dokumentów magazynowych i sprzedażowych, minimalizując błędy i zyskując pełną kontrolę nad przepływem towarów.</value>
+  </data>
+  <data name="ModuleLogisticsTitle" xml:space="preserve">
+    <value>Logistyka</value>
+  </data>
+  <data name="ModuleLogisticsDesc" xml:space="preserve">
+    <value>Planuj i koordynuj transporty, wysyłki i odbiory, aby logistyka Twojej firmy była szybka, przewidywalna i dobrze zorganizowana.</value>
+  </data>
+  <data name="ModuleWorktimeTitle" xml:space="preserve">
+    <value>Ewidencja pracy</value>
+  </data>
+  <data name="ModuleWorktimeDesc" xml:space="preserve">
+    <value>Rejestruj czas i aktywność pracowników na zmianach oraz zleceniach, aby zyskać pełną przejrzystość nad realizacją pracy w firmie.</value>
+  </data>
+  <data name="ModuleProdPlanTitle" xml:space="preserve">
+    <value>Plan Produkcji</value>
+  </data>
+  <data name="ModuleProdPlanDesc" xml:space="preserve">
+    <value>Buduj efektywne harmonogramy oraz optymalizuj wykorzystanie maszyn, ludzi i materiałów, aby zlecenia były realizowane na czas.</value>
+  </data>
+  <data name="ModuleProcessesTitle" xml:space="preserve">
+    <value>Procesy Produkcyjne</value>
+  </data>
+  <data name="ModuleProcessesDesc" xml:space="preserve">
+    <value>Modeluj, standaryzuj i kontroluj każdy etap produkcji, aby zwiększyć powtarzalność i jakość wytwarzania.</value>
+  </data>
+  <data name="ModuleReportsTitle" xml:space="preserve">
+    <value>Raporty</value>
+  </data>
+  <data name="ModuleReportsDesc" xml:space="preserve">
+    <value>Otrzymuj przejrzyste raporty i kluczowe wskaźniki, które pomagają podejmować lepsze decyzje operacyjne i strategiczne.</value>
   </data>
   <data name="LearnMore" xml:space="preserve">
     <value>Szczegóły</value>
@@ -254,5 +254,35 @@
   </data>
   <data name="LP_Section_Module_Text1" xml:space="preserve">
     <value>Elastyczne, w pełni zintegrowane moduły, które współpracują ze sobą, aby usprawnić przepływy pracy, zwiększyć efektywność i zapewnić pełną kontrolę nad całym procesem produkcyjnym.</value>
+  </data>
+  <data name="CustomPricing" xml:space="preserve">
+    <value>Wycena Indywidualna</value>
+  </data>
+  <data name="LP_Section_Pricing_Text1" xml:space="preserve">
+    <value>Skalowalne rozwiązanie zaprojektowane z myślą o rzeczywistych warunkach produkcyjnych.</value>
+  </data>
+  <data name="RequestAQuote" xml:space="preserve">
+    <value>Zamów wycenę</value>
+  </data>
+  <data name="EnterprisePlan" xml:space="preserve">
+    <value>Plan Enterprise</value>
+  </data>
+  <data name="EnterprisePlanDescription" xml:space="preserve">
+    <value>Kompleksowa platforma do zarządzania produkcją, magazynem i procesami operacyjnymi w jednym systemie.</value>
+  </data>
+  <data name="LP_Section_Pricing_Text2" xml:space="preserve">
+    <value>Zakres funkcjonalny dopasowany do potrzeb firmy</value>
+  </data>
+  <data name="LP_Section_Pricing_Text3" xml:space="preserve">
+    <value>Modułowa struktura umożliwiająca stopniową rozbudowę</value>
+  </data>
+  <data name="LP_Section_Pricing_Text4" xml:space="preserve">
+    <value>Wsparcie przy wdrożeniu i pierwszym uruchomieniu</value>
+  </data>
+  <data name="LP_Section_Pricing_Text5" xml:space="preserve">
+    <value>Pomoc techniczna w trakcie użytkowania systemu</value>
+  </data>
+  <data name="LP_Section_Pricing_Text6" xml:space="preserve">
+    <value>Elastyczne warunki współpracy wraz z rozwojem firmy</value>
   </data>
 </root>
