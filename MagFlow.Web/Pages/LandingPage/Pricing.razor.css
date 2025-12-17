@@ -1,6 +1,6 @@
 ﻿/* --- HERO LAYOUT --- */
 .hero-container {
-    padding: 60px 110px 0 110px;
+    padding: 120px 70px 150px 70px;
 }
 
 .hero-content {
@@ -33,4 +33,22 @@
     font-size: 16px;
     color: #495057;
     line-height: 27px;
+}
+
+::deep .e-btn.btn-dark-base {
+    background-color: #272C34 !important;
+    border-color: #272C34 !important;
+    color: #fff !important;
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 6px;
+}
+
+::deep .e-btn.btn-outline-base {
+    background-color: transparent !important;
+    border-color: #6C757D !important;
+    color: #6C757D !important;
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 6px;
 }

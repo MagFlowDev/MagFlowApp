@@ -255,4 +255,88 @@
   <data name="LP_Section_Module_Text1" xml:space="preserve">
     <value>Elastyczne, w pełni zintegrowane moduły, które współpracują ze sobą, aby usprawnić przepływy pracy, zwiększyć efektywność i zapewnić pełną kontrolę nad całym procesem produkcyjnym.</value>
   </data>
+  <data name="CustomPricing" xml:space="preserve">
+    <value>Wycena Indywidualna</value>
+  </data>
+  <data name="LP_Section_Pricing_Text1" xml:space="preserve">
+    <value>Skalowalne rozwiązanie zaprojektowane z myślą o rzeczywistych warunkach produkcyjnych.</value>
+  </data>
+  <data name="RequestAQuote" xml:space="preserve">
+    <value>Zamów wycenę</value>
+  </data>
+  <data name="EnterprisePlan" xml:space="preserve">
+    <value>Plan Enterprise</value>
+  </data>
+  <data name="EnterprisePlanDescription" xml:space="preserve">
+    <value>Kompleksowa platforma do zarządzania produkcją, magazynem i procesami operacyjnymi w jednym systemie.</value>
+  </data>
+  <data name="LP_Section_Pricing_Text2" xml:space="preserve">
+    <value>Zakres funkcjonalny dopasowany do potrzeb firmy</value>
+  </data>
+  <data name="LP_Section_Pricing_Text3" xml:space="preserve">
+    <value>Modułowa struktura umożliwiająca stopniową rozbudowę</value>
+  </data>
+  <data name="LP_Section_Pricing_Text4" xml:space="preserve">
+    <value>Wsparcie przy wdrożeniu i pierwszym uruchomieniu</value>
+  </data>
+  <data name="LP_Section_Pricing_Text5" xml:space="preserve">
+    <value>Pomoc techniczna w trakcie użytkowania systemu</value>
+  </data>
+  <data name="LP_Section_Pricing_Text6" xml:space="preserve">
+    <value>Elastyczne warunki współpracy wraz z rozwojem firmy</value>
+  </data>
+  <data name="LP_Section_Contact_Text1" xml:space="preserve">
+    <value>Porozmawiaj o swojej produkcji</value>
+  </data>
+  <data name="John" xml:space="preserve">
+    <value>Jan</value>
+  </data>
+  <data name="Smith" xml:space="preserve">
+    <value>Kowalski</value>
+  </data>
+  <data name="E_mail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Wymagane</value>
+  </data>
+  <data name="JohnSmithCompanyCom" xml:space="preserve">
+    <value>jan.kowalski@firma.com</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Firma</value>
+  </data>
+  <data name="YourCompanyName" xml:space="preserve">
+    <value>Nazwa Twojej firmy</value>
+  </data>
+  <data name="ContactUs" xml:space="preserve">
+    <value>Skontaktuj się</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Imię</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Nazwisko</value>
+  </data>
+  <data name="LP_Section_Contact_Text2" xml:space="preserve">
+    <value>Indywidualna Wycena i Moduły</value>
+  </data>
+  <data name="LP_Section_Contact_Text3" xml:space="preserve">
+    <value>Omów wycenę dopasowaną do skali działalności oraz planowanego sposobu korzystania z platformy.</value>
+  </data>
+  <data name="LP_Section_Contact_Text4" xml:space="preserve">
+    <value>Strategia Wdrożenia</value>
+  </data>
+  <data name="LP_Section_Contact_Text5" xml:space="preserve">
+    <value>Poznaj możliwe warianty uruchomienia systemu oraz orientacyjny harmonogram startu.</value>
+  </data>
+  <data name="LP_Section_Contact_Text6" xml:space="preserve">
+    <value>Aspekty Techniczne</value>
+  </data>
+  <data name="LP_Section_Contact_Text7" xml:space="preserve">
+    <value>Omów podstawowe kwestie techniczne związane z działaniem i konfiguracją systemu.</value>
+  </data>
+  <data name="FAQ" xml:space="preserve">
+    <value>Najczęściej zadawane pytania</value>
+  </data>
 </root>
