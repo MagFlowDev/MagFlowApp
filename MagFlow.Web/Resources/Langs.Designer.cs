@@ -79,6 +79,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Firma.
+        /// </summary>
+        public static string Company {
+            get {
+                return ResourceManager.GetString("Company", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Kompletny Pakiet Produkcyjny.
         /// </summary>
         public static string CompleteManufacturingSuite {
@@ -97,11 +106,29 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Skontaktuj się.
+        /// </summary>
+        public static string ContactUs {
+            get {
+                return ResourceManager.GetString("ContactUs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wycena Indywidualna.
         /// </summary>
         public static string CustomPricing {
             get {
                 return ResourceManager.GetString("CustomPricing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu E-mail.
+        /// </summary>
+        public static string E_mail {
+            get {
+                return ResourceManager.GetString("E_mail", resourceCulture);
             }
         }
         
@@ -133,6 +160,51 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Najczęściej zadawane pytania.
+        /// </summary>
+        public static string FAQ {
+            get {
+                return ResourceManager.GetString("FAQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Imię.
+        /// </summary>
+        public static string FirstName {
+            get {
+                return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Jan.
+        /// </summary>
+        public static string John {
+            get {
+                return ResourceManager.GetString("John", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu jan.kowalski@firma.com.
+        /// </summary>
+        public static string JohnSmithCompanyCom {
+            get {
+                return ResourceManager.GetString("JohnSmithCompanyCom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Nazwisko.
+        /// </summary>
+        public static string LastName {
+            get {
+                return ResourceManager.GetString("LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Szczegóły.
         /// </summary>
         public static string LearnMore {
@@ -147,6 +219,69 @@ namespace MagFlow.Web.Resources {
         public static string LessManualWork {
             get {
                 return ResourceManager.GetString("LessManualWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Porozmawiaj o swojej produkcji.
+        /// </summary>
+        public static string LP_Section_Contact_Text1 {
+            get {
+                return ResourceManager.GetString("LP_Section_Contact_Text1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Indywidualna Wycena i Moduły.
+        /// </summary>
+        public static string LP_Section_Contact_Text2 {
+            get {
+                return ResourceManager.GetString("LP_Section_Contact_Text2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Omów wycenę dopasowaną do skali działalności oraz planowanego sposobu korzystania z platformy..
+        /// </summary>
+        public static string LP_Section_Contact_Text3 {
+            get {
+                return ResourceManager.GetString("LP_Section_Contact_Text3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Strategia Wdrożenia.
+        /// </summary>
+        public static string LP_Section_Contact_Text4 {
+            get {
+                return ResourceManager.GetString("LP_Section_Contact_Text4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Poznaj możliwe warianty uruchomienia systemu oraz orientacyjny harmonogram startu..
+        /// </summary>
+        public static string LP_Section_Contact_Text5 {
+            get {
+                return ResourceManager.GetString("LP_Section_Contact_Text5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Aspekty Techniczne.
+        /// </summary>
+        public static string LP_Section_Contact_Text6 {
+            get {
+                return ResourceManager.GetString("LP_Section_Contact_Text6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Omów podstawowe kwestie techniczne związane z działaniem i konfiguracją systemu..
+        /// </summary>
+        public static string LP_Section_Contact_Text7 {
+            get {
+                return ResourceManager.GetString("LP_Section_Contact_Text7", resourceCulture);
             }
         }
         
@@ -502,6 +637,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wymagane.
+        /// </summary>
+        public static string Required {
+            get {
+                return ResourceManager.GetString("Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Bezpieczeństwo.
         /// </summary>
         public static string Security {
@@ -516,6 +660,15 @@ namespace MagFlow.Web.Resources {
         public static string SignIn {
             get {
                 return ResourceManager.GetString("SignIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Kowalski.
+        /// </summary>
+        public static string Smith {
+            get {
+                return ResourceManager.GetString("Smith", resourceCulture);
             }
         }
         
@@ -561,6 +714,15 @@ namespace MagFlow.Web.Resources {
         public static string TrialPeriod {
             get {
                 return ResourceManager.GetString("TrialPeriod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Nazwa Twojej firmy.
+        /// </summary>
+        public static string YourCompanyName {
+            get {
+                return ResourceManager.GetString("YourCompanyName", resourceCulture);
             }
         }
     }

@@ -34,3 +34,21 @@
     color: #495057;
     line-height: 27px;
 }
+
+::deep .e-btn.btn-dark-base {
+    background-color: #272C34 !important;
+    border-color: #272C34 !important;
+    color: #fff !important;
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 6px;
+}
+
+::deep .e-btn.btn-outline-base {
+    background-color: transparent !important;
+    border-color: #6C757D !important;
+    color: #6C757D !important;
+    height: 44px;
+    padding: 0 12px;
+    border-radius: 6px;
+}

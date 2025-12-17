@@ -285,4 +285,58 @@
   <data name="LP_Section_Pricing_Text6" xml:space="preserve">
     <value>Flexible cooperation terms aligned with company growth</value>
   </data>
+  <data name="LP_Section_Contact_Text1" xml:space="preserve">
+    <value>Talk about your production</value>
+  </data>
+  <data name="John" xml:space="preserve">
+    <value>John</value>
+  </data>
+  <data name="Smith" xml:space="preserve">
+    <value>Smith</value>
+  </data>
+  <data name="E_mail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Required</value>
+  </data>
+  <data name="JohnSmithCompanyCom" xml:space="preserve">
+    <value>john.smith@company.com</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="YourCompanyName" xml:space="preserve">
+    <value>Your company name</value>
+  </data>
+  <data name="ContactUs" xml:space="preserve">
+    <value>Contact us</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="LP_Section_Contact_Text2" xml:space="preserve">
+    <value>Custom Pricing &amp; Modules</value>
+  </data>
+  <data name="LP_Section_Contact_Text3" xml:space="preserve">
+    <value>Discuss pricing adjusted to your scale of operation and planned system usage.</value>
+  </data>
+  <data name="LP_Section_Contact_Text4" xml:space="preserve">
+    <value>Implementation Strategy</value>
+  </data>
+  <data name="LP_Section_Contact_Text5" xml:space="preserve">
+    <value>Learn about available rollout options and an estimated timeline for getting started.</value>
+  </data>
+  <data name="LP_Section_Contact_Text6" xml:space="preserve">
+    <value>Technical Overview</value>
+  </data>
+  <data name="LP_Section_Contact_Text7" xml:space="preserve">
+    <value>Discuss basic technical aspects related to system operation and configuration.</value>
+  </data>
+  <data name="FAQ" xml:space="preserve">
+    <value>Frequently asked questions</value>
+  </data>
 </root>
