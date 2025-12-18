@@ -1,4 +1,8 @@
-﻿@using MudBlazor
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.Generators.EmailGenerators
+@using MudBlazor
+@inject IEmailService EmailService
+@inject ISnackbar Snackbar
 
 <div class="hero-container d-md-flex align-items-center justify-content-center align-self-stretch flex-shrink-0" style="gap: 80px; background-color: #F8F9FA">
     <div class="d-md-flex flex-column align-items-start" style="gap: 24px; padding-right: 24px; margin-bottom: 24px; min-width: 300px">
@@ -11,16 +15,17 @@
             </div>
         </div>
         <div class="d-md-flex flex-column align-items-start flex-shrink-0" style="padding: 32px 16px; border-radius: 8px; background: #FFF; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08)">
-            <MudForm Spacing="4">
+            <MudForm @ref="_form" Spacing="4">
                 <div class="d-flex align-items-center" style="gap: 16px;">
-                    <MudTextField T="string" Placeholder="@Localizer[Langs.John]" Label="@Localizer[Langs.FirstName]" Variant="Variant.Outlined" Margin="Margin.Dense" />
-                    <MudTextField T="string" Placeholder="@Localizer[Langs.Smith]" Label="@Localizer[Langs.LastName]" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    <MudTextField T="string" @bind-Value="_firstName" Placeholder="@Localizer[Langs.John]" Label="@Localizer[Langs.FirstName]" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    <MudTextField T="string" @bind-Value="_lastName" Placeholder="@Localizer[Langs.Smith]" Label="@Localizer[Langs.LastName]" Variant="Variant.Outlined" Margin="Margin.Dense" />
                 </div>
-                <MudTextField T="string" Placeholder="@Localizer[Langs.JohnSmithCompanyCom]" Label="@Localizer[Langs.E_mail]" Variant="Variant.Outlined" Required="true" RequiredError="@Localizer[Langs.Required]" Margin="Margin.Dense" />
-                <MudTextField T="string" Placeholder="@Localizer[Langs.YourCompanyName]" Label="@Localizer[Langs.Company]" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                <MudTextField T="string" @bind-Value="_email" Placeholder="@Localizer[Langs.JohnSmithCompanyCom]" Label="@Localizer[Langs.E_mail]" InputType="InputType.Email" Variant="Variant.Outlined" Required="true" RequiredError="@Localizer[Langs.Required]" Margin="Margin.Dense" />
+                <MudTextField T="string" @bind-Value="_company" Placeholder="@Localizer[Langs.YourCompanyName]" Label="@Localizer[Langs.Company]" Variant="Variant.Outlined" Margin="Margin.Dense" />
                 <MudButton Variant="Variant.Filled"
                            Color="Color.Dark"
                            Style=""
+                           OnClick="SubmitForm"
                            Class="btn-dark-base align-self-center">
                     @Localizer[Langs.ContactUs]
                 </MudButton>
@@ -62,5 +67,19 @@
 </div>
 
 @code {
-    
+    MudForm _form;
+    string _firstName = "";
+    string _lastName = "";
+    string _email = "";
+    string _company = "";
+
+    public async Task SubmitForm()
+    {
+        await EmailService.SendToMeAsync("Contact", EmailGenerator.ContactFormBody(_firstName, _lastName, _email, _company));
+        _firstName = "";
+        _lastName = "";
+        _email = "";
+        _company = "";
+        Snackbar.Add("Skontaktujemy się z Tobą!");
+    }
 }
