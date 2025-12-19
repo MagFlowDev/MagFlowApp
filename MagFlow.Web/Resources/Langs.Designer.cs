@@ -79,6 +79,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wstecz.
+        /// </summary>
+        public static string Back {
+            get {
+                return ResourceManager.GetString("Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Firma.
         /// </summary>
         public static string Company {
@@ -741,6 +750,15 @@ namespace MagFlow.Web.Resources {
         public static string TrialPeriod {
             get {
                 return ResourceManager.GetString("TrialPeriod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to W trakcie budowy.
+        /// </summary>
+        public static string UnderConstruction {
+            get {
+                return ResourceManager.GetString("UnderConstruction", resourceCulture);
             }
         }
         

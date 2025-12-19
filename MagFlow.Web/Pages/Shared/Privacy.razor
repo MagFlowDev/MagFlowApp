@@ -1,7 +1,43 @@
 ﻿@page "/Privacy"
+@layout LPLayout
 
-<h3>Privacy</h3>
+@using MudBlazor
+
+@inject IJSRuntime JS
+
+<div style="margin: 0; width: 100vw; height: 100%;">
+    <nav class="control-container sticky-nav">
+        <div style="width: 100%; padding-left: 8px; padding-right: 8px;">
+            <MudAppBar Color="Color.Inherit" Class="lp-appbar">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Class="rounded-pill"
+                           Style="max-height: 37px; text-wrap: nowrap"
+                           OnClick="GoBack">
+                    @Localizer[Langs.Back]
+                </MudButton>
+
+                <MudSpacer />
+            </MudAppBar>
+        </div>
+    </nav>
+    <div style="padding-top: 60px">
+        <div style="position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 32px;">
+            <i class="bi bi-gear-fill"></i> @Localizer[Langs.UnderConstruction]
+        </div>
+       
+    </div>
+</div>
 
 @code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("scrollTop");
+    }
 
+    private async Task GoBack()
+    {
+        await JS.InvokeVoidAsync("scrollTop");
+        await JS.InvokeVoidAsync("history.back");
+    }
 }

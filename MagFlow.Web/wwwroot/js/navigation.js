@@ -7,6 +7,14 @@
     });
 };
 
+window.scrollTop = () => {
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant"
+    });
+}
+
 window.startScrollSpy = (dotnetHelper, sectionIds) => {
     const options = {
         root: null,

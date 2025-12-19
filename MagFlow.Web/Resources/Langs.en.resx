@@ -348,4 +348,10 @@
   <data name="PrivacyPolicy1" xml:space="preserve">
     <value>Privacy Policy</value>
   </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="UnderConstruction" xml:space="preserve">
+    <value>Under construction</value>
+  </data>
 </root>
