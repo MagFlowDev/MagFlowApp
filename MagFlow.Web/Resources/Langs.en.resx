@@ -354,4 +354,40 @@
   <data name="UnderConstruction" xml:space="preserve">
     <value>Under construction</value>
   </data>
+  <data name="FAQ_Q1" xml:space="preserve">
+    <value>What is MagFlow?</value>
+  </data>
+  <data name="FAQ_Q2" xml:space="preserve">
+    <value>What is the MagFlow licensing model?</value>
+  </data>
+  <data name="FAQ_Q3" xml:space="preserve">
+    <value>How does the implementation process work?</value>
+  </data>
+  <data name="FAQ_Q4" xml:space="preserve">
+    <value>Does MagFlow support user access management?</value>
+  </data>
+  <data name="FAQ_Q5" xml:space="preserve">
+    <value>Is the system regularly updated?</value>
+  </data>
+  <data name="FAQ_Q6" xml:space="preserve">
+    <value>Does MagFlow support integration with other systems?</value>
+  </data>
+  <data name="FAQ_A1" xml:space="preserve">
+    <value>MagFlow is a modern MES-class system that supports production management, warehouse management, and operational processes in manufacturing plants — in real time and within a single, integrated solution.</value>
+  </data>
+  <data name="FAQ_A2" xml:space="preserve">
+    <value>MagFlow is offered under a flexible licensing model, tailored to the scale of the plant, the number of users, and the modules in use. Billing is based on an annual model.</value>
+  </data>
+  <data name="FAQ_A3" xml:space="preserve">
+    <value>The implementation is carried out in stages — from requirements analysis, through system configuration, to user training. The entire process is tailored to the specific needs of the plant and minimizes downtime.</value>
+  </data>
+  <data name="FAQ_A4" xml:space="preserve">
+    <value>MagFlow includes a built-in role-based access mechanism that defines access to individual areas of the system. Each role determines the scope of functionalities and data available to the user, allowing precise control of permissions in line with the plant’s organizational structure.</value>
+  </data>
+  <data name="FAQ_A5" xml:space="preserve">
+    <value>Yes. MagFlow updates are provided at no additional cost. The system is continuously developed, and new functionalities are created based on real user needs and hands-on experience from manufacturing environments.</value>
+  </data>
+  <data name="FAQ_A6" xml:space="preserve">
+    <value>Integrations with external systems are currently in the planning phase. We are open to discussions regarding integration with ERP systems and other solutions used in manufacturing plants, and we will continue to develop this area in line with customer needs.</value>
+  </data>
 </root>

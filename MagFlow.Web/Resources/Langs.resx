@@ -354,4 +354,40 @@
   <data name="UnderConstruction" xml:space="preserve">
     <value>W trakcie budowy</value>
   </data>
+  <data name="FAQ_Q1" xml:space="preserve">
+    <value>Czym jest MagFlow?</value>
+  </data>
+  <data name="FAQ_Q2" xml:space="preserve">
+    <value>Jak wygląda model licencjonowania systemu MagFlow?</value>
+  </data>
+  <data name="FAQ_Q3" xml:space="preserve">
+    <value>Jak przebiega proces wdrożenia systemu?</value>
+  </data>
+  <data name="FAQ_Q4" xml:space="preserve">
+    <value>Czy MagFlow pozwala zarządzać uprawnieniami użytkowników?</value>
+  </data>
+  <data name="FAQ_Q5" xml:space="preserve">
+    <value>Czy system jest regularnie aktualizowany?</value>
+  </data>
+  <data name="FAQ_Q6" xml:space="preserve">
+    <value>Czy system MagFlow umożliwia integrację z innymi systemami?</value>
+  </data>
+  <data name="FAQ_A1" xml:space="preserve">
+    <value>MagFlow to nowoczesny system klasy MES, który wspiera zarządzanie produkcją, magazynem i procesami operacyjnymi w zakładach produkcyjnych – w czasie rzeczywistym i w jednym spójnym narzędziu.</value>
+  </data>
+  <data name="FAQ_A2" xml:space="preserve">
+    <value>System MagFlow oferowany jest w elastycznym modelu licencjonowania, dopasowanym do skali zakładu, liczby użytkowników oraz wykorzystywanych modułów. Rozliczenia prowadzone są w modelu rocznym.</value>
+  </data>
+  <data name="FAQ_A3" xml:space="preserve">
+    <value>Wdrożenie odbywa się etapami – od analizy potrzeb, przez konfigurację systemu, po szkolenie użytkowników. Cały proces jest dopasowany do specyfiki zakładu i minimalizuje przestoje w pracy.</value>
+  </data>
+  <data name="FAQ_A4" xml:space="preserve">
+    <value>MagFlow posiada wbudowany mechanizm ról użytkowników, które definiują dostęp do poszczególnych obszarów systemu. Każda rola określa zakres funkcjonalności i danych, do których użytkownik ma dostęp, co pozwala precyzyjnie kontrolować uprawnienia zgodnie z organizacją pracy w zakładzie.</value>
+  </data>
+  <data name="FAQ_A5" xml:space="preserve">
+    <value>Tak. Aktualizacje systemu MagFlow są dostępne bez dodatkowych opłat. System jest stale rozwijany, a nowe funkcjonalności powstają w oparciu o realne potrzeby użytkowników oraz doświadczenia z pracy w zakładach produkcyjnych.</value>
+  </data>
+  <data name="FAQ_A6" xml:space="preserve">
+    <value>Integracje z zewnętrznymi systemami są obecnie na etapie planowania. Jesteśmy otwarci na rozmowy dotyczące integracji z systemami ERP oraz innymi rozwiązaniami wykorzystywanymi w zakładach produkcyjnych i sukcesywnie będziemy rozwijać ten obszar wraz z potrzebami klientów.</value>
+  </data>
 </root>
