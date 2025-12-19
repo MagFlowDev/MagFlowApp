@@ -3,6 +3,12 @@
     padding: 70px 100px;
 }
 
+@media (max-width: 576px) {
+    .hero-container {
+        padding: 80px 20px;
+    }
+}
+
 .hero-content {
     gap: 48px;
     padding-bottom: 100px;

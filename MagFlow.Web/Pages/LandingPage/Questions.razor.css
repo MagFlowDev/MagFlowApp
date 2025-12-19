@@ -3,6 +3,12 @@
     padding: 120px 100px;
 }
 
+@media (max-width: 576px) {
+    .hero-container {
+        padding: 80px 20px;
+    }
+}
+
 .hero-content {
     gap: 48px;
 }
@@ -68,4 +74,14 @@
     line-height: 1;
     display: inline-block;
     color: #fff;
+}
+
+::deep .faq-expansion-panel-header
+.mud-expand-panel-text {
+    padding-right: 15px !important;
+}
+
+::deep .faq-expansion-panel {
+    margin-top: 1px !important;
+    margin-bottom: 1px !important;
 }
