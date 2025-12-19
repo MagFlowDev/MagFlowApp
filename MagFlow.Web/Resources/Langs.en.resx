@@ -339,4 +339,13 @@
   <data name="FAQ" xml:space="preserve">
     <value>Frequently asked questions</value>
   </data>
+  <data name="Footer_Privacy_Text" xml:space="preserve">
+    <value>Use of this site constitues acceptance of</value>
+  </data>
+  <data name="PrivacyPolicy" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="PrivacyPolicy1" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
 </root>
