@@ -75,7 +75,7 @@
                                        Color="Color.Primary"
                                        Class="rounded-pill"
                                        Style="max-height: 37px; text-wrap: nowrap"
-                                       OnClick="@(() => NavigationManager.NavigateTo("/Auth/Login", true))">
+                                       OnClick="@(() => NavigationManager.NavigateTo("", true) /* /Auth/Login */)">
                                 @Localizer[Langs.SignIn]
                             </MudButton>
 
@@ -101,6 +101,9 @@
         </ErrorContent>
     </ErrorBoundary>
 </div>
+<footer>
+    <Footer />
+</footer>
 
 @code {   
     bool IsMobileMenuOpen = false;
