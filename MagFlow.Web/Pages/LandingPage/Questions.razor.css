@@ -81,7 +81,18 @@
     padding-right: 15px !important;
 }
 
+::deep
+.mud-expand-panel
+.mud-expand-panel-content {
+    width: inherit;
+}
+
 ::deep .faq-expansion-panel {
     margin-top: 1px !important;
     margin-bottom: 1px !important;
+    width: inherit;
+}
+
+::deep .faq-expansion-panel {
+    width: 100% !important;
 }
