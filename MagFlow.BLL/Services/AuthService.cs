@@ -5,6 +5,7 @@ using MagFlow.Shared.Models.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -18,16 +19,19 @@ namespace MagFlow.BLL.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICompanyContext _companyContext;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<AuthService> _logger;  
 
         public AuthService(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ICompanyContext companyContext,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            ILogger<AuthService> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _companyContext = companyContext;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         public async Task<SignInResult> PasswordSignInAsync(string email, string password, bool rememberMe)

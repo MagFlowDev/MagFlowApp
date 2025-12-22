@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MagFlow.BLL.Mappers.Domain
+namespace MagFlow.BLL.Services.Interfaces
 {
-    public static class CompanyDTOMapper
+    public interface IEventService
     {
+        Task AddEventAsync(Guid userId);
     }
 }
