@@ -3,6 +3,7 @@ using MagFlow.BLL.Mappers.Domain.Core;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.Shared.DTOs.Core;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace MagFlow.BLL.Services.Notifications
     public class NotificationService : INotificationService
     {
         private readonly INotificationRepository _notificationRepository;
+        private readonly ILogger<NotificationService> _logger;
 
-        public NotificationService(INotificationRepository notificationRepository)
+        public NotificationService(INotificationRepository notificationRepository,
+            ILogger<NotificationService> logger)
         {
             _notificationRepository = notificationRepository;
-            Random random = new Random();
+            _logger = logger;
         }
 
         public async Task<List<NotificationDTO>> GetCurrentSystemNotificationsAsync()

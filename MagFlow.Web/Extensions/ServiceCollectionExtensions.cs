@@ -5,6 +5,8 @@ using MagFlow.BLL.Hubs;
 using MagFlow.BLL.Services;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.BLL.Services.Notifications;
+using MagFlow.DAL.Repositories.Company;
+using MagFlow.DAL.Repositories.Company.Interfaces;
 using MagFlow.DAL.Repositories.Core;
 using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.Domain.Core;
@@ -161,6 +163,8 @@ namespace MagFlow.Web.Extensions
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEventService, EventService>();
+
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ClientNotificationService>();
@@ -170,6 +174,19 @@ namespace MagFlow.Web.Extensions
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IEventLogRepository, EventLogRepository>();
+
+            services.AddScoped<IContractorRepository, ContractorRepository>();
+            services.AddScoped<IDocumentRepository, DocumentRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<ILocalUserRepository, LocalUserRepository>();
+            services.AddScoped<IMachineRepository, MachineRepository>();
+            services.AddScoped<IOrderRepository,  OrderRepository>();
+            services.AddScoped<IProcessRepository, ProcessRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IUnitRepository, UnitRepository>();
+            services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+
             services.AddScoped<INotificationRepository, NotificationRepository>();
         }
 

@@ -17,6 +17,7 @@ builder.Logging.AddOpenTelemetry(builder =>
     builder.AddOtlpExporter(options => options.Endpoint = new Uri("http://localhost:4317"));
 });
 
+builder.Host.UseSystemd();
 var app = builder.Build();
 app.UseMagFlowPipeline();
 await app.InitializeDatabase();

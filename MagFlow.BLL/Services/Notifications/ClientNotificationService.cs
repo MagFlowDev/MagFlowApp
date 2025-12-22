@@ -3,6 +3,7 @@ using MagFlow.Shared.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +18,17 @@ namespace MagFlow.BLL.Services.Notifications
     public class ClientNotificationService : IAsyncDisposable
     {
         private readonly NavigationManager _navigationManager;
+        private readonly ILogger<ClientNotificationService> _logger;
         private HubConnection? _hubConnection;
 
         public event Action<NotificationMessage>? OnNotificationReceived;
         public bool IsConnected => _hubConnection?.State == HubConnectionState.Connected;
 
-        public ClientNotificationService(NavigationManager navigationManager)
+        public ClientNotificationService(NavigationManager navigationManager,
+            ILogger<ClientNotificationService> logger)
         {
             _navigationManager = navigationManager;
+            _logger = logger;
         }
 
         public Task StartAsync()

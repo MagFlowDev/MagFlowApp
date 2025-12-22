@@ -9,7 +9,7 @@ namespace MagFlow.BLL.Services
 {
     public class EmailService : IEmailService
     {
-        private ILogger<EmailService> _logger;
+        private readonly ILogger<EmailService> _logger;
 
         public EmailService(ILogger<EmailService> logger)
         {

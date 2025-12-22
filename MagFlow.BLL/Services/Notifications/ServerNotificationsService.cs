@@ -3,6 +3,7 @@ using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Domain.Company;
 using MagFlow.Shared.Models;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,13 @@ namespace MagFlow.BLL.Services.Notifications
     public class ServerNotificationsService : IServerNotificationService
     {
         private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly ILogger<ServerNotificationsService> _logger;
 
-        public ServerNotificationsService(IHubContext<NotificationHub> hubContext)
+        public ServerNotificationsService(IHubContext<NotificationHub> hubContext,
+            ILogger<ServerNotificationsService> logger)
         {
             _hubContext = hubContext;
+            _logger = logger;
         }
 
         public Task NotifyAllAsync(string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null)
