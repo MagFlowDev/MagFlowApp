@@ -390,4 +390,10 @@
   <data name="FAQ_A6" xml:space="preserve">
     <value>Integracje z zewnętrznymi systemami są obecnie na etapie planowania. Jesteśmy otwarci na rozmowy dotyczące integracji z systemami ERP oraz innymi rozwiązaniami wykorzystywanymi w zakładach produkcyjnych i sukcesywnie będziemy rozwijać ten obszar wraz z potrzebami klientów.</value>
   </data>
+  <data name="UserAlreadyLogged" xml:space="preserve">
+    <value>Użytkownik jest już zalogowany</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Otwórz</value>
+  </data>
 </root>
