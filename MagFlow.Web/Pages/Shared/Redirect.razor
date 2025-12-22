@@ -1,0 +1,15 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager NavigationManager
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    [Parameter, EditorRequired]
+    public string RedirectUrl { get; set; } = "/";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        NavigationManager.NavigateTo(RedirectUrl, replace: true);
+    }
+}

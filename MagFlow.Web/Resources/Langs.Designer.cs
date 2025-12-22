@@ -718,6 +718,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Otwórz.
+        /// </summary>
+        public static string Open {
+            get {
+                return ResourceManager.GetString("Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Optymalizacja.
         /// </summary>
         public static string Optimization {
@@ -867,6 +876,15 @@ namespace MagFlow.Web.Resources {
         public static string UnderConstruction {
             get {
                 return ResourceManager.GetString("UnderConstruction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Użytkownik jest już zalogowany.
+        /// </summary>
+        public static string UserAlreadyLogged {
+            get {
+                return ResourceManager.GetString("UserAlreadyLogged", resourceCulture);
             }
         }
         

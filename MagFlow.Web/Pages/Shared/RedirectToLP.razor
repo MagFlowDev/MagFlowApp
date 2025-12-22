@@ -5,13 +5,16 @@
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var authenticationState = await AuthenticationStateTask;
-
-        if(authenticationState?.User?.Identity is null || !authenticationState.User.Identity.IsAuthenticated)
+        if (firstRender)
         {
-            NavigationManager.NavigateTo("/Home", replace: true);
+            var authenticationState = await AuthenticationStateTask;
+
+            if (authenticationState?.User?.Identity is null || !authenticationState.User.Identity.IsAuthenticated)
+            {
+                NavigationManager.NavigateTo("/Home", replace: true);
+            }
         }
     }
 }

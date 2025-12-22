@@ -38,6 +38,8 @@ namespace MagFlow.Web.Extensions
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseAntiforgery();
 

@@ -390,4 +390,10 @@
   <data name="FAQ_A6" xml:space="preserve">
     <value>Integrations with external systems are currently in the planning phase. We are open to discussions regarding integration with ERP systems and other solutions used in manufacturing plants, and we will continue to develop this area in line with customer needs.</value>
   </data>
+  <data name="UserAlreadyLogged" xml:space="preserve">
+    <value>User is already logged</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
 </root>
