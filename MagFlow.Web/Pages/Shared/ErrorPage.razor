@@ -1,4 +1,8 @@
-﻿@inject ILogger<ErrorPage> Logger
+﻿@page "/error"
+@using System.Diagnostics
+@inject ILogger<ErrorPage> Logger
+
+<PageTitle>Error</PageTitle>
 
 <p>@ErrorMessage</p>
 <p>Click the button below to refresh website</p>
@@ -8,20 +12,27 @@
     [Parameter]
     public Exception? Exception { get; set; }
 
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
     string ErrorMessage = string.Empty;
 
+    private string? RequestId { get; set; }
+    private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+
     protected override async Task OnInitializedAsync()
-    {
+    { 
+        RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
         if (Exception == null)
         {
             var errorId = Guid.NewGuid();
-            Logger.LogError($"Unknown error (ErrorId: {errorId})");
-            ErrorMessage = $"Unknown error (ErrorId: {errorId})";
+            Logger.LogError($"Unknown error (ErrorId|RequestId: {errorId} {RequestId})");
+            ErrorMessage = $"Unknown error (ErrorId|RequestId: {errorId} {RequestId})";
         }
         else
         {
             var errorId = Guid.NewGuid();
-            Logger.LogError(Exception, $"Error message (ErrorId: {errorId}): {Exception.Message}");
+            Logger.LogError(Exception, $"Error message (ErrorId|RequestId: {errorId} {RequestId}): {Exception.Message}");
             ErrorMessage = $"An error occurred. Please contact with system administrator - serwis@magflow.pl - and provide error id: {errorId}\n";
         }
     }

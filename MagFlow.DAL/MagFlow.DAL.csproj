@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Helpers\" />
-    <Folder Include="Repositories\Company\Interfaces\" />
     <Folder Include="Repositories\Interfaces\" />
   </ItemGroup>
 
