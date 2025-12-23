@@ -1,30 +1,20 @@
 ﻿@page "/Auth/Login"
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
 @layout EmptyLayout
 
-@using System.ComponentModel.DataAnnotations
-@using MagFlow.BLL.Services.Interfaces
-@using MagFlow.Domain.Core
-@using MagFlow.Shared.Models.Auth
-@using MagFlow.Web.Auth
-@using MagFlow.Web.Pages.Shared
-@using Microsoft.AspNetCore.Antiforgery
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Identity
-@using MudBlazor
 
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
-@inject IdentityRedirectManager RedirectManager
-@inject IAuthorizationService AuthorizationService
-@inject IAuthService AuthService
+
 
 <PageTitle>Logowanie</PageTitle>
 
 <AuthorizeView>
-    <NotAuthorized Context="notAuthorizedContext">
-
+    <NotAuthorized>
+        <LoginForm/>
+    </NotAuthorized>
+    <Authorized>
         <div style="margin: 0 auto; min-height: 100vh; min-width: 100%" class="flex-grow-1 d-flex flex-column">
             <nav class="control-container">
                 <div style="width: 100%;">
@@ -42,69 +32,15 @@
                     </MudAppBar>
                 </div>
             </nav>
-            <div style="width: 100%; height: 100%;" class="flex-grow-1 d-flex align-items-stretch justify-content-center">
-                <div class="w-50 d-flex flex-column justify-content-center align-items-center">
-                    <div class="flex-shrink-0 w-100 h-100" style="background: #f8f9fa url('/img/login/ConcreteBuilding.jpg') center bottom/cover no-repeat;"></div>
+            <div style="width: 100%; height: 100%;" class="flex-grow-1 d-flex align-items-center justify-content-center">
+                <div class="d-flex flex-column">
+                    <div class="d-flex" style="font-weight: 700; font-size: 32px;">
+                        <i class="bi bi-person"></i> @Localizer[Langs.UserAlreadyLogged]
+                    </div>
+                    <a href="/" style='@string.Concat("background-color: ", Themes.MAIN.PaletteLight.Primary, "; color: white; margin: 0 auto; border-radius: 6px; padding: 6px 16px; text-decoration: none")' class="w-100 d-flex justify-content-center align-items-center">
+                        <span style="margin: 0 auto; font-size: .875rem; font-weight: 500; color: white; padding: 0;">@Localizer[Langs.Open]</span>
+                    </a>
                 </div>
-                <div class="w-50 d-flex flex-column justify-content-center align-items-center">
-
-                </div>
-            </div>
-        </div>
-@* 
-        <div class="row">
-            <div class="col-lg-6">
-                <section>
-                    <EditForm EditContext="editContext" method="post" OnValidSubmit="LoginUser" FormName="login">
-                        <DataAnnotationsValidator />
-                        <h2>Use a local account to log in.</h2>
-                        <hr />
-                        <ValidationSummary class="text-danger" role="alert" />
-                        <div class="form-floating mb-3">
-                            <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username webauthn" aria-required="true" placeholder="name@example.com" />
-                            <label for="Input.Email" class="form-label">Email</label>
-                            <ValidationMessage For="() => Input.Email" class="text-danger" />
-                        </div>
-                        <div class="form-floating mb-3">
-                            <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                            <label for="Input.Password" class="form-label">Password</label>
-                            <ValidationMessage For="() => Input.Password" class="text-danger" />
-                        </div>
-                        <div class="checkbox mb-3">
-                            <label class="form-label">
-                                <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                                Remember me
-                            </label>
-                        </div>
-                        <div>
-                            <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                        </div>
-                        <hr />
-                        <hr />
-                        <div>
-                            <p>
-                                <a href="Account/ForgotPassword">Forgot your password?</a>
-                            </p>
-                            <p>
-                                <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
-                            </p>
-                        </div>
-                    </EditForm>
-                </section>
-            </div>
-        </div> *@
-
-
-    </NotAuthorized>
-    <Authorized>
-        <div style="position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); font-weight: 700; font-size: 32px;" class="text-center">
-            <div class="d-flex flex-column">
-                <div class="d-flex">
-                    <i class="bi bi-person"></i> @Localizer[Langs.UserAlreadyLogged]
-                </div>
-                <a href="/" style='@string.Concat("background-color: ", Themes.MAIN.PaletteLight.Primary, "; color: white; margin: 0 auto; border-radius: 6px; padding: 6px 16px; text-decoration: none")' class="w-100 d-flex justify-content-center align-items-center">
-                    <span style="margin: 0 auto; font-size: .875rem; font-weight: 500; color: white; padding: 0;">@Localizer[Langs.Open]</span>
-                </a>
             </div>
         </div>
     </Authorized>
@@ -113,27 +49,6 @@
 @code {
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; }
-
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
-
-    [SupplyParameterFromForm]
-    private SignInModel Input { get; set; } = default!;
-
-    private EditContext editContext = default!;
-
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        Input ??= new();
-        editContext = new EditContext(Input);
-
-        if (HttpContext != null && HttpMethods.IsGet(HttpContext.Request.Method))
-        {
-
-        }
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -145,25 +60,6 @@
             {
                 NavigationManager.NavigateTo("/", replace: true);
             }
-        }
-    }
-
-    public async Task LoginUser()
-    {
-        if (!editContext.Validate())
-        {
-            return;
-        }
-        var result = await AuthService.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe);
-
-        if (result.Succeeded)
-        {
-            Logger.LogInformation($"User {Input.Email} logged in via IPv4 address: {HttpContext?.Connection?.RemoteIpAddress?.ToString()}");
-            NavigationManager.NavigateTo("/", true);
-        }
-        else
-        {
-            Logger.LogWarning($"Invalid login attempt from IPv4 address: {HttpContext?.Connection?.RemoteIpAddress?.ToString()}");
         }
     }
 }

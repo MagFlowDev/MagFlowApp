@@ -1,5 +1,6 @@
 ﻿using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.Core.Interfaces;
+using MagFlow.Shared.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace MagFlow.BLL.Services
             _logger = logger;
         }
 
-        public async Task AddEventAsync(Guid userId)
+        public async Task AddEventAsync(Guid userId, Enums.EventLogCategory category, Enums.EventLogLevel level, string message, string details, string ip, string agent)
         {
             
         }

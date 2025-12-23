@@ -97,12 +97,17 @@ namespace MagFlow.Shared.Models
 
         public enum EventLogCategory
         {
-            Unknown
+            Unknown,
+            Logging
         }
 
         public enum EventLogLevel
         {
-            Unknown
+            TRACE = 0,
+            INFO = 1,
+            WARN = 2,
+            ERROR = 3,
+            FATAL = 4
         }
 
         public enum AuditLogAction
