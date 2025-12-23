@@ -1,0 +1,110 @@
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.Models.Auth
+@using MagFlow.Web.Auth
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@inject IdentityRedirectManager RedirectManager
+@inject IAuthorizationService AuthorizationService
+@inject IAuthService AuthService
+@inject ILogger<Login> Logger
+@inject NavigationManager NavigationManager
+
+<div style="margin: 0 auto; min-height: 100vh; min-width: 100%" class="flex-grow-1 d-flex flex-column">
+    <nav class="control-container">
+        <div style="width: 100%;">
+            <MudAppBar Color="Color.Inherit" Class="lp-appbar w-100" Style="position: relative; margin: 0 auto;">
+                <a href="/" style="display:inline-flex;align-items:center;gap:16px" class="d-flex align-items-center">
+                    <div style="width:40px;height:40px;background:#0D6EFD;border-radius:6px; display:flex;align-items:center;justify-content:center">
+                        <span style="color:white;font-size:20px;font-weight:700">M</span>
+                    </div>
+                    <span style="font-size:28px;font-weight:700;color:#212529">
+                        MagFlow
+                    </span>
+                </a>
+
+                <MudSpacer />
+            </MudAppBar>
+        </div>
+    </nav>
+    <div style="width: 100%; height: 100%;" class="flex-grow-1 d-flex align-items-stretch justify-content-center">
+        <div class="w-50 d-flex flex-column justify-content-center align-items-center">
+            <div class="flex-shrink-0 w-100 h-100" style="background: #f8f9fa url('/img/login/ConcreteBuilding.jpg') center bottom/cover no-repeat;"></div>
+        </div>
+        <div class="w-50 d-flex flex-column justify-content-center align-items-center">
+            <EditForm EditContext="SignInContext" OnValidSubmit="LoginUser" @key="SignInContext" FormName="login">
+                <DataAnnotationsValidator />
+                <div class="d-flex flex-column align-items-center" style="gap: 10px;">
+                    <div class="d-flex flex-column  align-items-center">
+                        <h1>Welcome Back</h1>
+                        <p>LogIn to your MagFlow account</p>
+                    </div>
+                    <div class="w-100 d-flex flex-column">
+                        <label class="form-label align-self-start" style="margin-left: 2px">Email</label>
+                        <div class="form-floating mb-3 w-100" style="max-height: 38px;">
+                            <InputText @bind-Value="SignInModel.Email" id="SignInModel.Email" class="form-control w-100" style="padding: 4px; max-height: 30px; min-height: 10px;" aria-required="true" autocomplete="username webauthn" />
+                            <ValidationMessage For="() => SignInModel.Email" class="text-danger"/>
+                        </div>
+                    </div>
+                    <div class="w-100 d-flex flex-column">
+                        <label class="form-label align-self-start" style="margin-left: 2px">Password</label>
+                        <div class="form-floating mb-3 w-100" style="max-height: 38px;">
+                            <InputText type="password" @bind-Value="SignInModel.Password" id="SignInModel.Password" class="form-control w-100" style="padding: 4px; max-height: 30px; min-height: 10px;" aria-required="true" autocomplete="current-password" />
+                            <ValidationMessage For="() => SignInModel.Password" class="text-danger" />
+                        </div>
+                    </div>
+                    <div class="d-flex w-100 justify-content-between">
+                        <div class="checkbox mb-3">
+                            <label class="form-label">
+                                <InputCheckbox @bind-Value="SignInModel.RememberMe" class="darker-border-checkbox form-check-input" />
+                                Remember me
+                            </label>
+                        </div>
+                        <a href="/Auth/ForgotPassword">Forget password?</a>
+                    </div>
+                    <button type="submit" Class="w-100 btn btn-lg btn-primary">Sign In</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private SignInModel SignInModel { get; set; } = default!;
+    private EditContext SignInContext { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        SignInModel ??= new();
+
+        SignInContext = new EditContext(SignInModel);
+
+        if (HttpContext != null && HttpMethods.IsGet(HttpContext.Request.Method))
+        {
+
+        }
+    }
+
+    public async Task LoginUser()
+    {
+        if (!SignInContext.Validate())
+        {
+            return;
+        }
+        var result = await AuthService.PasswordSignInAsync(SignInModel.Email, SignInModel.Password, SignInModel.RememberMe, HttpContext?.Connection?.RemoteIpAddress?.MapToIPv4().ToString());
+
+        if (result.Succeeded)
+        {
+            Logger.LogInformation($"User {SignInModel.Email} logged in via IPv4 address: {HttpContext?.Connection?.RemoteIpAddress?.ToString()}");
+            NavigationManager.NavigateTo("/", true);
+        }
+        else
+        {
+            Logger.LogWarning($"Invalid login attempt from IPv4 address: {HttpContext?.Connection?.RemoteIpAddress?.ToString()}");
+        }
+    }
+}
