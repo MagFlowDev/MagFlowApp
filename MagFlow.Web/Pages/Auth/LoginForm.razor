@@ -1,6 +1,7 @@
 ﻿@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.Models.Auth
 @using MagFlow.Web.Auth
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
@@ -8,6 +9,7 @@
 @inject IAuthorizationService AuthorizationService
 @inject IAuthService AuthService
 @inject ILogger<Login> Logger
+@inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 
 <div style="margin: 0 auto; min-height: 100vh; min-width: 100%" class="flex-grow-1 d-flex flex-column">
@@ -31,38 +33,40 @@
         <div class="w-50 d-flex flex-column justify-content-center align-items-center">
             <div class="flex-shrink-0 w-100 h-100" style="background: #f8f9fa url('/img/login/ConcreteBuilding.jpg') center bottom/cover no-repeat;"></div>
         </div>
-        <div class="w-50 d-flex flex-column justify-content-center align-items-center">
+        <div class="w-50 d-flex flex-column justify-content-center align-items-center" style="min-width: 350px;">
             <EditForm EditContext="SignInContext" OnValidSubmit="LoginUser" @key="SignInContext" FormName="login">
-                <DataAnnotationsValidator />
-                <div class="d-flex flex-column align-items-center" style="gap: 10px;">
-                    <div class="d-flex flex-column  align-items-center">
-                        <h1>Welcome Back</h1>
-                        <p>LogIn to your MagFlow account</p>
+                <LocalizedDataAnnotationsValidator />
+                <div class="d-flex flex-column align-items-center" style="gap: 24px;">
+                    <div class="d-flex flex-column align-items-center align-self-stretch" style="gap: 4px">
+                        <h1>@Localizer[Langs.SignIn1]</h1>
+                        <p style='@string.Concat("font-size: 16px; color: ", Themes.MAIN.PaletteLight.TextSecondary)'>@Localizer[Langs.AccessYourAccount]</p>
                     </div>
-                    <div class="w-100 d-flex flex-column">
-                        <label class="form-label align-self-start" style="margin-left: 2px">Email</label>
-                        <div class="form-floating mb-3 w-100" style="max-height: 38px;">
-                            <InputText @bind-Value="SignInModel.Email" id="SignInModel.Email" class="form-control w-100" style="padding: 4px; max-height: 30px; min-height: 10px;" aria-required="true" autocomplete="username webauthn" />
-                            <ValidationMessage For="() => SignInModel.Email" class="text-danger"/>
+                    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px;">
+                        <div class="w-100 d-flex flex-column align-items-start" style="gap: 4px;">
+                            <label class="align-self-start" style="margin-left: 2px">@Localizer[Langs.Email]</label>
+                            <div class="w-100" style="max-height: 38px;">
+                                <InputText @bind-Value="SignInModel.Email" id="SignInModel.Email" class="form-control w-100" style="padding: 10px; max-height: 30px; min-height: 15px; text-align: start !important;" aria-required="true" autocomplete="username webauthn" placeholder="@Localizer[Langs.JohnSmithCompanyCom]" />
+                                <ValidationMessage For="() => SignInModel.Email" class="text-danger" style="margin-top: 2px"/>
+                            </div>
+                        </div>
+                        <div class="w-100 d-flex flex-column align-items-start" style="gap: 4px;">
+                            <label class="align-self-start" style="margin-left: 2px">@Localizer[Langs.Password]</label>
+                            <div class="w-100" style="max-height: 38px;">
+                                <InputText type="password" @bind-Value="SignInModel.Password" id="SignInModel.Password" class="form-control w-100" style="padding: 10px; max-height: 30px; min-height: 15px; text-align: start !important;" aria-required="true" autocomplete="current-password" placeholder="@Localizer[Langs.Password]" />
+                                <ValidationMessage For="() => SignInModel.Password" class="text-danger" style="margin-top: 2px"/>
+                            </div>
+                        </div>
+                        <div class="d-flex w-100 justify-content-between" style="gap: 16px;">
+                            <div class="checkbox">
+                                <label class="form-label" style="font-size: 14px">
+                                    <InputCheckbox @bind-Value="SignInModel.RememberMe" class="darker-border-checkbox form-check-input" style="font-size: 14px" />
+                                    @Localizer[Langs.RememberMe]
+                                </label>
+                            </div>
+                            <a href="/Auth/ForgotPassword" style='@string.Concat("font-size: 14px; text-decoration: none; color: ", Themes.MAIN.PaletteLight.Primary)'>@Localizer[Langs.ForgotPassword]</a>
                         </div>
                     </div>
-                    <div class="w-100 d-flex flex-column">
-                        <label class="form-label align-self-start" style="margin-left: 2px">Password</label>
-                        <div class="form-floating mb-3 w-100" style="max-height: 38px;">
-                            <InputText type="password" @bind-Value="SignInModel.Password" id="SignInModel.Password" class="form-control w-100" style="padding: 4px; max-height: 30px; min-height: 10px;" aria-required="true" autocomplete="current-password" />
-                            <ValidationMessage For="() => SignInModel.Password" class="text-danger" />
-                        </div>
-                    </div>
-                    <div class="d-flex w-100 justify-content-between">
-                        <div class="checkbox mb-3">
-                            <label class="form-label">
-                                <InputCheckbox @bind-Value="SignInModel.RememberMe" class="darker-border-checkbox form-check-input" />
-                                Remember me
-                            </label>
-                        </div>
-                        <a href="/Auth/ForgotPassword">Forget password?</a>
-                    </div>
-                    <button type="submit" Class="w-100 btn btn-lg btn-primary">Sign In</button>
+                    <button type="submit" Class="w-100 d-flex justify-content-center align-items-center align-self-stretch" style="padding: 6px 12px; height: 38px; border-radius: 6px; background: var(--bs-gray-900); color: white;">@Localizer[Langs.SignIn1]</button>
                 </div>
             </EditForm>
         </div>
@@ -81,7 +85,7 @@
     {
         SignInModel ??= new();
 
-        SignInContext = new EditContext(SignInModel);
+        SignInContext = new EditContext(SignInModel); 
 
         if (HttpContext != null && HttpMethods.IsGet(HttpContext.Request.Method))
         {
@@ -105,6 +109,9 @@
         else
         {
             Logger.LogWarning($"Invalid login attempt from IPv4 address: {HttpContext?.Connection?.RemoteIpAddress?.ToString()}");
+
+            Snackbar.Add(Localizer[Langs.InvalidLogin], Severity.Error);
+            SignInModel.Password = string.Empty;
         }
     }
 }

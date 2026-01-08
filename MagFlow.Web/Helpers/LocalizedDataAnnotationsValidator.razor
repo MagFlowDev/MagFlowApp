@@ -1,0 +1,132 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+@using Microsoft.AspNetCore.Components.Forms
+@inject IStringLocalizer<Langs> L
+
+@implements IDisposable
+
+@code
+{
+    [CascadingParameter] private EditContext CurrentEditContext { get; set; } = default!;
+
+    private ValidationMessageStore? _messageStore;
+
+    protected override void OnInitialized()
+    {
+        if (CurrentEditContext is null)
+            throw new InvalidOperationException($"{nameof(LocalizedDataAnnotationsValidator)} must be used inside an EditForm.");
+
+        _messageStore = new ValidationMessageStore(CurrentEditContext);
+
+        CurrentEditContext.OnValidationRequested += OnValidationRequested;
+        CurrentEditContext.OnFieldChanged += OnFieldChanged;
+    }
+
+    private void OnValidationRequested(object? sender, ValidationRequestedEventArgs e)
+        => ValidateModel();
+
+    private void OnFieldChanged(object? sender, FieldChangedEventArgs e)
+        => ValidateField(e.FieldIdentifier);
+
+    private void ValidateModel()
+    {
+        if (_messageStore is null) return;
+
+        _messageStore.Clear();
+
+        var model = CurrentEditContext.Model;
+        var validationResults = new List<ValidationResult>();
+
+        var vc = new ValidationContext(model, serviceProvider: null, items: null);
+        Validator.TryValidateObject(model, vc, validationResults, validateAllProperties: true);
+
+        foreach (var vr in validationResults)
+        {
+            if (!vr.MemberNames.Any())
+            {
+                _messageStore.Add(new FieldIdentifier(model, string.Empty),
+                    LocalizeMessage(vr.ErrorMessage, model, null));
+                continue;
+            }
+
+            foreach (var memberName in vr.MemberNames)
+            {
+                var fieldIdentifier = new FieldIdentifier(model, memberName);
+                _messageStore.Add(fieldIdentifier, LocalizeMessage(vr.ErrorMessage, model, memberName));
+            }
+        }
+
+        CurrentEditContext.NotifyValidationStateChanged();
+    }
+
+    private void ValidateField(FieldIdentifier fieldIdentifier)
+    {
+        if (_messageStore is null) return;
+
+        _messageStore.Clear(fieldIdentifier);
+
+        var model = fieldIdentifier.Model;
+        var propertyName = fieldIdentifier.FieldName;
+
+        var propertyInfo = model.GetType().GetProperty(propertyName);
+        if (propertyInfo is null)
+        {
+            CurrentEditContext.NotifyValidationStateChanged();
+            return;
+        }
+
+        var validationResults = new List<ValidationResult>();
+        var propertyValue = propertyInfo.GetValue(model);
+
+        var vc = new ValidationContext(model, serviceProvider: null, items: null)
+        {
+            MemberName = propertyName
+        };
+
+        Validator.TryValidateProperty(propertyValue, vc, validationResults);
+
+        foreach (var vr in validationResults)
+            _messageStore.Add(fieldIdentifier, LocalizeMessage(vr.ErrorMessage, model, propertyName));
+
+        CurrentEditContext.NotifyValidationStateChanged();
+    }
+
+    private string LocalizeMessage(string? keyOrText, object model, string? memberName)
+    {
+        if (string.IsNullOrWhiteSpace(keyOrText))
+            return string.Empty;
+
+        string fieldDisplay = memberName is null
+            ? string.Empty
+            : GetLocalizedDisplayName(model.GetType(), memberName);
+
+        var localized = L[keyOrText];
+        var template = localized.ResourceNotFound ? keyOrText : localized.Value;
+
+        if (!string.IsNullOrEmpty(fieldDisplay))
+            template = template.Replace("{0}", fieldDisplay);
+
+        return template;
+    }
+
+    private string GetLocalizedDisplayName(Type modelType, string memberName)
+    {
+        var prop = modelType.GetProperty(memberName);
+        var displayAttr = prop?.GetCustomAttribute<DisplayAttribute>();
+
+        var displayKey = displayAttr?.Name;
+        if (string.IsNullOrWhiteSpace(displayKey))
+            return memberName;
+
+        var localized = L[displayKey];
+        return localized.ResourceNotFound ? memberName : localized.Value;
+    }
+
+    public void Dispose()
+    {
+        if (CurrentEditContext is null) return;
+
+        CurrentEditContext.OnValidationRequested -= OnValidationRequested;
+        CurrentEditContext.OnFieldChanged -= OnFieldChanged;
+    }
+}

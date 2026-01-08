@@ -396,4 +396,34 @@
   <data name="Open" xml:space="preserve">
     <value>Otwórz</value>
   </data>
+  <data name="SignIn1" xml:space="preserve">
+    <value>Zaloguj się</value>
+  </data>
+  <data name="AccessYourAccount" xml:space="preserve">
+    <value>Dostęp do systemu MagFlow</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>Zapamiętaj mnie</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>Zapomniałem hasła</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>Pole jest wymagane.</value>
+  </data>
+  <data name="Validation_Email" xml:space="preserve">
+    <value>Podaj poprawny adres e-mail.</value>
+  </data>
+  <data name="InvalidLogin" xml:space="preserve">
+    <value>Nieprawidłowy adres e-mail lub hasło.</value>
+  </data>
+  <data name="LoginError" xml:space="preserve">
+    <value>Nie udało się zalogować do systemu. Spróbuj ponownie.</value>
+  </data>
 </root>
