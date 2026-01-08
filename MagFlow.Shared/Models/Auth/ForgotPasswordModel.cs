@@ -3,22 +3,17 @@ using MagFlow.Shared.Keys;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MagFlow.Shared.Models.Auth
 {
-    public class SignInModel
+    public class ForgotPasswordModel
     {
         [Display(Name = "Field.Email")]
         [RequiredKey(ValidationKeys.Required)]
         [EmailKey(ValidationKeys.Email)]
         public string Email { get; set; } = "";
-
-        [Display(Name = "Field.Password")]
-        [RequiredKey(ValidationKeys.Required)]
-        [DataType(DataType.Password)]
-        public string Password { get; set; } = "";
-
-        public bool RememberMe { get; set; }
     }
 }
