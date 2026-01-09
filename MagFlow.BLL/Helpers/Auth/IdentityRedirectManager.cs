@@ -50,6 +50,6 @@ namespace MagFlow.Web.Auth
             => RedirectToWithStatus(CurrentPath, message, context);
 
         public void RedirectToInvalidUser(UserManager<ApplicationUser> userManager, HttpContext context)
-            => RedirectToWithStatus("Auth/InvalidUser", $"Error: Unable to load user with ID '{userManager.GetUserId(context.User)}'.", context);
+            => RedirectToWithStatus("InvalidUser", $"Error: Unable to load user with ID '{userManager.GetUserId(context.User)}'.", context);
     }
 }

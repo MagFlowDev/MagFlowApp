@@ -65,6 +65,7 @@
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="10.0.1" />
     <PackageReference Include="MudBlazor" Version="8.15.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="OpenTelemetry" Version="1.13.1" />
     <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.13.1" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.13.1" />

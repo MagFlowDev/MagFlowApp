@@ -37,6 +37,8 @@ namespace MagFlow.Web.Extensions
                 app.UseHsts();
             }
 
+            app.UseForwardedHeaders();
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

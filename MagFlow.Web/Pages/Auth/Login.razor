@@ -1,10 +1,10 @@
-﻿@page "/Auth/Login"
+﻿@page "/Login"
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 @layout EmptyLayout
 
-
 @inject ILogger<Login> Logger
+@inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 
 
@@ -48,7 +48,14 @@
 
 @code {
     [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "error")]
+    public string? error { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -60,6 +67,14 @@
             {
                 NavigationManager.NavigateTo("/", replace: true);
             }
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(error == "1")
+        {
+            Snackbar.Add(Localizer[Langs.InvalidLogin], Severity.Error);
         }
     }
 }
