@@ -18,6 +18,24 @@ namespace MagFlow.DAL.Repositories.Core
 
         }
 
+        public async Task<ApplicationUser?> GetByEmailAsync(string email)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    return await context.ApplicationUsers
+                        .Include(u => u.UserSettings)
+                        .FirstOrDefaultAsync(u => u.Email == email);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
         public override async Task<ApplicationUser?> GetByIdAsync(object id)
         {
             try

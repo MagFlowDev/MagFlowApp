@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -21,7 +22,7 @@ namespace MagFlow.BLL.Helpers
 
             builder.Host.UseSerilog((ctx, sp, cfg) =>
             {
-                var root = AppDomain.CurrentDomain.BaseDirectory;
+                var root = GetLogsRoot();
                 var logsDir = Path.Combine(root, "logs", "magflow");
                 Directory.CreateDirectory(logsDir);
 
@@ -62,7 +63,7 @@ namespace MagFlow.BLL.Helpers
 
         private static SerilogLoggerProvider CreateLoggerProvider<T>(string moduleName, IServiceProvider sp, IConfiguration config)
         {
-            var root = AppDomain.CurrentDomain.BaseDirectory;
+            var root = GetLogsRoot();
             var logsDir = Path.Combine(root, "logs", moduleName);
             Directory.CreateDirectory(logsDir);
 
@@ -76,7 +77,7 @@ namespace MagFlow.BLL.Helpers
         public static LoggerConfiguration CreateLoggerConfiguration(string moduleName, IServiceProvider sp, IConfiguration config)
         {
             var osModuleName = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? moduleName.ToLowerInvariant() : moduleName;
-            var root = AppDomain.CurrentDomain.BaseDirectory;
+            var root = GetLogsRoot();
             var logsDir = Path.Combine(root, "logs", moduleName);
             Directory.CreateDirectory(logsDir);
 
@@ -94,6 +95,18 @@ namespace MagFlow.BLL.Helpers
                         shared: true,
                         outputTemplate: OutputTemplate);
             return loggerConfiguration;
+        }
+
+
+
+        private static string GetLogsRoot()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                return AppDomain.CurrentDomain.BaseDirectory;
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return "/var/log/magflow";
+            else
+                return AppDomain.CurrentDomain.BaseDirectory;
         }
     }
 

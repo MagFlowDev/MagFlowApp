@@ -73,6 +73,16 @@ namespace MagFlow.Web.Extensions
             services.AddHttpContextAccessor();
             services.AddLocalization();
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor |
+                    Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto;
+
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
+            });
+
             services.AddHostedService<ApplicationMonitorHostedService>();
 
             services.AddMagFlowHealthChecks();
@@ -134,9 +144,9 @@ namespace MagFlow.Web.Extensions
                 .AddDefaultTokenProviders();
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Auth/Login";
-                options.LogoutPath = "/Auth/Logout";
-                options.AccessDeniedPath = "/Auth/Denied";
+                options.LoginPath = "/Login";
+                options.LogoutPath = "/Logout";
+                options.AccessDeniedPath = "/Denied";
 
                 options.Cookie.MaxAge = TimeSpan.FromHours(12);
                 options.SlidingExpiration = true;
@@ -161,7 +171,6 @@ namespace MagFlow.Web.Extensions
 
         private static void RegisterServices(this IServiceCollection services)
         {
-            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<ICompanyService, CompanyService>();

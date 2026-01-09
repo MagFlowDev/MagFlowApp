@@ -7,9 +7,8 @@
 
 @inject IdentityRedirectManager RedirectManager
 @inject IAuthorizationService AuthorizationService
-@inject IAuthService AuthService
 @inject ILogger<Login> Logger
-@inject ISnackbar Snackbar
+@inject IJSRuntime JS
 @inject NavigationManager NavigationManager
 
 <div style="margin: 0 auto; min-height: 100vh; min-width: 100%" class="flex-grow-1 d-flex flex-column">
@@ -34,8 +33,9 @@
             <div class="flex-shrink-0 w-100 h-100" style="background: #f8f9fa url('/img/login/ConcreteBuilding.jpg') center bottom/cover no-repeat;"></div>
         </div>
         <div class="w-50 d-flex flex-column justify-content-center align-items-center" style="min-width: 350px;">
-            <EditForm EditContext="SignInContext" OnValidSubmit="LoginUser" @key="SignInContext" FormName="login">
+            <EditForm EditContext="SignInContext" @key="SignInContext" FormName="login" method="post">
                 <LocalizedDataAnnotationsValidator />
+                <AntiforgeryToken/>
                 <div class="d-flex flex-column align-items-center" style="gap: 24px;">
                     <div class="d-flex flex-column align-items-center align-self-stretch" style="gap: 4px">
                         <h1>@Localizer[Langs.SignIn1]</h1>
@@ -63,10 +63,10 @@
                                     @Localizer[Langs.RememberMe]
                                 </label>
                             </div>
-                            <a href="/Auth/ForgotPassword" style='@string.Concat("font-size: 14px; text-decoration: none; color: ", Themes.MAIN.PaletteLight.Primary)'>@Localizer[Langs.ForgotPassword]</a>
+                            <a href="/ForgotPassword" style='@string.Concat("font-size: 14px; text-decoration: none; color: ", Themes.MAIN.PaletteLight.Primary)'>@Localizer[Langs.ForgotPassword]</a>
                         </div>
                     </div>
-                    <button type="submit" Class="w-100 d-flex justify-content-center align-items-center align-self-stretch" style="padding: 6px 12px; height: 38px; border-radius: 6px; background: var(--bs-gray-900); color: white;">@Localizer[Langs.SignIn1]</button>
+                    <button @onclick="LoginUser" type="submit" Class="w-100 d-flex justify-content-center align-items-center align-self-stretch" style="padding: 6px 12px; height: 38px; border-radius: 6px; background: var(--bs-gray-900); color: white;">@Localizer[Langs.SignIn1]</button>
                 </div>
             </EditForm>
         </div>
@@ -99,19 +99,12 @@
         {
             return;
         }
-        var result = await AuthService.PasswordSignInAsync(SignInModel.Email, SignInModel.Password, SignInModel.RememberMe, HttpContext?.Connection?.RemoteIpAddress?.MapToIPv4().ToString());
 
-        if (result.Succeeded)
+        await JS.InvokeVoidAsync("formPost.post", "/Auth/Login", new Dictionary<string, object?>
         {
-            Logger.LogInformation($"User {SignInModel.Email} logged in via IPv4 address: {HttpContext?.Connection?.RemoteIpAddress?.ToString()}");
-            NavigationManager.NavigateTo("/", true);
-        }
-        else
-        {
-            Logger.LogWarning($"Invalid login attempt from IPv4 address: {HttpContext?.Connection?.RemoteIpAddress?.ToString()}");
-
-            Snackbar.Add(Localizer[Langs.InvalidLogin], Severity.Error);
-            SignInModel.Password = string.Empty;
-        }
+            { "Email", SignInModel.Email },
+            { "Password", SignInModel.Password },
+            { "RememberMe", SignInModel.RememberMe }
+        }); 
     }
 }
