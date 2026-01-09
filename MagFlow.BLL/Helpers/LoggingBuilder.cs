@@ -22,9 +22,9 @@ namespace MagFlow.BLL.Helpers
 
             builder.Host.UseSerilog((ctx, sp, cfg) =>
             {
-                var root = GetLogsRoot();
-                var logsDir = Path.Combine(root, "logs", "magflow");
-                Directory.CreateDirectory(logsDir);
+                var logsDir = GetLogsPath();
+                var logsPath = Path.Combine(logsDir, "magflow");
+                Directory.CreateDirectory(logsPath);
 
                 cfg.ReadFrom.Configuration(ctx.Configuration)
                    .ReadFrom.Services(sp)
@@ -33,7 +33,7 @@ namespace MagFlow.BLL.Helpers
                    .Enrich.WithEnvironmentName()
                    .WriteTo.Console()
                    .WriteTo.File(
-                        path: Path.Combine(logsDir, "magflow-.log"),
+                        path: Path.Combine(logsPath, "magflow-.log"),
                         rollingInterval: RollingInterval.Day,
                         retainedFileCountLimit: 14,
                         shared: true,
@@ -63,9 +63,9 @@ namespace MagFlow.BLL.Helpers
 
         private static SerilogLoggerProvider CreateLoggerProvider<T>(string moduleName, IServiceProvider sp, IConfiguration config)
         {
-            var root = GetLogsRoot();
-            var logsDir = Path.Combine(root, "logs", moduleName);
-            Directory.CreateDirectory(logsDir);
+            var logsDir = GetLogsPath();
+            var logsPath = Path.Combine(logsDir, moduleName);
+            Directory.CreateDirectory(logsPath);
 
             var serilog = Log.Logger ?? CreateLoggerConfiguration(moduleName, sp, config).CreateLogger();
             ILoggerFactory factory = new LoggerFactory().AddSerilog(serilog);
@@ -77,9 +77,9 @@ namespace MagFlow.BLL.Helpers
         public static LoggerConfiguration CreateLoggerConfiguration(string moduleName, IServiceProvider sp, IConfiguration config)
         {
             var osModuleName = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ? moduleName.ToLowerInvariant() : moduleName;
-            var root = GetLogsRoot();
-            var logsDir = Path.Combine(root, "logs", moduleName);
-            Directory.CreateDirectory(logsDir);
+            var logsDir = GetLogsPath();
+            var logsPath = Path.Combine(logsDir,  moduleName);
+            Directory.CreateDirectory(logsPath);
 
             var loggerConfiguration = new LoggerConfiguration()
                 .ReadFrom.Configuration(config)
@@ -89,7 +89,7 @@ namespace MagFlow.BLL.Helpers
                    .Enrich.WithEnvironmentName()
                    .WriteTo.Console()
                    .WriteTo.File(
-                        path: Path.Combine(logsDir, $"{moduleName}-.log"),
+                        path: Path.Combine(logsPath, $"{moduleName}-.log"),
                         rollingInterval: RollingInterval.Day,
                         retainedFileCountLimit: 14,
                         shared: true,
@@ -99,14 +99,14 @@ namespace MagFlow.BLL.Helpers
 
 
 
-        private static string GetLogsRoot()
+        private static string GetLogsPath()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                return AppDomain.CurrentDomain.BaseDirectory;
+                return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 return "/var/log/magflow";
             else
-                return AppDomain.CurrentDomain.BaseDirectory;
+                return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
         }
     }
 

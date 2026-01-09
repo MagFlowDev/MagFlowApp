@@ -66,7 +66,7 @@ namespace MagFlow.BLL.ApplicationMonitor
                 {
 
                 }
-                await Task.Delay(1000 * 60);
+                await Task.Delay(1000 * 60, stoppingToken);
             }
         }
 
