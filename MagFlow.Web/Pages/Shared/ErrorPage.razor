@@ -1,8 +1,11 @@
 ﻿@page "/error"
 @using System.Diagnostics
+@using MagFlow.Web.Components.Status
 @inject ILogger<ErrorPage> Logger
 
 <PageTitle>Error</PageTitle>
+
+<Error/>
 
 <p>@ErrorMessage</p>
 <p>Click the button below to refresh website</p>
