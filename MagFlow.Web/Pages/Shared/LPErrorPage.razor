@@ -1,10 +1,31 @@
+﻿@page "/error"
 @using System.Diagnostics
 @using MagFlow.Web.Components.Status
+@using MudBlazor
 @inject ILogger<LPErrorPage> Logger
 
 <PageTitle>Error</PageTitle>
 
-<Error ErrorId="ErrorId"/>
+<div style="margin: 0 auto; min-height: 100vh; min-width: 100%" class="flex-grow-1 d-md-flex flex-column">
+    <nav class="control-container">
+        <div style="width: 100%;">
+            <MudAppBar Color="Color.Inherit" Class="lp-appbar w-100" Style="position: relative; margin: 0 auto;">
+                <a href="/" style="display:inline-flex;align-items:center;gap:16px" class="d-md-flex align-items-center">
+                    <div style="width:40px;height:40px;background:#0D6EFD;border-radius:6px; display:flex;align-items:center;justify-content:center">
+                        <span style="color:white;font-size:20px;font-weight:700">M</span>
+                    </div>
+                    <span style="font-size:28px;font-weight:700;color:#212529">
+                                MagFlow
+                    </span>
+                </a>
+                <MudSpacer />
+            </MudAppBar>
+        </div>
+    </nav>
+    <div class="flex-grow-1 d-md-flex flex-column align-items-center justify-content-center w-100 h-100">
+        <Error ErrorId="ErrorId"/>
+    </div>
+</div>
 
 @code {
     [Parameter]
