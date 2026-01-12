@@ -1,0 +1,17 @@
+﻿
+<div class="w-100 h-100 m-0 p-0 align-self-center d-md-flex justify-content-center align-items-center">
+    <div class="d-md-flex">
+        
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid? ErrorId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if(!ErrorId.HasValue)
+            ErrorId = Guid.NewGuid();
+    }
+}
