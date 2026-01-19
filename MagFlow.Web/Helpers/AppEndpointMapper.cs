@@ -19,6 +19,15 @@ namespace MagFlow.Web.Helpers
             ArgumentNullException.ThrowIfNull(app);
 
             app.MapAuth();
+            
+            app.MapGet("/{**path}", (HttpContext ctx) =>
+            {
+                var path = ctx.Request.Path.Value ?? "";
+                if (path.StartsWith("/_framework") || path.StartsWith("/_content") || Path.HasExtension(path))
+                    return Results.NotFound();
+
+                return Results.Redirect("/NotFound");
+            });
         }
 
         public static IEndpointConventionBuilder MapAuth(this IEndpointRouteBuilder endpoints)

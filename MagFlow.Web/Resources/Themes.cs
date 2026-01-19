@@ -20,6 +20,13 @@ namespace MagFlow.Web.Resources
                 Button = new ButtonTypography
                 {
                     TextTransform = "none"
+                },
+                Default = new DefaultTypography()
+                {
+                    FontFamily = new []
+                    {
+                        "Roboto"
+                    }
                 }
             }
         };

@@ -4,7 +4,7 @@
 @using MudBlazor
 @inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider Theme="Themes.MAIN"/>
 <MudPopoverProvider />
 
 <MudDialogProvider />
@@ -35,7 +35,14 @@
             <Footer />
         </footer>
     </Authorized>
-    <NotAuthorized>
-        <RedirectToLP/>
+    <NotAuthorized Context="authState">
+        @if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            <RedirectToDenied/>
+        }
+        else
+        {
+            <RedirectToLP/>
+        }
     </NotAuthorized>
 </AuthorizeView>

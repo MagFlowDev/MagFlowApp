@@ -1,0 +1,31 @@
+@using MudBlazor
+@inject IJSRuntime JS
+
+<div class="w-100 h-100 m-0 p-0 align-self-stretch flex-grow-1 d-md-flex justify-content-center align-items-center">
+    <div class="d-md-flex flex-column justify-content-end align-items-center" style="gap: 24px;">
+        <div class="flex-shrink-0 d-md-flex" style="gap: 40px">
+            <div class="d-inline-flex align-items-start" style="gap: 16px;">
+                <MudImage Src="/img/icons/lock.svg"></MudImage>
+            </div>
+            <div class="d-md-flex flex-column justify-content-between" style="gap: 24px">
+                <div class="d-md-flex flex-column align-items-start" style="gap: 16px;">
+                    <span class="align-self-stretch" style="@string.Concat("font-size: 48px; font-weight: 700; line-height: 30px; color: ", Themes.MAIN.PaletteLight.Dark)">
+                        Odmowa dostępu
+                    </span>
+                    <span class="align-self-stretch" style="@string.Concat("font-size: 20px; font-weight: 400; line-height: 30px; color: ", Themes.MAIN.PaletteLight.Black)">
+                        Nie masz uprawnień dostępu do tej strony.
+                    </span>
+                </div>
+                <MudButton StartIcon="@Icons.Material.Filled.West" Color="Color.Primary" Variant="Variant.Filled" Class="align-self-center" OnClick="GoBack">Powrót</MudButton>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    public async Task GoBack()
+    {
+        await JS.InvokeVoidAsync("history.back");
+    }
+}

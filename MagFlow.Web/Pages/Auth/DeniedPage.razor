@@ -1,0 +1,28 @@
+﻿@page "/Denied"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using MagFlow.Web.Components.Status
+@inject ILogger<DeniedPage> Logger
+
+<PageTitle>Denied</PageTitle>
+
+<div class="flex-grow-1 d-md-flex flex-column align-items-center justify-content-center w-100 h-100">
+    <Denied/>
+</div>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var authenticationState = await AuthenticationStateTask;
+
+            var user = authenticationState?.User?.FindFirst(ClaimTypes.Email)?.Value;
+            Logger.LogError($"Access denied for user: {user}");
+        }
+    }
+
+}
