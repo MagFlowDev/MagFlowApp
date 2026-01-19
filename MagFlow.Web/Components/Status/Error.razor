@@ -1,24 +1,32 @@
 ﻿@using MudBlazor
+@inject NavigationManager NavigationManager
 
 <div class="w-100 h-100 m-0 p-0 align-self-stretch flex-grow-1 d-md-flex justify-content-center align-items-center">
     <div class="d-md-flex flex-column justify-content-end align-items-center" style="gap: 24px;">
-        <div class="flex-shrink-0">
-            <div class="d-inline-flex align-items-center" style="gap: 16px;">
-                
+        <div class="flex-shrink-0 d-md-flex" style="gap: 40px">
+            <div class="d-inline-flex align-items-start" style="gap: 16px;">
+                <MudImage Src="/img/icons/heart_broken.svg"></MudImage>
             </div>
-            <div class="d-md-flex flex-column align-items-center" style="gap: 24px;">
-                
-            </div>
-            <div class="d-md-flex align-items-start" style="gap: 4px; padding-right: 8px; border-radius: 4px; border: 1px solid @Colors.Red.Darken4; background: @Colors.Red.Lighten5">
-                <div class="d-md-flex align-items-center" style="gap: 12px; border-radius: 4px; padding: 8px">
-                    <div class="d-md-flex">
-                        <span style="color: @Colors.Red.Darken4; font-size: 14px; font-weight: 600; font-family: Inter">Kod błędu:</span><span style="color: @Themes.MAIN.PaletteLight.Dark; padding-left: 4px; font-size: 14px; font-weight: 600; font-family: Inter">@ErrorId</span>
-                    </div>
-                    <MudIconButton Icon="@Icons.Material.Outlined.ContentCopy" Size="Size.Small"></MudIconButton>
+            <div class="d-md-flex flex-column justify-content-between" style="gap: 24px">
+                <div class="d-md-flex flex-column align-items-start" style="gap: 16px;">
+                    <span class="align-self-stretch" style="@string.Concat("font-size: 48px; font-weight: 700; line-height: 30px; color: ", Themes.MAIN.PaletteLight.Dark)">
+                        Coś poszło nie tak
+                    </span>
+                    <span class="align-self-stretch" style="@string.Concat("font-size: 20px; font-weight: 400; line-height: 30px; color: ", Themes.MAIN.PaletteLight.Black)">
+                        Nie udało się załadować danych, spróbuj ponownie.
+                    </span>
                 </div>
+                <div class="d-md-flex align-items-start" style="gap: 4px; padding-right: 8px; border-radius: 4px; border: 1px solid @Colors.Red.Darken4; background: @Colors.Red.Lighten5">
+                    <div class="d-md-flex align-items-center" style="gap: 12px; border-radius: 4px; padding: 8px">
+                        <div class="d-md-flex">
+                            <span style="color: @Colors.Red.Darken4; font-size: 14px; font-weight: 600; font-family: Inter">Kod błędu:</span><span style="color: @Themes.MAIN.PaletteLight.Dark; padding-left: 4px; font-size: 14px; font-weight: 600; font-family: Inter">@ErrorId</span>
+                        </div>
+                        <MudIconButton Icon="@Icons.Material.Outlined.ContentCopy" Size="Size.Small"></MudIconButton>
+                    </div>
+                </div>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="align-self-center" OnClick="Reload">Spróbuj ponownie</MudButton>
             </div>
         </div>
-        <MudButton Color="Color.Primary" Variant="Variant.Filled">Spróbuj ponownie</MudButton>
     </div>
 </div>
 
@@ -30,5 +38,10 @@
     {
         if(!ErrorId.HasValue)
             ErrorId = Guid.NewGuid();
+    }
+
+    private void Reload()
+    {
+        NavigationManager.Refresh(true);
     }
 }

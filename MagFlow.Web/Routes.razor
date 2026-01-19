@@ -2,19 +2,27 @@
 @using MagFlow.Web.Pages.LandingPage
 @using MagFlow.Web.Pages.Shared
 @using Microsoft.AspNetCore.Components.Authorization
+@using MagFlow.Web.Pages.Auth
 
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(Program).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Pages.Layouts.MainLayout)" >
-                <NotAuthorized>
-                    <LandingPage/>
+                <NotAuthorized Context="authState">
+                    @if (authState.User.Identity?.IsAuthenticated == true)
+                    {
+                        <DeniedPage/>
+                    }
+                    else
+                    {
+                        <LandingPage/>
+                    }
                 </NotAuthorized>
             </AuthorizeRouteView>
             <FocusOnNavigate RouteData="routeData" Selector="h1" />
         </Found>
         <NotFound>
-            <NotFound/>
+            <NotFoundPage/>
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
