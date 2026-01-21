@@ -4,9 +4,9 @@
 @using MagFlow.Web.Components.Status
 @inject ILogger<DeniedPage> Logger
 
-<PageTitle>Denied</PageTitle>
+<PageTitle>@Localizer[Langs.AccessDenied]</PageTitle>
 
-<div class="flex-grow-1 d-md-flex flex-column align-items-center justify-content-center w-100 h-100">
+<div class="flex-grow-1 d-flex flex-column align-items-center justify-content-center w-100 h-100">
     <Denied/>
 </div>
 

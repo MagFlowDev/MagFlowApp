@@ -426,4 +426,58 @@
   <data name="LoginError" xml:space="preserve">
     <value>Nie udało się zalogować do systemu. Spróbuj ponownie.</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Błąd</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>Odmowa dostępu</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Nie znaleziono</value>
+  </data>
+  <data name="WeWillContactWithYou" xml:space="preserve">
+    <value>Skontaktujemy się z Tobą!</value>
+  </data>
+  <data name="ResolutionNotSupported" xml:space="preserve">
+    <value>Rozdzielczość nieobsługiwana</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Wyloguj się</value>
+  </data>
+  <data name="StartPanel" xml:space="preserve">
+    <value>Panel startowy</value>
+  </data>
+  <data name="SomethingWentWrong" xml:space="preserve">
+    <value>Coś poszło nie tak</value>
+  </data>
+  <data name="CouldNotLoadData" xml:space="preserve">
+    <value>Nie udało się załadować danych, spróbuj ponownie.</value>
+  </data>
+  <data name="ErrorCode" xml:space="preserve">
+    <value>Kod błędu</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Spróbuj ponownie</value>
+  </data>
+  <data name="YouDontHavePermissions" xml:space="preserve">
+    <value>Nie masz uprawnień dostępu do tej strony.</value>
+  </data>
+  <data name="GoBack" xml:space="preserve">
+    <value>Powrót</value>
+  </data>
+  <data name="PageNotFound" xml:space="preserve">
+    <value>Nie odnaleziono strony</value>
+  </data>
+  <data name="PageDoesNotExist" xml:space="preserve">
+    <value>Strona, której szukasz, nie istnieje lub została przeniesiona.</value>
+  </data>
+  <data name="CheckUrl" xml:space="preserve">
+    <value>Sprawdź poprawność adresu albo wróć do strony głównej.</value>
+  </data>
+  <data name="MainPage" xml:space="preserve">
+    <value>Strona główna</value>
+  </data>
+  <data name="ChangeScreenToLarger" xml:space="preserve">
+    <value>Zmień ekran na większy, żeby wyświetlić treść.</value>
+  </data>
 </root>

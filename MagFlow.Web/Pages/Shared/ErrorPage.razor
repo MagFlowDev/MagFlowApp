@@ -1,10 +1,11 @@
+@page "/Error"
 @using System.Diagnostics
 @using MagFlow.Web.Components.Status
 @inject ILogger<LPErrorPage> Logger
 
-<PageTitle>Error</PageTitle>
+<PageTitle>@Localizer[Langs.Error]</PageTitle>
 
-<div class="flex-grow-1 d-md-flex flex-column align-items-center justify-content-center w-100 h-100">
+<div class="flex-grow-1 d-flex flex-column align-items-center justify-content-center w-100 h-100">
     <Error ErrorId="ErrorId"/>
 </div>
 
@@ -14,8 +15,6 @@
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
-
-    string ErrorMessage = string.Empty;
 
     private Guid? ErrorId { get; set; }
     private string? RequestId { get; set; }
@@ -27,14 +26,12 @@
         if (Exception == null)
         {
             ErrorId = Guid.NewGuid();
-            Logger.LogError($"Unknown error (ErrorId|RequestId: {ErrorId} {RequestId})");
-            ErrorMessage = $"Unknown error (ErrorId|RequestId: {ErrorId} {RequestId})";
+            Logger.LogError($"Unknown error (ErrorId: {ErrorId})");
         }
         else
         {
             ErrorId = Guid.NewGuid();
-            Logger.LogError(Exception, $"Error message (ErrorId|RequestId: {ErrorId} {RequestId}): {Exception.Message}");
-            ErrorMessage = $"An error occurred. Please contact with system administrator - serwis@magflow.pl - and provide error id: {ErrorId}\n";
+            Logger.LogError(Exception, $"Error message (ErrorId: {ErrorId}): {Exception.Message}");
         }
     }
 }
