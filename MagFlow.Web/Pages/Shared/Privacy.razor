@@ -32,7 +32,6 @@
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        throw new Exception("test");
         await JS.InvokeVoidAsync("scrollTop");
     }
 
