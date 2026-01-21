@@ -13,6 +13,26 @@ html, body {
     flex: 1;
 }
 
+.app-content {
+    display: flex;
+}
+
+.resolution-warning {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+}
+
+@media(max-width: 767px), (max-height: 511px) {
+    .app-content {
+        display: none !important;
+    }
+
+    .resolution-warning {
+        display: flex !important;
+    }
+}
+
 footer {
     
 }

@@ -5,7 +5,7 @@
 
 @if (_last != null)
 {
-    <div class="notification-bar @GetCssClass(_last)">
+    <div class="w-100 flex-grow-1 notification-bar @GetCssClass(_last)">
         @if (!string.IsNullOrEmpty(_last.Title))
         {
             <strong>@_last.Title</strong>
@@ -17,7 +17,7 @@
 }
 
 @code {
-    private NotificationMessage? _last;
+    private NotificationMessage? _last = new NotificationMessage("Title", "Message", DateTime.UtcNow, Enums.NotificationType.System, null);
 
     protected override async Task OnInitializedAsync()
     {

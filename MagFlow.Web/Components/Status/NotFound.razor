@@ -1,31 +1,30 @@
-@using MudBlazor
-@inject IJSRuntime JS
+﻿@using MudBlazor
+@inject NavigationManager NavigationManager
 
 <div class="w-100 h-100 m-0 p-0 align-self-stretch flex-grow-1 d-flex justify-content-center align-items-center">
     <div class="d-flex flex-column justify-content-end align-items-center" style="gap: 24px;">
         <div class="flex-shrink-0 d-sm-flex" style="gap: 40px">
             <div class="d-inline-flex align-items-start" style="gap: 16px;">
-                <MudImage Src="/img/icons/lock.svg"></MudImage>
+                <MudImage Src="/img/icons/warehouse.svg"></MudImage>
             </div>
             <div class="d-flex flex-column justify-content-between" style="gap: 24px">
                 <div class="d-flex flex-column align-items-start" style="gap: 16px;">
                     <span class="align-self-stretch" style="@string.Concat("font-size: 48px; font-weight: 700; color: ", Themes.MAIN.PaletteLight.Dark)">
-                        @Localizer[Langs.AccessDenied]
+                        @Localizer[Langs.PageNotFound]
                     </span>
-                    <span class="align-self-stretch" style="@string.Concat("font-size: 20px; font-weight: 400; color: ", Themes.MAIN.PaletteLight.Black)">
-                        @Localizer[Langs.YouDontHavePermissions]
+                    <span class="align-self-stretch" style="@string.Concat("max-width: 580px; font-size: 20px; font-weight: 400; color: ", Themes.MAIN.PaletteLight.Black)">
+                        @Localizer[Langs.PageDoesNotExist]<br/>@Localizer[Langs.CheckUrl]
                     </span>
                 </div>
-                <MudButton StartIcon="@Icons.Material.Filled.West" Color="Color.Primary" Variant="Variant.Filled" Class="align-self-center" OnClick="GoBack">@Localizer[Langs.GoBack]</MudButton>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="align-self-center" OnClick="GoMainPage">@Localizer[Langs.MainPage]</MudButton>
             </div>
         </div>
     </div>
 </div>
 
 @code {
-
-    public async Task GoBack()
+    public void GoMainPage()
     {
-        await JS.InvokeVoidAsync("history.back");
+        NavigationManager.NavigateTo("/");
     }
 }

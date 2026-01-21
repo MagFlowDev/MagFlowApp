@@ -426,4 +426,58 @@
   <data name="LoginError" xml:space="preserve">
     <value>Unable to sign in. Please try again.</value>
   </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>Access denied</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Not found</value>
+  </data>
+  <data name="WeWillContactWithYou" xml:space="preserve">
+    <value>We will contact with you!</value>
+  </data>
+  <data name="ResolutionNotSupported" xml:space="preserve">
+    <value>Resolution not supported</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="StartPanel" xml:space="preserve">
+    <value>Start panel</value>
+  </data>
+  <data name="SomethingWentWrong" xml:space="preserve">
+    <value>Something went wrong</value>
+  </data>
+  <data name="CouldNotLoadData" xml:space="preserve">
+    <value>Could not load data, please try again.</value>
+  </data>
+  <data name="ErrorCode" xml:space="preserve">
+    <value>Error code:</value>
+  </data>
+  <data name="TryAgain" xml:space="preserve">
+    <value>Try again</value>
+  </data>
+  <data name="YouDontHavePermissions" xml:space="preserve">
+    <value>You do not have permission to access this page.</value>
+  </data>
+  <data name="GoBack" xml:space="preserve">
+    <value>Go back</value>
+  </data>
+  <data name="PageNotFound" xml:space="preserve">
+    <value>Page not found</value>
+  </data>
+  <data name="PageDoesNotExist" xml:space="preserve">
+    <value>The page you are looking for does not exist or has been moved.</value>
+  </data>
+  <data name="CheckUrl" xml:space="preserve">
+    <value>Check the URL or return to the home page.</value>
+  </data>
+  <data name="MainPage" xml:space="preserve">
+    <value>Main page</value>
+  </data>
+  <data name="ChangeScreenToLarger" xml:space="preserve">
+    <value>Change to a larger screen to view content.</value>
+  </data>
 </root>
