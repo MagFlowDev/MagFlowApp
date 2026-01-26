@@ -3,6 +3,7 @@ using MagFlow.BLL.Mappers.Domain.Core;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.Shared.DTOs.Core;
+using MagFlow.Shared.Models.Auth;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,11 @@ namespace MagFlow.BLL.Services
         {
             var user = await _userRepository.GetByIdAsync(id);
             return user?.ToDTO();
+        }
+
+        public async Task ResetPasswordRequest(ForgotPasswordModel model)
+        {
+
         }
     }
 }
