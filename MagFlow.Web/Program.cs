@@ -1,4 +1,5 @@
 using MagFlow.BLL.Helpers;
+using MagFlow.Shared.Models.Settings;
 using MagFlow.Web.Extensions;
 using MagFlow.Web.Helpers;
 using OpenTelemetry.Logs;

@@ -3,7 +3,9 @@ using MagFlow.BLL.Hubs;
 using MagFlow.Domain.Core;
 using MagFlow.EF;
 using MagFlow.Shared.Constants;
+using MagFlow.Shared.Models.Settings;
 using MagFlow.Web.Middlewares;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +47,8 @@ namespace MagFlow.Web.Extensions
 
             app.UseAntiforgery();
 
+            app.UseEnsureAppUriFromRequest();
+
             app.MapStaticAssets();
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
@@ -54,6 +58,29 @@ namespace MagFlow.Web.Extensions
             app.UseMiddleware<RequestLocalizationMiddleware>();
 
             app.MapMagFlowHealthChecks();
+            return app;
+        }
+
+        private static WebApplication UseEnsureAppUriFromRequest(this WebApplication app)
+        {
+            app.Use(async (context, next) =>
+            {
+                if (AppSettings.AppUri == null)
+                {
+                    try
+                    {
+                        var req = context.Request;
+                        var baseUri = new Uri($"{req.Scheme}://{req.Host}{req.PathBase}/");
+                        AppSettings.AppUri = baseUri;
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                await next();
+            });
+
             return app;
         }
 

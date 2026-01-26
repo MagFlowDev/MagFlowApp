@@ -9,5 +9,6 @@ namespace MagFlow.Shared.Models.Settings
         public static ConnectionStrings ConnectionStrings;
         public static OtelSettings OtelSettings;
         public static SmtpSettings SmtpSettings;
+        public static Uri AppUri;
     }
 }

@@ -498,4 +498,31 @@
   <data name="PasswordChangeRequested" xml:space="preserve">
     <value>Link do zmiany hasła został wysłany. Jeśli nie widzisz wiadomości e-mail, sprawdź spam albo skontaktuj się poprzez adres:</value>
   </data>
+  <data name="Validation_PasswordCompare" xml:space="preserve">
+    <value>Oba hasła muszą być identyczne</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Nowe hasło</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>Potwierdź nowe hasło</value>
+  </data>
+  <data name="Validation_PasswordRequirements" xml:space="preserve">
+    <value>Hasło nie spełnia wymagań</value>
+  </data>
+  <data name="SetNewPassword" xml:space="preserve">
+    <value>Ustaw nowe hasło</value>
+  </data>
+  <data name="PasswordMinimumRequirements" xml:space="preserve">
+    <value>Minimum 8 znaków, mała litera, wielka litera i cyfra</value>
+  </data>
+  <data name="PasswordHasBeenChanged" xml:space="preserve">
+    <value>Hasło zostało zmienione</value>
+  </data>
+  <data name="LoginWithNewPassword" xml:space="preserve">
+    <value>Możesz teraz zalogować się przy użyciu nowego hasła</value>
+  </data>
+  <data name="InvalidPasswordChange" xml:space="preserve">
+    <value>Nie udało się zmienić hasła. Spróbuj później</value>
+  </data>
 </root>
