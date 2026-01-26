@@ -480,4 +480,22 @@
   <data name="ChangeScreenToLarger" xml:space="preserve">
     <value>Zmień ekran na większy, żeby wyświetlić treść.</value>
   </data>
+  <data name="ForgotPasswordQuestion" xml:space="preserve">
+    <value>Zapomniałeś hasła?</value>
+  </data>
+  <data name="ForgotPasswordDescription" xml:space="preserve">
+    <value>Podaj e-mail powiązany z kontem, aby zresetować hasło</value>
+  </data>
+  <data name="ResetPassword" xml:space="preserve">
+    <value>Zresetuj hasło</value>
+  </data>
+  <data name="BackToLogin" xml:space="preserve">
+    <value>Powrót do logowania</value>
+  </data>
+  <data name="CheckYourEmail" xml:space="preserve">
+    <value>Sprawdź swój e-mail</value>
+  </data>
+  <data name="PasswordChangeRequested" xml:space="preserve">
+    <value>Link do zmiany hasła został wysłany. Jeśli nie widzisz wiadomości e-mail, sprawdź spam albo skontaktuj się poprzez adres:</value>
+  </data>
 </root>
