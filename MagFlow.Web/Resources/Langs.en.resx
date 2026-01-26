@@ -498,4 +498,31 @@
   <data name="PasswordChangeRequested" xml:space="preserve">
     <value>A link to reset your password has been sent. If you don't see the email, please check your spam folder or contact us at:</value>
   </data>
+  <data name="Validation_PasswordCompare" xml:space="preserve">
+    <value>Both passwords must match</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="ConfirmNewPassword" xml:space="preserve">
+    <value>Confirm new password</value>
+  </data>
+  <data name="Validation_PasswordRequirements" xml:space="preserve">
+    <value>The password does not meet the requirements</value>
+  </data>
+  <data name="SetNewPassword" xml:space="preserve">
+    <value>Set new password</value>
+  </data>
+  <data name="PasswordMinimumRequirements" xml:space="preserve">
+    <value>Minimum 8 characters, lowercase letter, uppercase letter and number</value>
+  </data>
+  <data name="PasswordHasBeenChanged" xml:space="preserve">
+    <value>Password has been changed</value>
+  </data>
+  <data name="LoginWithNewPassword" xml:space="preserve">
+    <value>You can now login with your new password</value>
+  </data>
+  <data name="InvalidPasswordChange" xml:space="preserve">
+    <value>Password change failed. Please try again later.</value>
+  </data>
 </root>

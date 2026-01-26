@@ -11,5 +11,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<UserDTO> GetUser(Guid id);
 
         Task ResetPasswordRequest(ForgotPasswordModel model);
+        Task<bool> ChangePassword(ChangePasswordModel model);
+        Task<bool> ChangePassword(TokenChangePasswordModel model);
     }
 }

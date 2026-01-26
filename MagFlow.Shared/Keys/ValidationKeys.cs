@@ -10,5 +10,7 @@ namespace MagFlow.Shared.Keys
     {
         public const string Required = "Validation_Required";
         public const string Email = "Validation_Email";
+        public const string PasswordCompare = "Validation_PasswordCompare";
+        public const string PasswordRequirements = "Validation_PasswordRequirements";
     }
 }
