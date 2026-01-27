@@ -1,5 +1,6 @@
 ﻿using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Domain.Core;
+using MagFlow.Shared.Generators.EmailGenerators;
 using MagFlow.Shared.Models.Settings;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
@@ -16,24 +17,15 @@ namespace MagFlow.BLL.Services
             _logger = logger;
         }
 
-        public async Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink)
-        {
-            
-        }
-
-        public async Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode)
-        {
-           
-        }
-
-        public async Task SendPasswordResetLinkAsync(ApplicationUser user, string email, string resetLink)
-        {
-            
-        }
 
         public async Task SendToMeAsync(string subject, MimeEntity body)
         {
             await SendAsync(AppSettings.SmtpSettings?.Username?? "", AppSettings.SmtpSettings?.Email ?? "", subject, body);
+        }
+
+        public async Task SendAsync(string firstName, string lastName, string receiverEmail, string subject, MimeEntity body)
+        {
+            await SendAsync($"{firstName} {lastName}", receiverEmail, subject, body);
         }
 
         public async Task SendAsync(string receiverName, string receiverEmail, string subject, MimeEntity body)
@@ -78,5 +70,15 @@ namespace MagFlow.BLL.Services
                 _logger.LogError(ex, $"Error while sending email: {ex}");
             }
         }
+
+        public async Task SendPasswordResetLinkAsync(ApplicationUser user, string email, string resetLink)
+        {
+            var body = EmailGenerator.ResetForgottenPasswordBody(user.FirstName, user.LastName, email, resetLink, user.UserSettings?.Language);
+            await SendAsync(user.FirstName, user.LastName, email, "Reset Password", body);
+        }
+
+        public Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink) => Task.CompletedTask;
+
+        public Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode) => Task.CompletedTask;
     }
 }
