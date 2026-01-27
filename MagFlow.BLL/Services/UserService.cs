@@ -4,6 +4,7 @@ using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.Domain.Core;
 using MagFlow.Shared.DTOs.Core;
+using MagFlow.Shared.Generators.EmailGenerators;
 using MagFlow.Shared.Models.Auth;
 using MagFlow.Shared.Models.Settings;
 using Microsoft.AspNetCore.Identity;
@@ -41,22 +42,29 @@ namespace MagFlow.BLL.Services
 
         public async Task ResetPasswordRequest(ForgotPasswordModel model)
         {
-            var user = await _userRepository.GetByEmailAsync(model.Email);
-            if(user == null)
+            try
             {
-                _logger.LogWarning($"Password reset requested for non-existing email: {model.Email}");
-                return;
-            }
-            if(AppSettings.AppUri == null || string.IsNullOrEmpty(AppSettings.AppUri.AbsoluteUri))
-            {
-                _logger.LogError("Error while generating password reset link: AppUri is not configured.");
-                return;
-            }
+                var user = await _userRepository.GetByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    _logger.LogWarning($"Password reset requested for non-existing email: {model.Email}");
+                    return;
+                }
+                if (AppSettings.AppUri == null || string.IsNullOrEmpty(AppSettings.AppUri.AbsoluteUri))
+                {
+                    _logger.LogError("Error while generating password reset link: AppUri is not configured.");
+                    return;
+                }
 
-            string token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var encodedToken = HttpUtility.UrlEncode(token);
-            var callback = new Uri(AppSettings.AppUri, "/ForgotPasswordChange?userId=" + user.Id + "&token=" + encodedToken);
-            await _emailService.SendPasswordResetLinkAsync(user, model.Email, callback.ToString());
+                string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var encodedToken = HttpUtility.UrlEncode(token);
+                var callback = new Uri(AppSettings.AppUri, "/ForgotPasswordChange?userId=" + user.Id + "&token=" + encodedToken);
+                await _emailService.SendPasswordResetLinkAsync(user, model.Email, callback.ToString());
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing reset password request");
+            }
         }
 
         public async Task<bool> ChangePassword(ChangePasswordModel model)
@@ -66,6 +74,31 @@ namespace MagFlow.BLL.Services
 
         public async Task<bool> ChangePassword(TokenChangePasswordModel model)
         {
+            try
+            {
+                if (string.IsNullOrEmpty(model.UserId) || string.IsNullOrEmpty(model.Token) || string.IsNullOrEmpty(model.Password))
+                    return false;
+
+                var user = await _userManager.FindByIdAsync(model.UserId);
+                if (user == null)
+                    return false;
+
+                var passwordValidator = new PasswordValidator<ApplicationUser>();
+                var isValid = await passwordValidator.ValidateAsync(_userManager, user, model.Password);
+                if (!isValid.Succeeded)
+                    return false;
+
+                var resetResult = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+                if (resetResult.Succeeded)
+                {
+                    await _emailService.SendAsync(user.UserName, user.Email, "Password Changed", EmailGenerator.PasswordChangedBody(user.FirstName, user.LastName, user.Email, user.UserSettings?.Language));
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error while changing user password");
+            }
             return false;
         }
     }
