@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.ApplicationMonitor;
+﻿using Castle.DynamicProxy;
+using MagFlow.BLL.ApplicationMonitor;
 using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Helpers.Auth;
 using MagFlow.BLL.Hubs;
@@ -13,12 +14,12 @@ using MagFlow.Domain.Core;
 using MagFlow.EF;
 using MagFlow.EF.MultiTenancy;
 using MagFlow.Shared.Models.Settings;
-using MagFlow.Web.Auth;
 using MagFlow.Web.HealthChecks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MudBlazor;
 using MudBlazor.Services;
@@ -171,9 +172,15 @@ namespace MagFlow.Web.Extensions
 
         private static void RegisterServices(this IServiceCollection services)
         {
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IEventService, EventService>();
-            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<SecurityInterceptor>();
+
+            services.AddScoped<UserService>();
+            services.AddScoped<EventService>();
+            services.AddScoped<CompanyService>();
+
+            services.AddScoped<IUserService>(sp => sp.GetRequiredService<UserService>().WithProxy(sp));
+            services.AddScoped<IEventService>(sp => sp.GetRequiredService<EventService>().WithProxy(sp));
+            services.AddScoped<ICompanyService>(sp => sp.GetRequiredService<CompanyService>().WithProxy(sp));
 
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<INotificationService, NotificationService>();
@@ -227,6 +234,16 @@ namespace MagFlow.Web.Extensions
                            .AddTelemetrySdk())
                        .AddOtlpExporter(options => options.Endpoint = new Uri(AppSettings.OtelSettings.Address));
                });
+        }
+
+        private static TInterface WithProxy<TInterface>(this TInterface target, IServiceProvider sp) where TInterface : class
+        {
+            var proxyGenerator = new ProxyGenerator();
+            var interceptor = sp.GetRequiredService<SecurityInterceptor>();
+
+            return proxyGenerator.CreateInterfaceProxyWithTarget<TInterface>(
+                target,
+                interceptor.ToInterceptor());
         }
     }
 }

@@ -3,9 +3,11 @@ using MagFlow.BLL.Mappers.Domain.Core;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.Domain.Core;
+using MagFlow.Shared.Attributes;
 using MagFlow.Shared.DTOs.Core;
 using MagFlow.Shared.Generators.EmailGenerators;
 using MagFlow.Shared.Models.Auth;
+using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Shared.Models.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -40,6 +42,7 @@ namespace MagFlow.BLL.Services
             return user?.ToDTO();
         }
 
+        [MinimumRole("Admin")]
         public async Task ResetPasswordRequest(ForgotPasswordModel model)
         {
             try

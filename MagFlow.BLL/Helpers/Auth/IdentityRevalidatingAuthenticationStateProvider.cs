@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 
-namespace MagFlow.BLL.Helpers
+namespace MagFlow.BLL.Helpers.Auth
 {
     public class IdentityRevalidatingAuthenticationStateProvider(
         ILoggerFactory loggerFactory,
