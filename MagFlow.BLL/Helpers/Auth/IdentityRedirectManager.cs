@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
-namespace MagFlow.Web.Auth
+namespace MagFlow.BLL.Helpers.Auth
 {
     public sealed class IdentityRedirectManager(NavigationManager navigationManager)
     {

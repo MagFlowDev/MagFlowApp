@@ -1,5 +1,4 @@
 ﻿using MagFlow.Domain.Core;
-using MagFlow.Web.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
