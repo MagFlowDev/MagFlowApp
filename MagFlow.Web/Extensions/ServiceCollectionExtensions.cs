@@ -174,13 +174,13 @@ namespace MagFlow.Web.Extensions
         {
             services.AddScoped<SecurityInterceptor>();
 
-            services.AddScoped<UserService>();
-            services.AddScoped<EventService>();
-            services.AddScoped<CompanyService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEventService, EventService>();
+            services.AddScoped<ICompanyService, CompanyService>();
 
-            services.AddScoped<IUserService>(sp => sp.GetRequiredService<UserService>().WithProxy(sp));
-            services.AddScoped<IEventService>(sp => sp.GetRequiredService<EventService>().WithProxy(sp));
-            services.AddScoped<ICompanyService>(sp => sp.GetRequiredService<CompanyService>().WithProxy(sp));
+            // services.AddScoped<IUserService>(sp => sp.GetRequiredService<UserService>().WithProxy(sp));
+            // services.AddScoped<IEventService>(sp => sp.GetRequiredService<EventService>().WithProxy(sp));
+            // services.AddScoped<ICompanyService>(sp => sp.GetRequiredService<CompanyService>().WithProxy(sp));
 
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<INotificationService, NotificationService>();
