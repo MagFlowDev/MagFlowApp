@@ -1,4 +1,5 @@
-﻿using MagFlow.Shared.DTOs.Core;
+﻿using MagFlow.Domain.Core;
+using MagFlow.Shared.DTOs.Core;
 using MagFlow.Shared.Models.Auth;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,6 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<bool> ChangePassword(ChangePasswordModel model);
         Task<bool> ChangePassword(TokenChangePasswordModel model);
 
+        Task<UserSessionDTO?> GetLastSession();
     }
 }

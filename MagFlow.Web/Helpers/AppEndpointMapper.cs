@@ -86,7 +86,7 @@ namespace MagFlow.Web.Helpers
 
                 logger.LogInformation($"User {req.Email} logged in via IPv4 address: {ip}");
 
-                var returnUrl = "/";
+                var returnUrl = "/lobby";
                 return Results.Redirect(returnUrl);
             });
 

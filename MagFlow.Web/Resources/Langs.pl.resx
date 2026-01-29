@@ -525,4 +525,19 @@
   <data name="InvalidPasswordChange" xml:space="preserve">
     <value>Nie udało się zmienić hasła. Spróbuj później</value>
   </data>
+  <data name="StartPanelWelcomeText" xml:space="preserve">
+    <value>Witaj ponownie! Wybierz moduły, aby uzyskać dostęp do narzędzi produkcyjnych.</value>
+  </data>
+  <data name="LastSessions" xml:space="preserve">
+    <value>Ostatnie sesje</value>
+  </data>
+  <data name="Modules" xml:space="preserve">
+    <value>Moduły</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Zaznacz wszystko</value>
+  </data>
+  <data name="Restore" xml:space="preserve">
+    <value>Przywróć</value>
+  </data>
 </root>

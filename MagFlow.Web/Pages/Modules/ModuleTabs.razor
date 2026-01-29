@@ -1,0 +1,50 @@
+﻿@using System.Reflection
+@using MagFlow.Shared.Models.Interfaces
+@using MudBlazor
+
+<div class="d-flex w-100 h-100">
+    <MudTabs @bind-ActivePanelIndex="activeIndex" KeepPanelsAlive="true">
+        @foreach(var tab in Tabs)
+        {
+            <MudTabPanel Text="@tab.Value.Title">
+                @tab.Value.Content
+            </MudTabPanel>
+        }
+    </MudTabs>
+</div>
+
+@code {
+    private int activeIndex = 0;
+
+    class Module {
+        public string Title { get; set; }
+        public RenderFragment Content { get; set; }
+    }
+
+    private Dictionary<string, Module> Tabs = new Dictionary<string, Module>();
+
+    protected override void OnInitialized()
+    {
+        var templateTypes = Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => typeof(IModule).IsAssignableFrom(t) && !t.IsAbstract)
+            .ToList();
+
+        foreach(var type in templateTypes)
+        {
+            var instance = (IModule)Activator.CreateInstance(type)!;
+
+            RenderFragment content = builder =>
+            {
+                builder.OpenComponent(0, type);
+                builder.CloseComponent();
+            };
+
+            Tabs.TryAdd(type.FullName, new Module()
+            {
+                Title = instance.TabTitle,
+                Content = content
+            });
+        }
+    }
+}

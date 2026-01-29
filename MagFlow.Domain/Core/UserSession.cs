@@ -28,5 +28,7 @@ namespace MagFlow.Domain.Core
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser? User { get; set; }
+
+        public ICollection<SessionModule> SessionModules { get; set; }
     }
 }

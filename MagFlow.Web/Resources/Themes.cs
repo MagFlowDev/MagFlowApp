@@ -27,7 +27,7 @@ namespace MagFlow.Web.Resources
                     {
                         "Roboto"
                     }
-                }
+                },
             }
         };
     }

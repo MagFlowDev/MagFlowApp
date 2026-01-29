@@ -28,5 +28,16 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 Language = applicationUserSettings?.Language ?? Shared.Models.Enums.Language.Polish,
             };
         }
+
+        public static UserSessionDTO ToDTO(this UserSession userSession)
+        {
+            return new UserSessionDTO()
+            {
+                Id = userSession.Id,
+                ExpiresAt = userSession.ExpiresAt,
+                CreatedAt = userSession.CreatedDate,
+                Modules = userSession.SessionModules?.Where(x => x.Module != null)?.Select(m => m.Module!).ToDTO() ?? new List<ModuleDTO>()
+            };
+        }
     }
 }
