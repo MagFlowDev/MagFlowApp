@@ -42,7 +42,6 @@ namespace MagFlow.BLL.Services
             return user?.ToDTO();
         }
 
-        [MinimumRole("Admin")]
         public async Task ResetPasswordRequest(ForgotPasswordModel model)
         {
             try

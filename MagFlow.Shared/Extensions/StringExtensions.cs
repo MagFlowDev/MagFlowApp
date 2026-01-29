@@ -38,5 +38,12 @@ namespace MagFlow.Shared.Extensions
                 return null;
             return string.Format(template, normalizedCompanyName);
         }
+
+        public static Guid? ToGuid(this string guidString)
+        {
+            if(Guid.TryParse(guidString, out var guidResult))
+                return guidResult;
+            return null;
+        }
     }
 }

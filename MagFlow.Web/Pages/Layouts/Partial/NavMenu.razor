@@ -1,9 +1,11 @@
-﻿@using MagFlow.Web.Pages.Shared
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Web.Pages.Shared
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
+
 @implements IDisposable
 @inject NavigationManager NavigationManager
-
+@inject IUserService UserService
 
 <MudAppBar Elevation="1" Class="justify-content-center" Style="min-height: 64px; max-height: 64px;">
     <div class="d-flex">
