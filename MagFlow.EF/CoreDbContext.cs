@@ -91,6 +91,10 @@ namespace MagFlow.EF
             {
                 e.UserId, e.CompanyId
             });
+            builder.Entity<SessionModule>().HasKey(e => new
+            {
+                e.SessionId, e.ModuleId
+            });
 
             builder.Entity<CompanyUser>().HasOne(c => c.Company).WithMany(u => u.Users).OnDelete(DeleteBehavior.ClientCascade);
             builder.Entity<CompanyUser>().HasOne(u => u.User).WithMany(c => c.Companies).OnDelete(DeleteBehavior.ClientCascade);
@@ -111,6 +115,8 @@ namespace MagFlow.EF
             builder.Entity<Module>().HasMany(p => p.Pricings).WithOne(m => m.Module);
             builder.Entity<ModulePackage>().HasMany(m => m.Modules).WithMany(p => p.Packages);
             builder.Entity<SystemNotification>().HasOne(n => n.Notification);
+            builder.Entity<UserSession>().HasMany(m => m.SessionModules).WithOne(s => s.Session);
+            builder.Entity<SessionModule>().HasOne(m => m.Module).WithMany();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

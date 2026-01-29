@@ -484,6 +484,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ostatnie sesje.
+        /// </summary>
+        public static string LastSessions {
+            get {
+                return ResourceManager.GetString("LastSessions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Szczegóły.
         /// </summary>
         public static string LearnMore {
@@ -826,6 +835,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Moduły.
+        /// </summary>
+        public static string Modules {
+            get {
+                return ResourceManager.GetString("Modules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Kontroluj dostęp do funkcji systemu i dostosowuj uprawnienia do struktury Twojej firmy, zapewniając bezpieczeństwo i porządek..
         /// </summary>
         public static string ModuleUsersDesc {
@@ -1087,11 +1105,29 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Przywróć.
+        /// </summary>
+        public static string Restore {
+            get {
+                return ResourceManager.GetString("Restore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Bezpieczeństwo.
         /// </summary>
         public static string Security {
             get {
                 return ResourceManager.GetString("Security", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zaznacz wszystko.
+        /// </summary>
+        public static string SelectAll {
+            get {
+                return ResourceManager.GetString("SelectAll", resourceCulture);
             }
         }
         
@@ -1155,6 +1191,15 @@ namespace MagFlow.Web.Resources {
         public static string StartPanel {
             get {
                 return ResourceManager.GetString("StartPanel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Witaj ponownie! Wybierz moduły, aby uzyskać dostęp do narzędzi produkcyjnych..
+        /// </summary>
+        public static string StartPanelWelcomeText {
+            get {
+                return ResourceManager.GetString("StartPanelWelcomeText", resourceCulture);
             }
         }
         

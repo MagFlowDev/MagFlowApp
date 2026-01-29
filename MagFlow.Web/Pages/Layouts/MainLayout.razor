@@ -5,7 +5,7 @@
 @using MudBlazor
 @inherits LayoutComponentBase
 
-<MudThemeProvider Theme="Themes.MAIN"/>
+<MudThemeProvider Theme="Themes.MAIN" />
 <MudPopoverProvider />
 
 <MudDialogProvider />
@@ -19,11 +19,11 @@
                 <ChildContent>
                     <MudLayout Class="h-100 flex-grow-1 d-flex flex-column">
                         <NavMenu />
-                        <MudMainContent Class="pt-16 px-4 h-100 w-100 d-flex flex-column">
+                        <MudMainContent Class="pt-16 px-4 h-100 w-100 d-flex flex-column" Style="background: var(--bs-gray-100, #F8F9FA)">
                             <div class="resolution-warning h-100 w-100 flex-grow-1 ">
                                 <ResolutionWarning />
                             </div>
-                            <div class="app-content w-100 h-100 flex-column flex-grow-1 mt-1">
+                            <div class="app-content w-100 h-100 flex-column flex-grow-1 pt-1 justify-content-center" style="max-width: 1920px !important; margin: 0 auto">
                                 @Body
                             </div>
                         </MudMainContent>

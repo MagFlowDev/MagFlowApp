@@ -58,5 +58,26 @@ namespace MagFlow.DAL.Repositories.Core
                 return null;
             }
         }
+
+        public async Task<UserSession?> GetLastSessionAsync(Guid userId)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+
+                    return await context.UserSessions
+                        .Where(x => x.UserId == userId && !x.RevokedAt.HasValue && x.ExpiresAt > DateTime.UtcNow)
+                        .Include(x => x.SessionModules).ThenInclude(y => y.Module)
+                        .OrderByDescending(x => x.CreatedDate)
+                        .FirstOrDefaultAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
     }
 }

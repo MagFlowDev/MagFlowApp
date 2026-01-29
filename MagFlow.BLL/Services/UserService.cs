@@ -5,14 +5,17 @@ using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.Domain.Core;
 using MagFlow.Shared.Attributes;
 using MagFlow.Shared.DTOs.Core;
+using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Generators.EmailGenerators;
 using MagFlow.Shared.Models.Auth;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Shared.Models.Settings;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 using System.Web;
 
@@ -21,19 +24,26 @@ namespace MagFlow.BLL.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly ISessionRepository _sessionRepository;
         private readonly IEmailService _emailService;
-        private readonly ILogger<UserService> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<UserService> _logger;
 
         public UserService(IUserRepository userRepository,
             IEmailService emailService,
+            ISessionRepository sessionRepository,
+            IHttpContextAccessor httpContextAccessor,
             UserManager<ApplicationUser> userManager,
             ILogger<UserService> logger)
         {
             _userRepository = userRepository;
+            _sessionRepository = sessionRepository;
             _logger = logger;
             _userManager = userManager;
             _emailService = emailService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<UserDTO?> GetUser(Guid id)
@@ -41,6 +51,44 @@ namespace MagFlow.BLL.Services
             var user = await _userRepository.GetByIdAsync(id);
             return user?.ToDTO();
         }
+
+        public async Task<List<ModuleDTO>?> GetLastSessionModules()
+        {
+            try
+            {
+                var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToGuid();
+                var session = await _userRepository.GetLastSessionAsync(userId ?? Guid.Empty);
+                if (session == null)
+                    return null;
+                var sessionModules = await _sessionRepository.GetSessionModules(session.Id);
+                if(sessionModules == null)
+                    return null;
+                return sessionModules.ToDTO();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error while getting user session");
+                return null;
+            }
+            
+        }
+
+        public async Task<UserSessionDTO?> GetLastSession()
+        {
+            try
+            {
+                var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToGuid();
+                var userSession = await _userRepository.GetLastSessionAsync(userId ?? Guid.Empty);
+                return userSession?.ToDTO();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while getting user session");
+                return null;
+            }
+        }
+
+
 
         public async Task ResetPasswordRequest(ForgotPasswordModel model)
         {

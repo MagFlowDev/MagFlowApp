@@ -525,4 +525,19 @@
   <data name="InvalidPasswordChange" xml:space="preserve">
     <value>Password change failed. Please try again later.</value>
   </data>
+  <data name="StartPanelWelcomeText" xml:space="preserve">
+    <value>Welcome back! Select modules to access production tools.</value>
+  </data>
+  <data name="LastSessions" xml:space="preserve">
+    <value>Last sessions</value>
+  </data>
+  <data name="Modules" xml:space="preserve">
+    <value>Modules</value>
+  </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="Restore" xml:space="preserve">
+    <value>Restore</value>
+  </data>
 </root>

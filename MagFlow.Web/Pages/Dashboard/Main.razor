@@ -1,0 +1,27 @@
+﻿@page "/"
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.Core
+@using MagFlow.Web.Pages.Modules
+
+@inject NavigationManager NavigationManager
+@inject IUserService UserService
+
+<h3>Main</h3>
+
+<ModuleTabs/>
+
+@code {
+
+    UserSessionDTO? LastSession = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LastSession = await UserService.GetLastSession();
+
+        if(LastSession == null)
+        {
+            NavigationManager.NavigateTo("/lobby");
+            return;
+        }
+    }
+}
