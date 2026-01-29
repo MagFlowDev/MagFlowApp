@@ -13,5 +13,6 @@ namespace MagFlow.BLL.Services.Interfaces
         Task ResetPasswordRequest(ForgotPasswordModel model);
         Task<bool> ChangePassword(ChangePasswordModel model);
         Task<bool> ChangePassword(TokenChangePasswordModel model);
+
     }
 }

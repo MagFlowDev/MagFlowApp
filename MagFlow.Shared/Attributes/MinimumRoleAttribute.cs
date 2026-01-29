@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MagFlow.Shared.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class MinimumRoleAttribute : Attribute
     {
         public string Role { get; set; }

@@ -167,20 +167,35 @@ namespace MagFlow.Web.Extensions
         private static void RegisterScopes(this IServiceCollection services)
         {
             services.RegisterRepositories();
-            services.RegisterServices();
+            // services.RegisterServices();
+            // Use instead of standard services.RegisterServices()
+            // It uses SecurityInterceptor as middleware between blazor pages code and BLL services
+            // It checks user permissions to functions/methods with attribute MinimumRole/MustHaveRole
+            services.RegisterServicesWithProxy();
         }
 
         private static void RegisterServices(this IServiceCollection services)
         {
-            services.AddScoped<SecurityInterceptor>();
-
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<ICompanyService, CompanyService>();
 
-            // services.AddScoped<IUserService>(sp => sp.GetRequiredService<UserService>().WithProxy(sp));
-            // services.AddScoped<IEventService>(sp => sp.GetRequiredService<EventService>().WithProxy(sp));
-            // services.AddScoped<ICompanyService>(sp => sp.GetRequiredService<CompanyService>().WithProxy(sp));
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<ClientNotificationService>();
+        }
+
+        private static void RegisterServicesWithProxy(this IServiceCollection services)
+        {
+            services.AddScoped<SecurityInterceptor>();
+
+            services.AddScoped<UserService>();
+            services.AddScoped<EventService>();
+            services.AddScoped<CompanyService>();
+
+            services.AddScoped<IUserService>(sp => sp.GetRequiredService<UserService>().WithProxy<IUserService>(sp));
+            services.AddScoped<IEventService>(sp => sp.GetRequiredService<EventService>().WithProxy<IEventService>(sp));
+            services.AddScoped<ICompanyService>(sp => sp.GetRequiredService<CompanyService>().WithProxy<ICompanyService>(sp));
 
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<INotificationService, NotificationService>();

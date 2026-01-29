@@ -26,6 +26,7 @@ namespace MagFlow.DAL.Repositories.Core
                 {
                     return await context.ApplicationUsers
                         .Include(u => u.UserSettings)
+                        .Include(u => u.Roles).ThenInclude(r => r.Role)
                         .FirstOrDefaultAsync(u => u.Email == email);
                 }
             }
@@ -47,6 +48,7 @@ namespace MagFlow.DAL.Repositories.Core
                 {
                     return await context.ApplicationUsers
                         .Include(u => u.UserSettings)
+                        .Include(u => u.Roles).ThenInclude(r => r.Role)
                         .FirstOrDefaultAsync(i => i.Id == guid);
                 }
             }
