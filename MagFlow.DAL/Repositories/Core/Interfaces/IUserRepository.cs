@@ -9,6 +9,6 @@ namespace MagFlow.DAL.Repositories.Core.Interfaces
     {
         Task<ApplicationUser?> GetByEmailAsync(string email);
 
-        Task<UserSession?> GetLastSessionAsync(Guid userId);
+        Task<List<UserSession>?> GetLastSessionsAsync(Guid userId, int historyLength = 1);
     }
 }

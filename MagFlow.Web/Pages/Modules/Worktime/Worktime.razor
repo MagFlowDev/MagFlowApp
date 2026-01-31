@@ -1,7 +1,9 @@
-﻿@page "/module/worktime"
+﻿@using MagFlow.Shared.Models.Interfaces
+@implements IModule
 
 <h3>Worktime</h3>
 
 @code {
-
+    public string TabTitle => "Worktime";
+    public string Icon => "bi bi-clock-history";
 }

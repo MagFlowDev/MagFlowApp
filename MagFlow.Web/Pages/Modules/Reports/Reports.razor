@@ -1,7 +1,9 @@
-﻿@page "/module/reports"
+﻿@using MagFlow.Shared.Models.Interfaces
+@implements IModule
 
 <h3>Reports</h3>
 
 @code {
-
+    public string TabTitle => "Reports";
+    public string Icon => "bi bi-bar-chart-line";
 }

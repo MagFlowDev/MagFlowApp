@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Web;
+using MagFlow.Shared.Models;
 
 namespace MagFlow.BLL.Services
 {
@@ -25,6 +26,7 @@ namespace MagFlow.BLL.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly ISessionRepository _sessionRepository;
+        private readonly ICompanyRepository _companyRepository;
         private readonly IEmailService _emailService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         
@@ -34,12 +36,14 @@ namespace MagFlow.BLL.Services
         public UserService(IUserRepository userRepository,
             IEmailService emailService,
             ISessionRepository sessionRepository,
+            ICompanyRepository companyRepository,
             IHttpContextAccessor httpContextAccessor,
             UserManager<ApplicationUser> userManager,
             ILogger<UserService> logger)
         {
             _userRepository = userRepository;
             _sessionRepository = sessionRepository;
+            _companyRepository = companyRepository;
             _logger = logger;
             _userManager = userManager;
             _emailService = emailService;
@@ -52,12 +56,59 @@ namespace MagFlow.BLL.Services
             return user?.ToDTO();
         }
 
+        private Guid? GetUserId()
+        {
+            return _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToGuid();
+        }
+
+        public async Task<Enums.Result> StartNewSession(List<ModuleDTO> modules)
+        {
+            try
+            {
+                var userId = GetUserId() ?? Guid.Empty;
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user == null)
+                    return Enums.Result.Error;
+                
+                var selectedModulesIds = modules.Select(m => m.Id).Distinct().ToList();
+                var userCompanyId = user.DefaultCompanyId ?? Guid.Empty;
+                var companyModules = await _companyRepository.GetCompanyModules(userCompanyId);
+                var selectedModules = companyModules?
+                    .Where(x => x.Module != null && selectedModulesIds.Contains(x.Module.Id))
+                    .ToList() ?? new List<CompanyModule>();
+                if(!selectedModules.Any())
+                    return Enums.Result.Error;
+
+                List<SessionModule> sessionModules = new List<SessionModule>();
+                foreach (var module in selectedModules)
+                {
+                    sessionModules.Add(new SessionModule()
+                    {
+                        ModuleId = module.ModuleId
+                    });
+                }
+                UserSession newSession = new UserSession()
+                {
+                    UserId = userId,
+                    CreatedDate = DateTime.UtcNow,
+                    ExpiresAt = DateTime.MaxValue,
+                    SessionModules = sessionModules
+                };
+                return await _sessionRepository.AddAsync(newSession);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error while starting user session");
+                return Enums.Result.Error;
+            }
+        }
+        
         public async Task<List<ModuleDTO>?> GetLastSessionModules()
         {
             try
             {
-                var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToGuid();
-                var session = await _userRepository.GetLastSessionAsync(userId ?? Guid.Empty);
+                var userId = GetUserId();
+                var session = (await _userRepository.GetLastSessionsAsync(userId ?? Guid.Empty))?.FirstOrDefault();
                 if (session == null)
                     return null;
                 var sessionModules = await _sessionRepository.GetSessionModules(session.Id);
@@ -70,16 +121,15 @@ namespace MagFlow.BLL.Services
                 _logger.LogError(ex, "Error while getting user session");
                 return null;
             }
-            
         }
 
-        public async Task<UserSessionDTO?> GetLastSession()
+        public async Task<List<UserSessionDTO>?> GetLastSessions(int historyLength = 1)
         {
             try
             {
                 var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToGuid();
-                var userSession = await _userRepository.GetLastSessionAsync(userId ?? Guid.Empty);
-                return userSession?.ToDTO();
+                var userSessions = await _userRepository.GetLastSessionsAsync(userId ?? Guid.Empty, historyLength);
+                return userSessions?.ToDTO();
             }
             catch (Exception ex)
             {

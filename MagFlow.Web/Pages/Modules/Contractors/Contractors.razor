@@ -1,7 +1,9 @@
-﻿@page "/module/contractors"
+﻿@using MagFlow.Shared.Models.Interfaces
+@implements IModule
 
 <h3>Contractors</h3>
 
 @code {
-
+    public string TabTitle => "Contractors";
+    public string Icon => "bi bi-building-check";
 }

@@ -25,6 +25,12 @@ namespace MagFlow.EF.Seeds.Core
             bool seed = false;
 
             var now = DateTime.UtcNow;
+            var testCompany = await context.Companies
+                .Include(x => x.Modules).ThenInclude(y => y.Module)
+                .FirstOrDefaultAsync(c => c.NormalizedName.Equals("TEST"));
+            var demoCompany = await context.Companies
+                .Include(x => x.Modules).ThenInclude(y => y.Module)
+                .FirstOrDefaultAsync(c => c.NormalizedName.Equals("DEMO"));
             foreach(var module in Enumeration<Guid>.GetAll<ModuleType>())
             {
                 var dbModule = await context.Modules.FirstOrDefaultAsync(m => m.Name.Equals(module.Name));
@@ -34,11 +40,42 @@ namespace MagFlow.EF.Seeds.Core
                     {
                         Id = module.Id,
                         Name = module.Name,
+                        Description = ModuleType.GetModuleTypeDescription(ModuleType.GetModuleType(module.Name)),
                         CreatedAt = now,
                         Code = CodeGenerator.Module_GenerateCode(module.Name),
                         IsActive = true
                     };
                     await context.Modules.AddAsync(dbModule);
+                    seed = true;
+                }
+
+                if (testCompany != null && !testCompany.Modules.Any(x => x.ModuleId == module.Id))
+                {
+                    CompanyModule companyModule = new CompanyModule()
+                    {
+                        CompanyId = testCompany.Id,
+                        ModuleId = module.Id,
+                        AssignedAt = now,
+                        EnabledFrom = now,
+                        EnabledTo = DateTime.MaxValue,
+                        IsActive = true,
+                    };
+                    await context.CompanyModules.AddAsync(companyModule);
+                    seed = true;
+                }
+                
+                if (demoCompany != null && !demoCompany.Modules.Any(x => x.ModuleId == module.Id))
+                {
+                    CompanyModule companyModule = new CompanyModule()
+                    {
+                        CompanyId = demoCompany.Id,
+                        ModuleId = module.Id,
+                        AssignedAt = now,
+                        EnabledFrom = now,
+                        EnabledTo = DateTime.MaxValue,
+                        IsActive = true,
+                    };
+                    await context.CompanyModules.AddAsync(companyModule);
                     seed = true;
                 }
             }

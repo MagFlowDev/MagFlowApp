@@ -1,7 +1,9 @@
-﻿@page "/module/processes"
+﻿@using MagFlow.Shared.Models.Interfaces
+@implements IModule
 
 <h3>Processes</h3>
 
 @code {
-
+    public string TabTitle => "Processes";
+    public string Icon => "bi bi-gear-wide-connected";
 }

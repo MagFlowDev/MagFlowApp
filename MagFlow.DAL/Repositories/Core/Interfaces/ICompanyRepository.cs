@@ -9,5 +9,6 @@ namespace MagFlow.DAL.Repositories.Core.Interfaces
 {
     public interface ICompanyRepository : IRepository<MagFlow.Domain.Core.Company>
     {
+        Task<List<CompanyModule>?> GetCompanyModules(Guid companyId);
     }
 }
