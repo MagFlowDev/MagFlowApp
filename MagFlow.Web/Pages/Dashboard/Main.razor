@@ -11,14 +11,13 @@
 <ModuleTabs/>
 
 @code {
-
     UserSessionDTO? LastSession = null;
 
     protected override async Task OnInitializedAsync()
     {
-        LastSession = await UserService.GetLastSession();
+        LastSession = (await UserService.GetLastSessions())?.FirstOrDefault();
 
-        if(LastSession == null)
+        if(LastSession == null || LastSession.ExpiresAt <= DateTime.UtcNow)
         {
             NavigationManager.NavigateTo("/lobby");
             return;

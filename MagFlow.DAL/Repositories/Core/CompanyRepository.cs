@@ -8,6 +8,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using MagFlow.Domain.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace MagFlow.DAL.Repositories.Core
 {
@@ -20,6 +22,28 @@ namespace MagFlow.DAL.Repositories.Core
             
         }
 
+        public async Task<List<CompanyModule>?> GetCompanyModules(Guid companyId)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    var company = await context.Companies
+                        .Where(x => x.Id == companyId)
+                        .Include(x => x.Modules).ThenInclude(y => y.Module)
+                        .FirstOrDefaultAsync();
+                    return company?.Modules
+                        .Where(x => x.IsActive && x.EnabledTo > DateTime.UtcNow)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+        
         public override Enums.Result Delete(Domain.Core.Company entity)
         {
             try

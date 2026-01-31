@@ -1,7 +1,9 @@
-﻿@page "/module/documents"
+﻿@using MagFlow.Shared.Models.Interfaces
+@implements IModule
 
 <h3>Documents</h3>
 
 @code {
-
+    public string TabTitle => "Documents";
+    public string Icon => "bi bi-file-earmark-text";
 }

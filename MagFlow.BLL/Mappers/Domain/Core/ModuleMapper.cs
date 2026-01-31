@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MagFlow.Shared.Models.Enumerators;
 
 namespace MagFlow.BLL.Mappers.Domain.Core
 {
@@ -20,7 +21,8 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 Id = module.Id,
                 Code = module.Code,
                 Description = module.Description,
-                Name = module.Name
+                Name = module.Name,
+                Type = ModuleType.GetModuleType(module.Name)
             };
         }
 
@@ -28,5 +30,6 @@ namespace MagFlow.BLL.Mappers.Domain.Core
         {
             return modules.Where(x => x.IsActive).Select(x => ToDTO(x)!).ToList();
         }
+
     }
 }

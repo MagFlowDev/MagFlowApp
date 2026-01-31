@@ -11,12 +11,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace MagFlow.BLL.Services
 {
     public class CompanyService : ICompanyService
     {
         private readonly ICompanyRepository _companyRepository;
+        
         private readonly ILogger<CompanyService> _logger;
 
         public CompanyService(ICompanyRepository companyRepository,
@@ -26,6 +28,17 @@ namespace MagFlow.BLL.Services
             _logger = logger;
         }
 
+        public async Task<List<ModuleDTO>?> GetCompanyModules(Guid companyId)
+        {
+            var modules = await _companyRepository.GetCompanyModules(companyId);
+            if(modules == null)
+                return null;
+            return modules
+                .Where(x => x.Module != null)
+                .Select(x => x.Module!)
+                .ToDTO();
+        }
+        
         public async Task<Enums.Result> CreateCompany(CompanyDTO companyDTO)
         {
             Company company = companyDTO.ToEntity();

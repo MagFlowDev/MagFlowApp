@@ -4,6 +4,7 @@ using MagFlow.Shared.Models.Auth;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MagFlow.Shared.Models;
 
 namespace MagFlow.BLL.Services.Interfaces
 {
@@ -15,6 +16,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<bool> ChangePassword(ChangePasswordModel model);
         Task<bool> ChangePassword(TokenChangePasswordModel model);
 
-        Task<UserSessionDTO?> GetLastSession();
+        Task<List<UserSessionDTO>?> GetLastSessions(int historyLength = 1);
+        Task<Enums.Result> StartNewSession(List<ModuleDTO> modules);
     }
 }

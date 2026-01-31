@@ -59,7 +59,7 @@ namespace MagFlow.DAL.Repositories.Core
             }
         }
 
-        public async Task<UserSession?> GetLastSessionAsync(Guid userId)
+        public async Task<List<UserSession>?> GetLastSessionsAsync(Guid userId, int historyLength = 1)
         {
             try
             {
@@ -70,7 +70,8 @@ namespace MagFlow.DAL.Repositories.Core
                         .Where(x => x.UserId == userId && !x.RevokedAt.HasValue && x.ExpiresAt > DateTime.UtcNow)
                         .Include(x => x.SessionModules).ThenInclude(y => y.Module)
                         .OrderByDescending(x => x.CreatedDate)
-                        .FirstOrDefaultAsync();
+                        .Take(historyLength)
+                        .ToListAsync();
                 }
             }
             catch (Exception ex)

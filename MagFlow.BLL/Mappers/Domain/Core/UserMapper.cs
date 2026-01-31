@@ -39,5 +39,10 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 Modules = userSession.SessionModules?.Where(x => x.Module != null)?.Select(m => m.Module!).ToDTO() ?? new List<ModuleDTO>()
             };
         }
+
+        public static List<UserSessionDTO> ToDTO(this IEnumerable<UserSession> userSessions)
+        {
+            return userSessions.Select(x => x.ToDTO()).ToList();
+        }
     }
 }

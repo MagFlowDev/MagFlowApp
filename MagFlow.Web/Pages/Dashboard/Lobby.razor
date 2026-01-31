@@ -1,12 +1,20 @@
 ﻿@page "/lobby"
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.Extensions
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Auth
+@using MagFlow.Web.Helpers
 @using MagFlow.Web.Pages.Modules
 @using MagFlow.Web.Pages.Modules.Users
 @using MagFlow.Web.Pages.Modules.Wares
+@using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
 @inject IUserService UserService
+@inject ICompanyService CompanyService
 
 <div class="d-flex flex-column w-100 flex-grow-1 px-4 pt-2" style="min-height: 0">
     <div class="text-start d-flex align-items-start flex-column flex-shrink-0" style="gap: 8px;">
@@ -14,7 +22,7 @@
         <MudText Typo="Typo.subtitle1" Style="color: var(--mud-palette-text-secondary)">@Localizer[Langs.StartPanelWelcomeText]</MudText>
     </div>
     <div class="d-flex w-100 mt-6" style="gap: 16px; flex: 1 1 0; min-height: 0">
-        <div class="d-flex flex-column justify-content-start align-items-center" style="padding: 16px; background: var(--white, #FFF); border-radius: 8px; min-width: 300px; flex: 0 0 auto;">
+        <div class="d-flex flex-column justify-content-start align-items-center" style="padding: 16px; background: #FFF; border-radius: 8px; min-width: 300px; flex: 0 0 auto;">
             <div class="d-flex align-items-center align-self-stretch">
                 <div class="d-flex justify-content-center align-items-center" style="@($"width: 32px; height: 32px; aspect-ratio: 1/1; border-radius: 6px; background: {Colors.Blue.Lighten5}")">
                     <MudIcon Icon="@Icons.Material.Filled.Restore" Color="Color.Primary" Size="Size.Small"/>    
@@ -24,7 +32,7 @@
                 </div>
             </div>
             <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px; flex: 1 1 auto; min-height: 0; overflow: auto; box-sizing: border-box;">
-                @foreach(var userSession in userSessions)
+                @foreach(var userSession in _userSessions)
                 {
                     <div class="d-flex flex-column align-self-stretch justify-content-between" style="gap: 16px; border-radius: 8px; padding: 16px; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08)">
                         <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 8px">
@@ -44,13 +52,13 @@
                                 }
                             </div>
                         </div>
-                        <MudButton StartIcon="@Icons.Material.Filled.Restore" Style="background-color: var(--white, #FFF)" IconColor="Color.Primary" Color="Color.Primary">@Localizer[Langs.Restore]</MudButton>
+                        <MudButton StartIcon="@Icons.Material.Filled.Restore" Style="background-color: #FFF" IconColor="Color.Primary" Color="Color.Primary">@Localizer[Langs.Restore]</MudButton>
                     </div>
                 }
             </div>
         </div>
-        <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; background: var(--white, #FFF); border-radius: 8px; padding: 16px;">
-            <div class="d-flex flex-column align-items-start w-100" style="gap: 16px; flex: 1 0 0;">
+        <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; background: #FFF; border-radius: 8px; padding: 16px; overflow-x: hidden">
+            <div class="d-flex flex-column align-items-start w-100" style="gap: 16px; flex: 1 1 auto; min-height: 0;">
                 <div class="d-flex align-items-center align-self-stretch justify-content-between">
                     <div class="d-flex align-items-center align-self-stretch">
                         <div class="d-flex justify-content-center align-items-center" style="@($"width: 32px; height: 32px; aspect-ratio: 1/1; border-radius: 6px; background: {Colors.Blue.Lighten5}")">
@@ -61,11 +69,32 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-end align-items-center">
-                        <MudButton Style="background-color: var(--white, #FFF)" IconColor="Color.Primary" Color="Color.Primary">@Localizer[Langs.SelectAll]</MudButton>
+                        <MudButton OnClick="SelectAll" Style="background-color: #FFF" IconColor="Color.Primary" Color="Color.Primary">@Localizer[Langs.SelectAll]</MudButton>
                     </div>
                 </div>
-                <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px;">
-
+                <div class="d-flex flex-column align-items-start" style="gap: 16px; flex: 1 1 auto; min-height: 0; overflow: auto; box-sizing: border-box">
+                    <div class="d-flex align-items-center align-self-stretch flex-wrap justify-content-center m-0 p-0" style="gap: 0;flex: 1 1 auto; min-height: 0; overflow: auto; box-sizing: border-box">
+                        @foreach (var module in _companyModules)
+                        {
+                            <div class="d-flex align-items-center align-self-stretch" style="padding: 8px; box-sizing: border-box; min-width: 300px; flex: 1 1 25%;">
+                                <div class="d-flex flex-column align-items-start overflow-hidden" style="padding: 16px; gap: 16px; flex: 1 0 0; border-radius: 8px; background: #FFF; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);">
+                                    <div class="d-flex align-items-start align-self-stretch" style="gap: 8px">
+                                        <div class="d-flex justify-content-center align-items-center" style="@($"width: 40px; height: 40px; aspect-ratio: 1/1; border-radius: 8px; background: {Colors.Blue.Darken4}")">
+                                            <MudIcon Icon="@module.ModuleComponent!.Icon" Size="Size.Small" Class="my-1"/>
+                                        </div>
+                                        <div class="d-flex flex-grow-1 align-items-start justify-content-between align-self-stretch">
+                                            <div class="d-flex align-items-center align-self-stretch" style="max-width: 160px">
+                                                <MudText Typo="Typo.h6" Style="font-weight: 700;">@module.Name</MudText>
+                                            </div>
+                                            <div class="d-flex align-items-center" style="gap: 10px">
+                                                <MudCheckBox Value="@ModuleSelected(module.Id)" ValueChanged="@((bool value) => ModuleSelectionChanged(value, module.Id))" Dense="true" Color="Color.Success"></MudCheckBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,166 +102,84 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
-    List<ModuleDTO> companyModules = new List<ModuleDTO>()
+    List<ModuleDTO> _companyModules = new List<ModuleDTO>();
+    List<Guid> _selectedModules = new List<Guid>();
+    List<UserSessionDTO> _userSessions = new List<UserSessionDTO>();
+
+    bool ModuleSelected(Guid moduleId)
     {
-        new ModuleDTO()
-        {
-            Name = "Procesy Produkcyjne",
-            Description = "Zarządzanie i monitorowanie przebiegu produkcji w czasie rzeczywistym",
-            
-        },
-        new ModuleDTO()
-        {
-            Name = "Zamówienia",
-            Description = "Obsługa, śledzenie i realizacja zamówień produkcyjnych"
-        },
-        new ModuleDTO()
-        {
-            Name = "Magazyn",
-            Description = "Kontrola stanów magazynowych oraz przepływu materiałów"
-        },
-        new ModuleDTO()
-        {
-            Name = "Użytkownicy",
-            Description = "Zarządzanie kontami, rolami i uprawnieniami użytkowników"
-        },
-        new ModuleDTO()
-        {
-            Name = "Raporty",
-            Description = "Analiza danych produkcyjnych i generowanie raportów"
-        },
-        new ModuleDTO()
-        {
-            Name = "Maszyny",
-            Description = "Monitorowanie pracy maszyn i ich efektywności"
-        },
-    };
+        return _selectedModules.Any(x => x == moduleId);
+    }
 
-    List<UserSessionDTO> userSessions = new List<UserSessionDTO>()
+    void ModuleSelectionChanged(bool isSelected, Guid moduleId)
     {
-        new UserSessionDTO()
-        {
-            CreatedAt = new DateTime(2026,1,29,12,0,0),
-            ExpiresAt = DateTime.MaxValue,
-            Id = Guid.NewGuid(),
-            Modules = new List<ModuleDTO>()
-            {
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Users",
-                    Code = "Users",
-                    ModuleComponent = new Users()
-                },
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Wares",
-                    Code = "Wares",
-                    ModuleComponent = new Wares()
-                }
-            }
-        },
+        if(isSelected) SelectModule(moduleId);
+        else DeselectModule(moduleId);
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticationState = await AuthenticationStateTask;
+        var user = authenticationState.User;
+        var companyId = user.FindFirst(Claims.CompanyClaim)?.Value.ToGuid() ?? Guid.Empty;
+        
+        var modules = await CompanyService.GetCompanyModules(companyId);
+        modules?.ForEach(x => x.ModuleComponent = IModuleMapper.GetIModule(x.Type));
+        _companyModules = modules?.Where(x => x.ModuleComponent != null).ToList() ?? new List<ModuleDTO>();
 
-        new UserSessionDTO()
+        var sessions = (await UserService.GetLastSessions(5)) ?? new List<UserSessionDTO>();
+        foreach (var session in sessions)
         {
-            CreatedAt = new DateTime(2026,1,29,12,0,0),
-            ExpiresAt = DateTime.MaxValue,
-            Id = Guid.NewGuid(),
-            Modules = new List<ModuleDTO>()
-            {
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Users",
-                    Code = "Users",
-                    ModuleComponent = new Users()
-                },
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Users",
-                    Code = "Users",
-                    ModuleComponent = new Users()
-                },
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Users",
-                    Code = "Users",
-                    ModuleComponent = new Users()
-                },
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Wares",
-                    Code = "Wares",
-                    ModuleComponent = new Wares()
-                }
-            }
-        },
-
-        new UserSessionDTO()
-        {
-            CreatedAt = new DateTime(2026,1,29,12,0,0),
-            ExpiresAt = DateTime.MaxValue,
-            Id = Guid.NewGuid(),
-            Modules = new List<ModuleDTO>()
-            {
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Users",
-                    Code = "Users",
-                    ModuleComponent = new Users()
-                },
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Wares",
-                    Code = "Wares",
-                    ModuleComponent = new Wares()
-                }
-            }
-        },
-
-        new UserSessionDTO()
-        {
-            CreatedAt = new DateTime(2026,1,29,12,0,0),
-            ExpiresAt = DateTime.MaxValue,
-            Id = Guid.NewGuid(),
-            Modules = new List<ModuleDTO>()
-            {
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Users",
-                    Code = "Users",
-                    ModuleComponent = new Users()
-                },
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Users",
-                    Code = "Users",
-                    ModuleComponent = new Users()
-                },
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Users",
-                    Code = "Users",
-                    ModuleComponent = new Users()
-                },
-                new ModuleDTO()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Wares",
-                    Code = "Wares",
-                    ModuleComponent = new Wares()
-                }
-            }
+            session.Modules.ForEach(x => x.ModuleComponent = IModuleMapper.GetIModule(x.Type));
+            session.Modules = session.Modules.Where(x => x.ModuleComponent != null).ToList();
         }
-    };
+        _userSessions = sessions;
+    }
+
+    private void SelectModule(Guid moduleId)
+    {
+        var module = _companyModules.FirstOrDefault(x => x.Id == moduleId);
+        if (module == null)
+            return;
+        if (_selectedModules.Any(x => x == moduleId))
+            return;
+        _selectedModules.Add(module.Id);
+    }
+
+    private void DeselectModule(Guid moduleId)
+    {
+        if (_selectedModules.Any(x => x == moduleId))
+            _selectedModules.Remove(moduleId);
+    }
+
+    private void SelectAll()
+    {
+        _selectedModules = _companyModules.Select(x => x.Id).ToList();
+    }
+
+    private void DeselectAll()
+    {
+        _selectedModules.Clear();
+    }
+
+    private async Task StartSession()
+    {
+        if (!_selectedModules.Any())
+            Snackbar.Add("Nie wybrano żadnego modułu", Severity.Error);
+
+        var selectedModules = _companyModules.Where(x => _selectedModules.Contains(x.Id)).ToList();
+        var result = await UserService.StartNewSession(selectedModules);
+        if (result == Enums.Result.Success)
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+        else
+        {
+            Snackbar.Add("Nie udało się rozpocząć nowej sesji. Spróbuj później", Severity.Error);
+        }
+    }
 }

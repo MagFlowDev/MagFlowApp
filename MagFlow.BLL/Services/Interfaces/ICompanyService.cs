@@ -11,5 +11,6 @@ namespace MagFlow.BLL.Services.Interfaces
     public interface ICompanyService
     {
         Task<Enums.Result> CreateCompany(CompanyDTO companyDTO);
+        Task<List<ModuleDTO>?> GetCompanyModules(Guid companyId);
     }
 }

@@ -1,7 +1,9 @@
-﻿@page "/module/productionplan"
+﻿@using MagFlow.Shared.Models.Interfaces
+@implements IModule
 
 <h3>ProductionPlan</h3>
 
 @code {
-
+    public string TabTitle => "ProductionPlan";
+    public string Icon => "bi bi-calendar-week";
 }

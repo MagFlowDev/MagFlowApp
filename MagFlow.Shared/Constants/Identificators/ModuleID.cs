@@ -17,7 +17,7 @@ namespace MagFlow.Shared.Constants.Identificators
         public static Guid WAREHOUSES_MODULE_ID = new Guid("da38ed2f-ca2f-462b-ba0a-7f30351c6883");
         public static Guid MACHINES_MODULE_ID = new Guid("1dcf5433-7999-4da8-bedb-e8e4202da048");
         public static Guid PROCESSES_MODULE_ID = new Guid("a7426861-ae63-41c8-8d24-61be4df7ffce");
-        public static Guid RAPORTS_MODULE_ID = new Guid("4e238e7c-3ce6-4326-b653-6a5a70fad335");
+        public static Guid REPORTS_MODULE_ID = new Guid("4e238e7c-3ce6-4326-b653-6a5a70fad335");
         public static Guid WORKTIME_MODULE_ID = new Guid("ec4ba070-b2ac-4083-aeb5-2b27cf4943fc");
         public static Guid PRODUCTION_PLAN_MODULE_ID = new Guid("af1ed585-2e13-4416-9528-deb88542da72");
         public static Guid LOGISTICS_MODULE_ID = new Guid("2e137fcf-a4b8-4700-917f-708cdee854a7");
