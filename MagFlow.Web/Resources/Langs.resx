@@ -540,4 +540,77 @@
   <data name="Restore" xml:space="preserve">
     <value>Przywróć</value>
   </data>
+  <data name="UsersModule" xml:space="preserve">
+    <value>Użytkownicy</value>
+  </data>
+  <data name="ContractorsModule" xml:space="preserve">
+    <value>Kontrahenci</value>
+  </data>
+  <data name="WaresModule" xml:space="preserve">
+    <value>Produkty</value>
+  </data>
+  <data name="OrdersModule" xml:space="preserve">
+    <value>Zamówienia</value>
+  </data>
+  <data name="DocumentsModule" xml:space="preserve">
+    <value>Dokumenty</value>
+  </data>
+  <data name="WarehousesModule" xml:space="preserve">
+    <value>Magazyny</value>
+  </data>
+  <data name="MachinesModule" xml:space="preserve">
+    <value>Maszyny</value>
+  </data>
+  <data name="ProcessesModule" xml:space="preserve">
+    <value>Procesy</value>
+  </data>
+  <data name="ReportsModule" xml:space="preserve">
+    <value>Raporty</value>
+  </data>
+  <data name="WorkTimeModule" xml:space="preserve">
+    <value>Czas pracy</value>
+  </data>
+  <data name="ProductionPlanModule" xml:space="preserve">
+    <value>Plan produkcji</value>
+  </data>
+  <data name="LogisticsModule" xml:space="preserve">
+    <value>Logistyka</value>
+  </data>
+  <data name="UsersModuleDescription" xml:space="preserve">
+    <value>Zarządzanie kontami, rolami 
+i uprawnieniami użytkowników</value>
+  </data>
+  <data name="ContractorsModuleDescription" xml:space="preserve">
+    <value>Zarządzanie kontrahentami</value>
+  </data>
+  <data name="ProcessesModuleDescription" xml:space="preserve">
+    <value>Zarządzanie i monitorowanie przebiegu produkcji w czasie rzeczywistym</value>
+  </data>
+  <data name="WaresModuleDescription" xml:space="preserve">
+    <value>Zarządzanie produktami</value>
+  </data>
+  <data name="OrdersModuleDescription" xml:space="preserve">
+    <value>Obsługa, śledzenie i realizacja zamówień produkcyjnych</value>
+  </data>
+  <data name="DocumentsModuleDescription" xml:space="preserve">
+    <value>Zarządzanie dokumentami</value>
+  </data>
+  <data name="WarehousesModuleDescription" xml:space="preserve">
+    <value>Kontrola stanów magazynowych oraz przepływu materiałów</value>
+  </data>
+  <data name="MachinesModuleDescription" xml:space="preserve">
+    <value>Monitorowanie pracy maszyn i ich efektywności</value>
+  </data>
+  <data name="ReportsModuleDescription" xml:space="preserve">
+    <value>Analiza danych produkcyjnych i generowanie raportów</value>
+  </data>
+  <data name="WorkTimeModuleDescription" xml:space="preserve">
+    <value>Ewidencja czasu pracy</value>
+  </data>
+  <data name="ProductionPlanModuleDescription" xml:space="preserve">
+    <value>Zarządzanie planem produkcji</value>
+  </data>
+  <data name="LogisticsModuleDescription" xml:space="preserve">
+    <value>Zarządzanie transportem i logistyką</value>
+  </data>
 </root>

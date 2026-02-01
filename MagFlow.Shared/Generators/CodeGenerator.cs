@@ -10,7 +10,7 @@ namespace MagFlow.Shared.Helpers.Generators
     public static class CodeGenerator
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
+        
         public static string Module_GenerateCode(string name)
         {
             if(string.IsNullOrEmpty(name) || name.Length < 3)

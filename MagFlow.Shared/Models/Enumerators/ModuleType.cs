@@ -30,7 +30,7 @@ namespace MagFlow.Shared.Models.Enumerators
         {
             if(moduleType == null)
                 return null;
-            if (ModuleDescriptionMap.ContainsKey(moduleType))
+            if (!ModuleDescriptionMap.ContainsKey(moduleType))
                 return null;
             return ModuleDescriptionMap[moduleType];
         }
