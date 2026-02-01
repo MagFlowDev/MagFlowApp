@@ -540,4 +540,76 @@
   <data name="Restore" xml:space="preserve">
     <value>Restore</value>
   </data>
+  <data name="UsersModule" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="ContractorsModule" xml:space="preserve">
+    <value>Contractors</value>
+  </data>
+  <data name="WaresModule" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="OrdersModule" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="DocumentsModule" xml:space="preserve">
+    <value>Documents</value>
+  </data>
+  <data name="WarehousesModule" xml:space="preserve">
+    <value>Warehouses</value>
+  </data>
+  <data name="MachinesModule" xml:space="preserve">
+    <value>Machines</value>
+  </data>
+  <data name="ProcessesModule" xml:space="preserve">
+    <value>Processes</value>
+  </data>
+  <data name="ReportsModule" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="WorkTimeModule" xml:space="preserve">
+    <value>Work time</value>
+  </data>
+  <data name="ProductionPlanModule" xml:space="preserve">
+    <value>Production plan</value>
+  </data>
+  <data name="LogisticsModule" xml:space="preserve">
+    <value>Logistics</value>
+  </data>
+  <data name="UsersModuleDescription" xml:space="preserve">
+    <value>Managing accounts, roles, and user permissions</value>
+  </data>
+  <data name="ProcessesModuleDescription" xml:space="preserve">
+    <value>Managing and monitoring production in real time</value>
+  </data>
+  <data name="ContractorsModuleDescription" xml:space="preserve">
+    <value>Managing contractors</value>
+  </data>
+  <data name="WaresModuleDescription" xml:space="preserve">
+    <value>Managing products</value>
+  </data>
+  <data name="OrdersModuleDescription" xml:space="preserve">
+    <value>Processing, tracking and fulfilling production orders</value>
+  </data>
+  <data name="DocumentsModuleDescription" xml:space="preserve">
+    <value>Managing documents</value>
+  </data>
+  <data name="WarehousesModuleDescription" xml:space="preserve">
+    <value>Control of inventory levels and material flow</value>
+  </data>
+  <data name="MachinesModuleDescription" xml:space="preserve">
+    <value>Monitoring machine operation and their efficiency</value>
+  </data>
+  <data name="ReportsModuleDescription" xml:space="preserve">
+    <value>Production data analysis and report generation</value>
+  </data>
+  <data name="WorkTimeModuleDescription" xml:space="preserve">
+    <value>Working time records</value>
+  </data>
+  <data name="ProductionPlanModuleDescription" xml:space="preserve">
+    <value>Managing production plan</value>
+  </data>
+  <data name="LogisticsModuleDescription" xml:space="preserve">
+    <value>Managing transport and logistics</value>
+  </data>
 </root>
