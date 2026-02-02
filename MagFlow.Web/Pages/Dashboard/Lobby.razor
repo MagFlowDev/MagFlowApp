@@ -77,10 +77,10 @@
                         @foreach (var module in _companyModules)
                         {
                             <div class="d-flex align-items-center align-self-stretch" style="padding: 8px; box-sizing: border-box; min-width: 300px; flex: 1 1 25%;">
-                                <div class="d-flex flex-column align-items-start overflow-hidden" style="height: 150px; padding: 16px; gap: 16px; flex: 1 0 0; border-radius: 8px; background: #FFF; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);">
+                                <div class="d-flex flex-column align-items-start overflow-hidden overflow-y-auto" style="height: 150px; padding: 16px; gap: 16px; flex: 1 0 0; border-radius: 8px; background: #FFF; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);">
                                     <div class="d-flex align-items-start align-self-stretch" style="gap: 8px">
                                         <div class="d-flex justify-content-center align-items-center" style="@($"width: 40px; height: 40px; aspect-ratio: 1/1; border-radius: 8px; background: {Colors.Blue.Darken4}; color: #FFF")">
-                                            <MudIcon Icon="@module.ModuleComponent!.Icon" Size="Size.Small" Class="my-1"/>
+                                            <MudIcon Icon="@module.ModuleComponent!.Icon" Size="Size.Small" Class="lh-1"/>
                                         </div>
                                         <div class="d-flex flex-grow-1 align-items-start justify-content-between align-self-stretch">
                                             <div class="d-flex align-items-center align-self-stretch" style="max-width: 160px">

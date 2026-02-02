@@ -547,7 +547,7 @@
     <value>Contractors</value>
   </data>
   <data name="WaresModule" xml:space="preserve">
-    <value>Products</value>
+    <value>Wares</value>
   </data>
   <data name="OrdersModule" xml:space="preserve">
     <value>Orders</value>
@@ -568,7 +568,7 @@
     <value>Reports</value>
   </data>
   <data name="WorkTimeModule" xml:space="preserve">
-    <value>Work time</value>
+    <value>Recording and analyzing employee working hours</value>
   </data>
   <data name="ProductionPlanModule" xml:space="preserve">
     <value>Production plan</value>
@@ -583,16 +583,16 @@
     <value>Managing and monitoring production in real time</value>
   </data>
   <data name="ContractorsModuleDescription" xml:space="preserve">
-    <value>Managing contractors</value>
+    <value>Managing customer and supplier data</value>
   </data>
   <data name="WaresModuleDescription" xml:space="preserve">
-    <value>Managing products</value>
+    <value>Creating, editing, and cataloging wares with their properties</value>
   </data>
   <data name="OrdersModuleDescription" xml:space="preserve">
     <value>Processing, tracking and fulfilling production orders</value>
   </data>
   <data name="DocumentsModuleDescription" xml:space="preserve">
-    <value>Managing documents</value>
+    <value>Creating and reviewing production and material documents</value>
   </data>
   <data name="WarehousesModuleDescription" xml:space="preserve">
     <value>Control of inventory levels and material flow</value>
@@ -607,9 +607,9 @@
     <value>Working time records</value>
   </data>
   <data name="ProductionPlanModuleDescription" xml:space="preserve">
-    <value>Managing production plan</value>
+    <value>Creating production schedules and monitoring order execution</value>
   </data>
   <data name="LogisticsModuleDescription" xml:space="preserve">
-    <value>Managing transport and logistics</value>
+    <value>Coordinating transport, deliveries, and material flow between warehouses</value>
   </data>
 </root>
