@@ -28,7 +28,7 @@ namespace MagFlow.BLL.Services
         private readonly ISessionRepository _sessionRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly IEmailService _emailService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly INetworkService _networkService;
         
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UserService> _logger;
@@ -37,7 +37,7 @@ namespace MagFlow.BLL.Services
             IEmailService emailService,
             ISessionRepository sessionRepository,
             ICompanyRepository companyRepository,
-            IHttpContextAccessor httpContextAccessor,
+            INetworkService networkService,
             UserManager<ApplicationUser> userManager,
             ILogger<UserService> logger)
         {
@@ -46,8 +46,7 @@ namespace MagFlow.BLL.Services
             _companyRepository = companyRepository;
             _logger = logger;
             _userManager = userManager;
-            _emailService = emailService;
-            _httpContextAccessor = httpContextAccessor;
+            _networkService = networkService;
         }
 
         public async Task<UserDTO?> GetUser(Guid id)
@@ -56,16 +55,11 @@ namespace MagFlow.BLL.Services
             return user?.ToDTO();
         }
 
-        private Guid? GetUserId()
-        {
-            return _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToGuid();
-        }
-
         public async Task<Enums.Result> StartNewSession(List<ModuleDTO> modules)
         {
             try
             {
-                var userId = GetUserId() ?? Guid.Empty;
+                var userId = _networkService.GetUserId() ?? Guid.Empty;
                 var user = await _userRepository.GetByIdAsync(userId);
                 if (user == null)
                     return Enums.Result.Error;
@@ -92,7 +86,10 @@ namespace MagFlow.BLL.Services
                     UserId = userId,
                     CreatedDate = DateTime.UtcNow,
                     ExpiresAt = DateTime.MaxValue,
-                    SessionModules = sessionModules
+                    SessionModules = sessionModules,
+                    IpAddress = _networkService.GetUserIp() ?? "Unknown",
+                    UserAgent = "Website",
+                    RefreshToken = Guid.NewGuid().ToString()
                 };
                 return await _sessionRepository.AddAsync(newSession);
             }
@@ -107,8 +104,8 @@ namespace MagFlow.BLL.Services
         {
             try
             {
-                var userId = GetUserId();
-                var session = (await _userRepository.GetLastSessionsAsync(userId ?? Guid.Empty))?.FirstOrDefault();
+                var userId = _networkService.GetUserId() ?? Guid.Empty;
+                var session = (await _userRepository.GetLastSessionsAsync(userId))?.FirstOrDefault();
                 if (session == null)
                     return null;
                 var sessionModules = await _sessionRepository.GetSessionModules(session.Id);
@@ -127,8 +124,8 @@ namespace MagFlow.BLL.Services
         {
             try
             {
-                var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToGuid();
-                var userSessions = await _userRepository.GetLastSessionsAsync(userId ?? Guid.Empty, historyLength);
+                var userId = _networkService.GetUserId() ?? Guid.Empty;
+                var userSessions = await _userRepository.GetLastSessionsAsync(userId, historyLength);
                 return userSessions?.ToDTO();
             }
             catch (Exception ex)

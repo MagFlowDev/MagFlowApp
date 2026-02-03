@@ -66,7 +66,17 @@
                             <a href="/ForgotPassword" style='@string.Concat("font-size: 14px; text-decoration: none; color: ", Themes.MAIN.PaletteLight.Primary)'>@Localizer[Langs.ForgotPassword]</a>
                         </div>
                     </div>
-                    <button @onclick="LoginUser" type="submit" Class="w-100 d-flex justify-content-center align-items-center align-self-stretch" style="padding: 6px 12px; height: 38px; border-radius: 6px; background: var(--bs-gray-900); color: white;">@Localizer[Langs.SignIn1]</button>
+                    <button @onclick="LoginUser" type="submit" Class="w-100 d-flex justify-content-center align-items-center align-self-stretch" style="padding: 6px 12px; height: 38px; border-radius: 6px; background: var(--bs-gray-900); color: white;" disabled="@_isSubmitting">
+                        @if (_isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span>@Localizer[Langs.SignIn1]</span>
+                        }
+                        else
+                        {
+                            @Localizer[Langs.SignIn1]
+                        }
+                    </button>
                 </div>
             </EditForm>
         </div>
@@ -80,6 +90,8 @@
     [SupplyParameterFromForm]
     private SignInModel SignInModel { get; set; } = default!;
     private EditContext SignInContext { get; set; } = default!;
+
+    private bool _isSubmitting;
 
     protected override async Task OnInitializedAsync()
     {
@@ -95,16 +107,28 @@
 
     public async Task LoginUser()
     {
+        if (_isSubmitting)
+            return;
+
         if (!SignInContext.Validate())
         {
             return;
         }
 
-        await JS.InvokeVoidAsync("formPost.post", "/Auth/Login", new Dictionary<string, object?>
+        try
         {
-            { "Email", SignInModel.Email },
-            { "Password", SignInModel.Password },
-            { "RememberMe", SignInModel.RememberMe }
-        }); 
+            _isSubmitting = true;
+
+            await JS.InvokeVoidAsync("formPost.post", "/Auth/Login", new Dictionary<string, object?>
+            {
+                { "Email", SignInModel.Email },
+                { "Password", SignInModel.Password },
+                { "RememberMe", SignInModel.RememberMe }
+            });
+        }
+        finally
+        {
+            _isSubmitting = false;
+        }
     }
 }
