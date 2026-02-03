@@ -613,4 +613,10 @@ i uprawnieniami użytkowników</value>
   <data name="LogisticsModuleDescription" xml:space="preserve">
     <value>Koordynacja transportu, dostaw oraz przepływu materiałów między magazynami</value>
   </data>
+  <data name="OpenSelected" xml:space="preserve">
+    <value>Otwórz wybrane</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Wyczyść</value>
+  </data>
 </root>
