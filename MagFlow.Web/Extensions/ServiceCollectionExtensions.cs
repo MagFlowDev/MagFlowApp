@@ -1,4 +1,6 @@
 ﻿using Castle.DynamicProxy;
+using FormCraft;
+using FormCraft.ForMudBlazor.Extensions;
 using MagFlow.BLL.ApplicationMonitor;
 using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Helpers.Auth;
@@ -48,6 +50,9 @@ namespace MagFlow.Web.Extensions
             });
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            services.AddFormCraft();
+            services.AddFormCraftMudBlazor();
 
             services.RegisterScopes();
             services.ConfigureDbContext();
@@ -197,6 +202,7 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IEventService>(sp => sp.GetRequiredService<EventService>().WithProxy<IEventService>(sp));
             services.AddScoped<ICompanyService>(sp => sp.GetRequiredService<CompanyService>().WithProxy<ICompanyService>(sp));
 
+            services.AddScoped<INetworkService, NetworkService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<ClientNotificationService>();

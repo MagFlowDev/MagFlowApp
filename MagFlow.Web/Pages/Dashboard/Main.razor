@@ -6,9 +6,9 @@
 @inject NavigationManager NavigationManager
 @inject IUserService UserService
 
-<h3>Main</h3>
-
-<ModuleTabs/>
+<div class="d-flex flex-column w-100 flex-grow-1 pt-2" style="min-height: 0">
+    <ModuleTabs/>
+</div>
 
 @code {
     UserSessionDTO? LastSession = null;
