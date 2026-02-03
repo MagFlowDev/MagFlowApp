@@ -579,11 +579,11 @@
   <data name="UsersModuleDescription" xml:space="preserve">
     <value>Managing accounts, roles, and user permissions</value>
   </data>
-  <data name="ProcessesModuleDescription" xml:space="preserve">
-    <value>Managing and monitoring production in real time</value>
-  </data>
   <data name="ContractorsModuleDescription" xml:space="preserve">
     <value>Managing customer and supplier data</value>
+  </data>
+  <data name="ProcessesModuleDescription" xml:space="preserve">
+    <value>Managing and monitoring production in real time</value>
   </data>
   <data name="WaresModuleDescription" xml:space="preserve">
     <value>Creating, editing, and cataloging wares with their properties</value>
@@ -611,5 +611,11 @@
   </data>
   <data name="LogisticsModuleDescription" xml:space="preserve">
     <value>Coordinating transport, deliveries, and material flow between warehouses</value>
+  </data>
+  <data name="OpenSelected" xml:space="preserve">
+    <value>Open selected</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
   </data>
 </root>
