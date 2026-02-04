@@ -55,6 +55,24 @@ namespace MagFlow.BLL.Services
             return user?.ToDTO();
         }
 
+        public async Task<Enums.Result> UpdateLastSession(UserSessionDTO sessionDTO)
+        {
+            try
+            {
+                var session = await _sessionRepository.GetByIdAsync(sessionDTO.Id);
+                if(session == null)
+                    return Enums.Result.Error;
+
+                session.LastTimeRecord = DateTime.UtcNow;
+                return await _sessionRepository.UpdateAsync(session);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating user session");
+                return Enums.Result.Error;
+            }
+        }
+
         public async Task<Enums.Result> StartNewSession(List<ModuleDTO> modules)
         {
             try
@@ -81,10 +99,12 @@ namespace MagFlow.BLL.Services
                         ModuleId = module.ModuleId
                     });
                 }
+                var now = DateTime.UtcNow;
                 UserSession newSession = new UserSession()
                 {
                     UserId = userId,
-                    CreatedDate = DateTime.UtcNow,
+                    CreatedDate = now,
+                    LastTimeRecord = now,
                     ExpiresAt = DateTime.MaxValue,
                     SessionModules = sessionModules,
                     IpAddress = _networkService.GetUserIp() ?? "Unknown",

@@ -36,6 +36,7 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 Id = userSession.Id,
                 ExpiresAt = userSession.ExpiresAt,
                 CreatedAt = userSession.CreatedDate,
+                LastTimeRecord = userSession.LastTimeRecord,
                 Modules = userSession.SessionModules?.Where(x => x.Module != null)?.Select(m => m.Module!).ToDTO() ?? new List<ModuleDTO>()
             };
         }

@@ -21,6 +21,8 @@ namespace MagFlow.Domain.Core
         [Required]
         public DateTime CreatedDate { get; set; }
         [Required]
+        public DateTime LastTimeRecord { get; set; }
+        [Required]
         public DateTime ExpiresAt { get; set; }
         public DateTime? RevokedAt { get; set; }
         [Required]

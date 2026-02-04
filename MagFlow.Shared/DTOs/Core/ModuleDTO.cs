@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MagFlow.Shared.Models.Enumerators;
+using Microsoft.AspNetCore.Components;
 
 namespace MagFlow.Shared.DTOs.Core
 {
@@ -17,5 +18,6 @@ namespace MagFlow.Shared.DTOs.Core
         public ModuleType? Type { get; set; }
 
         public IModule? ModuleComponent { get; set; }
+        public RenderFragment? ModuleContent { get; set; }
     }
 }

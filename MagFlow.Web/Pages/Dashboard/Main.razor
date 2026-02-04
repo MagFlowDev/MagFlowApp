@@ -1,14 +1,18 @@
 ﻿@page "/"
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.Models
 @using MagFlow.Web.Pages.Modules
 
 @inject NavigationManager NavigationManager
 @inject IUserService UserService
 
-<div class="d-flex flex-column w-100 flex-grow-1 pt-2" style="min-height: 0">
-    <ModuleTabs/>
-</div>
+@if (LastSession != null)
+{
+    <div class="d-flex flex-column w-100 flex-grow-1 pt-2" style="min-height: 0">
+        <ModuleTabs SessionModules="LastSession.Modules"/>
+    </div>
+}
 
 @code {
     UserSessionDTO? LastSession = null;
@@ -21,6 +25,15 @@
         {
             NavigationManager.NavigateTo("/lobby");
             return;
+        }
+        else
+        {
+            var updated = await UserService.UpdateLastSession(LastSession);
+            if(updated != Enums.Result.Success)
+            {
+                NavigationManager.NavigateTo("/lobby");
+                return;
+            }
         }
     }
 }

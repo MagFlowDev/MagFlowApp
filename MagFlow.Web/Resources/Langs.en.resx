@@ -618,4 +618,40 @@
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
   </data>
+  <data name="NoRecentSessions" xml:space="preserve">
+    <value>No recent sessions</value>
+  </data>
+  <data name="ModulesOne" xml:space="preserve">
+    <value>{0} modules</value>
+  </data>
+  <data name="ModulesFew" xml:space="preserve">
+    <value>{0} module</value>
+  </data>
+  <data name="ModulesMany" xml:space="preserve">
+    <value>{0} modules</value>
+  </data>
+  <data name="TimeJustNow" xml:space="preserve">
+    <value>just now</value>
+  </data>
+  <data name="TimeMinuteOneAgo" xml:space="preserve">
+    <value>{0} minute ago</value>
+  </data>
+  <data name="TimeMinuteManyAgo" xml:space="preserve">
+    <value>{0} minutes ago</value>
+  </data>
+  <data name="TimeHourOneAgo" xml:space="preserve">
+    <value>{0} hour ago</value>
+  </data>
+  <data name="TimeHourManyAgo" xml:space="preserve">
+    <value>{0} hours ago</value>
+  </data>
+  <data name="TimeDayOneAgo" xml:space="preserve">
+    <value>{0} day ago</value>
+  </data>
+  <data name="TimeDayManyAgo" xml:space="preserve">
+    <value>{0} days ago</value>
+  </data>
+  <data name="LongTimeAgo" xml:space="preserve">
+    <value>long time ago</value>
+  </data>
 </root>
