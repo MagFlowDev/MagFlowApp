@@ -1,50 +1,92 @@
 ﻿@using System.Reflection
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.Extensions
+@using MagFlow.Shared.Models.Auth
 @using MagFlow.Shared.Models.Interfaces
+@using MagFlow.Web.Helpers
+@using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
+
+@inject ICompanyService CompanyService
 
 <div class="d-flex w-100 h-100">
     <MudTabs @bind-ActivePanelIndex="activeIndex" KeepPanelsAlive="true">
         @foreach(var tab in Tabs)
         {
-            <MudTabPanel Text="@tab.Value.Title">
-                @tab.Value.Content
+            <MudTabPanel Text="@Localizer[tab.Key]">
+                @tab.Value
             </MudTabPanel>
         }
     </MudTabs>
 </div>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    [Parameter]
+    public List<ModuleDTO> SessionModules { get; set; } = new List<ModuleDTO>();
+
+    public Dictionary<string, RenderFragment> Tabs = new Dictionary<string, RenderFragment>();
+    
     private int activeIndex = 0;
 
-    class Module {
-        public string Title { get; set; }
-        public RenderFragment Content { get; set; }
+    List<ModuleDTO> _companyModules { get; set; } = new List<ModuleDTO>();
+    List<ModuleDTO> _activeModules { get; set; } = new List<ModuleDTO>();
+    List<ModuleDTO> ActiveModules
+    {
+        get
+        {
+            return _activeModules;
+        }
+        set
+        {
+            _activeModules = value;
+            UpdateActiveModules();
+        }
     }
 
-    private Dictionary<string, Module> Tabs = new Dictionary<string, Module>();
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        var templateTypes = Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .Where(t => typeof(IModule).IsAssignableFrom(t) && !t.IsAbstract)
-            .ToList();
+        var authenticationState = await AuthenticationStateTask;
+        var user = authenticationState.User;
+        var companyId = user.FindFirst(Claims.CompanyClaim)?.Value.ToGuid() ?? Guid.Empty;
 
-        foreach(var type in templateTypes)
+        var modules = await CompanyService.GetCompanyModules(companyId);
+        modules?.ForEach(x => x.ModuleComponent = IModuleMapper.GetIModule(x.Type));
+        _companyModules = modules?.Where(x => x.ModuleComponent != null).ToList() ?? new List<ModuleDTO>();
+        InitializeModules();
+
+        var sessionModulesIds = SessionModules.Select(x => x.Id).ToList();
+        ActiveModules = _companyModules.Where(x => sessionModulesIds.Contains(x.Id)).ToList();
+    }
+
+    private void InitializeModules()
+    {
+        foreach(var module in _companyModules)
         {
-            var instance = (IModule)Activator.CreateInstance(type)!;
+            var moduleType = module.ModuleComponent.GetType();
+            var instance = (IModule)Activator.CreateInstance(moduleType)!;
 
             RenderFragment content = builder =>
             {
-                builder.OpenComponent(0, type);
+                builder.OpenComponent(0, moduleType);
                 builder.CloseComponent();
             };
 
-            Tabs.TryAdd(type.FullName, new Module()
-            {
-                Title = instance.TabTitle,
-                Content = content
-            });
+            module.ModuleContent = content;
+        }
+    }
+
+    private void UpdateActiveModules()
+    {
+        Tabs.Clear();
+        foreach(var module in _activeModules)
+        {
+            if (module.ModuleContent == null)
+                continue;
+            Tabs.TryAdd(module.Name, module.ModuleContent);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace MagFlow.DAL.Repositories.Core
                     return await context.UserSessions
                         .Where(x => x.UserId == userId && !x.RevokedAt.HasValue && x.ExpiresAt > DateTime.UtcNow)
                         .Include(x => x.SessionModules).ThenInclude(y => y.Module)
-                        .OrderByDescending(x => x.CreatedDate)
+                        .OrderByDescending(x => x.LastTimeRecord)
                         .Take(historyLength)
                         .ToListAsync();
                 }

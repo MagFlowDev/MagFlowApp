@@ -17,6 +17,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<bool> ChangePassword(TokenChangePasswordModel model);
 
         Task<List<UserSessionDTO>?> GetLastSessions(int historyLength = 1);
+        Task<Enums.Result> UpdateLastSession(UserSessionDTO sessionDTO);
         Task<Enums.Result> StartNewSession(List<ModuleDTO> modules);
     }
 }

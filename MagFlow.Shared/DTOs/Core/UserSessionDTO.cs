@@ -10,6 +10,7 @@ namespace MagFlow.Shared.DTOs.Core
     {
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime LastTimeRecord { get; set; }
         public DateTime ExpiresAt { get; set; }
 
         public List<ModuleDTO> Modules { get; set; }

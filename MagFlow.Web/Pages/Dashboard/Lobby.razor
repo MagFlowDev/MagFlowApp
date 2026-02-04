@@ -1,4 +1,5 @@
 ﻿@page "/lobby"
+@using MagFlow.BLL.Helpers
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.Core
 @using MagFlow.Shared.Extensions
@@ -33,27 +34,41 @@
                 </div>
             </div>
             <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px; flex: 1 1 auto; min-height: 0; overflow: auto; box-sizing: border-box;">
-                @foreach(var userSession in _userSessions)
+                @if(_userSessions.Any())
                 {
-                    <div class="d-flex flex-column align-self-stretch justify-content-between" style="gap: 16px; border-radius: 8px; padding: 16px; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08)">
-                        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 8px">
-                            <div class="d-flex justify-content-between align-items-center align-self-stretch" style="padding-bottom: 8px">
-                                <div class="d-flex align-items-center" style="gap: 8px">
-                                    <MudIcon Icon="@Icons.Material.Filled.AccessTime" Style="color: var(--bs-gray-600)"/>
-                                    <MudText Typo="Typo.body2" Style="color: var(--bs-gray-600)">2 godz. temu</MudText>
+                    @foreach(var userSession in _userSessions)
+                    {
+                        <div class="d-flex flex-column align-self-stretch justify-content-between" style="gap: 16px; border-radius: 8px; padding: 16px; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08)">
+                            <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 8px">
+                                <div class="d-flex justify-content-between align-items-center align-self-stretch" style="padding-bottom: 8px">
+                                    <div class="d-flex align-items-center" style="gap: 8px">
+                                        <MudIcon Icon="@Icons.Material.Filled.AccessTime" Style="color: var(--bs-gray-600)"/>
+                                        <MudText Typo="Typo.body2" Style="color: var(--bs-gray-600)">@userSession.LastTimeRecord.ToRelativeTime(Localizer, _relativeTime)</MudText>
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center" style="@($"padding: 4px 8px; border-radius: 8px; background: {Colors.Blue.Lighten4}")">
+                                        <MudText Typo="Typo.body2" Color="Color.Primary">@PluralizationHelper.Modules(Localizer, userSession.Modules.Count)</MudText>
+                                    </div>
                                 </div>
-                                <div class="d-flex justify-content-center align-items-center" style="@($"padding: 4px; border-radius: 8px; background: {Colors.Blue.Lighten4}")">
-                                    <MudText Typo="Typo.body2" Color="Color.Primary">@string.Concat(userSession.Modules.Count, " moduły")</MudText>
+                                <div class="d-flex align-items-start align-self-stretch flex-wrap" style="max-width: 236px; gap: 12px;">
+                                    @foreach(var module in userSession.Modules)
+                                    {
+                                        <MudTooltip Text="@Localizer[module.Name]" Delay="300">
+                                            <MudIcon Icon="@module.ModuleComponent.Icon" Size="Size.Small" Class="my-1"/>
+                                        </MudTooltip>
+                                    }
                                 </div>
                             </div>
-                            <div class="d-flex align-items-start align-self-stretch" style="gap: 12px;">
-                                @foreach(var module in userSession.Modules)
-                                {
-                                    <MudIcon Icon="@module.ModuleComponent.Icon" Size="Size.Small" Class="my-1"/>
-                                }
-                            </div>
+                            <MudLoadingButton @bind-Loading="_loadingRestoreSession[userSession.Id]" OnClick="@(async () => await RestoreSession(userSession.Id))" StartIcon="@Icons.Material.Filled.Restore" Style="background-color: #FFF" IconColor="Color.Primary" Color="Color.Primary">@Localizer[Langs.Restore]</MudLoadingButton>
                         </div>
-                        <MudButton StartIcon="@Icons.Material.Filled.Restore" Style="background-color: #FFF" IconColor="Color.Primary" Color="Color.Primary">@Localizer[Langs.Restore]</MudButton>
+                    }
+                }
+                else
+                {
+                    <div class="d-flex h-100 align-self-stretch align-items-center justify-content-center">
+                        <div class="d-flex flex-column align-items-center">
+                            <MudIcon Icon="@Icons.Material.Filled.Restore" Style="@($"color: {Colors.BlueGray.Lighten1}")" Size="Size.Large"/>
+                            <MudText Typo="Typo.body1" Style="@($"color: {Colors.BlueGray.Lighten1}")">@Localizer[Langs.NoRecentSessions]</MudText>
+                        </div>
                     </div>
                 }
             </div>
@@ -132,9 +147,11 @@
     int _selectedCount => _selectedModules.Count;
 
     Dictionary<Guid, bool> _loadingStartSessionSingleModule = new Dictionary<Guid, bool>();
+    Dictionary<Guid, bool> _loadingRestoreSession = new Dictionary<Guid, bool>();
     bool _loadingStartSession;
-    bool _loadingRestoreSession;
     bool _isBusy;
+
+    DateTime _relativeTime;
 
     bool ModuleSelected(Guid moduleId)
     {
@@ -159,6 +176,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _relativeTime = DateTime.UtcNow;
         var authenticationState = await AuthenticationStateTask;
         var user = authenticationState.User;
         var companyId = user.FindFirst(Claims.CompanyClaim)?.Value.ToGuid() ?? Guid.Empty;
@@ -174,6 +192,7 @@
             session.Modules.ForEach(x => x.ModuleComponent = IModuleMapper.GetIModule(x.Type));
             session.Modules = session.Modules.Where(x => x.ModuleComponent != null).ToList();
         }
+        _loadingRestoreSession = sessions.ToDictionary(x => x.Id, x => false);
         _userSessions = sessions;
     }
 
@@ -265,6 +284,33 @@
         {
             _isBusy = false;
             _loadingStartSession = false;
+        }
+    }
+
+    private async Task RestoreSession(Guid sessionId)
+    {
+        if (_isBusy)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loadingRestoreSession[sessionId] = true;
+
+            var session = _userSessions.FirstOrDefault(x => x.Id == sessionId);
+            if (session == null)
+                return;
+
+            if(await UserService.UpdateLastSession(session) == Enums.Result.Success)
+            {
+                NavigationManager.NavigateTo("/");
+                return;
+            }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loadingRestoreSession[sessionId] = false;
         }
     }
 }

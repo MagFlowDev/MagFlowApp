@@ -619,4 +619,40 @@ i uprawnieniami użytkowników</value>
   <data name="Clear" xml:space="preserve">
     <value>Wyczyść</value>
   </data>
+  <data name="NoRecentSessions" xml:space="preserve">
+    <value>Brak ostatnich sesji</value>
+  </data>
+  <data name="ModulesOne" xml:space="preserve">
+    <value>{0} moduł</value>
+  </data>
+  <data name="ModulesFew" xml:space="preserve">
+    <value>{0} moduły</value>
+  </data>
+  <data name="ModulesMany" xml:space="preserve">
+    <value>{0} modułów</value>
+  </data>
+  <data name="TimeJustNow" xml:space="preserve">
+    <value>przed chwilą</value>
+  </data>
+  <data name="TimeMinuteOneAgo" xml:space="preserve">
+    <value>{0} min temu</value>
+  </data>
+  <data name="TimeMinuteManyAgo" xml:space="preserve">
+    <value>{0} min temu</value>
+  </data>
+  <data name="TimeHourOneAgo" xml:space="preserve">
+    <value>{0} godz. temu</value>
+  </data>
+  <data name="TimeHourManyAgo" xml:space="preserve">
+    <value>{0} godz. temu</value>
+  </data>
+  <data name="TimeDayOneAgo" xml:space="preserve">
+    <value>{0} dzień temu</value>
+  </data>
+  <data name="TimeDayManyAgo" xml:space="preserve">
+    <value>{0} dni temu</value>
+  </data>
+  <data name="LongTimeAgo" xml:space="preserve">
+    <value>dawno temu</value>
+  </data>
 </root>
