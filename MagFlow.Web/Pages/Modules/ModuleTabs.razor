@@ -10,14 +10,34 @@
 
 @inject ICompanyService CompanyService
 
-<div class="d-flex w-100 h-100">
-    <MudTabs @bind-ActivePanelIndex="activeIndex" KeepPanelsAlive="true">
-        @foreach(var tab in Tabs)
-        {
-            <MudTabPanel Text="@Localizer[tab.Key]">
-                @tab.Value
-            </MudTabPanel>
-        }
+<div class="d-flex w-100 h-100" style="max-width: 100%;">
+    <MudTabs @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" Centered="false" Elevation="0" Class="bg-transparent" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
+        <ChildContent>
+            @foreach(var tab in Tabs)
+            {
+                <MudTabPanel Tag="@tab.Key">
+                    <ChildContent>
+                        <DynamicComponent Type="@tab.Value.GetType()"/>
+                    </ChildContent>
+                    <TabContent>
+                        <div class="d-flex">
+                            <MudIcon Icon="@tab.Value.Icon" Class="lh-1"/>
+                            <MudText Class="px-2">@Localizer[tab.Key]</MudText>
+                        </div>
+                    </TabContent>
+                </MudTabPanel>
+            }
+        </ChildContent>
+        <Header>
+            <MudTooltip Text="Append a tab" Class="align-self-center">
+                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="@(() => AddTab())" Color="Color.Primary" Class="align-self-center" />
+            </MudTooltip>
+        </Header>
+        <TabPanelHeader>
+            <MudTooltip Text="only dynamic tabs can be closed">
+                <MudIconButton Class="ml-2 pa-1" Color="Color.Primary" Icon="@Icons.Material.Filled.Close" OnClick="(_) => RemoveTab(context)" />
+            </MudTooltip>
+        </TabPanelHeader>
     </MudTabs>
 </div>
 
@@ -28,9 +48,10 @@
     [Parameter]
     public List<ModuleDTO> SessionModules { get; set; } = new List<ModuleDTO>();
 
-    public Dictionary<string, RenderFragment> Tabs = new Dictionary<string, RenderFragment>();
-    
-    private int activeIndex = 0;
+    public Dictionary<string, IModule> Tabs = new Dictionary<string, IModule>();
+
+    private int _activeIndex = 0;
+    private int? _nextIndex = null;
 
     List<ModuleDTO> _companyModules { get; set; } = new List<ModuleDTO>();
     List<ModuleDTO> _activeModules { get; set; } = new List<ModuleDTO>();
@@ -56,27 +77,9 @@
         var modules = await CompanyService.GetCompanyModules(companyId);
         modules?.ForEach(x => x.ModuleComponent = IModuleMapper.GetIModule(x.Type));
         _companyModules = modules?.Where(x => x.ModuleComponent != null).ToList() ?? new List<ModuleDTO>();
-        InitializeModules();
 
         var sessionModulesIds = SessionModules.Select(x => x.Id).ToList();
         ActiveModules = _companyModules.Where(x => sessionModulesIds.Contains(x.Id)).ToList();
-    }
-
-    private void InitializeModules()
-    {
-        foreach(var module in _companyModules)
-        {
-            var moduleType = module.ModuleComponent.GetType();
-            var instance = (IModule)Activator.CreateInstance(moduleType)!;
-
-            RenderFragment content = builder =>
-            {
-                builder.OpenComponent(0, moduleType);
-                builder.CloseComponent();
-            };
-
-            module.ModuleContent = content;
-        }
     }
 
     private void UpdateActiveModules()
@@ -84,9 +87,37 @@
         Tabs.Clear();
         foreach(var module in _activeModules)
         {
-            if (module.ModuleContent == null)
+            if (module.ModuleComponent == null)
                 continue;
-            Tabs.TryAdd(module.Name, module.ModuleContent);
+
+            Tabs.TryAdd(module.Name, module.ModuleComponent);
+        }
+    }
+
+    private void RemoveTab(MudTabPanel tabPanel)
+    {
+        var tag = tabPanel.Tag?.ToString();
+        if (string.IsNullOrEmpty(tag))
+            return;
+        if(Tabs.ContainsKey(tag))
+        {
+            Tabs.Remove(tag);
+        }
+    }
+
+    private void AddTab()
+    {
+        //Tabs.TryAdd(key, content);
+        _nextIndex = Tabs.Count - 1;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if(_nextIndex.HasValue)
+        {
+            _activeIndex = _nextIndex.Value;
+            _nextIndex = null;
+            StateHasChanged();
         }
     }
 }

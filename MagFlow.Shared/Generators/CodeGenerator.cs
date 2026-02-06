@@ -19,7 +19,7 @@ namespace MagFlow.Shared.Helpers.Generators
                 return new string(Enumerable.Repeat(chars, 3)
                     .Select(s => s[random.Next(s.Length)]).ToArray());
             }
-            var first = name.Take(1).ToString()!;
+            var first = name.Substring(0,1).ToString()!;
             var rest = name.Skip(1).ToString()!;
             return first.ToUpper() + rest.ConsonantsOnly().ToUpper();
         }
