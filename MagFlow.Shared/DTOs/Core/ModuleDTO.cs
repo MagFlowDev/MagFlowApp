@@ -18,6 +18,5 @@ namespace MagFlow.Shared.DTOs.Core
         public ModuleType? Type { get; set; }
 
         public IModule? ModuleComponent { get; set; }
-        public RenderFragment? ModuleContent { get; set; }
     }
 }
