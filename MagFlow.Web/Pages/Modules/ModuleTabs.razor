@@ -11,7 +11,7 @@
 @inject ICompanyService CompanyService
 
 <div class="d-flex w-100 h-100" style="max-width: 100%;">
-    <MudTabs @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" Centered="false" Elevation="0" Class="bg-transparent" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
+    <MudTabs @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
         <ChildContent>
             @foreach(var tab in Tabs)
             {
@@ -30,12 +30,34 @@
         </ChildContent>
         <Header>
             <MudTooltip Text="Append a tab" Class="align-self-center">
-                <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="@(() => AddTab())" Color="Color.Primary" Class="align-self-center" />
+                <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="align-self-center" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+                    @{
+                        var snapshot = NotActiveModules.ToArray();
+                    }
+                    @for (int i = 0; i < snapshot.Length; i+=2)
+                    {
+                        <div class="d-flex align-center">
+                            <div class="w-50">
+                                @{
+                                    var moduleName = snapshot[i].Name;
+                                }
+                                <MudText>@Localizer[moduleName]</MudText>
+                            </div>
+                            @if (i < snapshot.Length-1)
+                            {
+                                var moduleName2 = snapshot[i + 1].Name;
+                                <div class="w-50">
+                                    <MudText>@Localizer[moduleName2]</MudText>
+                                </div>
+                            }
+                        </div>
+                    }
+                </MudMenu>
             </MudTooltip>
         </Header>
         <TabPanelHeader>
             <MudTooltip Text="only dynamic tabs can be closed">
-                <MudIconButton Class="ml-2 pa-1" Color="Color.Primary" Icon="@Icons.Material.Filled.Close" OnClick="(_) => RemoveTab(context)" />
+                <MudIconButton Class="ml-2 pa-1" Color="Color.Primary" Icon="@Icons.Material.Filled.Close" OnClick="async (_) => await RemoveTab(context)" />
             </MudTooltip>
         </TabPanelHeader>
     </MudTabs>
@@ -67,6 +89,11 @@
             UpdateActiveModules();
         }
     }
+    List<ModuleDTO> NotActiveModules => _companyModules
+            .Where(c => !_activeModules.Any(a => a.Id == c.Id))
+            .OrderBy(x => x.Name)
+            .ToList();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,21 +121,28 @@
         }
     }
 
-    private void RemoveTab(MudTabPanel tabPanel)
+    private async Task UpdateSession()
+    {
+
+    }
+
+    private async Task RemoveTab(MudTabPanel tabPanel)
     {
         var tag = tabPanel.Tag?.ToString();
         if (string.IsNullOrEmpty(tag))
             return;
-        if(Tabs.ContainsKey(tag))
-        {
-            Tabs.Remove(tag);
-        }
+        var activeModule = _activeModules.FirstOrDefault(x => x.Name == tag);
+        if (activeModule != null)
+            _activeModules.Remove(activeModule);
+        UpdateActiveModules();
+        await UpdateSession();
     }
 
-    private void AddTab()
+    private async Task AddTab()
     {
         //Tabs.TryAdd(key, content);
         _nextIndex = Tabs.Count - 1;
+        await UpdateSession();
     }
 
     protected override void OnAfterRender(bool firstRender)
