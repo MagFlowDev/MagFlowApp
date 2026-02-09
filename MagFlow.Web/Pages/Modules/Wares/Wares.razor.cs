@@ -1,6 +1,6 @@
 ﻿namespace MagFlow.Web.Pages.Modules.Wares
 {
-    public partial class Wares
+    public partial class Wares : BaseModuleComponent
     {
         protected override async Task OnInitializedAsync()
         {

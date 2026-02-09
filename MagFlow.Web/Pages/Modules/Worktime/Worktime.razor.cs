@@ -1,6 +1,6 @@
 ﻿namespace MagFlow.Web.Pages.Modules.Worktime
 {
-    public partial class Worktime
+    public partial class Worktime : BaseModuleComponent
     {
         private int _value = 0;
 

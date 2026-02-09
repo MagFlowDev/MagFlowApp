@@ -1,6 +1,6 @@
 ﻿namespace MagFlow.Web.Pages.Modules.Contractors
 {
-    public partial class Contractors
+    public partial class Contractors : BaseModuleComponent
     {
         protected override async Task OnInitializedAsync()
         {

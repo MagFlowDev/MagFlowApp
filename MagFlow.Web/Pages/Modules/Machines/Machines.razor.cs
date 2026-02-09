@@ -1,6 +1,6 @@
 ﻿namespace MagFlow.Web.Pages.Modules.Machines
 {
-    public partial class Machines
+    public partial class Machines : BaseModuleComponent
     {
         protected override async Task OnInitializedAsync()
         {

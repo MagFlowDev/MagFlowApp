@@ -1,6 +1,6 @@
 ﻿namespace MagFlow.Web.Pages.Modules.Reports
 {
-    public partial class Reports
+    public partial class Reports : BaseModuleComponent
     {
         protected override async Task OnInitializedAsync()
         {

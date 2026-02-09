@@ -1,6 +1,6 @@
 ﻿namespace MagFlow.Web.Pages.Modules.Users
 {
-    public partial class Users
+    public partial class Users : BaseModuleComponent
     {
         protected override async Task OnInitializedAsync()
         {

@@ -1,6 +1,6 @@
 ﻿namespace MagFlow.Web.Pages.Modules.ProductionPlan
 {
-    public partial class ProductionPlan
+    public partial class ProductionPlan : BaseModuleComponent
     {
         protected override async Task OnInitializedAsync()
         {
