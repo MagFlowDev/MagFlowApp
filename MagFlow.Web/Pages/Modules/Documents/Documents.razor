@@ -1,5 +1,6 @@
 ﻿@using MagFlow.Shared.Models.Interfaces
 @implements IModule
+@inherits BaseModuleComponent
 
 <h3>Documents</h3>
 
@@ -7,8 +8,4 @@
     public string TabTitle => "Documents";
     public string Icon => "bi bi-file-earmark-text";
 
-    public void Dispose()
-    {
-
-    }
 }

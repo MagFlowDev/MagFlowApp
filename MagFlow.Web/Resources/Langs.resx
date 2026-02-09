@@ -655,4 +655,7 @@ i uprawnieniami użytkowników</value>
   <data name="LongTimeAgo" xml:space="preserve">
     <value>dawno temu</value>
   </data>
+  <data name="OpenModule" xml:space="preserve">
+    <value>Otwórz moduł</value>
+  </data>
 </root>

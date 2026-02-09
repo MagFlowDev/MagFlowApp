@@ -2,5 +2,14 @@
 {
     public partial class Contractors
     {
+        protected override async Task OnInitializedAsync()
+        {
+
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }
