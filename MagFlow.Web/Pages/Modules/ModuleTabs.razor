@@ -11,7 +11,7 @@
 @inject ICompanyService CompanyService
 
 <div class="d-flex w-100 h-100" style="max-width: 100%;">
-    <MudTabs @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
+    <MudTabs @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
         <ChildContent>
             @foreach(var tab in Tabs)
             {
@@ -56,7 +56,10 @@
             </MudTooltip>
         </Header>
         <TabPanelHeader>
-            <MudIconButton Class="ml-2 pa-1" Color="Color.Primary" Icon="@Icons.Material.Filled.Close" OnClick="async (_) => await RemoveTab(context)" />
+            @if (ActiveModules.Count > 1)
+            {
+                <MudIconButton Class="ml-2 pa-1" Color="Color.Primary" Icon="@Icons.Material.Filled.Close" OnClick="async (_) => await RemoveTab(context)"/>
+            }
         </TabPanelHeader>
     </MudTabs>
 </div>
