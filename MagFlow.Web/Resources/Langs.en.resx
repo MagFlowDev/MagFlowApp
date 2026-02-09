@@ -654,4 +654,7 @@
   <data name="LongTimeAgo" xml:space="preserve">
     <value>long time ago</value>
   </data>
+  <data name="OpenModule" xml:space="preserve">
+    <value>Open module</value>
+  </data>
 </root>

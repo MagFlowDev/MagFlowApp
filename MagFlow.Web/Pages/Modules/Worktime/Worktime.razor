@@ -1,14 +1,20 @@
 ﻿@using MagFlow.Shared.Models.Interfaces
+@using MudBlazor
 @implements IModule
+@inherits BaseModuleComponent
 
 <h3>Worktime</h3>
+
+<br/>
+
+<MudProgressCircular Color="Color.Primary" Value="@_value" Size="Size.Large">
+    <ChildContent>
+        @_value %
+    </ChildContent>
+</MudProgressCircular>
 
 @code {
     public string TabTitle => "Worktime";
     public string Icon => "bi bi-stopwatch";
 
-    public void Dispose()
-    {
-
-    }
 }

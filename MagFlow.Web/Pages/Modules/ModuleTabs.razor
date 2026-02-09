@@ -29,7 +29,7 @@
             }
         </ChildContent>
         <Header>
-            <MudTooltip Text="Append a tab" Class="align-self-center">
+            <MudTooltip Text="@Localizer[Langs.OpenModule]" Class="align-self-center">
                 <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="align-self-center" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
                     @{
                         var snapshot = NotActiveModules.ToArray();
@@ -56,9 +56,7 @@
             </MudTooltip>
         </Header>
         <TabPanelHeader>
-            <MudTooltip Text="only dynamic tabs can be closed">
-                <MudIconButton Class="ml-2 pa-1" Color="Color.Primary" Icon="@Icons.Material.Filled.Close" OnClick="async (_) => await RemoveTab(context)" />
-            </MudTooltip>
+            <MudIconButton Class="ml-2 pa-1" Color="Color.Primary" Icon="@Icons.Material.Filled.Close" OnClick="async (_) => await RemoveTab(context)" />
         </TabPanelHeader>
     </MudTabs>
 </div>

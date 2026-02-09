@@ -2,5 +2,14 @@
 {
     public partial class Processes
     {
+        protected override async Task OnInitializedAsync()
+        {
+
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }
