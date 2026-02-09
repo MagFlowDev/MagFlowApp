@@ -24,7 +24,7 @@
         <MudText Typo="Typo.subtitle1" Style="color: var(--mud-palette-text-secondary)">@Localizer[Langs.StartPanelWelcomeText]</MudText>
     </div>
     <div class="d-flex w-100 mt-6" style="gap: 16px; flex: 1 1 0; min-height: 0">
-        <div class="d-flex flex-column justify-content-start align-items-center" style="padding: 16px; background: #FFF; border-radius: 8px; min-width: 300px; flex: 0 0 auto;">
+        <div class="d-flex flex-column justify-content-start align-items-center" style="padding: 16px; background: #FFF; border-radius: 8px; min-width: 316px; flex: 0 0 auto;">
             <div class="d-flex align-items-center align-self-stretch">
                 <div class="d-flex justify-content-center align-items-center" style="@($"width: 32px; height: 32px; aspect-ratio: 1/1; border-radius: 6px; background: {Colors.Blue.Lighten5}")">
                     <MudIcon Icon="@Icons.Material.Filled.Restore" Color="Color.Primary" Size="Size.Small"/>    
@@ -33,7 +33,7 @@
                     <MudText Typo="Typo.h5" Style="font-weight: 700; padding: 8px">@Localizer[Langs.LastSessions]</MudText>
                 </div>
             </div>
-            <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px; flex: 1 1 auto; min-height: 0; overflow: auto; box-sizing: border-box;">
+            <div class="d-flex flex-column align-items-start align-self-stretch" style="padding: 8px; gap: 16px; flex: 1 1 auto; min-height: 0; overflow: auto; box-sizing: border-box;">
                 @if(_userSessions.Any())
                 {
                     @foreach(var userSession in _userSessions)
