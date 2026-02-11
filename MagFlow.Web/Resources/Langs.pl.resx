@@ -635,10 +635,10 @@ i uprawnieniami użytkowników</value>
     <value>przed chwilą</value>
   </data>
   <data name="TimeMinuteOneAgo" xml:space="preserve">
-    <value>{0} min temu</value>
+    <value>{0} min. temu</value>
   </data>
   <data name="TimeMinuteManyAgo" xml:space="preserve">
-    <value>{0} min temu</value>
+    <value>{0} min. temu</value>
   </data>
   <data name="TimeHourOneAgo" xml:space="preserve">
     <value>{0} godz. temu</value>
