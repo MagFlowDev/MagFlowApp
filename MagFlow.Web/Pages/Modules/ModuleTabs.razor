@@ -11,18 +11,18 @@
 @inject ICompanyService CompanyService
 
 <div class="d-flex w-100 h-100" style="max-width: 100%;">
-    <MudTabs @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
+    <MudTabs @ref="_tabsRef" @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" OnItemDropped="MoveTab" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
         <ChildContent>
-            @foreach(var tab in Tabs)
+            @foreach(var tab in ActiveModules)
             {
-                <MudTabPanel Tag="@tab.Key">
+                <MudTabPanel @key="tab.Id" Tag="@tab.Id" Icon="@tab.ModuleComponent!.Icon">
                     <ChildContent>
-                        <DynamicComponent Type="@tab.Value.GetType()"/>
+                        <DynamicComponent Type="@tab.ModuleComponent!.GetType()" />
                     </ChildContent>
                     <TabContent>
                         <div class="d-flex">
-                            <MudIcon Icon="@tab.Value.Icon" Class="lh-1"/>
-                            <MudText Class="px-2">@Localizer[tab.Key]</MudText>
+                            <MudIcon Icon="@tab.ModuleComponent!.Icon" Class="lh-1" />
+                            <MudText Class="px-2">@Localizer[tab.Name]</MudText>
                         </div>
                     </TabContent>
                 </MudTabPanel>
@@ -30,24 +30,31 @@
         </ChildContent>
         <Header>
             <MudTooltip Text="@Localizer[Langs.OpenModule]" Class="align-self-center">
-                <MudMenu Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="align-self-center" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+                <MudMenu @ref="_tabsMenu" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="align-self-center" PopoverClass="my-2" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
                     @{
                         var snapshot = NotActiveModules.ToArray();
                     }
                     @for (int i = 0; i < snapshot.Length; i+=2)
                     {
-                        <div class="d-flex align-center">
-                            <div class="w-50">
-                                @{
-                                    var moduleName = snapshot[i].Name;
-                                }
-                                <MudText>@Localizer[moduleName]</MudText>
+                        <div class="d-flex align-center" style="gap: 8px; padding: 8px 0; width: 306px">
+                            @{
+                                var moduleName = snapshot[i].Name;
+                                var moduleId = snapshot[i].Id;
+                                var icon = snapshot[i].ModuleComponent!.Icon;
+                            }
+                            <div class="w-50 d-flex flex-column align-items-center" style="padding: 8px 0; gap: 4px; cursor: pointer" @onclick="async () => await AddTab(moduleId)">
+                                
+                                <MudIcon Size="Size.Small" Class="lh-1" Icon="@icon" Color="Color.Primary"/>
+                                <MudText Class="text-center" Style="font: 500; color: var(--mud-palette-text-primary)">@Localizer[moduleName]</MudText>
                             </div>
                             @if (i < snapshot.Length-1)
                             {
                                 var moduleName2 = snapshot[i + 1].Name;
-                                <div class="w-50">
-                                    <MudText>@Localizer[moduleName2]</MudText>
+                                var moduleId2 = snapshot[i + 1].Id;
+                                var icon2 = snapshot[i + 1].ModuleComponent!.Icon;
+                                <div class="w-50 d-flex flex-column align-items-center" style="padding: 8px 0; gap: 4px; cursor: pointer" @onclick="async () => await AddTab(moduleId2)">
+                                    <MudIcon Size="Size.Small" Class="lh-1" Icon="@icon2" Color="Color.Primary" />
+                                    <MudText Class="text-center" Style="font: 500; color: var(--mud-palette-text-primary)">@Localizer[moduleName2]</MudText>
                                 </div>
                             }
                         </div>
@@ -58,7 +65,8 @@
         <TabPanelHeader>
             @if (ActiveModules.Count > 1)
             {
-                <MudIconButton Class="ml-2 pa-1" Color="Color.Primary" Icon="@Icons.Material.Filled.Close" OnClick="async (_) => await RemoveTab(context)"/>
+                var isActive = ActiveModules.ElementAt(_activeIndex).Id.Equals(context.Tag);
+                <MudIconButton Class="ml-2 pa-1" Color="@(isActive ? Color.Primary : Color.Dark)"  Icon="@Icons.Material.Filled.Close" OnClick="async (_) => await RemoveTab(context)"/>
             }
         </TabPanelHeader>
     </MudTabs>
@@ -71,7 +79,8 @@
     [Parameter]
     public List<ModuleDTO> SessionModules { get; set; } = new List<ModuleDTO>();
 
-    public Dictionary<string, IModule> Tabs = new Dictionary<string, IModule>();
+    private MudTabs? _tabsRef;
+    private MudMenu? _tabsMenu;
 
     private int _activeIndex = 0;
     private int? _nextIndex = null;
@@ -87,7 +96,6 @@
         set
         {
             _activeModules = value;
-            UpdateActiveModules();
         }
     }
     List<ModuleDTO> NotActiveModules => _companyModules
@@ -110,41 +118,73 @@
         ActiveModules = _companyModules.Where(x => sessionModulesIds.Contains(x.Id)).ToList();
     }
 
-    private void UpdateActiveModules()
-    {
-        Tabs.Clear();
-        foreach(var module in _activeModules)
-        {
-            if (module.ModuleComponent == null)
-                continue;
-
-            Tabs.TryAdd(module.Name, module.ModuleComponent);
-        }
-    }
 
     private async Task UpdateSession()
     {
 
     }
 
+    private async Task UpdateLocalCache()
+    {
+
+    }
+
     private async Task RemoveTab(MudTabPanel tabPanel)
     {
-        var tag = tabPanel.Tag?.ToString();
-        if (string.IsNullOrEmpty(tag))
+        var tag = tabPanel.Tag?.ToString()?.ToGuid();
+        if (!tag.HasValue)
             return;
-        var activeModule = _activeModules.FirstOrDefault(x => x.Name == tag);
+        var activeModule = _activeModules.FirstOrDefault(x => x.Id == tag);
         if (activeModule != null)
             _activeModules.Remove(activeModule);
-        UpdateActiveModules();
+
         await UpdateSession();
     }
 
-    private async Task AddTab()
+    private async Task AddTab(Guid companyModuleId)
     {
-        //Tabs.TryAdd(key, content);
-        _nextIndex = Tabs.Count - 1;
+        if (_tabsMenu == null)
+            return;
+
+        if (_activeModules.Any(x => x.Id == companyModuleId))
+            return;
+
+        var companyModule = _companyModules.Where(x => x.Id == companyModuleId).ToList();
+        if (companyModule.Count != 1)
+            return;
+
+        _activeModules.AddRange(companyModule);
+        _nextIndex = ActiveModules.Count - 1;
         await UpdateSession();
+        await _tabsMenu.CloseMenuAsync();
     }
+
+    private async Task MoveTab(MudItemDropInfo<MudTabPanel> dropInfo)
+    {
+        if (_tabsRef == null)
+            return;
+
+        var tag = dropInfo.Item?.Tag?.ToString()?.ToGuid();
+        if (!tag.HasValue)
+            return;
+
+        var oldIndex = _activeModules.FindIndex(x => x.Id == tag);
+        if (oldIndex < 0 || oldIndex == dropInfo.IndexInZone)
+            return;
+
+        var orderedIds = _tabsRef.Panels
+           .Select(p => p.Tag)
+           .OfType<Guid>()
+           .ToList();
+
+        _activeModules = orderedIds
+            .Select(id => _activeModules.First(x => x.Id == id))
+            .ToList();
+
+        _activeIndex = dropInfo.IndexInZone;
+        StateHasChanged();
+    }
+
 
     protected override void OnAfterRender(bool firstRender)
     {
