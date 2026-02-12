@@ -1,4 +1,5 @@
-﻿using Castle.DynamicProxy;
+﻿using Blazored.LocalStorage;
+using Castle.DynamicProxy;
 using FormCraft;
 using FormCraft.ForMudBlazor.Extensions;
 using MagFlow.BLL.ApplicationMonitor;
@@ -50,6 +51,7 @@ namespace MagFlow.Web.Extensions
             });
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            services.AddBlazoredLocalStorage();
 
             services.AddFormCraft();
             services.AddFormCraftMudBlazor();
@@ -185,9 +187,7 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<ICompanyService, CompanyService>();
 
-            services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<INotificationService, NotificationService>();
-            services.AddScoped<ClientNotificationService>();
+            services.RegisterCommonServices();
         }
 
         private static void RegisterServicesWithProxy(this IServiceCollection services)
@@ -202,9 +202,15 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IEventService>(sp => sp.GetRequiredService<EventService>().WithProxy<IEventService>(sp));
             services.AddScoped<ICompanyService>(sp => sp.GetRequiredService<CompanyService>().WithProxy<ICompanyService>(sp));
 
+            services.RegisterCommonServices();
+        }
+
+        private static void RegisterCommonServices(this IServiceCollection services)
+        {
             services.AddScoped<INetworkService, NetworkService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<ILocalCacheService, LocalCacheService>();    
             services.AddScoped<ClientNotificationService>();
         }
 
