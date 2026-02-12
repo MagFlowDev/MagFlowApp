@@ -9,6 +9,8 @@
 @using MudBlazor
 
 @inject ICompanyService CompanyService
+@inject IUserService UserService
+@inject ILocalCacheService LocalCacheService
 
 <div class="d-flex w-100 h-100" style="max-width: 100%;">
     <MudTabs @ref="_tabsRef" @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" OnItemDropped="MoveTab" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
@@ -77,7 +79,7 @@
     private Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
     [Parameter]
-    public List<ModuleDTO> SessionModules { get; set; } = new List<ModuleDTO>();
+    public UserSessionDTO UserSession { get; set; } = new UserSessionDTO();
 
     private MudTabs? _tabsRef;
     private MudMenu? _tabsMenu;
@@ -114,19 +116,28 @@
         modules?.ForEach(x => x.ModuleComponent = IModuleMapper.GetIModule(x.Type));
         _companyModules = modules?.Where(x => x.ModuleComponent != null).ToList() ?? new List<ModuleDTO>();
 
-        var sessionModulesIds = SessionModules.Select(x => x.Id).ToList();
+        var sessionModulesIds = UserSession.Modules.Select(x => x.Id).ToList();
         ActiveModules = _companyModules.Where(x => sessionModulesIds.Contains(x.Id)).ToList();
     }
 
 
     private async Task UpdateSession()
     {
-
+        UserSession.Modules = ActiveModules;
+        await UserService.UpdateLastSession(UserSession);
     }
 
     private async Task UpdateLocalCache()
     {
+        if (_tabsRef == null)
+            return;
 
+        var orderedIds = _tabsRef.Panels
+           .Select(p => p.Tag)
+           .OfType<Guid>()
+           .ToList();
+
+        await LocalCacheService.SetSessionOrder(UserSession.Id, orderedIds);
     }
 
     private async Task RemoveTab(MudTabPanel tabPanel)
@@ -139,6 +150,7 @@
             _activeModules.Remove(activeModule);
 
         await UpdateSession();
+        UpdateLocalCache();
     }
 
     private async Task AddTab(Guid companyModuleId)
@@ -157,6 +169,7 @@
         _nextIndex = ActiveModules.Count - 1;
         await UpdateSession();
         await _tabsMenu.CloseMenuAsync();
+        UpdateLocalCache();
     }
 
     private async Task MoveTab(MudItemDropInfo<MudTabPanel> dropInfo)
@@ -183,6 +196,7 @@
 
         _activeIndex = dropInfo.IndexInZone;
         StateHasChanged();
+        UpdateLocalCache();
     }
 
 
