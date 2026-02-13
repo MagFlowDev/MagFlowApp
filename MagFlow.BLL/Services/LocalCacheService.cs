@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using MagFlow.BLL.Services.Interfaces;
+using MagFlow.Domain.Company;
 using MagFlow.Shared.Models;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,24 +14,30 @@ namespace MagFlow.BLL.Services
     public class LocalCacheService : ILocalCacheService
     {
         private readonly ILocalStorageService _localStorage;
+        private readonly INetworkService _networkService;
         private readonly ILogger<LocalCacheService> _logger;
 
         public LocalCacheService(ILogger<LocalCacheService> logger, 
-            ILocalStorageService localStorage)
+            ILocalStorageService localStorage,
+            INetworkService networkService)
         {
             _logger = logger;
             _localStorage = localStorage;
+            _networkService = networkService;
         }
 
         public async Task<Enums.Result> SetSessionOrder(Guid sessionId, List<Guid> orderedIds)
         {
             try
             {
-                var cache = await GetCache<List<SessionCache>>(Shared.Constants.LocalStorageKeys.SESSION_ORDER);
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return Enums.Result.Error;
+                var cache = await GetCache<List<SessionCache>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_ORDER);
                 if(cache == null)
                 {
-                    await AddOrUpdateCache(Shared.Constants.LocalStorageKeys.SESSION_ORDER, new List<SessionCache>());
-                    cache = await GetCache<List<SessionCache>>(Shared.Constants.LocalStorageKeys.SESSION_ORDER);
+                    await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_ORDER, new List<SessionCache>());
+                    cache = await GetCache<List<SessionCache>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_ORDER);
                     if (cache == null)
                         return Enums.Result.Error;
                 }
@@ -54,7 +61,7 @@ namespace MagFlow.BLL.Services
                     foreach (var toRemove in oldSessionCache)
                         cache.Remove(toRemove);
                 }
-                await AddOrUpdateCache(Shared.Constants.LocalStorageKeys.SESSION_ORDER, cache);
+                await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_ORDER, cache);
                 
                 return Enums.Result.Success;
             }
@@ -67,31 +74,57 @@ namespace MagFlow.BLL.Services
 
         public async Task<List<Guid>?> GetSessionOrder(Guid sessionId)
         {
-            return null;
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return null;
+
+                var cache = await GetCache<List<SessionCache>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_ORDER);
+                if(cache == null)
+                    return null;
+
+                var sessionCache = cache.FirstOrDefault(x => x.SessionId == sessionId);
+                if(sessionCache != null)
+                {
+                    sessionCache.LastUpdateDate = DateTime.UtcNow;
+                    await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_ORDER, cache);
+                }
+
+                return sessionCache?.SessionOrder;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while getting session order from local storage");
+                return null;
+            }
         }
 
 
 
         
 
-        private async Task<T?> GetCache<T>(string key)
+        private async Task<T?> GetCache<T>(Guid userId, string key)
         {
-            var cache = await _localStorage.GetItemAsync<StorageItem<T>>(key);
+            var storageKey = string.Concat(userId.ToString(), "_", key);
+            var cache = await _localStorage.GetItemAsync<StorageItem<T>>(storageKey);
             if (cache != null)
                 return cache.Data;
             else
                 return default(T);
         }
 
-        private async Task AddOrUpdateCache<T>(string key, T data)
+        private async Task AddOrUpdateCache<T>(Guid userId, string key, T data)
         {
-            StorageItem<T> item = new StorageItem<T>() { Key = key, Data = data };
+            var storageKey = string.Concat(userId.ToString(), "_", key);
+            StorageItem<T> item = new StorageItem<T>() { Key = storageKey, Data = data };
             await _localStorage.SetItemAsync(item.Key, item);
         }
 
-        private async Task RemoveCache(string key)
+        private async Task RemoveCache(Guid userId, string key)
         {
-            await _localStorage.RemoveItemAsync(key);
+            var storageKey = string.Concat(userId.ToString(), "_", key);
+            await _localStorage.RemoveItemAsync(storageKey);
         }
     }
 }

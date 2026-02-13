@@ -311,13 +311,33 @@ namespace MagFlow.DAL.Repositories.Core
             }
         }
 
-        public virtual TEntity? GetById(object id)
+        public virtual TEntity? GetById(object id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
         {
             try
             {
                 using (var context = _coreContextFactory.CreateDbContext())
                 {
-                    return context.Set<TEntity>().Find(id);
+                    var query = context.Set<TEntity>().AsQueryable();
+
+                    if (include != null)
+                    {
+                        query = include(query);
+                    }
+
+                    var entityType = context.Model.FindEntityType(typeof(TEntity));
+                    var keyProperty = entityType?.FindPrimaryKey()?.Properties.Single();
+
+                    if (keyProperty == null)
+                        throw new InvalidOperationException("Entity has no primary key.");
+
+                    var parameter = Expression.Parameter(typeof(TEntity), "e");
+                    var property = Expression.Property(parameter, keyProperty.Name);
+                    var constant = Expression.Constant(id);
+                    var equality = Expression.Equal(property, Expression.Convert(constant, property.Type));
+
+                    var lambda = Expression.Lambda<Func<TEntity, bool>>(equality, parameter);
+
+                    return query.FirstOrDefault(lambda);
                 }
             }
             catch (Exception ex)
@@ -327,13 +347,33 @@ namespace MagFlow.DAL.Repositories.Core
             }
         }
 
-        public virtual async Task<TEntity?> GetByIdAsync(object id)
+        public virtual async Task<TEntity?> GetByIdAsync(object id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
         {
             try
             {
                 using (var context = _coreContextFactory.CreateDbContext())
                 {
-                    return await context.Set<TEntity>().FindAsync(id);
+                    var query = context.Set<TEntity>().AsQueryable();
+
+                    if (include != null)
+                    {
+                        query = include(query);
+                    }
+
+                    var entityType = context.Model.FindEntityType(typeof(TEntity));
+                    var keyProperty = entityType?.FindPrimaryKey()?.Properties.Single();
+
+                    if (keyProperty == null)
+                        throw new InvalidOperationException("Entity has no primary key.");
+
+                    var parameter = Expression.Parameter(typeof(TEntity), "e");
+                    var property = Expression.Property(parameter, keyProperty.Name);
+                    var constant = Expression.Constant(id);
+                    var equality = Expression.Equal(property, Expression.Convert(constant, property.Type));
+
+                    var lambda = Expression.Lambda<Func<TEntity, bool>>(equality, parameter);
+
+                    return await query.FirstOrDefaultAsync(lambda);
                 }
             }
             catch (Exception ex)

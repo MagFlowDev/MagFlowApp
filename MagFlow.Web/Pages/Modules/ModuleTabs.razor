@@ -13,7 +13,7 @@
 @inject ILocalCacheService LocalCacheService
 
 <div class="d-flex w-100 h-100" style="max-width: 100%;">
-    <MudTabs @ref="_tabsRef" @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" OnItemDropped="MoveTab" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
+    <MudTabs @ref="_tabsRef" @key="_tabsVersion" @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" OnItemDropped="MoveTab" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
         <ChildContent>
             @foreach(var tab in ActiveModules)
             {
@@ -86,6 +86,7 @@
 
     private int _activeIndex = 0;
     private int? _nextIndex = null;
+    private int _tabsVersion = 0;
 
     List<ModuleDTO> _companyModules { get; set; } = new List<ModuleDTO>();
     List<ModuleDTO> _activeModules { get; set; } = new List<ModuleDTO>();
@@ -150,6 +151,8 @@
             _activeModules.Remove(activeModule);
 
         await UpdateSession();
+        _tabsVersion++;
+        StateHasChanged();
         UpdateLocalCache();
     }
 
@@ -169,6 +172,8 @@
         _nextIndex = ActiveModules.Count - 1;
         await UpdateSession();
         await _tabsMenu.CloseMenuAsync();
+        _tabsVersion++;
+        StateHasChanged();
         UpdateLocalCache();
     }
 
@@ -185,6 +190,9 @@
         if (oldIndex < 0 || oldIndex == dropInfo.IndexInZone)
             return;
 
+        if (oldIndex == dropInfo.IndexInZone)
+            return;
+
         var orderedIds = _tabsRef.Panels
            .Select(p => p.Tag)
            .OfType<Guid>()
@@ -195,14 +203,29 @@
             .ToList();
 
         _activeIndex = dropInfo.IndexInZone;
+        _tabsVersion++;
         StateHasChanged();
         UpdateLocalCache();
     }
 
-
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(_nextIndex.HasValue)
+        if (firstRender)
+        {
+            var sessionCache = await LocalCacheService.GetSessionOrder(UserSession.Id);
+            if (sessionCache != null)
+            {
+                var validIds = sessionCache.Where(id => _activeModules.Any(m => m.Id == id)).ToList();
+                _activeModules = validIds
+                    .Select(id => _activeModules.First(x => x.Id == id))
+                    .ToList();
+
+                _tabsVersion++;
+                StateHasChanged();
+            }
+        }
+
+        if (_nextIndex.HasValue)
         {
             _activeIndex = _nextIndex.Value;
             _nextIndex = null;

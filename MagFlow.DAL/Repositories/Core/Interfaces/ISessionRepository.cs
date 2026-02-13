@@ -11,5 +11,7 @@ namespace MagFlow.DAL.Repositories.Core.Interfaces
     public interface ISessionRepository : IRepository<UserSession>
     {
         Task<List<Module>?> GetSessionModules(Guid sessionId);
+        Task<Enums.Result> RemoveSessionModulesAsync(List<SessionModule> modules);
+        Task<Enums.Result> AddSessionModulesAsync(List<SessionModule> modules);
     }
 }
