@@ -19,6 +19,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Web;
 using MagFlow.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace MagFlow.BLL.Services
 {
@@ -59,9 +60,56 @@ namespace MagFlow.BLL.Services
         {
             try
             {
-                var session = await _sessionRepository.GetByIdAsync(sessionDTO.Id);
+                var userId = _networkService.GetUserId() ?? Guid.Empty;
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user == null)
+                    return Enums.Result.Error;
+
+                var session = await _sessionRepository.GetByIdAsync(sessionDTO.Id, s => s.Include(x => x.SessionModules).ThenInclude(y => y.Module));
                 if(session == null)
                     return Enums.Result.Error;
+                var dbSessionModulesIds = session.SessionModules.Select(x => x.ModuleId).ToList();
+                var currentSessionModulesIds = sessionDTO.Modules.Select(x => x.Id).ToList();
+
+                var modulesToRemove = dbSessionModulesIds.Except(currentSessionModulesIds);
+                var modulesToAdd = currentSessionModulesIds.Except(dbSessionModulesIds);
+
+                if (modulesToRemove.Any())
+                {
+                    List<SessionModule> sessionModules = new List<SessionModule>();
+                    foreach (var moduleId in modulesToRemove)
+                    {
+                        var sessionModule = session.SessionModules.FirstOrDefault(x => x.ModuleId == moduleId);
+                        if (sessionModule != null)
+                        {
+                            session.SessionModules.Remove(sessionModule);
+                            sessionModules.Add(sessionModule);
+                        }
+                    }
+                    await _sessionRepository.RemoveSessionModulesAsync(sessionModules);
+                }
+
+                if(modulesToAdd.Any())
+                {
+                    var userCompanyId = user.DefaultCompanyId ?? Guid.Empty;
+                    var companyModules = await _companyRepository.GetCompanyModules(userCompanyId);
+                    var selectedModules = companyModules?
+                        .Where(x => x.Module != null && modulesToAdd.Contains(x.Module.Id))
+                        .ToList() ?? new List<CompanyModule>();
+                    List<SessionModule> sessionModules = new List<SessionModule>();
+                    foreach (var module in selectedModules)
+                    {
+                        var sessionModule = new SessionModule()
+                        {
+                            ModuleId = module.ModuleId,
+                            SessionId = session.Id
+                        };
+                        session.SessionModules.Add(sessionModule);
+                        sessionModules.Add(sessionModule);
+                    }
+                    await _sessionRepository.AddSessionModulesAsync(sessionModules);
+                }
+                
 
                 session.LastTimeRecord = DateTime.UtcNow;
                 return await _sessionRepository.UpdateAsync(session);

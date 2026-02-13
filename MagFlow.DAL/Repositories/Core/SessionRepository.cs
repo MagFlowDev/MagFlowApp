@@ -43,10 +43,46 @@ namespace MagFlow.DAL.Repositories.Core
                         .ToList();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error retrieving session modules for session ID {sessionId}");
                 return null;
+            }
+        }
+
+        public async Task<Enums.Result> RemoveSessionModulesAsync(List<SessionModule> modules)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    context.SessionModules.RemoveRange(modules);
+                    await context.SaveChangesAsync();
+                    return Enums.Result.Success;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error while removing session modules from session with ID {modules.FirstOrDefault()?.SessionId}");
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<Enums.Result> AddSessionModulesAsync(List<SessionModule> modules)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    await context.SessionModules.AddRangeAsync(modules);
+                    await context.SaveChangesAsync();
+                    return Enums.Result.Success;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error while adding session modules to session with ID {modules.FirstOrDefault()?.SessionId}");
+                return Enums.Result.Error;
             }
         }
     }

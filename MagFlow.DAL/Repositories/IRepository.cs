@@ -16,8 +16,8 @@ namespace MagFlow.DAL.Repositories
 
         IQueryable<TEntity>? Find(Expression<Func<TEntity, bool>> predicate);
 
-        TEntity? GetById(object id);
-        Task<TEntity?> GetByIdAsync(object id);
+        TEntity? GetById(object id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
+        Task<TEntity?> GetByIdAsync(object id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
 
         TEntity? Get(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate);

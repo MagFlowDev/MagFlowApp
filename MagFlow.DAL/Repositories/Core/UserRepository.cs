@@ -37,7 +37,7 @@ namespace MagFlow.DAL.Repositories.Core
             }
         }
 
-        public override async Task<ApplicationUser?> GetByIdAsync(object id)
+        public override async Task<ApplicationUser?> GetByIdAsync(object id, Func<IQueryable<ApplicationUser>, IQueryable<ApplicationUser>>? include = null)
         {
             try
             {
