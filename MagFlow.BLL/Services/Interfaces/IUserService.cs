@@ -11,6 +11,7 @@ namespace MagFlow.BLL.Services.Interfaces
     public interface IUserService
     {
         Task<UserDTO> GetUser(Guid id);
+        Task<UserDTO?> GetCurrentUser();
 
         Task ResetPasswordRequest(ForgotPasswordModel model);
         Task<bool> ChangePassword(ChangePasswordModel model);

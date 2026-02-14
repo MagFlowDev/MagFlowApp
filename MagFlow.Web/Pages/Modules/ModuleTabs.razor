@@ -32,7 +32,7 @@
         </ChildContent>
         <Header>
             <MudTooltip Text="@Localizer[Langs.OpenModule]" Class="align-self-center">
-                <MudMenu @ref="_tabsMenu" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="align-self-center" PopoverClass="my-2" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+                <MudMenu MaxHeight="250" @ref="_tabsMenu" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="align-self-center" PopoverClass="my-2" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
                     @{
                         var snapshot = NotActiveModules.ToArray();
                     }

@@ -17,6 +17,7 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 Id = applicationUser.Id,
                 FirstName = applicationUser.FirstName,
                 LastName = applicationUser.LastName,
+                Email = applicationUser.Email ?? "",
                 Settings = ToDTO(applicationUser.UserSettings)
             };
         }

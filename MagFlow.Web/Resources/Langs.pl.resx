@@ -658,4 +658,10 @@ i uprawnieniami użytkowników</value>
   <data name="OpenModule" xml:space="preserve">
     <value>Otwórz moduł</value>
   </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Ustawienia</value>
+  </data>
+  <data name="SettingsCompany" xml:space="preserve">
+    <value>Ustawienia firmy</value>
+  </data>
 </root>

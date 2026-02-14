@@ -56,6 +56,14 @@ namespace MagFlow.BLL.Services
             return user?.ToDTO();
         }
 
+        public async Task<UserDTO?> GetCurrentUser()
+        {
+            var userId = _networkService.GetUserId();
+            if (!userId.HasValue)
+                return null;
+            return await GetUser(userId.Value);
+        }
+
         public async Task<Enums.Result> UpdateLastSession(UserSessionDTO sessionDTO)
         {
             try
