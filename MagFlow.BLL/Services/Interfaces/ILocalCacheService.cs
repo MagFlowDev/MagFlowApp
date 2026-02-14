@@ -1,4 +1,5 @@
-﻿using MagFlow.Shared.Models;
+﻿using MagFlow.Shared.DTOs.Core;
+using MagFlow.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,9 @@ namespace MagFlow.BLL.Services.Interfaces
     {
         Task<Enums.Result> SetSessionOrder(Guid sessionId, List<Guid> orderedIds);
         Task<List<Guid>?> GetSessionOrder(Guid sessionId);
+
+
+        Task<Enums.Result> SetCurrentUser(UserDTO userDTO);
+        Task<UserDTO?> GetCurrentUser();
     }
 }

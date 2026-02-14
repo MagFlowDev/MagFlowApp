@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Domain.Company;
+using MagFlow.Shared.DTOs.Core;
 using MagFlow.Shared.Models;
 using Microsoft.Extensions.Logging;
 using System;
@@ -100,6 +101,57 @@ namespace MagFlow.BLL.Services
             }
         }
 
+        public async Task<Enums.Result> SetCurrentUser(UserDTO userDTO)
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return Enums.Result.Error;
+
+                if (userDTO.Id != userId.Value)
+                    return Enums.Result.Error;
+
+                var cache = await GetCache<UserDTO>(Shared.Constants.LocalStorageKeys.CURRENT_USER);
+                if (cache != null)
+                {
+                    await RemoveCache(Shared.Constants.LocalStorageKeys.CURRENT_USER);
+                }
+
+                await AddOrUpdateCache<UserDTO>(Shared.Constants.LocalStorageKeys.CURRENT_USER, userDTO);
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while saving current user in local storage");
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<UserDTO?> GetCurrentUser()
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return null;
+
+                var cache = await GetCache<UserDTO>(Shared.Constants.LocalStorageKeys.CURRENT_USER);
+                if (cache == null)
+                    return null;
+
+                if (cache.Id != userId.Value)
+                    return null;
+
+                return cache;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while getting current user from local storage");
+                return null;
+            }
+        }
+
 
 
         
@@ -114,6 +166,15 @@ namespace MagFlow.BLL.Services
                 return default(T);
         }
 
+        private async Task<T?> GetCache<T>(string key)
+        {
+            var cache = await _localStorage.GetItemAsync<StorageItem<T>>(key);
+            if (cache != null)
+                return cache.Data;
+            else
+                return default(T);
+        }
+
         private async Task AddOrUpdateCache<T>(Guid userId, string key, T data)
         {
             var storageKey = string.Concat(userId.ToString(), "_", key);
@@ -121,10 +182,21 @@ namespace MagFlow.BLL.Services
             await _localStorage.SetItemAsync(item.Key, item);
         }
 
+        private async Task AddOrUpdateCache<T>(string key, T data)
+        {
+            StorageItem<T> item = new StorageItem<T>() { Key = key, Data = data };
+            await _localStorage.SetItemAsync(item.Key, item);
+        }
+
         private async Task RemoveCache(Guid userId, string key)
         {
             var storageKey = string.Concat(userId.ToString(), "_", key);
             await _localStorage.RemoveItemAsync(storageKey);
+        }
+
+        private async Task RemoveCache(string key)
+        {
+            await _localStorage.RemoveItemAsync(key);
         }
     }
 }
