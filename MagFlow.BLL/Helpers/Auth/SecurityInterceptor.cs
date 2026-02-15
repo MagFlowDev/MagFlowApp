@@ -66,7 +66,6 @@ namespace MagFlow.BLL.Helpers.Auth
 
         private async Task<bool> CheckMinimumAttribute(MinimumRoleAttribute attribute)
         {
-            return false;
             if (attribute != null)
             {
                 var authState = await _authStateProvider.GetAuthenticationStateAsync();

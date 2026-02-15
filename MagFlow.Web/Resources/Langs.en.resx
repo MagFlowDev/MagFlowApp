@@ -663,4 +663,7 @@
   <data name="SettingsCompany" xml:space="preserve">
     <value>Company settings</value>
   </data>
+  <data name="AdminPanel" xml:space="preserve">
+    <value>Admin panel</value>
+  </data>
 </root>

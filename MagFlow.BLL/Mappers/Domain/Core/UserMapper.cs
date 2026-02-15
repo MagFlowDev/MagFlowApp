@@ -12,12 +12,14 @@ namespace MagFlow.BLL.Mappers.Domain.Core
     {
         public static UserDTO ToDTO(this ApplicationUser applicationUser)
         {
+            var roles = applicationUser.Roles?.Select(x => RoleMapper.GetAppRole(x.RoleId));
             return new UserDTO()
             {
                 Id = applicationUser.Id,
                 FirstName = applicationUser.FirstName,
                 LastName = applicationUser.LastName,
                 Email = applicationUser.Email ?? "",
+                Roles = roles?.Where(x => x != null).Select(x => x!).ToList() ?? new List<Shared.Models.Enumerators.AppRole>(),
                 Settings = ToDTO(applicationUser.UserSettings)
             };
         }

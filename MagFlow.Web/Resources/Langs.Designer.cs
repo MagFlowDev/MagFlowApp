@@ -88,6 +88,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Panel administratora.
+        /// </summary>
+        public static string AdminPanel {
+            get {
+                return ResourceManager.GetString("AdminPanel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Automatyzacja.
         /// </summary>
         public static string Automation {
