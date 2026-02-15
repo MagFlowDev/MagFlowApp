@@ -1,9 +1,11 @@
 ﻿@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.Models.Enumerators
 @using MagFlow.Web.Pages.Shared
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 @using MudExtensions
+@using MagFlow.BLL.Helpers.Auth
 
 @implements IDisposable
 @inject NavigationManager NavigationManager
@@ -62,7 +64,14 @@
         </div>
     </MudDrawerHeader>
     <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Start" Href="/lobby">@Localizer[Langs.StartPanel]</MudNavLink>
-    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.SettingsApplications" Href="/company/settings">@Localizer[Langs.SettingsCompany]</MudNavLink>
+    @if (_user?.Roles.HasMinimumRole(AppRole.CompanyAdmin) == true)
+    {
+        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.SettingsApplications" Href="/company/settings">@Localizer[Langs.SettingsCompany]</MudNavLink>
+    }
+    @if (_user?.Roles.HasExactRole(AppRole.SuperAdmin) == true)
+    {
+        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.AdminPanelSettings" Href="/admin">@Localizer[Langs.AdminPanel]</MudNavLink>
+    }
 </MudDrawer>
 
 @code {

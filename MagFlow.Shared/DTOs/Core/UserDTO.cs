@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagFlow.Shared.Models.Enumerators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,7 @@ namespace MagFlow.Shared.DTOs.Core
         public string Email { get; set; }
 
         public UserSettingsDTO Settings { get; set; }
+
+        public List<AppRole> Roles { get; set; }
     }
 }

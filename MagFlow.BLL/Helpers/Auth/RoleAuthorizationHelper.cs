@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MagFlow.BLL.Helpers.Auth
 {
-    public class RoleAuthorizationHelper
+    public static class RoleAuthorizationHelper
     {
         public static bool HasMinimumRole(string minimum, List<string> roles)
         {
@@ -66,6 +66,16 @@ namespace MagFlow.BLL.Helpers.Auth
             {
                 return false;
             }
+        }
+
+        public static bool HasMinimumRole(this ICollection<AppRole> roles, AppRole minimum)
+        {
+            return HasMinimumRole(minimum.Name, roles.Select(x => x.Name).ToList());
+        }
+
+        public static bool HasExactRole(this ICollection<AppRole> roles, AppRole required)
+        {
+            return HasExactRole(required.Name, roles.Select(x => x.Name).ToList());
         }
     }
 }
