@@ -1,7 +1,5 @@
 ﻿using Blazored.LocalStorage;
 using Castle.DynamicProxy;
-using FormCraft;
-using FormCraft.ForMudBlazor.Extensions;
 using MagFlow.BLL.ApplicationMonitor;
 using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Helpers.Auth;
@@ -52,9 +50,6 @@ namespace MagFlow.Web.Extensions
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             services.AddBlazoredLocalStorage();
-
-            services.AddFormCraft();
-            services.AddFormCraftMudBlazor();
 
             services.RegisterScopes();
             services.ConfigureDbContext();
