@@ -1,0 +1,34 @@
+﻿@using MudBlazor
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px;">
+    <MudText Typo="Typo.h5">@Localizer[Langs.AccountInformation]</MudText>
+    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 4px; padding-bottom: 1px;">
+            <MudTextField Label="@Localizer[Langs.NameAndLastname]" T="string" Text="Jan Kowalski" Class="w-100 gray-label" Style="font-weight: 600" ></MudTextField>
+        </div>
+    </div>
+    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 4px; padding-bottom: 1px;">
+            <MudTextField Label="@Localizer[Langs.Email]" T="string" Text="jan.kowalski@firma.com" Class="w-100 gray-label" Style="font-weight: 600"></MudTextField>
+        </div>
+    </div>
+    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 4px; padding-bottom: 1px;">
+            <MudTextField Label="@Localizer[Langs.Role]" T="string" Text="Administrator Produkcji" Class="w-100 gray-label" Style="font-weight: 600"></MudTextField>
+        </div>
+    </div>
+    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 4px; padding-bottom: 1px;">
+            <MudTextField Label="@Localizer[Langs.JoiningDate]" T="string" Text="15 Styczeń 2025" Class="w-100 gray-label" Style="font-weight: 600"></MudTextField>
+        </div>
+    </div>
+    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 4px; padding-bottom: 1px;">
+            <MudTextField Label="@Localizer[Langs.AccountStatus]" T="string" Text="Aktywne" Class="w-100 gray-label" Style="font-weight: 600"></MudTextField>
+        </div>
+    </div>
+</div>
+
+@code {
+    
+}

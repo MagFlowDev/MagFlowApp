@@ -13,7 +13,8 @@ namespace MagFlow.Web.Resources
                 Background = "#FFFFFF",
                 AppbarBackground = "#FFFFFF",
                 TextPrimary = "#272C34",
-                TextSecondary = "#495057"
+                TextSecondary = "#495057",
+                ActionDefault = "#F8F9FA"
             },
             Typography = new Typography
             {

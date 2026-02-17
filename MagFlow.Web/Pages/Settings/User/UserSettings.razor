@@ -1,4 +1,5 @@
 ﻿@page "/user/settings"
+@using MagFlow.Shared.Models
 @using MudBlazor
 @inject IJSRuntime JS
 
@@ -6,24 +7,71 @@
     <div class="text-start d-flex align-items-start flex-column flex-shrink-0">
         <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.West" OnClick="@(async () => await JS.InvokeVoidAsync("history.back"))">@Localizer[Langs.GoBack]</MudButton>
     </div>
-    <div class="d-flex w-100 mt-6" style="gap: 16px; flex: 1 1 0; min-height: 0">
+    <div class="d-flex w-100 mt-6" style="gap: 100px; flex: 1 1 0; min-height: 0">
         <div class="d-flex flex-column justify-content-start align-items-start" style="min-width: 300px; flex: 0 0 auto; gap: 24px;">
             <MudText Typo="Typo.h5" Style="font-weight: 700;">@Localizer[Langs.Settings]</MudText>
-            <MudNavMenu Style="background: #F8F9FA !important;">
-                <MudNavLink Icon="@Icons.Material.Outlined.Person" Style="background: #F8F9FA;">Informacje o koncie</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Outlined.Lock">Hasło</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Outlined.Place">Regionalne</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Outlined.Language">Język</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Outlined.ColorLens">Motyw</MudNavLink>
-                <MudNavLink Icon="@Icons.Material.Outlined.Notifications">Powiadomienia</MudNavLink>
-            </MudNavMenu>
+            <MudList T="Enums.UserSettingsSection" SelectionMode="SelectionMode.SingleSelection" SelectedValue="@_currentSection" SelectedValueChanged="OnSectionChanged">
+                <MudListItem Value="Enums.UserSettingsSection.Account" Text="@Localizer[Langs.AccountInformation]" Icon="@Icons.Material.Outlined.Person" IconColor="@GetIconColor(Enums.UserSettingsSection.Account)" Class="@GetNavClass(Enums.UserSettingsSection.Account)" />
+                <MudListItem Value="Enums.UserSettingsSection.Password" Text="@Localizer[Langs.Password]" Icon="@Icons.Material.Outlined.Lock" IconColor="@GetIconColor(Enums.UserSettingsSection.Password)" Class="@GetNavClass(Enums.UserSettingsSection.Password)" />
+                <MudListItem Value="Enums.UserSettingsSection.Regional" Text="@Localizer[Langs.Regional]" Icon="@Icons.Material.Outlined.Place" IconColor="@GetIconColor(Enums.UserSettingsSection.Regional)" Class="@GetNavClass(Enums.UserSettingsSection.Regional)" />
+                <MudListItem Value="Enums.UserSettingsSection.Language" Text="@Localizer[Langs.Language]" Icon="@Icons.Material.Outlined.Language" IconColor="@GetIconColor(Enums.UserSettingsSection.Language)" Class="@GetNavClass(Enums.UserSettingsSection.Language)" />
+                <MudListItem Value="Enums.UserSettingsSection.Theme" Text="@Localizer[Langs.Theme]" Icon="@Icons.Material.Outlined.ColorLens" IconColor="@GetIconColor(Enums.UserSettingsSection.Theme)" Class="@GetNavClass(Enums.UserSettingsSection.Theme)" />
+                <MudListItem Value="Enums.UserSettingsSection.Notifications" Text="@Localizer[Langs.Notifications]" Icon="@Icons.Material.Outlined.Notifications" IconColor="@GetIconColor(Enums.UserSettingsSection.Notifications)" Class="@GetNavClass(Enums.UserSettingsSection.Notifications)" />
+            </MudList>
         </div>
         <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden; gap: 40px;">
-
+            @switch(_currentSection)
+            {
+                case Enums.UserSettingsSection.Account:
+                    <AccountInformation/>
+                    break;
+                case Enums.UserSettingsSection.Password:
+                    <PasswordSettings />
+                    break;
+                case Enums.UserSettingsSection.Regional:
+                    <RegionalSettings />
+                    break;
+                case Enums.UserSettingsSection.Language:
+                    <LanguageSettings />
+                    break;
+                case Enums.UserSettingsSection.Theme:
+                    <ThemeSettings />
+                    break;
+                case Enums.UserSettingsSection.Notifications:
+                    <NotificationsSettings />
+                    break;
+                default: break;
+            }
         </div>
     </div>
 </div>
 
 @code {
+    private Enums.UserSettingsSection _currentSection = Enums.UserSettingsSection.Account;
 
+    private void OnSectionChanged(Enums.UserSettingsSection section)
+    {
+        if (_currentSection == section)
+            return;
+        _currentSection = section;
+        StateHasChanged();
+    }
+
+    private string GetNavClass(Enums.UserSettingsSection section)
+    {
+        return _currentSection == section
+            ? "mud-primary-text mud-nav-link-active"
+            : "";
+    }
+
+    private Color GetIconColor(Enums.UserSettingsSection section)
+    {
+        return _currentSection == section
+            ? Color.Primary
+            : Color.Dark;
+    }
 }
+
+<style>
+    
+</style>

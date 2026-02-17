@@ -88,6 +88,24 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Informacje o koncie.
+        /// </summary>
+        public static string AccountInformation {
+            get {
+                return ResourceManager.GetString("AccountInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Status konta.
+        /// </summary>
+        public static string AccountStatus {
+            get {
+                return ResourceManager.GetString("AccountStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Panel administratora.
         /// </summary>
         public static string AdminPanel {
@@ -525,6 +543,24 @@ namespace MagFlow.Web.Resources {
         public static string JohnSmithCompanyCom {
             get {
                 return ResourceManager.GetString("JohnSmithCompanyCom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Data dołączenia.
+        /// </summary>
+        public static string JoiningDate {
+            get {
+                return ResourceManager.GetString("JoiningDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Język.
+        /// </summary>
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
             }
         }
         
@@ -1042,6 +1078,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Imię i nazwisko.
+        /// </summary>
+        public static string NameAndLastname {
+            get {
+                return ResourceManager.GetString("NameAndLastname", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Nowe hasło.
         /// </summary>
         public static string NewPassword {
@@ -1074,6 +1119,15 @@ namespace MagFlow.Web.Resources {
         public static string NotFound {
             get {
                 return ResourceManager.GetString("NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Powiadomienia.
+        /// </summary>
+        public static string Notifications {
+            get {
+                return ResourceManager.GetString("Notifications", resourceCulture);
             }
         }
         
@@ -1267,6 +1321,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Regionalne.
+        /// </summary>
+        public static string Regional {
+            get {
+                return ResourceManager.GetString("Regional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zapamiętaj mnie.
         /// </summary>
         public static string RememberMe {
@@ -1335,6 +1398,15 @@ namespace MagFlow.Web.Resources {
         public static string Restore {
             get {
                 return ResourceManager.GetString("Restore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rola.
+        /// </summary>
+        public static string Role {
+            get {
+                return ResourceManager.GetString("Role", resourceCulture);
             }
         }
         
@@ -1470,6 +1542,15 @@ namespace MagFlow.Web.Resources {
         public static string SystemModules {
             get {
                 return ResourceManager.GetString("SystemModules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Motyw.
+        /// </summary>
+        public static string Theme {
+            get {
+                return ResourceManager.GetString("Theme", resourceCulture);
             }
         }
         

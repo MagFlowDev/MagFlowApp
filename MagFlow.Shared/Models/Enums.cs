@@ -6,6 +6,16 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum UserSettingsSection
+        {
+            Account,
+            Password,
+            Regional,
+            Language,
+            Theme,
+            Notifications
+        }
+
         public enum Language
         {
             Polish,

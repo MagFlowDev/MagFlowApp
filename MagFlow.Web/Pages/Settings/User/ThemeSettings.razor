@@ -1,0 +1,21 @@
+﻿@using MudBlazor
+
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px;">
+    <div class="d-flex flex-column align-items-start" style="gap: 8px">
+        <MudText Typo="Typo.h5">@Localizer[Langs.Theme]</MudText>
+        <MudText Typo="Typo.body2">Zaktualizuj hasło do swojego konta</MudText>
+    </div>
+    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 24px;">
+            <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+                <MudTextField Label="@Localizer[Langs.Password]" T="string" Class="w-100"></MudTextField>
+            </div>
+            <MudButton>Zaktualizuj</MudButton>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}
