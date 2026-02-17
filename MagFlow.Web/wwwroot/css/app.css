@@ -197,3 +197,7 @@ h1:focus {
 .mud-tab {
     text-transform: none !important;
 }
+
+.gray-label .mud-input-label {
+    color: var(--mud-palette-text-secondary, rgba(0, 0, 0, 0.54)) !important;
+}

@@ -667,4 +667,31 @@ i uprawnieniami użytkowników</value>
   <data name="AdminPanel" xml:space="preserve">
     <value>Panel administratora</value>
   </data>
+  <data name="AccountInformation" xml:space="preserve">
+    <value>Informacje o koncie</value>
+  </data>
+  <data name="Regional" xml:space="preserve">
+    <value>Regionalne</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Język</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Motyw</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Powiadomienia</value>
+  </data>
+  <data name="NameAndLastname" xml:space="preserve">
+    <value>Imię i nazwisko</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Rola</value>
+  </data>
+  <data name="JoiningDate" xml:space="preserve">
+    <value>Data dołączenia</value>
+  </data>
+  <data name="AccountStatus" xml:space="preserve">
+    <value>Status konta</value>
+  </data>
 </root>
