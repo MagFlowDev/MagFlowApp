@@ -2,6 +2,20 @@
 
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px;">
     <MudText Typo="Typo.h5">@Localizer[Langs.Notifications]</MudText>
+    <div class="d-flex flex-column align-items-start align-self-stretch">
+        <div class="d-flex justify-content-between align-items-center align-self-stretch" style="@($"height:63px; border-bottom: 1px solid {Colors.Gray.Lighten2}")">
+            <MudText Typo="Typo.body1" Style="font-weight: 600">@Localizer[Langs.SystemAlerts]</MudText>
+            <MudSwitch T="bool" Color="Color.Primary" UncheckedColor="Color.Default" Size="Size.Large" Class=""/>
+        </div>
+        <div class="d-flex justify-content-between align-items-center align-self-stretch" style="@($"height:63px; border-bottom: 1px solid {Colors.Gray.Lighten2}")">
+            <MudText Typo="Typo.body1" Style="font-weight: 600">@Localizer[Langs.ProductionNotifications]</MudText>
+            <MudSwitch T="bool" Color="Color.Primary" UncheckedColor="Color.Default" Size="Size.Large" Class="" />
+        </div>
+        <div class="d-flex justify-content-between align-items-center align-self-stretch">
+            <MudText Typo="Typo.body1" Style="font-weight: 600">@Localizer[Langs.EmailNotifications]</MudText>
+            <MudSwitch T="bool" Color="Color.Primary" UncheckedColor="Color.Default" Size="Size.Large" Class="" />
+        </div>
+    </div>
 </div>
 
 @code {

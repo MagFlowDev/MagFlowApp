@@ -6,6 +6,12 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum ThemeMode
+        {
+            LightMode,
+            DarkMode
+        }
+
         public enum UserSettingsSection
         {
             Account,

@@ -1,9 +1,42 @@
-﻿@using MudBlazor
+﻿@using MagFlow.Shared.Models
+@using MudBlazor
 
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px;">
     <MudText Typo="Typo.h5">@Localizer[Langs.Language]</MudText>
+    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+        <MudButton Class="w-100 align-self-stretch justify-content-start" Style="@($"border-radius: 8px; height: 64px; border: {GetBorder(Enums.Language.Polish)}")" Variant="Variant.Outlined" Color="Color.Default" EndIcon="@GetEndIcon(Enums.Language.Polish)" IconClass="flex-grow-1 lh-1 justify-content-end" IconColor="Color.Primary" OnClick="@(() => ChangeLanguage(Enums.Language.Polish))">
+            <MudIcon Icon="fi fi-pl" Class="mb-1 mr-3" /> @Localizer[Langs.Polish]
+        </MudButton>
+        <MudButton Class="w-100 align-self-stretch justify-content-start" Style="@($"border-radius: 8px; height: 64px; border: {GetBorder(Enums.Language.English)}")" Variant="Variant.Outlined" Color="Color.Default" EndIcon="@GetEndIcon(Enums.Language.English)" IconClass="flex-grow-1 lh-1 justify-content-end" IconColor="Color.Primary" OnClick="@(() => ChangeLanguage(Enums.Language.English))">
+            <MudIcon Icon="fi fi-gb" Class="mb-1 mr-3" /> @Localizer[Langs.English]
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" Class="ml-1 mt-3">@Localizer[Langs.Update]</MudButton>
+    </div>
 </div>
 
 @code {
+    private Enums.Language _currentLanguage = Enums.Language.Polish;
 
+    private void ChangeLanguage(Enums.Language language)
+    {
+        if (_currentLanguage == language)
+            return;
+
+        _currentLanguage = language;
+        StateHasChanged();
+    }
+
+    private string GetBorder(Enums.Language language)
+    {
+        return _currentLanguage == language
+            ? "2px solid var(--mud-palette-primary)"
+            : $"1px solid {Colors.Gray.Lighten2}";
+    }
+
+    private string GetEndIcon(Enums.Language language)
+    {
+        return _currentLanguage == language
+            ? Icons.Material.Filled.Check
+            : "";
+    }
 }
