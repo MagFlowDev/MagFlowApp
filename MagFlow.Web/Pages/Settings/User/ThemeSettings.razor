@@ -1,21 +1,43 @@
-﻿@using MudBlazor
-
+﻿@using MagFlow.Shared.Models
+@using MudBlazor
 
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px;">
-    <div class="d-flex flex-column align-items-start" style="gap: 8px">
-        <MudText Typo="Typo.h5">@Localizer[Langs.Theme]</MudText>
-        <MudText Typo="Typo.body2">Zaktualizuj hasło do swojego konta</MudText>
-    </div>
+    <MudText Typo="Typo.h5">@Localizer[Langs.Theme]</MudText>
     <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
-        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 24px;">
-            <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
-                <MudTextField Label="@Localizer[Langs.Password]" T="string" Class="w-100"></MudTextField>
-            </div>
-            <MudButton>Zaktualizuj</MudButton>
-        </div>
+        <MudButton Class="w-100 align-self-stretch justify-content-start" Style="@($"border-radius: 8px; height: 64px; border: {GetBorder(Enums.ThemeMode.LightMode)}")" Variant="Variant.Outlined" Color="Color.Default" EndIcon="@GetEndIcon(Enums.ThemeMode.LightMode)" IconClass="flex-grow-1 lh-1 justify-content-end" IconColor="Color.Primary" OnClick="@(() => ChangeTheme(Enums.ThemeMode.LightMode))">
+            <MudIcon Icon="@Icons.Material.Outlined.LightMode" Class="mb-1 mr-3" /> @Localizer[Langs.Light]
+        </MudButton>
+        <MudButton Class="w-100 align-self-stretch justify-content-start" Style="@($"border-radius: 8px; height: 64px; border: {GetBorder(Enums.ThemeMode.DarkMode)}")" Variant="Variant.Outlined" Color="Color.Default" EndIcon="@GetEndIcon(Enums.ThemeMode.DarkMode)" IconClass="flex-grow-1 lh-1 justify-content-end" IconColor="Color.Primary" OnClick="@(() => ChangeTheme(Enums.ThemeMode.DarkMode))">
+            <MudIcon Icon="@Icons.Material.Outlined.DarkMode" Class="mb-1 mr-3" /> @Localizer[Langs.Dark]
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" Class="ml-1 mt-3">@Localizer[Langs.Update]</MudButton>
     </div>
 </div>
 
 @code {
+    private Enums.ThemeMode _currentTheme = Enums.ThemeMode.LightMode;
+    private MudTheme Theme { get;set; }
 
+    private void ChangeTheme(Enums.ThemeMode theme)
+    {
+        if (_currentTheme == theme)
+            return;
+
+        _currentTheme = theme;
+        StateHasChanged();
+    }
+
+    private string GetBorder(Enums.ThemeMode theme)
+    {
+        return _currentTheme == theme
+            ? "2px solid var(--mud-palette-primary)"
+            : $"1px solid {Colors.Gray.Lighten2}";
+    }
+
+    private string GetEndIcon(Enums.ThemeMode theme)
+    {
+        return _currentTheme == theme
+            ? Icons.Material.Filled.Check
+            : "";
+    }
 }

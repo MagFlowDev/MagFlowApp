@@ -694,4 +694,37 @@ i uprawnieniami użytkowników</value>
   <data name="AccountStatus" xml:space="preserve">
     <value>Status konta</value>
   </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>Obecne hasło</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Zaktualizuj</value>
+  </data>
+  <data name="UpdateYourAccountPassword" xml:space="preserve">
+    <value>Zaktualizuj hasło do swojego konta</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="Polish" xml:space="preserve">
+    <value>Polski</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Angielski</value>
+  </data>
+  <data name="Dark" xml:space="preserve">
+    <value>Ciemny</value>
+  </data>
+  <data name="Light" xml:space="preserve">
+    <value>Jasny</value>
+  </data>
+  <data name="SystemAlerts" xml:space="preserve">
+    <value>Alerty systemowe</value>
+  </data>
+  <data name="ProductionNotifications" xml:space="preserve">
+    <value>Powiadomienia z produkcji</value>
+  </data>
+  <data name="EmailNotifications" xml:space="preserve">
+    <value>Powiadomienia email</value>
+  </data>
 </root>

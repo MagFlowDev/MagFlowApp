@@ -250,11 +250,29 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Obecne hasło.
+        /// </summary>
+        public static string CurrentPassword {
+            get {
+                return ResourceManager.GetString("CurrentPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wycena Indywidualna.
         /// </summary>
         public static string CustomPricing {
             get {
                 return ResourceManager.GetString("CustomPricing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ciemny.
+        /// </summary>
+        public static string Dark {
+            get {
+                return ResourceManager.GetString("Dark", resourceCulture);
             }
         }
         
@@ -291,6 +309,24 @@ namespace MagFlow.Web.Resources {
         public static string Email {
             get {
                 return ResourceManager.GetString("Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Powiadomienia email.
+        /// </summary>
+        public static string EmailNotifications {
+            get {
+                return ResourceManager.GetString("EmailNotifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Angielski.
+        /// </summary>
+        public static string English {
+            get {
+                return ResourceManager.GetString("English", resourceCulture);
             }
         }
         
@@ -597,6 +633,15 @@ namespace MagFlow.Web.Resources {
         public static string LessManualWork {
             get {
                 return ResourceManager.GetString("LessManualWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Jasny.
+        /// </summary>
+        public static string Light {
+            get {
+                return ResourceManager.GetString("Light", resourceCulture);
             }
         }
         
@@ -1249,6 +1294,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Polski.
+        /// </summary>
+        public static string Polish {
+            get {
+                return ResourceManager.GetString("Polish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Oferta Cenowa.
         /// </summary>
         public static string Pricing {
@@ -1290,6 +1344,15 @@ namespace MagFlow.Web.Resources {
         public static string ProcessesModuleDescription {
             get {
                 return ResourceManager.GetString("ProcessesModuleDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Powiadomienia z produkcji.
+        /// </summary>
+        public static string ProductionNotifications {
+            get {
+                return ResourceManager.GetString("ProductionNotifications", resourceCulture);
             }
         }
         
@@ -1407,6 +1470,15 @@ namespace MagFlow.Web.Resources {
         public static string Role {
             get {
                 return ResourceManager.GetString("Role", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zapisz.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
             }
         }
         
@@ -1537,6 +1609,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Alerty systemowe.
+        /// </summary>
+        public static string SystemAlerts {
+            get {
+                return ResourceManager.GetString("SystemAlerts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Moduły Systemu.
         /// </summary>
         public static string SystemModules {
@@ -1641,6 +1722,24 @@ namespace MagFlow.Web.Resources {
         public static string UnderConstruction {
             get {
                 return ResourceManager.GetString("UnderConstruction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zaktualizuj.
+        /// </summary>
+        public static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zaktualizuj hasło do swojego konta.
+        /// </summary>
+        public static string UpdateYourAccountPassword {
+            get {
+                return ResourceManager.GetString("UpdateYourAccountPassword", resourceCulture);
             }
         }
         
