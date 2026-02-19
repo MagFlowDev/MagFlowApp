@@ -9,6 +9,7 @@ namespace MagFlow.Shared.DTOs.Core
 {
     public class UserSettingsDTO
     {
-        public Enums.Language Language { get; set; }
+        public Enums.Language? Language { get; set; }
+        public Enums.ThemeMode? ThemeMode { get; set; }
     }
 }

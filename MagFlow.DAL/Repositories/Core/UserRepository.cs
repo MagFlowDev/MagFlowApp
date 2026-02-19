@@ -1,6 +1,7 @@
 ﻿using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.Domain.Core;
 using MagFlow.EF;
+using MagFlow.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -56,6 +57,24 @@ namespace MagFlow.DAL.Repositories.Core
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
+            }
+        }
+
+        public async Task<Enums.Result> UpdateSettingsAsync(ApplicationUserSettings settings)
+        {
+            try
+            {
+                using(var context = _coreContextFactory.CreateDbContext())
+                {
+                    context.ApplicationUserSettings.Update(settings);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
             }
         }
 

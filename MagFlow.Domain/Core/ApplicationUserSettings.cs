@@ -14,8 +14,8 @@ namespace MagFlow.Domain.Core
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid UserId { get; set; }
-        [Required]
         public Enums.Language Language { get; set; }
+        public Enums.ThemeMode ThemeMode { get; set; }
         
 
         [ForeignKey(nameof(UserId))]
