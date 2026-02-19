@@ -22,6 +22,7 @@ namespace MagFlow.EF
         public DbSet<CompanyNotification> CompanyNotifications { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }
         public DbSet<UserSession> UserSessions { get; set; }
+        public DbSet<ApplicationUserSettings> ApplicationUserSettings { get; set; }
         public DbSet<SessionModule> SessionModules { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
         public DbSet<EventLog> EventLogs { get; set; }

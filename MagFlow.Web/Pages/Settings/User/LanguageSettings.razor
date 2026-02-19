@@ -1,5 +1,12 @@
-﻿@using MagFlow.Shared.Models
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.Models
 @using MudBlazor
+@using MudExtensions
+
+@inject IUserService UserService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px;">
     <MudText Typo="Typo.h5">@Localizer[Langs.Language]</MudText>
@@ -10,15 +17,62 @@
         <MudButton Class="w-100 align-self-stretch justify-content-start" Style="@($"border-radius: 8px; height: 64px; border: {GetBorder(Enums.Language.English)}")" Variant="Variant.Outlined" Color="Color.Default" EndIcon="@GetEndIcon(Enums.Language.English)" IconClass="flex-grow-1 lh-1 justify-content-end" IconColor="Color.Primary" OnClick="@(() => ChangeLanguage(Enums.Language.English))">
             <MudIcon Icon="fi fi-gb" Class="mb-1 mr-3" /> @Localizer[Langs.English]
         </MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" Class="ml-1 mt-3">@Localizer[Langs.Update]</MudButton>
+        <MudLoadingButton @bind-Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" Class="ml-1 mt-3" OnClick="Update">@Localizer[Langs.Update]</MudLoadingButton>
     </div>
 </div>
 
 @code {
+    [CascadingParameter(Name = "User")]
+    UserDTO? _user { get; set; }
+
+    bool _loadingUpdate;
+    bool _isBusy;
+
     private Enums.Language _currentLanguage = Enums.Language.Polish;
+
+    protected override void OnParametersSet()
+    {
+        if(_user?.Settings?.Language != null)
+        {
+            _currentLanguage = _user.Settings.Language.Value;
+            StateHasChanged();
+        }
+    }
+
+    private async Task Update()
+    {
+        if (_isBusy || _user == null)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loadingUpdate = true;
+
+            _user.Settings.Language = _currentLanguage;
+            var result = await UserService.UpdateUserSettings(_user.Settings);
+            if (result == Enums.Result.Success)
+            {
+                NavigationManager.NavigateTo("/user/settings", true);
+                return;
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.FailedUpdate], Severity.Error);
+            }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loadingUpdate = false;
+        }
+    }
 
     private void ChangeLanguage(Enums.Language language)
     {
+        if (_isBusy)
+            return;
+
         if (_currentLanguage == language)
             return;
 

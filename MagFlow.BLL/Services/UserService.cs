@@ -50,6 +50,7 @@ namespace MagFlow.BLL.Services
             _networkService = networkService;
         }
 
+
         public async Task<UserDTO?> GetUser(Guid id)
         {
             var user = await _userRepository.GetByIdAsync(id);
@@ -64,6 +65,35 @@ namespace MagFlow.BLL.Services
             return await GetUser(userId.Value);
         }
 
+
+
+        // Settings section
+        public async Task<Enums.Result> UpdateUserSettings(UserSettingsDTO userSettingsDTO)
+        {
+            try
+            {
+                var userId = _networkService.GetUserId() ?? Guid.Empty;
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user == null)
+                    return Enums.Result.Error;
+
+                if (user.UserSettings == null)
+                    user.UserSettings = userSettingsDTO.ToEntity(userId);
+                else
+                    user.UserSettings = userSettingsDTO.ToEntity(user.UserSettings);
+
+                return await _userRepository.UpdateSettingsAsync(user.UserSettings);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating user settings");
+                return Enums.Result.Error;
+            }
+        }
+
+
+
+        // Session section
         public async Task<Enums.Result> UpdateLastSession(UserSessionDTO sessionDTO)
         {
             try
@@ -213,6 +243,7 @@ namespace MagFlow.BLL.Services
 
 
 
+        // Password section
         public async Task ResetPasswordRequest(ForgotPasswordModel model)
         {
             try

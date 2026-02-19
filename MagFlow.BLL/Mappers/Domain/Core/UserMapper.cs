@@ -19,6 +19,8 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 FirstName = applicationUser.FirstName,
                 LastName = applicationUser.LastName,
                 Email = applicationUser.Email ?? "",
+                CreatedAt = applicationUser.CreatedAt,
+                IsActive = applicationUser.IsActive,
                 Roles = roles?.Where(x => x != null).Select(x => x!).ToList() ?? new List<Shared.Models.Enumerators.AppRole>(),
                 Settings = ToDTO(applicationUser.UserSettings)
             };
@@ -29,8 +31,29 @@ namespace MagFlow.BLL.Mappers.Domain.Core
             return new UserSettingsDTO()
             {
                 Language = applicationUserSettings?.Language ?? Shared.Models.Enums.Language.Polish,
+                ThemeMode = applicationUserSettings?.ThemeMode ?? Shared.Models.Enums.ThemeMode.LightMode
             };
         }
+
+        public static ApplicationUserSettings ToEntity(this UserSettingsDTO userSettingsDTO, Guid userId)
+        {
+            return new ApplicationUserSettings()
+            {
+                Language = userSettingsDTO.Language ?? Shared.Models.Enums.Language.Polish,
+                ThemeMode = userSettingsDTO.ThemeMode ?? Shared.Models.Enums.ThemeMode.LightMode,
+                UserId = userId,
+            };
+        }
+
+        public static ApplicationUserSettings ToEntity(this UserSettingsDTO userSettingsDTO, ApplicationUserSettings actualSettings)
+        {
+            actualSettings.Language = userSettingsDTO.Language ?? actualSettings.Language;
+            actualSettings.ThemeMode = userSettingsDTO.ThemeMode ?? actualSettings.ThemeMode;
+            return actualSettings;
+        }
+
+
+
 
         public static UserSessionDTO ToDTO(this UserSession userSession)
         {

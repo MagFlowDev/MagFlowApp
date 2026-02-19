@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace MagFlow.Shared.Models
@@ -24,7 +26,10 @@ namespace MagFlow.Shared.Models
 
         public enum Language
         {
+            [Display(Name = "Polish")]
             Polish,
+
+            [Display(Name = "English")]
             English
         }
 

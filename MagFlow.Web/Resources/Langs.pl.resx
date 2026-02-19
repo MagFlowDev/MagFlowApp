@@ -727,4 +727,58 @@ i uprawnieniami użytkowników</value>
   <data name="EmailNotifications" xml:space="preserve">
     <value>Powiadomienia email</value>
   </data>
+  <data name="StartSessionFailed" xml:space="preserve">
+    <value>Nie udało się rozpocząć nowej sesji. Spróbuj później.</value>
+  </data>
+  <data name="FailedUpdate" xml:space="preserve">
+    <value>Błąd aktualizacji. Zweryfikuj swoje dane lub spróbuj ponownie później.</value>
+  </data>
+  <data name="UserForeman" xml:space="preserve">
+    <value>Użytkownik operacyjny</value>
+  </data>
+  <data name="UserOperator" xml:space="preserve">
+    <value>Użytkownik wykonawczy</value>
+  </data>
+  <data name="UserSupervisor" xml:space="preserve">
+    <value>Użytkownik decyzyjny</value>
+  </data>
+  <data name="UserAuditor" xml:space="preserve">
+    <value>Użytkownik kontrolujący</value>
+  </data>
+  <data name="UserCompanyAdmin" xml:space="preserve">
+    <value>Administrator firmy</value>
+  </data>
+  <data name="UserSysAdmin" xml:space="preserve">
+    <value>Administrator systemu</value>
+  </data>
+  <data name="UserSuperAdmin" xml:space="preserve">
+    <value>Super administrator</value>
+  </data>
+  <data name="RoleForeman" xml:space="preserve">
+    <value>Brygadzista</value>
+  </data>
+  <data name="RoleOperator" xml:space="preserve">
+    <value>Operator</value>
+  </data>
+  <data name="RoleSupervisor" xml:space="preserve">
+    <value>Kierownik</value>
+  </data>
+  <data name="RoleAuditor" xml:space="preserve">
+    <value>Audytor</value>
+  </data>
+  <data name="RoleCompanyAdmin" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="RoleSysAdmin" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="RoleSuperAdmin" xml:space="preserve">
+    <value>SuperAdmin</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Aktywny</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Nieaktywny</value>
+  </data>
 </root>

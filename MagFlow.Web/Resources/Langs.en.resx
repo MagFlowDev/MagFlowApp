@@ -568,7 +568,7 @@
     <value>Reports</value>
   </data>
   <data name="WorkTimeModule" xml:space="preserve">
-    <value>Recording and analyzing employee working hours</value>
+    <value>Work time</value>
   </data>
   <data name="ProductionPlanModule" xml:space="preserve">
     <value>Production plan</value>
@@ -604,7 +604,7 @@
     <value>Production data analysis and report generation</value>
   </data>
   <data name="WorkTimeModuleDescription" xml:space="preserve">
-    <value>Working time records</value>
+    <value>Recording and analyzing employee working hours</value>
   </data>
   <data name="ProductionPlanModuleDescription" xml:space="preserve">
     <value>Creating production schedules and monitoring order execution</value>
@@ -725,5 +725,59 @@
   </data>
   <data name="EmailNotifications" xml:space="preserve">
     <value>Email notifications</value>
+  </data>
+  <data name="StartSessionFailed" xml:space="preserve">
+    <value>Failed to start new session. Please try again later.</value>
+  </data>
+  <data name="FailedUpdate" xml:space="preserve">
+    <value>Update error. Please verify your data or try again later.</value>
+  </data>
+  <data name="UserForeman" xml:space="preserve">
+    <value>Operational user</value>
+  </data>
+  <data name="UserOperator" xml:space="preserve">
+    <value>Executive user</value>
+  </data>
+  <data name="UserSupervisor" xml:space="preserve">
+    <value>Decision maker</value>
+  </data>
+  <data name="UserAuditor" xml:space="preserve">
+    <value>Controlling user</value>
+  </data>
+  <data name="UserCompanyAdmin" xml:space="preserve">
+    <value>Company administrator</value>
+  </data>
+  <data name="UserSysAdmin" xml:space="preserve">
+    <value>System administrator</value>
+  </data>
+  <data name="UserSuperAdmin" xml:space="preserve">
+    <value>Super admin</value>
+  </data>
+  <data name="RoleForeman" xml:space="preserve">
+    <value>Foreman</value>
+  </data>
+  <data name="RoleOperator" xml:space="preserve">
+    <value>Operator</value>
+  </data>
+  <data name="RoleSupervisor" xml:space="preserve">
+    <value>Supervisor</value>
+  </data>
+  <data name="RoleAuditor" xml:space="preserve">
+    <value>Auditor</value>
+  </data>
+  <data name="RoleCompanyAdmin" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="RoleSysAdmin" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="RoleSuperAdmin" xml:space="preserve">
+    <value>SuperAdmin</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inactive</value>
   </data>
 </root>
