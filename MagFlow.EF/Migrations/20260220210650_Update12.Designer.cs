@@ -4,6 +4,7 @@ using MagFlow.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MagFlow.EF.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    partial class CoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260220210650_Update12")]
+    partial class Update12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,17 +236,8 @@ namespace MagFlow.EF.Migrations
                     b.Property<int>("DecimalSeparator")
                         .HasColumnType("int");
 
-                    b.Property<bool>("EmailNotificationsEnabled")
-                        .HasColumnType("bit");
-
                     b.Property<int>("Language")
                         .HasColumnType("int");
-
-                    b.Property<bool>("ProductionNotificationsEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("SystemAlertsEnabled")
-                        .HasColumnType("bit");
 
                     b.Property<int>("ThemeMode")
                         .HasColumnType("int");

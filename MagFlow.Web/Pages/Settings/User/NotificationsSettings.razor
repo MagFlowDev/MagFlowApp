@@ -1,23 +1,77 @@
-﻿@using MudBlazor
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.Models
+@using MudBlazor
+@using MudExtensions
+
+@inject IUserService UserService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px;">
     <MudText Typo="Typo.h5">@Localizer[Langs.Notifications]</MudText>
     <div class="d-flex flex-column align-items-start align-self-stretch">
         <div class="d-flex justify-content-between align-items-center align-self-stretch" style="@($"height:63px; border-bottom: 1px solid {Colors.Gray.Lighten2}")">
             <MudText Typo="Typo.body1" Style="font-weight: 600">@Localizer[Langs.SystemAlerts]</MudText>
-            <MudSwitch T="bool" Color="Color.Primary" UncheckedColor="Color.Default" Size="Size.Large" Class=""/>
+            <MudSwitch T="bool?" Color="Color.Primary" UncheckedColor="Color.Default" Size="Size.Large" Value="_user?.Settings.SystemAlertsEnabled" ValueChanged="@(async (val) => await ToggleSystemAlerts(val))"/>
         </div>
         <div class="d-flex justify-content-between align-items-center align-self-stretch" style="@($"height:63px; border-bottom: 1px solid {Colors.Gray.Lighten2}")">
             <MudText Typo="Typo.body1" Style="font-weight: 600">@Localizer[Langs.ProductionNotifications]</MudText>
-            <MudSwitch T="bool" Color="Color.Primary" UncheckedColor="Color.Default" Size="Size.Large" Class="" />
+            <MudSwitch T="bool?" Color="Color.Primary" UncheckedColor="Color.Default" Size="Size.Large" Value="_user?.Settings.ProductionNotificationsEnabled" ValueChanged="@(async (val) => await ToggleProductionNotifications(val))" />
         </div>
         <div class="d-flex justify-content-between align-items-center align-self-stretch">
             <MudText Typo="Typo.body1" Style="font-weight: 600">@Localizer[Langs.EmailNotifications]</MudText>
-            <MudSwitch T="bool" Color="Color.Primary" UncheckedColor="Color.Default" Size="Size.Large" Class="" />
+            <MudSwitch T="bool?" Color="Color.Primary" UncheckedColor="Color.Default" Size="Size.Large" Value="_user?.Settings.EmailNotificationsEnabled" ValueChanged="@(async (val) => await ToggleEmailNotifications(val))" />
         </div>
     </div>
 </div>
 
 @code {
+    [CascadingParameter(Name = "User")]
+    UserDTO? _user { get; set; }
 
+    private async Task ToggleSystemAlerts(bool? value)
+    {
+        if(_user == null || !value.HasValue)
+            return;
+
+        var oldValue = _user.Settings.SystemAlertsEnabled;
+        _user.Settings.SystemAlertsEnabled = value.Value;
+        var result = await UserService.UpdateUserSettings(_user.Settings);
+        if (result != Enums.Result.Success)
+        {
+            _user.Settings.SystemAlertsEnabled = oldValue;
+            Snackbar.Add(Localizer[Langs.FailedUpdate], Severity.Error);
+        }
+    }
+
+    private async Task ToggleProductionNotifications(bool? value)
+    {
+        if (_user == null || !value.HasValue)
+            return;
+
+        var oldValue = _user.Settings.ProductionNotificationsEnabled;
+        _user.Settings.ProductionNotificationsEnabled = value.Value;
+        var result = await UserService.UpdateUserSettings(_user.Settings);
+        if (result != Enums.Result.Success)
+        {
+            _user.Settings.SystemAlertsEnabled = oldValue;
+            Snackbar.Add(Localizer[Langs.FailedUpdate], Severity.Error);
+        }
+    }
+
+    private async Task ToggleEmailNotifications(bool? value)
+    {
+        if (_user == null || !value.HasValue)
+            return;
+
+        var oldValue = _user.Settings.EmailNotificationsEnabled;
+        _user.Settings.EmailNotificationsEnabled = value.Value;
+        var result = await UserService.UpdateUserSettings(_user.Settings);
+        if (result != Enums.Result.Success)
+        {
+            _user.Settings.SystemAlertsEnabled = oldValue;
+            Snackbar.Add(Localizer[Langs.FailedUpdate], Severity.Error);
+        }
+    }
 }

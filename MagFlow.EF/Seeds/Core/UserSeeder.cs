@@ -42,7 +42,12 @@ namespace MagFlow.EF.Seeds.Core
                     SecurityStamp = Guid.NewGuid().ToString("D"),
                     UserSettings = new ApplicationUserSettings
                     {
-                        Language = Shared.Models.Enums.Language.Polish
+                        Language = Shared.Models.Enums.Language.Polish,
+                        ThemeMode = Shared.Models.Enums.ThemeMode.LightMode,
+                        DecimalSeparator = Shared.Models.Enums.DecimalSeparator.Comma,
+                        DateFormat = Shared.Models.Enums.DateFormat.DD_MM_RRRR_DOTS,
+                        TimeFormat = Shared.Models.Enums.TimeFormat.HH_MM_24H,
+                        TimeZone = Shared.Models.Enums.TimeZone.Europe_Warsaw
                     }
                 };
                 adminUser.PasswordHash = password.HashPassword(adminUser, "Password1!");

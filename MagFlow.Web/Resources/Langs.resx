@@ -781,4 +781,46 @@ i uprawnieniami użytkowników</value>
   <data name="Inactive" xml:space="preserve">
     <value>Nieaktywny</value>
   </data>
+  <data name="DecimalSeparator" xml:space="preserve">
+    <value>Separator dziesiętny</value>
+  </data>
+  <data name="DigitSeparatorCommaExample" xml:space="preserve">
+    <value>1234,56</value>
+  </data>
+  <data name="DigitSeparatorDotExample" xml:space="preserve">
+    <value>1234.56</value>
+  </data>
+  <data name="DateFormat" xml:space="preserve">
+    <value>Format daty</value>
+  </data>
+  <data name="DateFormatExample1" xml:space="preserve">
+    <value>DD.MM.RRRR</value>
+  </data>
+  <data name="DateFormatExample2" xml:space="preserve">
+    <value>MM/DD/RRRR</value>
+  </data>
+  <data name="DateFormatExample3" xml:space="preserve">
+    <value>RRRR-MM-DD</value>
+  </data>
+  <data name="DateFormatExample4" xml:space="preserve">
+    <value>DD-MM-RRRR</value>
+  </data>
+  <data name="TimeFormat" xml:space="preserve">
+    <value>Format czasu</value>
+  </data>
+  <data name="TimeFormatExample1" xml:space="preserve">
+    <value>24-godzinny (14:30)</value>
+  </data>
+  <data name="TimeFormatExample2" xml:space="preserve">
+    <value>12-godzinny (2:30 PM)</value>
+  </data>
+  <data name="TimeZone" xml:space="preserve">
+    <value>Strefa czasowa</value>
+  </data>
+  <data name="TimeZoneEuropeWarsaw" xml:space="preserve">
+    <value>Europa/Warszawa (UTC +1/+2)</value>
+  </data>
+  <data name="TimeZoneUTC" xml:space="preserve">
+    <value>Uniwersalny czas koordynowany (UTC)</value>
+  </data>
 </root>

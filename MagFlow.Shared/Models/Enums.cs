@@ -116,6 +116,48 @@ namespace MagFlow.Shared.Models
             USD = 2
         }
 
+        public enum DecimalSeparator
+        {
+            [Display(Name = "DigitSeparatorCommaExample")]
+            Comma,
+
+            [Display(Name = "DigitSeparatorDotExample")]
+            Dot
+        }
+        
+        public enum DateFormat
+        {
+            [Display(Name = "DateFormatExample1")]
+            DD_MM_RRRR_DOTS,
+
+            [Display(Name = "DateFormatExample2")]
+            MM_DD_RRRR_SLASHES,
+
+            [Display(Name = "DateFormatExample3")]
+            RRRR_MM_DD_DASHES,
+
+            [Display(Name = "DateFormatExample4")]
+            DD_MM_RRRR_DASHES,
+        }
+
+        public enum TimeFormat
+        {
+            [Display(Name = "TimeFormatExample1")]
+            HH_MM_24H,
+
+            [Display(Name = "TimeFormatExample2")]
+            HH_MM_12H,
+        }
+
+        public enum TimeZone
+        {
+            [Display(Name = "TimeZoneUTC")]
+            UTC,
+
+            [Display(Name = "TimeZoneEuropeWarsaw")]
+            Europe_Warsaw
+        }
+
         public enum EventLogCategory
         {
             Unknown,
