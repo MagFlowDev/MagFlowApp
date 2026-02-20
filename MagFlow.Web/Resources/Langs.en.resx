@@ -780,4 +780,46 @@
   <data name="Inactive" xml:space="preserve">
     <value>Inactive</value>
   </data>
+  <data name="DecimalSeparator" xml:space="preserve">
+    <value>Decimal separator</value>
+  </data>
+  <data name="DigitSeparatorCommaExample" xml:space="preserve">
+    <value>1234,56</value>
+  </data>
+  <data name="DigitSeparatorDotExample" xml:space="preserve">
+    <value>1234.56</value>
+  </data>
+  <data name="DateFormat" xml:space="preserve">
+    <value>Date format</value>
+  </data>
+  <data name="DateFormatExample1" xml:space="preserve">
+    <value>DD.MM.RRRR</value>
+  </data>
+  <data name="DateFormatExample2" xml:space="preserve">
+    <value>MM/DD/RRRR</value>
+  </data>
+  <data name="DateFormatExample3" xml:space="preserve">
+    <value>RRRR-MM-DD</value>
+  </data>
+  <data name="DateFormatExample4" xml:space="preserve">
+    <value>DD-MM-RRRR</value>
+  </data>
+  <data name="TimeFormat" xml:space="preserve">
+    <value>Time format</value>
+  </data>
+  <data name="TimeFormatExample1" xml:space="preserve">
+    <value>24-hour (14:30)</value>
+  </data>
+  <data name="TimeFormatExample2" xml:space="preserve">
+    <value>12-hour (2:30 PM)</value>
+  </data>
+  <data name="TimeZone" xml:space="preserve">
+    <value>Time zone</value>
+  </data>
+  <data name="TimeZoneEuropeWarsaw" xml:space="preserve">
+    <value>Europe/Warsaw (UTC +1/+2)</value>
+  </data>
+  <data name="TimeZoneUTC" xml:space="preserve">
+    <value>Coordinated Universal Time (UTC)</value>
+  </data>
 </root>

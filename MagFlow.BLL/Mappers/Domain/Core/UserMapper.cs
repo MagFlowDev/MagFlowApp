@@ -31,7 +31,14 @@ namespace MagFlow.BLL.Mappers.Domain.Core
             return new UserSettingsDTO()
             {
                 Language = applicationUserSettings?.Language ?? Shared.Models.Enums.Language.Polish,
-                ThemeMode = applicationUserSettings?.ThemeMode ?? Shared.Models.Enums.ThemeMode.LightMode
+                ThemeMode = applicationUserSettings?.ThemeMode ?? Shared.Models.Enums.ThemeMode.LightMode,
+                DecimalSeparator = applicationUserSettings?.DecimalSeparator ?? Shared.Models.Enums.DecimalSeparator.Comma,
+                DateFormat = applicationUserSettings?.DateFormat ?? Shared.Models.Enums.DateFormat.DD_MM_RRRR_DOTS,
+                TimeFormat = applicationUserSettings?.TimeFormat ?? Shared.Models.Enums.TimeFormat.HH_MM_24H,
+                TimeZone = applicationUserSettings?.TimeZone ?? Shared.Models.Enums.TimeZone.Europe_Warsaw,
+                SystemAlertsEnabled = applicationUserSettings?.SystemAlertsEnabled ?? false,
+                ProductionNotificationsEnabled = applicationUserSettings?.ProductionNotificationsEnabled ?? false,
+                EmailNotificationsEnabled = applicationUserSettings?.EmailNotificationsEnabled ?? false,
             };
         }
 
@@ -41,6 +48,13 @@ namespace MagFlow.BLL.Mappers.Domain.Core
             {
                 Language = userSettingsDTO.Language ?? Shared.Models.Enums.Language.Polish,
                 ThemeMode = userSettingsDTO.ThemeMode ?? Shared.Models.Enums.ThemeMode.LightMode,
+                DecimalSeparator = userSettingsDTO.DecimalSeparator ?? Shared.Models.Enums.DecimalSeparator.Comma,
+                DateFormat = userSettingsDTO.DateFormat ?? Shared.Models.Enums.DateFormat.DD_MM_RRRR_DOTS,
+                TimeFormat = userSettingsDTO.TimeFormat ?? Shared.Models.Enums.TimeFormat.HH_MM_24H,
+                TimeZone = userSettingsDTO.TimeZone ?? Shared.Models.Enums.TimeZone.Europe_Warsaw,
+                SystemAlertsEnabled = userSettingsDTO?.SystemAlertsEnabled ?? false,
+                ProductionNotificationsEnabled = userSettingsDTO?.ProductionNotificationsEnabled ?? false,
+                EmailNotificationsEnabled = userSettingsDTO?.EmailNotificationsEnabled ?? false,
                 UserId = userId,
             };
         }
@@ -49,6 +63,13 @@ namespace MagFlow.BLL.Mappers.Domain.Core
         {
             actualSettings.Language = userSettingsDTO.Language ?? actualSettings.Language;
             actualSettings.ThemeMode = userSettingsDTO.ThemeMode ?? actualSettings.ThemeMode;
+            actualSettings.DecimalSeparator = userSettingsDTO.DecimalSeparator ?? actualSettings.DecimalSeparator;
+            actualSettings.DateFormat = userSettingsDTO.DateFormat ?? actualSettings.DateFormat;
+            actualSettings.TimeFormat = userSettingsDTO.TimeFormat ?? actualSettings.TimeFormat;
+            actualSettings.TimeZone = userSettingsDTO.TimeZone ?? actualSettings.TimeZone;
+            actualSettings.SystemAlertsEnabled = userSettingsDTO.SystemAlertsEnabled ?? actualSettings.SystemAlertsEnabled;
+            actualSettings.ProductionNotificationsEnabled = userSettingsDTO.ProductionNotificationsEnabled ?? actualSettings.ProductionNotificationsEnabled;
+            actualSettings.EmailNotificationsEnabled = userSettingsDTO.EmailNotificationsEnabled ?? actualSettings.EmailNotificationsEnabled;
             return actualSettings;
         }
 

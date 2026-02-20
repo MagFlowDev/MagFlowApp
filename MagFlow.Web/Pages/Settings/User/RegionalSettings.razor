@@ -1,9 +1,79 @@
-﻿@using MudBlazor
+﻿@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Models
+@using MagFlow.Web.Helpers
+@using MudBlazor
+@using MudExtensions
+
+@inject IUserService UserService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px;">
     <MudText Typo="Typo.h5">@Localizer[Langs.Regional]</MudText>
+    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 15px">
+        <MudSelect T="Enums.DecimalSeparator?" Label="@Localizer[Langs.DecimalSeparator]" Variant="Variant.Outlined" OuterClass="w-100" @bind-Value="_user?.Settings.DecimalSeparator">
+            @foreach(var item in Enum.GetValues<Enums.DecimalSeparator>())
+            {
+                <MudSelectItem T="Enums.DecimalSeparator?" Value="@item">@item.GetDisplayName(Localizer)</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="Enums.DateFormat?" Label="@Localizer[Langs.DateFormat]" Variant="Variant.Outlined" OuterClass="w-100" @bind-Value="_user?.Settings.DateFormat">
+            @foreach (var item in Enum.GetValues<Enums.DateFormat>())
+            {
+                <MudSelectItem T="Enums.DateFormat?" Value="@item">@item.GetDisplayName(Localizer)</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="Enums.TimeFormat?" Label="@Localizer[Langs.TimeFormat]" Variant="Variant.Outlined" OuterClass="w-100" @bind-Value="_user?.Settings.TimeFormat">
+            @foreach (var item in Enum.GetValues<Enums.TimeFormat>())
+            {
+                <MudSelectItem T="Enums.TimeFormat?" Value="@item">@item.GetDisplayName(Localizer)</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="Enums.TimeZone?" Label="@Localizer[Langs.TimeZone]" Variant="Variant.Outlined" OuterClass="w-100" @bind-Value="_user?.Settings.TimeZone">
+            @foreach (var item in Enum.GetValues<Enums.TimeZone>())
+            {
+                <MudSelectItem T="Enums.TimeZone?" Value="@item">@item.GetDisplayName(Localizer)</MudSelectItem>
+            }
+        </MudSelect>
+        <MudLoadingButton @bind-Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" Class="ml-1" OnClick="Update">@Localizer[Langs.Update]</MudLoadingButton>
+    </div>
 </div>
 
 @code {
+    [CascadingParameter(Name = "User")]
+    UserDTO? _user { get; set; }
 
+    private bool _isBusy;
+    private bool _loadingUpdate;
+
+    private async Task Update()
+    {
+        if (_isBusy || _user == null)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loadingUpdate = true;
+
+            var result = await UserService.UpdateUserSettings(_user.Settings);
+            if (result == Enums.Result.Success)
+            {
+                NavigationManager.NavigateTo("/user/settings", true);
+                return;
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.FailedUpdate], Severity.Error);
+            }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loadingUpdate = false;
+        }
+    }
 }
