@@ -823,4 +823,16 @@ i uprawnieniami użytkowników</value>
   <data name="TimeZoneUTC" xml:space="preserve">
     <value>Uniwersalny czas koordynowany (UTC)</value>
   </data>
+  <data name="GeneralInformation" xml:space="preserve">
+    <value>Informacje ogólne</value>
+  </data>
+  <data name="Logo" xml:space="preserve">
+    <value>Logo</value>
+  </data>
+  <data name="ContactDetails" xml:space="preserve">
+    <value>Dane kontaktowe</value>
+  </data>
+  <data name="WorkingHours" xml:space="preserve">
+    <value>Godziny pracy</value>
+  </data>
 </root>

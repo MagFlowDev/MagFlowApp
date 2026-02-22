@@ -822,4 +822,16 @@
   <data name="TimeZoneUTC" xml:space="preserve">
     <value>Coordinated Universal Time (UTC)</value>
   </data>
+  <data name="GeneralInformation" xml:space="preserve">
+    <value>General information</value>
+  </data>
+  <data name="Logo" xml:space="preserve">
+    <value>Logo</value>
+  </data>
+  <data name="ContactDetails" xml:space="preserve">
+    <value>Contact details</value>
+  </data>
+  <data name="WorkingHours" xml:space="preserve">
+    <value>Working hours</value>
+  </data>
 </root>
