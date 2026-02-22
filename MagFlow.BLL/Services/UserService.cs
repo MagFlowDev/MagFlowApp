@@ -48,6 +48,7 @@ namespace MagFlow.BLL.Services
             _logger = logger;
             _userManager = userManager;
             _networkService = networkService;
+            _emailService = emailService;
         }
 
 
@@ -273,7 +274,48 @@ namespace MagFlow.BLL.Services
 
         public async Task<bool> ChangePassword(ChangePasswordModel model)
         {
-            return false;
+            try
+            {
+                if (string.IsNullOrEmpty(model.OldPassword) || string.IsNullOrEmpty(model.Password))
+                    return false;
+
+                var userId = _networkService.GetUserId() ?? Guid.Empty;
+                var user = await _userManager.FindByIdAsync(userId.ToString());
+                if (user == null)
+                    return false;
+
+                foreach(var validator in _userManager.PasswordValidators)
+                {
+                    var validationResult = await validator.ValidateAsync(_userManager, user, model.Password);
+                    if (!validationResult.Succeeded)
+                    {
+                        _logger.LogWarning("Password validation failed for user {UserId}: {Errors}", user.Id, string.Join(", ", validationResult.Errors.Select(e => e.Description)));
+                        return false;
+                    }
+                }
+
+                var changeResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.Password);
+                if(changeResult.Succeeded)
+                {
+                    try
+                    {
+                        await _emailService.SendAsync(user.UserName, user.Email, "Password Changed", EmailGenerator.PasswordChangedBody(user.FirstName, user.LastName, user.Email, user.UserSettings?.Language));
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to send password change notification email for user {UserId}", user.Id);
+                    }
+                    return true;
+                }
+
+                _logger.LogWarning("Password change failed for user {UserId}: {Errors}", user.Id, string.Join(", ", changeResult.Errors.Select(e => e.Description)));
+                return false;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error while processing change password request");
+                return false;
+            }
         }
 
         public async Task<bool> ChangePassword(TokenChangePasswordModel model)
@@ -295,7 +337,14 @@ namespace MagFlow.BLL.Services
                 var resetResult = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
                 if (resetResult.Succeeded)
                 {
-                    await _emailService.SendAsync(user.UserName, user.Email, "Password Changed", EmailGenerator.PasswordChangedBody(user.FirstName, user.LastName, user.Email, user.UserSettings?.Language));
+                    try
+                    {
+                        await _emailService.SendAsync(user.UserName, user.Email, "Password Changed", EmailGenerator.PasswordChangedBody(user.FirstName, user.LastName, user.Email, user.UserSettings?.Language));
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to send password change notification email for user {UserId}", user.Id);
+                    }
                     return true;
                 }
             }

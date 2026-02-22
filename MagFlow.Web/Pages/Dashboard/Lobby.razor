@@ -5,13 +5,13 @@
 @using MagFlow.Shared.Extensions
 @using MagFlow.Shared.Models
 @using MagFlow.Shared.Models.Auth
+@using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Helpers
 @using MagFlow.Web.Pages.Modules
 @using MagFlow.Web.Pages.Modules.Users
 @using MagFlow.Web.Pages.Modules.Wares
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
-@using MudExtensions
 
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
@@ -58,7 +58,7 @@
                                     }
                                 </div>
                             </div>
-                            <MudLoadingButton @bind-Loading="_loadingRestoreSession[userSession.Id]" OnClick="@(async () => await RestoreSession(userSession.Id))" StartIcon="@Icons.Material.Filled.Restore" Style="background-color: #FFF" IconColor="Color.Primary" Color="Color.Primary">@Localizer[Langs.Restore]</MudLoadingButton>
+                            <LoadingButton Loading="_loadingRestoreSession[userSession.Id]" OnClick="@(async () => await RestoreSession(userSession.Id))" StartIcon="@Icons.Material.Filled.Restore" Style="background-color: #FFF" IconColor="Color.Primary" Color="Color.Primary">@Localizer[Langs.Restore]</LoadingButton>
                         </div>
                     }
                 }
@@ -91,7 +91,7 @@
                         }
                         else
                         {
-                            <MudLoadingButton @bind-Loading="_loadingStartSession" OnClick="StartSession" Color="Color.Primary" Variant="Variant.Filled">@string.Concat(Localizer[Langs.OpenSelected], " (", _selectedCount, ")")</MudLoadingButton>
+                            <LoadingButton Loading="_loadingStartSession" OnClick="StartSession" Color="Color.Primary" Variant="Variant.Filled">@string.Concat(Localizer[Langs.OpenSelected], " (", _selectedCount, ")")</LoadingButton>
                             <MudButton OnClick="DeselectAll" Style="background-color: #FFF" Color="Color.Secondary" Variant="Variant.Outlined">@Localizer[Langs.Clear]</MudButton>
                         }
                     </div>
@@ -122,7 +122,7 @@
                                         }
                                         <MudText Typo="Typo.body2" Style="color: var(--bs-gray-700)"></MudText>
                                         <div class="d-flex justify-content-end align-self-end">
-                                            <MudLoadingButton @bind-Loading="_loadingStartSessionSingleModule[module.Id]" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.East" Color="Color.Primary" OnClick="@(async () => await StartSession(module.Id))">@Localizer[Langs.Open]</MudLoadingButton>
+                                            <LoadingButton Loading="_loadingStartSessionSingleModule[module.Id]" Variant="Variant.Text" EndIcon="@Icons.Material.Filled.East" Color="Color.Primary" OnClick="@(async () => await StartSession(module.Id))">@Localizer[Langs.Open]</LoadingButton>
                                         </div>
                                     </div>
                                 </div>
