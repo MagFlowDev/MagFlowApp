@@ -18,14 +18,43 @@ namespace MagFlow.BLL.Services
     public class CompanyService : ICompanyService
     {
         private readonly ICompanyRepository _companyRepository;
-        
+        private readonly IUserRepository _userRepository;
+        private readonly INetworkService _networkService;
+
         private readonly ILogger<CompanyService> _logger;
 
         public CompanyService(ICompanyRepository companyRepository,
+            INetworkService networkService,
+            IUserRepository userRepository,
             ILogger<CompanyService> logger)
         {
             _companyRepository = companyRepository;
+            _networkService = networkService;
+            _userRepository = userRepository;
             _logger = logger;
+        }
+
+        public async Task<CompanyDTO?> GetCurrentCompany()
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return null;
+                var user = await _userRepository.GetByIdAsync(userId.Value);
+
+                var companyId = user?.DefaultCompanyId;
+                if (!companyId.HasValue)
+                    return null;
+
+                var company = await _companyRepository.GetByIdAsync(companyId.Value);
+                return company?.ToDTO();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get user company");
+                return null;
+            }
         }
 
         public async Task<List<ModuleDTO>?> GetCompanyModules(Guid companyId)

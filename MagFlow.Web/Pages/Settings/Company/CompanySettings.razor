@@ -1,0 +1,86 @@
+﻿@page "/company/settings"
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Enumerators
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@* @attribute [Authorize(Roles = $"{nameof(AppRole.CompanyAdmin)} {nameof(AppRole.SysAdmin)} {nameof(AppRole.SuperAdmin)}")] *@
+
+@inject ICompanyService CompanyService
+@inject IJSRuntime JS
+
+<div class="d-flex flex-column w-100 flex-grow-1 px-4 pt-2" style="min-height: 0">
+    <div class="text-start d-flex align-items-start flex-column flex-shrink-0">
+        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.West" OnClick="@(async () => await JS.InvokeVoidAsync("history.back"))">@Localizer[Langs.GoBack]</MudButton>
+    </div>
+    <div class="d-flex w-100 mt-6" style="gap: 100px; flex: 1 1 0; min-height: 0">
+        <div class="d-flex flex-column justify-content-start align-items-start" style="min-width: 300px; flex: 0 0 auto; gap: 24px; min-height: 0; overflow-x: hidden">
+            <MudText Typo="Typo.h5" Style="font-weight: 700;">@Localizer[Langs.SettingsCompany]</MudText>
+            <MudList T="Enums.CompanySettingsSection" SelectionMode="SelectionMode.SingleSelection" SelectedValue="@_currentSection" SelectedValueChanged="OnSectionChanged">
+                <MudListItem Value="Enums.CompanySettingsSection.Information" Text="@Localizer[Langs.GeneralInformation]" Icon="@Icons.Material.Outlined.Apartment" IconColor="@GetIconColor(Enums.CompanySettingsSection.Information)" Class="@GetNavClass(Enums.CompanySettingsSection.Information)" />
+                <MudListItem Value="Enums.CompanySettingsSection.Logo" Text="@Localizer[Langs.Logo]" Icon="@Icons.Material.Outlined.PhotoSizeSelectActual" IconColor="@GetIconColor(Enums.CompanySettingsSection.Logo)" Class="@GetNavClass(Enums.CompanySettingsSection.Logo)" />
+                <MudListItem Value="Enums.CompanySettingsSection.Contact" Text="@Localizer[Langs.ContactDetails]" Icon="@Icons.Material.Outlined.Call" IconColor="@GetIconColor(Enums.CompanySettingsSection.Contact)" Class="@GetNavClass(Enums.CompanySettingsSection.Contact)" />
+                <MudListItem Value="Enums.CompanySettingsSection.WorkTime" Text="@Localizer[Langs.WorkingHours]" Icon="@Icons.Material.Outlined.Timer" IconColor="@GetIconColor(Enums.CompanySettingsSection.WorkTime)" Class="@GetNavClass(Enums.CompanySettingsSection.WorkTime)" />
+            </MudList>
+        </div>
+        <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden; gap: 40px;">
+            <CascadingValue Value="@_company" TValue="CompanyDTO" Name="Company">
+                @switch(_currentSection)
+                {
+                    case Enums.CompanySettingsSection.Information:
+                        <CompanyInformation/>
+                        break;
+                    case Enums.CompanySettingsSection.Logo:
+                        <LogoSettings />
+                        break;
+                    case Enums.CompanySettingsSection.Contact:
+                        <ContactSettings />
+                        break;
+                    case Enums.CompanySettingsSection.WorkTime:
+                        <WorkTimeSettings />
+                        break;
+                    default: break;
+                }
+            </CascadingValue>
+        </div>
+    </div>
+</div>
+
+@code {
+    CompanyDTO? _company { get; set; }
+
+    private Enums.CompanySettingsSection _currentSection = Enums.CompanySettingsSection.Information;
+
+    private void OnSectionChanged(Enums.CompanySettingsSection section)
+    {
+        if (_currentSection == section)
+            return;
+        _currentSection = section;
+        StateHasChanged();
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        _company = await CompanyService.GetCurrentCompany();
+        if (_company == null)
+            throw new Exception("Company not found!");
+    }
+
+
+    private string GetNavClass(Enums.CompanySettingsSection section)
+    {
+        return _currentSection == section
+            ? "mud-primary-text mud-nav-link-active"
+            : "";
+    }
+
+    private Color GetIconColor(Enums.CompanySettingsSection section)
+    {
+        return _currentSection == section
+            ? Color.Primary
+            : Color.Dark;
+    }
+}

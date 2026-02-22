@@ -14,6 +14,14 @@ namespace MagFlow.Shared.Models
             DarkMode
         }
 
+        public enum CompanySettingsSection
+        {
+            Information,
+            Logo,
+            Contact,
+            WorkTime
+        }
+
         public enum UserSettingsSection
         {
             Account,

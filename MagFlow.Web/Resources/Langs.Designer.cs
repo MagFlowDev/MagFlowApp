@@ -223,6 +223,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dane kontaktowe.
+        /// </summary>
+        public static string ContactDetails {
+            get {
+                return ResourceManager.GetString("ContactDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Skontaktuj się.
         /// </summary>
         public static string ContactUs {
@@ -628,6 +637,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Informacje ogólne.
+        /// </summary>
+        public static string GeneralInformation {
+            get {
+                return ResourceManager.GetString("GeneralInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Powrót.
         /// </summary>
         public static string GoBack {
@@ -777,6 +795,15 @@ namespace MagFlow.Web.Resources {
         public static string LogisticsModuleDescription {
             get {
                 return ResourceManager.GetString("LogisticsModuleDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Logo.
+        /// </summary>
+        public static string Logo {
+            get {
+                return ResourceManager.GetString("Logo", resourceCulture);
             }
         }
         
@@ -2137,6 +2164,15 @@ namespace MagFlow.Web.Resources {
         public static string WeWillContactWithYou {
             get {
                 return ResourceManager.GetString("WeWillContactWithYou", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Godziny pracy.
+        /// </summary>
+        public static string WorkingHours {
+            get {
+                return ResourceManager.GetString("WorkingHours", resourceCulture);
             }
         }
         
