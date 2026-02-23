@@ -25,9 +25,9 @@
         </a>
     </div>
     <MudSpacer />
-    <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="my-3">
+    <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" PopoverClass="my-3" ActivationEvent="MouseEvent.LeftClick">
         <ActivatorContent>
-            <MudIcon Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" Color="Color.Primary"/>
+            <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Size="Size.Large" Color="Color.Primary" OnClick="@(() => context.ToggleAsync())"/>
         </ActivatorContent>
         <ChildContent>
             <div class="d-flex flex-column align-items-center align-self-stretch px-5 pt-3 pb-1">
