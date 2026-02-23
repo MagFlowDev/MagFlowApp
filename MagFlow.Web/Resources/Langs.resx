@@ -835,4 +835,16 @@ i uprawnieniami użytkowników</value>
   <data name="WorkingHours" xml:space="preserve">
     <value>Godziny pracy</value>
   </data>
+  <data name="CompanyName" xml:space="preserve">
+    <value>Nazwa firmy</value>
+  </data>
+  <data name="TaxNumber" xml:space="preserve">
+    <value>NIP</value>
+  </data>
+  <data name="CreationDate" xml:space="preserve">
+    <value>Data utworzenia</value>
+  </data>
+  <data name="CompanyAddress" xml:space="preserve">
+    <value>Adres firmy</value>
+  </data>
 </root>

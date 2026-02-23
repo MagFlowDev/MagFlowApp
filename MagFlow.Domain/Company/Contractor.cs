@@ -15,7 +15,7 @@ namespace MagFlow.Domain.Company
         public string Name { get; set; }
         [Required]
         public string Code { get; set; }
-        public string? NIP { get; set; }
+        public string? TaxNumber { get; set; }
         public string? Address { get; set; }
         public string? PostalCode { get; set; }
         public string? City { get; set; }

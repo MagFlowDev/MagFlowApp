@@ -40,7 +40,8 @@ namespace MagFlow.EF.Seeds.Core
                     CreatedAt = now,
                     IsActive = true,
                     ConnectionString = StringExtensions.GetCompanyConnectionString("Test") ?? "",
-                    NIP = ""
+                    TaxNumber = "",
+                    CompanySettings = new CompanySettings()
                 };
                 await context.Companies.AddAsync(testCompany);
                 seed = true;
@@ -57,7 +58,8 @@ namespace MagFlow.EF.Seeds.Core
                     CreatedAt = now,
                     IsActive = true,
                     ConnectionString = StringExtensions.GetCompanyConnectionString("Demo") ?? "",
-                    NIP = ""
+                    TaxNumber = "",
+                    CompanySettings = new CompanySettings()
                 };
                 await context.Companies.AddAsync(demoCompany);
                 var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");

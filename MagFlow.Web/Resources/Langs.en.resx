@@ -834,4 +834,16 @@
   <data name="WorkingHours" xml:space="preserve">
     <value>Working hours</value>
   </data>
+  <data name="CompanyName" xml:space="preserve">
+    <value>Company name</value>
+  </data>
+  <data name="TaxNumber" xml:space="preserve">
+    <value>Tax number</value>
+  </data>
+  <data name="CreationDate" xml:space="preserve">
+    <value>Creation date</value>
+  </data>
+  <data name="CompanyAddress" xml:space="preserve">
+    <value>Company address</value>
+  </data>
 </root>
