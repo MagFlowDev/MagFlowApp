@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagFlow.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,6 +24,11 @@ namespace MagFlow.Domain.Core
         public DateTime CreatedAt { get; set; }
         [Required]
         public bool IsActive { get; set; }
+        public Address? Address { get; set; }
+
+
+        public virtual CompanySettings? CompanySettings { get; set; }
+        public virtual CompanyLogo? Logo { get; set; }
 
         public ICollection<CompanyUser> Users { get; set; }
         public ICollection<CompanyModule> Modules { get; set; }

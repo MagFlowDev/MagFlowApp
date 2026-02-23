@@ -18,6 +18,7 @@ namespace MagFlow.EF
         public DbSet<ApplicationRoleClaim> RoleClaims {  get; set; }
         public DbSet<ApplicationUserToken> UserTokens {  get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<CompanySettings> CompanySettings { get; set; }
         public DbSet<CompanyUser> CompanyUsers { get; set; }
         public DbSet<CompanyNotification> CompanyNotifications { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }
@@ -111,6 +112,7 @@ namespace MagFlow.EF
             builder.Entity<AuditLog>().HasMany(lc => lc.Changes).WithOne(l => l.AuditLog);
             builder.Entity<Company>().HasMany(m => m.Modules).WithOne(c => c.Company);
             builder.Entity<Company>().HasMany(n => n.Notifications).WithOne(c => c.Company);
+            builder.Entity<Company>().HasOne(s => s.CompanySettings).WithOne(c => c.Company);
             builder.Entity<CompanyNotification>().HasOne(n => n.Notification);
             builder.Entity<CompanyModule>().HasMany(p => p.ModulePricings).WithOne(m => m.CompanyModule);
             builder.Entity<CompanyModule>().HasOne(m => m.Module).WithMany(c => c.CompanyModules);
