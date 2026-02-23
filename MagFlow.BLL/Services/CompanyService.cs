@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace MagFlow.BLL.Services
 {
@@ -47,7 +48,7 @@ namespace MagFlow.BLL.Services
                 if (!companyId.HasValue)
                     return null;
 
-                var company = await _companyRepository.GetByIdAsync(companyId.Value);
+                var company = await _companyRepository.GetByIdAsync(companyId.Value, s => s.Include(x => x.CompanySettings));
                 return company?.ToDTO();
             }
             catch(Exception ex)

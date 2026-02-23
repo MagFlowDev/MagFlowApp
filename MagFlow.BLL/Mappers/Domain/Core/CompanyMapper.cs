@@ -17,7 +17,9 @@ namespace MagFlow.BLL.Mappers.Domain.Core
             {
                 Id = company.Id,
                 Name = company.Name,
-                NIP = company.NIP
+                TaxNumber = company.TaxNumber,
+                CreatedAt = company.CreatedAt,
+                Address = company.Address 
             };
         }
 
@@ -35,7 +37,7 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 Id = companyDTO.Id ?? Guid.NewGuid(),
                 Name = companyDTO.Name,
                 NormalizedName = companyDTO.Name.ToUpper(),
-                NIP = companyDTO.NIP,
+                TaxNumber = companyDTO.TaxNumber,
                 ConnectionString = StringExtensions.GetCompanyConnectionString(companyDTO.Name) ?? string.Empty,
                 IsActive = isActive,
                 CreatedAt = createdAt.Value,
@@ -45,7 +47,7 @@ namespace MagFlow.BLL.Mappers.Domain.Core
         public static Company Validate(this Company company, CompanyDTO companyDTO)
         {
             company.Name = !string.IsNullOrWhiteSpace(companyDTO.Name) ? companyDTO.Name : company.Name;
-            company.NIP = company.NIP;
+            company.TaxNumber = company.TaxNumber;
             return company;
         }
     }

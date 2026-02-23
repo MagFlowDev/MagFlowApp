@@ -19,7 +19,7 @@ namespace MagFlow.Domain.Core
         [Required]
         public string ConnectionString { get; set; }
         [Required]
-        public string NIP {  get; set; }
+        public string TaxNumber {  get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
         [Required]
