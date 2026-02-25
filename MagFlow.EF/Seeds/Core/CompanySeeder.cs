@@ -40,7 +40,7 @@ namespace MagFlow.EF.Seeds.Core
                     CreatedAt = now,
                     IsActive = true,
                     ConnectionString = StringExtensions.GetCompanyConnectionString("Test") ?? "",
-                    TaxNumber = "",
+                    TaxNumber = "1563555295",
                     CompanySettings = new CompanySettings()
                 };
                 await context.Companies.AddAsync(testCompany);
@@ -58,7 +58,7 @@ namespace MagFlow.EF.Seeds.Core
                     CreatedAt = now,
                     IsActive = true,
                     ConnectionString = StringExtensions.GetCompanyConnectionString("Demo") ?? "",
-                    TaxNumber = "",
+                    TaxNumber = "7591487315",
                     CompanySettings = new CompanySettings()
                 };
                 await context.Companies.AddAsync(demoCompany);

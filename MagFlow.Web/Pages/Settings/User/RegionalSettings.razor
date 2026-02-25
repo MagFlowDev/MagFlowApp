@@ -13,26 +13,26 @@
 
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px;">
     <MudText Typo="Typo.h5">@Localizer[Langs.Regional]</MudText>
-    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 15px">
-        <MudSelect T="Enums.DecimalSeparator?" Label="@Localizer[Langs.DecimalSeparator]" Variant="Variant.Outlined" OuterClass="w-100" @bind-Value="_user?.Settings.DecimalSeparator">
+    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+        <MudSelect T="Enums.DecimalSeparator ?" Label="@Localizer[Langs.DecimalSeparator]" Variant="Variant.Outlined" OuterClass="w-100 my-0" @bind-Value="_user?.Settings.DecimalSeparator">
             @foreach(var item in Enum.GetValues<Enums.DecimalSeparator>())
             {
                 <MudSelectItem T="Enums.DecimalSeparator?" Value="@item">@item.GetDisplayName(Localizer)</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="Enums.DateFormat?" Label="@Localizer[Langs.DateFormat]" Variant="Variant.Outlined" OuterClass="w-100" @bind-Value="_user?.Settings.DateFormat">
+        <MudSelect T="Enums.DateFormat ?" Label="@Localizer[Langs.DateFormat]" Variant="Variant.Outlined" OuterClass="w-100 my-0" @bind-Value="_user?.Settings.DateFormat">
             @foreach (var item in Enum.GetValues<Enums.DateFormat>())
             {
                 <MudSelectItem T="Enums.DateFormat?" Value="@item">@item.GetDisplayName(Localizer)</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="Enums.TimeFormat?" Label="@Localizer[Langs.TimeFormat]" Variant="Variant.Outlined" OuterClass="w-100" @bind-Value="_user?.Settings.TimeFormat">
+        <MudSelect T="Enums.TimeFormat ?" Label="@Localizer[Langs.TimeFormat]" Variant="Variant.Outlined" OuterClass="w-100 my-0" @bind-Value="_user?.Settings.TimeFormat">
             @foreach (var item in Enum.GetValues<Enums.TimeFormat>())
             {
                 <MudSelectItem T="Enums.TimeFormat?" Value="@item">@item.GetDisplayName(Localizer)</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="Enums.TimeZone?" Label="@Localizer[Langs.TimeZone]" Variant="Variant.Outlined" OuterClass="w-100" @bind-Value="_user?.Settings.TimeZone">
+        <MudSelect T="Enums.TimeZone ?" Label="@Localizer[Langs.TimeZone]" Variant="Variant.Outlined" OuterClass="w-100 my-0" @bind-Value="_user?.Settings.TimeZone">
             @foreach (var item in Enum.GetValues<Enums.TimeZone>())
             {
                 <MudSelectItem T="Enums.TimeZone?" Value="@item">@item.GetDisplayName(Localizer)</MudSelectItem>

@@ -1,29 +1,31 @@
 ﻿@using MagFlow.Shared.DTOs.Core
+@using MagFlow.Web.Components.Buttons
 @using MudBlazor
+@using System.Globalization
+@using MudExtensions
 
-<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px;">
-    <MudText Typo="Typo.h5">@Localizer[Langs.GeneralInformation]</MudText>
-    <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
-        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 4px; padding-bottom: 1px;">
-            <MudTextField Label="@Localizer[Langs.CompanyName]" T="string" Text="@_company?.Name" Class="w-100" Style="font-weight: 600" ReadOnly></MudTextField>
-        </div>
-        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 4px; padding-bottom: 1px;">
-            <MudTextField Label="@Localizer[Langs.TaxNumber]" T="string" Text="@_company?.TaxNumber" Class="w-100" Style="font-weight: 600" ReadOnly></MudTextField>
-        </div>
-        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 4px; padding-bottom: 1px;">
-            <MudTextField Label="@Localizer[Langs.CreationDate]" T="string" Text="@_company?.CreatedAt.ToShortDateString()" Class="w-100" Style="font-weight: 600" ReadOnly></MudTextField>
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 24px; padding-right: 40px;">
+    <div class="d-flex flex-column align-items-start w-100" style="gap: 40px;">
+        <MudText Typo="Typo.h5">@Localizer[Langs.GeneralInformation]</MudText>
+        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 24px">
+            <MudTextField Label="@Localizer[Langs.CompanyName]" Variant="Variant.Outlined" T="string" @bind-Text="@_company?.Name" Class="w-100 my-0" Style="font-weight: 600"></MudTextField>
+            <MudTextField Label="@Localizer[Langs.TaxNumber]" Variant="Variant.Outlined" T="string" @bind-Text="@_company?.TaxNumber" Class="w-100 my-0" Style="font-weight: 600"></MudTextField>
+            <MudTextField Label="@Localizer[Langs.CreationDate]" Variant="Variant.Outlined" T="string" Text="@_company?.CreatedAt.ToShortDateString()" Class="w-100 gray-label my-0" Style="font-weight: 600; color: var(--mud-palette-text-primary)" Disabled></MudTextField>
         </div>
     </div>
-    <div class="d-flex flex-column align-items-start w-100" style="gap: 4px">
-        <MudText Typo="Typo.h6">@Localizer[Langs.CompanyAddress]</MudText>
-        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
-            <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 4px; padding-bottom: 1px;">
-                <MudTextField Label="Ulica" T="string" Text="@_company?.Address?.Line1" Class="w-100" Style="font-weight: 600" ReadOnly Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="Kod pocztowy" T="string" Text="@_company?.Address?.ZipCode" Class="w-100" Style="font-weight: 600" ReadOnly Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="Miasto" T="string" Text="@_company?.Address?.City" Class="w-100" Style="font-weight: 600" ReadOnly Variant="Variant.Outlined"></MudTextField>
-                <MudTextField Label="Kraj" T="string" Text="@_company?.Address?.Country" Class="w-100" Style="font-weight: 600" ReadOnly Variant="Variant.Outlined"></MudTextField>
+    <div class="d-flex flex-column align-items-start w-100" style="gap: 16px; padding-bottom: 40px;">
+        <MudText Typo="Typo.h6" Class="my-0">@Localizer[Langs.CompanyAddress]</MudText>
+        <div class="d-flex flex-column align-items-start align-self-stretch my-0" style="gap: 24px">
+            <MudTextField Label="@Localizer[Langs.StreetAndNumber]" T="string" @bind-Text="@_company?.Address?.Line1" Class="w-100 my-0" Style="font-weight: 600" Variant="Variant.Outlined"></MudTextField>
+            <div class="d-flex w-100 align-self-stretch my-0 align-items-center justify-content-between" style="gap: 16px">
+                <MudTextField Label="@Localizer[Langs.ZipCode]" Mask="@_zipCodeMask" T="string" @bind-Text="@_company?.Address?.ZipCode" Class="my-0" Style="font-weight: 600" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField Label="@Localizer[Langs.City]" T="string" @bind-Text="@_company?.Address?.City" Class="my-0" Style="font-weight: 600" Variant="Variant.Outlined" ></MudTextField>
+            </div>
+            <div class="w-100 d-flex align-items-stretch">
+                <MudSelectExtended T="CountryItem?" ItemCollection="@_countries" Label="@Localizer[Langs.Country]" SearchBoxAutoFocus="true" SearchBox="true" Variant="Variant.Outlined" Style="font-weight: 600" @bind-Value="_selectedCountry" ToStringFunc="@(new Func<CountryItem,string?>(CountryStringFunc))" SearchFunc="@(new Func<CountryItem, string, bool>(CountrySearchFunc))"/>
             </div>
         </div>
+        <LoadingButton Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" Class="mt-3" OnClick="Update">@Localizer[Langs.Update]</LoadingButton>
     </div>
     
 </div>
@@ -32,4 +34,68 @@
 @code {
     [CascadingParameter(Name = "Company")]
     CompanyDTO? _company { get; set; }
+
+    private List<CountryItem> _countries = new();
+    private CountryItem? _selectedCountry
+    {
+        get;
+        set
+        {
+            _company?.Address?.Country = value?.Code ?? string.Empty;
+            field = value;
+        }
+    }
+    IMask _zipCodeMask = new PatternMask("00-000");
+
+    bool _loadingUpdate;
+    bool _isBusy;
+
+    protected override void OnParametersSet()
+    {
+        if (_company != null && _company.Address == null)
+            _company.Address = new MagFlow.Shared.Models.Address();
+    }
+
+    protected override void OnInitialized()
+    {
+        _countries = CultureInfo
+            .GetCultures(CultureTypes.SpecificCultures)
+            .Select(culture => new RegionInfo(culture.Name))
+            .GroupBy(region => region.TwoLetterISORegionName)
+            .Select(group => group.First())
+            .OrderBy(region => region.DisplayName)
+            .Select(region => new CountryItem
+            {
+                Code = region.TwoLetterISORegionName,
+                Name = region.DisplayName
+            })
+            .ToList();
+    }
+
+    private async Task Update()
+    {
+
+    }
+
+    private bool CountrySearchFunc(CountryItem? value, string searchString)
+    {
+        if (string.IsNullOrEmpty(searchString))
+            return true;
+
+        if (value?.Name.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase) == true)
+            return true;
+
+        return false;
+    }
+
+    private string? CountryStringFunc(CountryItem? countryItem)
+    {
+        return countryItem?.Name;
+    }
+
+    class CountryItem
+    {
+        public string Code { get; set; } = default!;
+        public string Name { get; set; } = default!;
+    }
 }
