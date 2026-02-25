@@ -847,4 +847,16 @@ i uprawnieniami użytkowników</value>
   <data name="CompanyAddress" xml:space="preserve">
     <value>Adres firmy</value>
   </data>
+  <data name="StreetAndNumber" xml:space="preserve">
+    <value>Ulica i numer</value>
+  </data>
+  <data name="ZipCode" xml:space="preserve">
+    <value>Kod pocztowy</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Miasto</value>
+  </data>
+  <data name="Country" xml:space="preserve">
+    <value>Kraj</value>
+  </data>
 </root>

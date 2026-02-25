@@ -24,6 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MudBlazor;
 using MudBlazor.Services;
+using MudExtensions.Services;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -50,6 +51,7 @@ namespace MagFlow.Web.Extensions
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             services.AddBlazoredLocalStorage();
+            services.AddMudExtensions();
 
             services.RegisterScopes();
             services.ConfigureDbContext();

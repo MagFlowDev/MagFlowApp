@@ -16,24 +16,37 @@
 
 @code {
     UserSessionDTO? LastSession = null;
+    private bool _initialized = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        LastSession = (await UserService.GetLastSessions())?.FirstOrDefault();
-
-        if(LastSession == null || LastSession.ExpiresAt <= DateTime.UtcNow)
-        {
-            NavigationManager.NavigateTo("/lobby");
+        if (!firstRender || _initialized)
             return;
-        }
-        else
+
+        _initialized = true;
+
+        try
         {
-            var updated = await UserService.UpdateLastSession(LastSession);
-            if(updated != Enums.Result.Success)
+            LastSession = (await UserService.GetLastSessions())?.FirstOrDefault();
+
+            if (LastSession == null || LastSession.ExpiresAt <= DateTime.UtcNow)
             {
                 NavigationManager.NavigateTo("/lobby");
                 return;
             }
+            else
+            {
+                var updated = await UserService.UpdateLastSession(LastSession);
+                if (updated != Enums.Result.Success)
+                {
+                    NavigationManager.NavigateTo("/lobby");
+                    return;
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+            NavigationManager.NavigateTo("/lobby");
         }
     }
 }
