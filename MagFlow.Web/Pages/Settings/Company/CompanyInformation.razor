@@ -1,8 +1,14 @@
-﻿@using MagFlow.Shared.DTOs.Core
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
 @using MudBlazor
 @using System.Globalization
 @using MudExtensions
+
+@inject ICompanyService CompanyService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 24px; padding-right: 40px;">
     <div class="d-flex flex-column align-items-start w-100" style="gap: 40px;">
@@ -74,7 +80,30 @@
 
     private async Task Update()
     {
+        if (_isBusy || _company == null)
+            return;
 
+        try
+        {
+            _isBusy = true;
+            _loadingUpdate = true;
+
+            var result = await CompanyService.UpdateCompany(_company);
+            if (result == Enums.Result.Success)
+            {
+                NavigationManager.NavigateTo("/user/settings", true);
+                return;
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.FailedUpdate], Severity.Error);
+            }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loadingUpdate = false;
+        }
     }
 
     private bool CountrySearchFunc(CountryItem? value, string searchString)

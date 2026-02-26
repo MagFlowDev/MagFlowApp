@@ -1,6 +1,9 @@
 ﻿using MagFlow.DAL.Repositories.Core.Interfaces;
+using MagFlow.Domain.Core;
 using MagFlow.EF;
 using MagFlow.Shared.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,8 +11,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using MagFlow.Domain.Core;
-using Microsoft.EntityFrameworkCore;
 
 namespace MagFlow.DAL.Repositories.Core
 {
@@ -43,7 +44,59 @@ namespace MagFlow.DAL.Repositories.Core
                 return null;
             }
         }
-        
+
+        public async Task<Enums.Result> UpdateLogoAsync(Guid companyId, byte[] data, string contentType)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    var existingLogo = await context.CompanyLogo.FirstOrDefaultAsync(x => x.CompanyId == companyId);
+                    if (existingLogo == null)
+                    {
+                        var newLogo = new CompanyLogo()
+                        {
+                            CompanyId = companyId,
+                            ImageData = data,
+                            ContentType = contentType
+                        };
+                        await context.CompanyLogo.AddAsync(newLogo);
+                    }
+                    else
+                    {
+                        existingLogo.ImageData = data;
+                        existingLogo.ContentType = contentType;
+                        context.CompanyLogo.Update(existingLogo);
+                    }
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<Enums.Result> UpdateSettingsAsync(CompanySettings settings)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    context.CompanySettings.Update(settings);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
         public override Enums.Result Delete(Domain.Core.Company entity)
         {
             try

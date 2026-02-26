@@ -19,6 +19,7 @@ namespace MagFlow.EF
         public DbSet<ApplicationUserToken> UserTokens {  get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<CompanySettings> CompanySettings { get; set; }
+        public DbSet<CompanyLogo> CompanyLogo { get; set; }
         public DbSet<CompanyUser> CompanyUsers { get; set; }
         public DbSet<CompanyNotification> CompanyNotifications { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }

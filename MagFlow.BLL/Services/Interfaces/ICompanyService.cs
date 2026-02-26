@@ -13,5 +13,9 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<CompanyDTO?> GetCurrentCompany();
         Task<Enums.Result> CreateCompany(CompanyDTO companyDTO);
         Task<List<ModuleDTO>?> GetCompanyModules(Guid companyId);
+
+        Task<Enums.Result> UpdateCompany(CompanyDTO companyDTO);
+        Task<Enums.Result> UpdateCompanySettings(Guid companyId, CompanySettingsDTO companySettingsDTO);
+        Task<Enums.Result> UpdateCompanyLogo(Guid companyId, byte[] data, string contentType = "image/jpg");
     }
 }
