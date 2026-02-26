@@ -2,17 +2,21 @@
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.Core.Interfaces;
 using MagFlow.Domain.Core;
+using MagFlow.Shared.Attributes;
 using MagFlow.Shared.DTOs.Core;
 using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Enumerators;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using static MagFlow.Shared.Models.Enums;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MagFlow.BLL.Services
 {
@@ -79,6 +83,10 @@ namespace MagFlow.BLL.Services
             return result;
         }
 
+
+
+        // Settings section
+        [MinimumRole(nameof(AppRole.CompanyAdmin))]
         public async Task<Enums.Result> UpdateCompany(CompanyDTO companyDTO)
         {
             if (!companyDTO.Id.HasValue)
@@ -92,6 +100,35 @@ namespace MagFlow.BLL.Services
             return result;
         }
 
+        [MinimumRole(nameof(AppRole.CompanyAdmin))]
+        public async Task<Enums.Result> UpdateCompanySettings(Guid companyId, CompanySettingsDTO companySettingsDTO)
+        {
+            var company = await _companyRepository.GetByIdAsync(companyId);
+            if (company == null)
+                return Enums.Result.Error;
+
+            if (company.CompanySettings == null)
+                company.CompanySettings = companySettingsDTO.ToEntity(companyId);
+            else
+                company.CompanySettings = companySettingsDTO.ToEntity(company.CompanySettings);
+
+            return await _companyRepository.UpdateSettingsAsync(company.CompanySettings);
+        }
+
+        [MinimumRole(nameof(AppRole.CompanyAdmin))]
+        public async Task<Enums.Result> UpdateCompanyLogo(Guid companyId, byte[] data, string contentType = "image/jpg")
+        {
+            var company = await _companyRepository.GetByIdAsync(companyId);
+            if (company == null)
+                return Enums.Result.Error;
+
+            var result = await _companyRepository.UpdateLogoAsync(companyId, data, contentType);
+            return result;
+        }
+
+
+
+        [MinimumRole(nameof(AppRole.SysAdmin))]
         public async Task<Enums.Result> DeleteCompany(Guid companyId)
         {
             var company = await _companyRepository.GetByIdAsync(companyId);

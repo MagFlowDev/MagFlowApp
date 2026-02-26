@@ -19,7 +19,8 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 Name = company.Name,
                 TaxNumber = company.TaxNumber,
                 CreatedAt = company.CreatedAt,
-                Address = company.Address 
+                Address = company.Address,
+                CompanySettings = ToDTO(company.CompanySettings)
             };
         }
 
@@ -27,6 +28,18 @@ namespace MagFlow.BLL.Mappers.Domain.Core
         {
             return companies.Select(x => ToDTO(x)).ToList();
         }
+
+        public static CompanySettingsDTO ToDTO(this CompanySettings? companySettings)
+        {
+            return new CompanySettingsDTO()
+            {
+                Email = companySettings?.Email,
+                PhoneNumber = companySettings?.PhoneNumber,
+                Website = companySettings?.Website,
+            };
+        }
+
+
 
         public static Company ToEntity(this CompanyDTO companyDTO, bool isActive = true, DateTime? createdAt = null)
         {
@@ -41,13 +54,36 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 ConnectionString = StringExtensions.GetCompanyConnectionString(companyDTO.Name) ?? string.Empty,
                 IsActive = isActive,
                 CreatedAt = createdAt.Value,
+                Address = companyDTO.Address
             };
         }
+
+        public static CompanySettings ToEntity(this CompanySettingsDTO companySettingsDTO, Guid companyId)
+        {
+            return new CompanySettings()
+            {
+                CompanyId = companyId,
+                Email = companySettingsDTO?.Email,
+                PhoneNumber = companySettingsDTO?.PhoneNumber,
+                Website = companySettingsDTO?.Website
+            };
+        }
+
+        public static CompanySettings ToEntity(this CompanySettingsDTO userSettingsDTO, CompanySettings actualSettings)
+        {
+            actualSettings.Email = userSettingsDTO.Email ?? actualSettings.Email;
+            actualSettings.PhoneNumber = userSettingsDTO.PhoneNumber ?? actualSettings.PhoneNumber;
+            actualSettings.Website = userSettingsDTO.Website ?? actualSettings.Website;
+            return actualSettings;
+        }
+
+
 
         public static Company Validate(this Company company, CompanyDTO companyDTO)
         {
             company.Name = !string.IsNullOrWhiteSpace(companyDTO.Name) ? companyDTO.Name : company.Name;
-            company.TaxNumber = company.TaxNumber;
+            company.TaxNumber = !string.IsNullOrWhiteSpace(companyDTO.TaxNumber) ? companyDTO.TaxNumber : company.TaxNumber;
+            company.Address = companyDTO.Address ?? company.Address;
             return company;
         }
     }
