@@ -114,6 +114,7 @@ namespace MagFlow.EF
             builder.Entity<Company>().HasMany(m => m.Modules).WithOne(c => c.Company);
             builder.Entity<Company>().HasMany(n => n.Notifications).WithOne(c => c.Company);
             builder.Entity<Company>().HasOne(s => s.CompanySettings).WithOne(c => c.Company);
+            builder.Entity<Company>().OwnsOne(c => c.Address);
             builder.Entity<CompanyNotification>().HasOne(n => n.Notification);
             builder.Entity<CompanyModule>().HasMany(p => p.ModulePricings).WithOne(m => m.CompanyModule);
             builder.Entity<CompanyModule>().HasOne(m => m.Module).WithMany(c => c.CompanyModules);

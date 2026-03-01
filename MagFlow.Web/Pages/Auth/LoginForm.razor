@@ -126,6 +126,7 @@
                 { "RememberMe", SignInModel.RememberMe }
             });
         }
+        catch (TaskCanceledException) { }
         finally
         {
             _isSubmitting = false;

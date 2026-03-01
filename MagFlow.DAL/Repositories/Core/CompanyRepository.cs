@@ -79,6 +79,30 @@ namespace MagFlow.DAL.Repositories.Core
             }
         }
 
+        public async Task<Enums.Result> RemoveLogoAsync(Guid companyId)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    var existingLogo = await context.CompanyLogo.FirstOrDefaultAsync(x => x.CompanyId == companyId);
+                    if (existingLogo == null)
+                        return Enums.Result.Success;
+                    else
+                    {
+                        context.CompanyLogo.Remove(existingLogo);
+                    }
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
         public async Task<Enums.Result> UpdateSettingsAsync(CompanySettings settings)
         {
             try

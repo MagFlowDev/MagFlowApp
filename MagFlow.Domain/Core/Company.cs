@@ -24,7 +24,7 @@ namespace MagFlow.Domain.Core
         public DateTime CreatedAt { get; set; }
         [Required]
         public bool IsActive { get; set; }
-        public Address? Address { get; set; }
+        public Address Address { get; set; } = new();
 
 
         public virtual CompanySettings? CompanySettings { get; set; }

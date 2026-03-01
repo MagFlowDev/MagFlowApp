@@ -1,5 +1,176 @@
-﻿<h3>LogoSettings</h3>
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.Models
+@using MagFlow.Web.Components.Buttons
+@using MudBlazor
+
+@inject ICompanyService CompanyService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 24px; padding-right: 40px;">
+    <div class="d-flex flex-column align-items-start" style="gap: 8px">
+        <MudText Typo="Typo.h5">@Localizer[Langs.Logo]</MudText>
+        <MudText Typo="Typo.body2" Color="Color.Secondary">@Localizer[Langs.LogoFormatExamples]</MudText>
+    </div>
+    <div class="d-flex flex-column align-items-start w-100" style="gap: 4px;">
+        @if (string.IsNullOrEmpty(_previewDataUrl))
+        {
+            <MudFileUpload @bind-Files="_file" @bind-Dragging="@_dragging" @bind-Dragging:after="@ClearDragClass" tabindex="-1" DragAndDrop="true" AppendMultipleFiles="false" Style="background: transparent" Accept=".png, .jpg, .jpeg" Class="align-self-stretch">
+                <CustomContent>
+                    <MudPaper @onclick="@context.OpenFilePickerAsync" @ondragenter="@SetDragClass" class="@_dragClass" style="gap: 24px; padding: 24px 0 24px 0; background: transparent">
+                        <div class="d-flex flex-column align-items-center align-self-stretch" style="gap: 24px">
+                            <MudIcon Icon="@Icons.Material.Outlined.FileUpload" Size="Size.Large" Style="width: 80px; height: 80px" Color="Color.Secondary" />
+                            <div class="d-flex flex-column align-items-center align-self-stretch" style="gap: 8px">
+                                <MudText Typo="Typo.body1">@Localizer[Langs.DragFileOrUpload]</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary" Class="text-center">@Localizer[Langs.DragAndDropLogo]</MudText>
+                            </div>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" StartIcon="@Icons.Material.Outlined.FileUpload" Class="mb-2" OnClick="@context.OpenFilePickerAsync">@Localizer[Langs.LogoUpload]</MudButton>
+                        </div>
+                    </MudPaper>
+                </CustomContent> 
+                <SelectedTemplate/>
+            </MudFileUpload>
+        }
+        else
+        {
+            <MudPaper Elevation="0" Class="d-flex flex-column align-items-center justify-content-center border-2 border-dashed" style="gap: 16px; padding: 0 0 8px 0; background: transparent">
+                <div class="d-flex justify-content-center" style="max-width: 320px; max-height: 320px; background: transparent;">
+                    <MudImage Src="@_previewDataUrl" Alt="logo preview" Style="max-width:100%; max-width:100%; object-fit:contain; border-radius:6px;" />
+                </div>
+                <div class="d-flex align-self-lg-stretch align-items-start justify-content-center" style="gap: 8px; max-width: 320px">
+                    <MudFileUpload AppendMultipleFiles="false" DragAndDrop="false" @bind-Files="_file" Accept=".png, .jpg, .jpeg">
+                        <CustomContent>
+                            <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" StartIcon="@Icons.Material.Outlined.FindReplace" OnClick="@context.OpenFilePickerAsync">@Localizer[Langs.LogoChange]</MudButton>
+                        </CustomContent>
+                        <SelectedTemplate/>
+                    </MudFileUpload>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" StartIcon="@Icons.Material.Outlined.Delete" OnClick="RemoveLogo">@Localizer[Langs.LogoRemove]</MudButton>
+                </div>
+            </MudPaper>
+        }
+        @if (_file != null)
+        {
+            <MudChip T="string" Color="Color.Secondary" OnClose="@(() => _file = null)" CloseIcon="@Icons.Material.Filled.Close" Style="padding: 10px">@_file?.Name</MudChip>
+        }
+    </div>
+    <div class="d-flex flex-column align-items-start w-100" style="padding-bottom: 40px">
+        <LoadingButton Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" OnClick="Update">@Localizer[Langs.Save]</LoadingButton>
+    </div>
+</div>
 
 @code {
+    [CascadingParameter(Name = "Company")]
+    CompanyDTO? _company { get; set; }
 
+    private IBrowserFile? _file;
+    private const string DefaultDragClass = "relative d-flex flex-column align-items-center align-self-stretch justify-content-center p-r gap-2 rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full";
+    private string _dragClass = DefaultDragClass;
+    private bool _dragging = false;
+
+    bool _loadingUpdate;
+    bool _isBusy;
+    bool _removeLogo;
+
+    private string? _previewDataUrl;
+
+    private void SetDragClass()
+    {
+        _dragClass = $"{DefaultDragClass} mud-border-success";
+        _dragging = true;
+    }
+
+    private void ClearDragClass()
+    {
+        if (!_dragging)
+        {
+            _dragClass = DefaultDragClass;
+        }
+    }
+
+    private void RemoveLogo()
+    {
+        _previewDataUrl = null;
+        _company?.LogoData = null;
+        _company?.LogoContentType = null;
+        _removeLogo = true;
+    }
+
+    protected override void OnParametersSet()
+    {
+        if(_company?.LogoData != null)
+        {
+            var base64 = Convert.ToBase64String(_company.LogoData);
+            _previewDataUrl = $"data:{_company.LogoContentType ?? "image/jpeg"};base64,{base64}";
+        }
+    }
+
+    private async Task Update()
+    {
+        if (_isBusy || _company == null || !_company.Id.HasValue)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loadingUpdate = true;
+
+            if (_file == null && _removeLogo == true)
+            {
+                var result = await CompanyService.RemoveCompanyLogo(_company.Id.Value);
+                if (result == Enums.Result.Success)
+                {
+                    Snackbar.Add(Localizer[Langs.SettingsSaved], Severity.Success);
+                    NavigationManager.NavigateTo("/company/settings", forceLoad: true);
+                    return;
+                }
+                else
+                {
+                    Snackbar.Add(Localizer[Langs.FailedUpdate], Severity.Error);
+                }
+            }
+            else if (_file != null)
+            {
+                if (_file.Size > 5 * 1024 * 1024)
+                {
+                    Snackbar.Add(Localizer[Langs.FileTooLarge], Severity.Error);
+                    return;
+                }
+
+                byte[]? data = null;
+                using (var stream = _file.OpenReadStream(5 * 1024 * 1024))
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await stream.CopyToAsync(memoryStream);
+                        data = memoryStream.ToArray();
+                    }
+                }
+
+                if (data == null)
+                {
+                    Snackbar.Add(Localizer[Langs.FileReadError], Severity.Error);
+                    return;
+                }
+                data = BLL.Helpers.FileHelper.ResizeIfLarger(data, 384);
+
+                var result = await CompanyService.UpdateCompanyLogo(_company.Id.Value, data, _file.ContentType);
+                if (result == Enums.Result.Success)
+                {
+                    Snackbar.Add(Localizer[Langs.SettingsSaved], Severity.Success);
+                    NavigationManager.NavigateTo("/company/settings", forceLoad: true);
+                    return;
+                }
+                else
+                {
+                    Snackbar.Add(Localizer[Langs.FailedUpdate], Severity.Error);
+                }
+            }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loadingUpdate = false;
+        }
+    }
 }

@@ -859,4 +859,46 @@ i uprawnieniami użytkowników</value>
   <data name="Country" xml:space="preserve">
     <value>Kraj</value>
   </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Ustawienia zostały zapisane</value>
+  </data>
+  <data name="LogoFormatExamples" xml:space="preserve">
+    <value>Format: PNG, JPG. Max 5MB. 384x384px</value>
+  </data>
+  <data name="LogoUpload" xml:space="preserve">
+    <value>Prześlij logo</value>
+  </data>
+  <data name="DragFileOrUpload" xml:space="preserve">
+    <value>Upuść plik tutaj lub prześlij</value>
+  </data>
+  <data name="DragAndDropLogo" xml:space="preserve">
+    <value>Przeciągnij i upuść plik logo lub kliknij, aby wybrać</value>
+  </data>
+  <data name="FileTooLarge" xml:space="preserve">
+    <value>Plik jest za duży</value>
+  </data>
+  <data name="FileReadError" xml:space="preserve">
+    <value>Wystąpił błąd podczas pobierania pliku. Spróbuj ponownie.</value>
+  </data>
+  <data name="LogoChange" xml:space="preserve">
+    <value>Zmień logo</value>
+  </data>
+  <data name="LogoRemove" xml:space="preserve">
+    <value>Usuń logo</value>
+  </data>
+  <data name="RejoiningTheServer" xml:space="preserve">
+    <value>Ponowne łączenie z serwerem…</value>
+  </data>
+  <data name="RejoinFailedNextAttempt" xml:space="preserve">
+    <value>Ponowne łączenie nie powiodło się… ponowna próba za</value>
+  </data>
+  <data name="RejoinFailed" xml:space="preserve">
+    <value>Ponowne łączenie nieudane.</value>
+  </data>
+  <data name="TryAgainOrReload" xml:space="preserve">
+    <value>Spróbuj ponownie lub odśwież stronę.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Ponów</value>
+  </data>
 </root>
