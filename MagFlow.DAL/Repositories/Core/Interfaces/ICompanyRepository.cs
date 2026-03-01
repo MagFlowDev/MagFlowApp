@@ -13,6 +13,7 @@ namespace MagFlow.DAL.Repositories.Core.Interfaces
         Task<List<CompanyModule>?> GetCompanyModules(Guid companyId);
 
         Task<Enums.Result> UpdateLogoAsync(Guid companyId, byte[] data, string contentType);
+        Task<Enums.Result> RemoveLogoAsync(Guid companyId);
         Task<Enums.Result> UpdateSettingsAsync(CompanySettings companySettings);
     }
 }

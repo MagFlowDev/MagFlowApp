@@ -858,4 +858,46 @@
   <data name="Country" xml:space="preserve">
     <value>Country</value>
   </data>
+  <data name="SettingsSaved" xml:space="preserve">
+    <value>Settings have been saved</value>
+  </data>
+  <data name="LogoFormatExamples" xml:space="preserve">
+    <value>Format: PNG, JPG. Max 5MB. 384x384px</value>
+  </data>
+  <data name="LogoUpload" xml:space="preserve">
+    <value>Upload logo</value>
+  </data>
+  <data name="DragFileOrUpload" xml:space="preserve">
+    <value>Drop file here or upload</value>
+  </data>
+  <data name="DragAndDropLogo" xml:space="preserve">
+    <value>Drag and drop logo file or click to select</value>
+  </data>
+  <data name="FileTooLarge" xml:space="preserve">
+    <value>File is too large</value>
+  </data>
+  <data name="FileReadError" xml:space="preserve">
+    <value>File upload error. Please try again.</value>
+  </data>
+  <data name="LogoChange" xml:space="preserve">
+    <value>Change logo</value>
+  </data>
+  <data name="LogoRemove" xml:space="preserve">
+    <value>Remove logo</value>
+  </data>
+  <data name="RejoiningTheServer" xml:space="preserve">
+    <value>Rejoining the server...</value>
+  </data>
+  <data name="RejoinFailedNextAttempt" xml:space="preserve">
+    <value>Rejoin failed... trying again in</value>
+  </data>
+  <data name="RejoinFailed" xml:space="preserve">
+    <value>Rejoin failed.</value>
+  </data>
+  <data name="TryAgainOrReload" xml:space="preserve">
+    <value>Please retry or reload the page.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
 </root>

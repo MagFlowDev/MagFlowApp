@@ -1,6 +1,7 @@
 ﻿using MagFlow.Domain.Core;
 using MagFlow.Shared.DTOs.Core;
 using MagFlow.Shared.Extensions;
+using MagFlow.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 TaxNumber = company.TaxNumber,
                 CreatedAt = company.CreatedAt,
                 Address = company.Address,
+                LogoData = company.Logo?.ImageData,
+                LogoContentType = company.Logo?.ContentType,
                 CompanySettings = ToDTO(company.CompanySettings)
             };
         }
@@ -54,7 +57,7 @@ namespace MagFlow.BLL.Mappers.Domain.Core
                 ConnectionString = StringExtensions.GetCompanyConnectionString(companyDTO.Name) ?? string.Empty,
                 IsActive = isActive,
                 CreatedAt = createdAt.Value,
-                Address = companyDTO.Address
+                Address = companyDTO.Address ?? new Address()
             };
         }
 

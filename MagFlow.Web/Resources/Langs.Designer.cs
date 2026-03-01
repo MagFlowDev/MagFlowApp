@@ -430,6 +430,24 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Przeciągnij i upuść plik logo lub kliknij, aby wybrać.
+        /// </summary>
+        public static string DragAndDropLogo {
+            get {
+                return ResourceManager.GetString("DragAndDropLogo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Upuść plik tutaj lub prześlij.
+        /// </summary>
+        public static string DragFileOrUpload {
+            get {
+                return ResourceManager.GetString("DragFileOrUpload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu E-mail.
         /// </summary>
         public static string E_mail {
@@ -633,6 +651,24 @@ namespace MagFlow.Web.Resources {
         public static string FAQ_Q6 {
             get {
                 return ResourceManager.GetString("FAQ_Q6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wystąpił błąd podczas pobierania pliku. Spróbuj ponownie..
+        /// </summary>
+        public static string FileReadError {
+            get {
+                return ResourceManager.GetString("FileReadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Plik jest za duży.
+        /// </summary>
+        public static string FileTooLarge {
+            get {
+                return ResourceManager.GetString("FileTooLarge", resourceCulture);
             }
         }
         
@@ -849,6 +885,42 @@ namespace MagFlow.Web.Resources {
         public static string Logo {
             get {
                 return ResourceManager.GetString("Logo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zmień logo.
+        /// </summary>
+        public static string LogoChange {
+            get {
+                return ResourceManager.GetString("LogoChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Format: PNG, JPG. Max 5MB. 384x384px.
+        /// </summary>
+        public static string LogoFormatExamples {
+            get {
+                return ResourceManager.GetString("LogoFormatExamples", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Usuń logo.
+        /// </summary>
+        public static string LogoRemove {
+            get {
+                return ResourceManager.GetString("LogoRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Prześlij logo.
+        /// </summary>
+        public static string LogoUpload {
+            get {
+                return ResourceManager.GetString("LogoUpload", resourceCulture);
             }
         }
         
@@ -1564,6 +1636,33 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ponowne łączenie nieudane..
+        /// </summary>
+        public static string RejoinFailed {
+            get {
+                return ResourceManager.GetString("RejoinFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ponowne łączenie nie powiodło się… ponowna próba za.
+        /// </summary>
+        public static string RejoinFailedNextAttempt {
+            get {
+                return ResourceManager.GetString("RejoinFailedNextAttempt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ponowne łączenie z serwerem….
+        /// </summary>
+        public static string RejoiningTheServer {
+            get {
+                return ResourceManager.GetString("RejoiningTheServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zapamiętaj mnie.
         /// </summary>
         public static string RememberMe {
@@ -1632,6 +1731,15 @@ namespace MagFlow.Web.Resources {
         public static string Restore {
             get {
                 return ResourceManager.GetString("Restore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ponów.
+        /// </summary>
+        public static string Retry {
+            get {
+                return ResourceManager.GetString("Retry", resourceCulture);
             }
         }
         
@@ -1758,6 +1866,15 @@ namespace MagFlow.Web.Resources {
         public static string SettingsCompany {
             get {
                 return ResourceManager.GetString("SettingsCompany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ustawienia zostały zapisane.
+        /// </summary>
+        public static string SettingsSaved {
+            get {
+                return ResourceManager.GetString("SettingsSaved", resourceCulture);
             }
         }
         
@@ -2028,6 +2145,15 @@ namespace MagFlow.Web.Resources {
         public static string TryAgain {
             get {
                 return ResourceManager.GetString("TryAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Spróbuj ponownie lub odśwież stronę..
+        /// </summary>
+        public static string TryAgainOrReload {
+            get {
+                return ResourceManager.GetString("TryAgainOrReload", resourceCulture);
             }
         }
         

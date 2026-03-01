@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static MagFlow.Shared.Models.Enums;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MagFlow.BLL.Services
 {
@@ -52,7 +53,7 @@ namespace MagFlow.BLL.Services
                 if (!companyId.HasValue)
                     return null;
 
-                var company = await _companyRepository.GetByIdAsync(companyId.Value, s => s.Include(x => x.CompanySettings));
+                var company = await _companyRepository.GetByIdAsync(companyId.Value, s => s.Include(x => x.CompanySettings).Include(x => x.Logo));
                 return company?.ToDTO();
             }
             catch(Exception ex)
@@ -126,6 +127,16 @@ namespace MagFlow.BLL.Services
             return result;
         }
 
+        [MinimumRole(nameof(AppRole.CompanyAdmin))]
+        public async Task<Enums.Result> RemoveCompanyLogo(Guid companyId)
+        {
+            var company = await _companyRepository.GetByIdAsync(companyId);
+            if (company == null)
+                return Enums.Result.Error;
+
+            var result = await _companyRepository.RemoveLogoAsync(companyId);
+            return result;
+        }
 
 
         [MinimumRole(nameof(AppRole.SysAdmin))]
