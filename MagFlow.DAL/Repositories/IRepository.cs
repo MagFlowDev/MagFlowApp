@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MagFlow.DAL.Repositories
 {
-    public interface IRepository<TEntity> where TEntity : class
+    public interface IRepository<TEntity, TContext> where TEntity : class where TContext : DbContext
     {
         IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null);
         Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null);
@@ -22,20 +22,23 @@ namespace MagFlow.DAL.Repositories
         TEntity? Get(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate);
 
-        Enums.Result Add(TEntity entity);
-        Task<Enums.Result> AddAsync(TEntity entity);
+        Enums.Result Add(TEntity entity, TContext? context = null);
+        Task<Enums.Result> AddAsync(TEntity entity, TContext? context = null);
 
-        Enums.Result AddMany(IEnumerable<TEntity> entities);
-        Task<Enums.Result> AddManyAsync(IEnumerable<TEntity> entities);
+        Enums.Result AddMany(IEnumerable<TEntity> entities, TContext? context = null);
+        Task<Enums.Result> AddManyAsync(IEnumerable<TEntity> entities, TContext? context = null);
 
-        Enums.Result Update(TEntity entity);
-        Task<Enums.Result> UpdateAsync(TEntity entity);
+        Enums.Result Update(TEntity entity, TContext? context = null);
+        Task<Enums.Result> UpdateAsync(TEntity entity, TContext? context = null);
 
-        Enums.Result Delete(TEntity entity);
-        Task<Enums.Result> DeleteAsync(TEntity entity);
+        Enums.Result UpdateRange(IEnumerable<TEntity> entities, TContext? context = null);
+        Task<Enums.Result> UpdateRangeAsync(IEnumerable<TEntity> entities, TContext? context = null);
 
-        Enums.Result DeleteMany(Expression<Func<TEntity, bool>> predicate);
-        Task<Enums.Result> DeleteManyAsync(Expression<Func<TEntity, bool>> predicate);
+        Enums.Result Delete(TEntity entity, TContext? context = null);
+        Task<Enums.Result> DeleteAsync(TEntity entity, TContext? context = null);
+
+        Enums.Result DeleteMany(Expression<Func<TEntity, bool>> predicate, TContext? context = null);
+        Task<Enums.Result> DeleteManyAsync(Expression<Func<TEntity, bool>> predicate, TContext? context = null);
 
         bool Any(Expression<Func<TEntity, bool>> predicate);
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);

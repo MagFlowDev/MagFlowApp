@@ -12,7 +12,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MagFlow.DAL.Repositories.CompanyScope
 {
-    public abstract class BaseCompanyRepository<TEntity, TLogger> : IRepository<TEntity> where TEntity : class where TLogger : class
+    public abstract class BaseCompanyRepository<TEntity, TLogger> : IRepository<TEntity, CompanyDbContext> where TEntity : class where TLogger : class
     {
         protected readonly ICoreDbContextFactory _coreContextFactory;
         protected readonly ICompanyDbContextFactory _companyContextFactory;
@@ -27,11 +27,19 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             _logger = logger;
         }
 
-        public virtual Enums.Result Add(TEntity entity)
+        public virtual Enums.Result Add(TEntity entity, CompanyDbContext? context = default)
         {
             try
             {
-                using (var context = _companyContextFactory.CreateDbContext())
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        context.Set<TEntity>().Add(entity);
+                        context.SaveChanges();
+                    }
+                }
+                else
                 {
                     context.Set<TEntity>().Add(entity);
                     context.SaveChanges();
@@ -45,11 +53,19 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual async Task<Enums.Result> AddAsync(TEntity entity)
+        public virtual async Task<Enums.Result> AddAsync(TEntity entity, CompanyDbContext? context = default)
         {
             try
             {
-                using (var context = _companyContextFactory.CreateDbContext())
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        await context.Set<TEntity>().AddAsync(entity);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                else
                 {
                     await context.Set<TEntity>().AddAsync(entity);
                     await context.SaveChangesAsync();
@@ -63,11 +79,19 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual Enums.Result AddMany(IEnumerable<TEntity> entities)
+        public virtual Enums.Result AddMany(IEnumerable<TEntity> entities, CompanyDbContext? context = default)
         {
             try
             {
-                using (var context = _companyContextFactory.CreateDbContext())
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        context.Set<TEntity>().AddRange(entities);
+                        context.SaveChanges();
+                    }
+                }
+                else
                 {
                     context.Set<TEntity>().AddRange(entities);
                     context.SaveChanges();
@@ -81,11 +105,19 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual async Task<Enums.Result> AddManyAsync(IEnumerable<TEntity> entities)
+        public virtual async Task<Enums.Result> AddManyAsync(IEnumerable<TEntity> entities, CompanyDbContext? context = default)
         {
             try
             {
-                using (var context = _companyContextFactory.CreateDbContext())
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        await context.Set<TEntity>().AddRangeAsync(entities);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                else
                 {
                     await context.Set<TEntity>().AddRangeAsync(entities);
                     await context.SaveChangesAsync();
@@ -163,11 +195,19 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual Enums.Result Delete(TEntity entity)
+        public virtual Enums.Result Delete(TEntity entity, CompanyDbContext? context = default)
         {
             try
             {
-                using (var context = _companyContextFactory.CreateDbContext())
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        context.Set<TEntity>().Remove(entity);
+                        context.SaveChanges();
+                    }
+                }
+                else
                 {
                     context.Set<TEntity>().Remove(entity);
                     context.SaveChanges();
@@ -181,11 +221,19 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual async Task<Enums.Result> DeleteAsync(TEntity entity)
+        public virtual async Task<Enums.Result> DeleteAsync(TEntity entity, CompanyDbContext? context = default)
         {
             try
             {
-                using (var context = _companyContextFactory.CreateDbContext())
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        context.Set<TEntity>().Remove(entity);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                else
                 {
                     context.Set<TEntity>().Remove(entity);
                     await context.SaveChangesAsync();
@@ -199,11 +247,22 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual Enums.Result DeleteMany(Expression<Func<TEntity, bool>> predicate)
+        public virtual Enums.Result DeleteMany(Expression<Func<TEntity, bool>> predicate, CompanyDbContext? context = default)
         {
             try
             {
-                using (var context = _companyContextFactory.CreateDbContext())
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        var entities = Find(predicate);
+                        if (entities == null)
+                            return Enums.Result.Error;
+                        context.Set<TEntity>().RemoveRange(entities);
+                        context.SaveChanges();
+                    }
+                }
+                else
                 {
                     var entities = Find(predicate);
                     if (entities == null)
@@ -220,11 +279,22 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual async Task<Enums.Result> DeleteManyAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<Enums.Result> DeleteManyAsync(Expression<Func<TEntity, bool>> predicate, CompanyDbContext? context = default)
         {
             try
             {
-                using (var context = _companyContextFactory.CreateDbContext())
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        var entities = Find(predicate);
+                        if (entities == null)
+                            return Enums.Result.Error;
+                        context.Set<TEntity>().RemoveRange(entities);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                else
                 {
                     var entities = Find(predicate);
                     if (entities == null)
@@ -384,13 +454,27 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual Enums.Result Update(TEntity entity)
+        public virtual Enums.Result Update(TEntity entity, CompanyDbContext? context = default)
         {
             try
             {
-                using (var context = _companyContextFactory.CreateDbContext())
+                if (context == null)
                 {
-                    context.Set<TEntity>().Update(entity);
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        if (context.Set<TEntity>().Contains(entity))
+                            context.Set<TEntity>().Update(entity);
+                        else
+                            return Add(entity);
+                        context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    if (context.Set<TEntity>().Contains(entity))
+                        context.Set<TEntity>().Update(entity);
+                    else
+                        return Add(entity);
                     context.SaveChanges();
                 }
                 return Enums.Result.Success;
@@ -402,13 +486,125 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual async Task<Enums.Result> UpdateAsync(TEntity entity)
+        public virtual async Task<Enums.Result> UpdateAsync(TEntity entity, CompanyDbContext? context = default)
         {
             try
             {
-                using (var context = _companyContextFactory.CreateDbContext())
+                if (context == null)
                 {
-                    context.Set<TEntity>().Update(entity);
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        if (await context.Set<TEntity>().ContainsAsync(entity))
+                            context.Set<TEntity>().Update(entity);
+                        else
+                            return await AddAsync(entity);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    if (await context.Set<TEntity>().ContainsAsync(entity))
+                        context.Set<TEntity>().Update(entity);
+                    else
+                        return await AddAsync(entity);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
+        public virtual Enums.Result UpdateRange(IEnumerable<TEntity> entities, CompanyDbContext? context = default)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        using (var transaction = context.Database.BeginTransaction())
+                        {
+                            foreach (var entity in entities)
+                            {
+                                if (context.Set<TEntity>().Contains(entity))
+                                    context.Set<TEntity>().Update(entity);
+                                else
+                                {
+                                    var temp = Add(entity);
+                                    if (temp != Enums.Result.Success)
+                                    {
+                                        transaction.Rollback();
+                                        return temp;
+                                    }
+                                }
+                            }
+                            transaction.Commit();
+                        }
+                        context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    foreach (var entity in entities)
+                    {
+                        if (context.Set<TEntity>().Contains(entity))
+                            context.Set<TEntity>().Update(entity);
+                        else
+                            Add(entity);
+                    }
+                    context.SaveChanges();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
+        public virtual async Task<Enums.Result> UpdateRangeAsync(IEnumerable<TEntity> entities, CompanyDbContext? context = default)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        using (var transaction = await context.Database.BeginTransactionAsync())
+                        {
+                            foreach (var entity in entities)
+                            {
+                                if (await context.Set<TEntity>().ContainsAsync(entity))
+                                    context.Set<TEntity>().Update(entity);
+                                else
+                                {
+                                    var temp = await AddAsync(entity);
+                                    if (temp != Enums.Result.Success)
+                                    {
+                                        await transaction.RollbackAsync();
+                                        return temp;
+                                    }
+                                }
+                            }
+                            await transaction.CommitAsync();
+                        }
+                        await context.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    foreach (var entity in entities)
+                    {
+                        if (await context.Set<TEntity>().ContainsAsync(entity))
+                            context.Set<TEntity>().Update(entity);
+                        else
+                            await AddAsync(entity);
+                    }
                     await context.SaveChangesAsync();
                 }
                 return Enums.Result.Success;

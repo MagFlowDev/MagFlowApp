@@ -1,4 +1,5 @@
 ﻿using MagFlow.Domain.CoreScope;
+using MagFlow.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
 {
-    public interface IEventLogRepository : IRepository<EventLog>
+    public interface IEventLogRepository : IRepository<EventLog, CoreDbContext>
     {
     }
 }

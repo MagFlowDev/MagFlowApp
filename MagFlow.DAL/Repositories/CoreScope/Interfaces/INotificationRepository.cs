@@ -1,4 +1,5 @@
 ﻿using MagFlow.Domain.CoreScope;
+using MagFlow.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
 {
-    public interface INotificationRepository : IRepository<MagFlow.Domain.CoreScope.Notification>
+    public interface INotificationRepository : IRepository<Notification, CoreDbContext>
     {
         Task<List<SystemNotification>> GetCurrentSystemNotificationsAsync();
     }

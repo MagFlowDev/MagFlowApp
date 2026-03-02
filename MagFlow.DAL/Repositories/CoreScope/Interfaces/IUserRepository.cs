@@ -1,4 +1,5 @@
 ﻿using MagFlow.Domain.CoreScope;
+using MagFlow.EF;
 using MagFlow.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
 {
-    public interface IUserRepository : IRepository<MagFlow.Domain.CoreScope.ApplicationUser>
+    public interface IUserRepository : IRepository<ApplicationUser, CoreDbContext>
     {
         Task<ApplicationUser?> GetByEmailAsync(string email);
 

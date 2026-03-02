@@ -213,11 +213,14 @@ namespace MagFlow.Web.Extensions
 
         private static void RegisterRepositories(this IServiceCollection services)
         {
+            // Core Scope
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IEventLogRepository, EventLogRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
+            // Company Scope
             services.AddScoped<IContractorRepository, ContractorRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
@@ -228,8 +231,8 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUnitRepository, UnitRepository>();
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();
-
-            services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IWorkingHourRepository, WorkingHourRepository>();
+            services.AddScoped<IWorkDayRepository, WorkDayRepository>();
         }
 
         private static void ConfigureOpenTelemetry(this IServiceCollection services)

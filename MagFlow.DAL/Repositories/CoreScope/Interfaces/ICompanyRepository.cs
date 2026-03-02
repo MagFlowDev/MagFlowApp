@@ -1,4 +1,5 @@
 ﻿using MagFlow.Domain.CoreScope;
+using MagFlow.EF;
 using MagFlow.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
 {
-    public interface ICompanyRepository : IRepository<MagFlow.Domain.CoreScope.Company>
+    public interface ICompanyRepository : IRepository<Company, CoreDbContext>
     {
         Task<List<CompanyModule>?> GetCompanyModules(Guid companyId);
 
