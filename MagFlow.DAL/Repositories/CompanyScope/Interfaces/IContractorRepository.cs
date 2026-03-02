@@ -1,4 +1,5 @@
 ﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MagFlow.DAL.Repositories.CompanyScope.Interfaces
 {
-    public interface IContractorRepository : IRepository<Contractor>
+    public interface IContractorRepository : IRepository<Contractor, CompanyDbContext>
     {
     }
 }

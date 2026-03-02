@@ -121,7 +121,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public override Enums.Result Delete(Company entity)
+        public override Enums.Result Delete(Company entity, CoreDbContext? coreDbContext = null)
         {
             try
             {
@@ -138,7 +138,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public override async Task<Enums.Result> DeleteAsync(Company entity)
+        public override async Task<Enums.Result> DeleteAsync(Company entity, CoreDbContext? coreDbContext = null)
         {
             try
             {
@@ -155,7 +155,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public override Enums.Result DeleteMany(Expression<Func<Company, bool>> predicate)
+        public override Enums.Result DeleteMany(Expression<Func<Company, bool>> predicate, CoreDbContext? coreDbContext = null)
         {
             try
             {
@@ -192,7 +192,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public override async Task<Enums.Result> DeleteManyAsync(Expression<Func<Company, bool>> predicate)
+        public override async Task<Enums.Result> DeleteManyAsync(Expression<Func<Company, bool>> predicate, CoreDbContext? coreDbContext = null)
         {
             try
             {

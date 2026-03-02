@@ -2,13 +2,11 @@
 using MagFlow.EF;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MagFlow.DAL.Repositories.CompanyScope.Interfaces
 {
-    public interface IWarehouseRepository : IRepository<Warehouse, CompanyDbContext>
+    public interface IWorkingHourRepository : IRepository<DefaultWorkingHour, CompanyDbContext>
     {
     }
 }

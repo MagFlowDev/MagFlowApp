@@ -1,4 +1,5 @@
-﻿using MagFlow.Shared.DTOs.CoreScope;
+﻿using MagFlow.Shared.DTOs.CompanyScope;
+using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,11 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> UpdateCompany(CompanyDTO companyDTO);
         Task<Enums.Result> UpdateCompanySettings(Guid companyId, CompanySettingsDTO companySettingsDTO);
         Task<Enums.Result> UpdateCompanyLogo(Guid companyId, byte[] data, string contentType = "image/jpg");
+        Task<Enums.Result> UpdateDefaultWorkingHours(List<DefaultWorkingHourDTO> defaultWorkingHourDTOs);
+        Task<Enums.Result> UpdateWorkDays(List<WorkDayDTO> workDayDTOs);
+
+
+
         Task<Enums.Result> RemoveCompanyLogo(Guid companyId);
     }
 }

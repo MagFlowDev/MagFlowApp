@@ -1,8 +1,11 @@
-﻿using MagFlow.BLL.Mappers.Domain.CoreScope;
+﻿using MagFlow.BLL.Mappers.Domain.CompanyScope;
+using MagFlow.BLL.Mappers.Domain.CoreScope;
 using MagFlow.BLL.Services.Interfaces;
+using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
 using MagFlow.DAL.Repositories.CoreScope.Interfaces;
 using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.Attributes;
+using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Models;
@@ -24,6 +27,8 @@ namespace MagFlow.BLL.Services
     public class CompanyService : ICompanyService
     {
         private readonly ICompanyRepository _companyRepository;
+        private readonly IWorkDayRepository _workDayRepository;
+        private readonly IWorkingHourRepository _workingHourRepository;
         private readonly IUserRepository _userRepository;
         private readonly INetworkService _networkService;
 
@@ -32,10 +37,14 @@ namespace MagFlow.BLL.Services
         public CompanyService(ICompanyRepository companyRepository,
             INetworkService networkService,
             IUserRepository userRepository,
+            IWorkDayRepository workDayRepository,
+            IWorkingHourRepository workingHourRepository,
             ILogger<CompanyService> logger)
         {
             _companyRepository = companyRepository;
             _networkService = networkService;
+            _workDayRepository = workDayRepository;
+            _workingHourRepository = workingHourRepository;
             _userRepository = userRepository;
             _logger = logger;
         }
@@ -139,15 +148,23 @@ namespace MagFlow.BLL.Services
         }
 
         [MinimumRole(nameof(AppRole.CompanyAdmin))]
-        public async Task<Enums.Result> UpdateDefaultWorkingHours()
+        public async Task<Enums.Result> UpdateDefaultWorkingHours(List<DefaultWorkingHourDTO> defaultWorkingHourDTOs)
         {
-            return Result.Error;
+            var existinDefaultWorkingHours = await _workingHourRepository.GetAllAsync();
+            var updatedDefaultWorkingHours = defaultWorkingHourDTOs.ToEntity(existinDefaultWorkingHours);
+
+            var result = await _workingHourRepository.UpdateRangeAsync(updatedDefaultWorkingHours);
+            return result;
         }
 
         [MinimumRole(nameof(AppRole.CompanyAdmin))]
-        public async Task<Enums.Result> UpdateWorkDays()
+        public async Task<Enums.Result> UpdateWorkDays(List<WorkDayDTO> workDayDTOs)
         {
-            return Result.Error;
+            var existingWorkDays = await _workDayRepository.GetAllAsync();
+            var updatedWorkDays = workDayDTOs.ToEntity(existingWorkDays);
+
+            var result = await _workDayRepository.UpdateRangeAsync(existingWorkDays);
+            return result;
         }
 
 
