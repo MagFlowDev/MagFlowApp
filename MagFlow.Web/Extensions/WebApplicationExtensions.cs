@@ -1,6 +1,6 @@
 ﻿using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Hubs;
-using MagFlow.Domain.Core;
+using MagFlow.Domain.CoreScope;
 using MagFlow.EF;
 using MagFlow.Shared.Constants;
 using MagFlow.Shared.Models.Settings;

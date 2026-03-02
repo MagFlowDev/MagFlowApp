@@ -1,8 +1,8 @@
 ﻿using MagFlow.BLL.Mappers.Domain;
-using MagFlow.BLL.Mappers.Domain.Core;
+using MagFlow.BLL.Mappers.Domain.CoreScope;
 using MagFlow.BLL.Services.Interfaces;
-using MagFlow.DAL.Repositories.Core.Interfaces;
-using MagFlow.Shared.DTOs.Core;
+using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Shared.DTOs.CoreScope;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

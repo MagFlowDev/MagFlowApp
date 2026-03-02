@@ -1,6 +1,6 @@
 ﻿using MagFlow.BLL.Services.Interfaces;
-using MagFlow.DAL.Repositories.Core.Interfaces;
-using MagFlow.Domain.Core;
+using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.Models.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

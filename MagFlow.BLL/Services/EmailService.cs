@@ -1,5 +1,5 @@
 ﻿using MagFlow.BLL.Services.Interfaces;
-using MagFlow.Domain.Core;
+using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.Generators.EmailGenerators;
 using MagFlow.Shared.Models.Settings;
 using MailKit.Net.Smtp;

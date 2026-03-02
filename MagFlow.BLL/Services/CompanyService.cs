@@ -1,9 +1,9 @@
-﻿using MagFlow.BLL.Mappers.Domain.Core;
+﻿using MagFlow.BLL.Mappers.Domain.CoreScope;
 using MagFlow.BLL.Services.Interfaces;
-using MagFlow.DAL.Repositories.Core.Interfaces;
-using MagFlow.Domain.Core;
+using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.Attributes;
-using MagFlow.Shared.DTOs.Core;
+using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
@@ -137,6 +137,19 @@ namespace MagFlow.BLL.Services
             var result = await _companyRepository.RemoveLogoAsync(companyId);
             return result;
         }
+
+        [MinimumRole(nameof(AppRole.CompanyAdmin))]
+        public async Task<Enums.Result> UpdateDefaultWorkingHours()
+        {
+            return Result.Error;
+        }
+
+        [MinimumRole(nameof(AppRole.CompanyAdmin))]
+        public async Task<Enums.Result> UpdateWorkDays()
+        {
+            return Result.Error;
+        }
+
 
 
         [MinimumRole(nameof(AppRole.SysAdmin))]

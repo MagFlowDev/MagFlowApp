@@ -1,5 +1,5 @@
-﻿using MagFlow.Domain.Core;
-using MagFlow.EF.Seeds.Core;
+﻿using MagFlow.Domain.CoreScope;
+using MagFlow.EF.Seeds.CoreScope;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

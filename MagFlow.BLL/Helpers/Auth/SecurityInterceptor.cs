@@ -1,7 +1,7 @@
 ﻿using Castle.Core;
 using Castle.DynamicProxy;
 using MagFlow.BLL.Services.Interfaces;
-using MagFlow.DAL.Repositories.Core.Interfaces;
+using MagFlow.DAL.Repositories.CoreScope.Interfaces;
 using MagFlow.Shared.Attributes;
 using MagFlow.Shared.Extensions;
 using Microsoft.AspNetCore.Components;

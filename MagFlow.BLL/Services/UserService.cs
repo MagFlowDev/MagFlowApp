@@ -1,10 +1,10 @@
 ﻿using MagFlow.BLL.Mappers.Domain;
-using MagFlow.BLL.Mappers.Domain.Core;
+using MagFlow.BLL.Mappers.Domain.CoreScope;
 using MagFlow.BLL.Services.Interfaces;
-using MagFlow.DAL.Repositories.Core.Interfaces;
-using MagFlow.Domain.Core;
+using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.Attributes;
-using MagFlow.Shared.DTOs.Core;
+using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Generators.EmailGenerators;
 using MagFlow.Shared.Models.Auth;
