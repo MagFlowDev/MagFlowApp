@@ -34,11 +34,11 @@
         }
         else
         {
-            <MudPaper Elevation="0" Class="d-flex flex-column align-items-center justify-content-center border-2 border-dashed" style="gap: 16px; padding: 0 0 8px 0; background: transparent">
+            <MudPaper Elevation="0" Class="d-flex flex-column align-self-stretch align-items-center justify-content-center rounded-lg border-2 border-dashed pa-4 mt-4" style="gap: 16px; padding: 0 0 8px 0; background: var(--bs-gray-200)">
                 <div class="d-flex justify-content-center" style="max-width: 320px; max-height: 320px; background: transparent;">
                     <MudImage Src="@_previewDataUrl" Alt="logo preview" Style="max-width:100%; max-width:100%; object-fit:contain; border-radius:6px;" />
                 </div>
-                <div class="d-flex align-self-lg-stretch align-items-start justify-content-center" style="gap: 8px; max-width: 320px">
+                <div class="d-flex align-self-lg-stretch align-items-start justify-content-center" style="gap: 8px;">
                     <MudFileUpload AppendMultipleFiles="false" DragAndDrop="false" @bind-Files="_file" Accept=".png, .jpg, .jpeg">
                         <CustomContent>
                             <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" StartIcon="@Icons.Material.Outlined.FindReplace" OnClick="@context.OpenFilePickerAsync">@Localizer[Langs.LogoChange]</MudButton>
