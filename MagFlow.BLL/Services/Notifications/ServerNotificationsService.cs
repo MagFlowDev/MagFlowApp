@@ -1,6 +1,6 @@
 ﻿using MagFlow.BLL.Hubs;
 using MagFlow.BLL.Services.Interfaces;
-using MagFlow.Domain.Company;
+using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;

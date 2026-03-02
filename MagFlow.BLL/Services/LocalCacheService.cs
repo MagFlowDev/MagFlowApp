@@ -1,7 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using MagFlow.BLL.Services.Interfaces;
-using MagFlow.Domain.Company;
-using MagFlow.Shared.DTOs.Core;
+using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using Microsoft.Extensions.Logging;
 using System;

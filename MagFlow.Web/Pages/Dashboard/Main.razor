@@ -1,6 +1,6 @@
 ﻿@page "/"
 @using MagFlow.BLL.Services.Interfaces
-@using MagFlow.Shared.DTOs.Core
+@using MagFlow.Shared.DTOs.CoreScope
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Pages.Modules
 
@@ -43,6 +43,7 @@
                     return;
                 }
             }
+            StateHasChanged();
         }
         catch(Exception ex)
         {

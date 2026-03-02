@@ -1,5 +1,5 @@
-﻿using MagFlow.Domain.Core;
-using MagFlow.Shared.DTOs.Core;
+﻿using MagFlow.Domain.CoreScope;
+using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models.Auth;
 using System;
 using System.Collections.Generic;

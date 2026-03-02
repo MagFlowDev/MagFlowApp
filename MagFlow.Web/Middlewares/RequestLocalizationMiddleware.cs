@@ -1,7 +1,7 @@
 ﻿using MagFlow.BLL.Mappers.Enum;
 using MagFlow.BLL.Services.Interfaces;
-using MagFlow.DAL.Repositories.Core.Interfaces;
-using MagFlow.Domain.Core;
+using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Domain.CoreScope;
 using Microsoft.AspNetCore.Identity;
 using System.Globalization;
 using System.Security.Claims;

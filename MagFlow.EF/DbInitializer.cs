@@ -1,6 +1,6 @@
-﻿using MagFlow.Domain.Core;
-using MagFlow.EF.Seeds.Company;
-using MagFlow.EF.Seeds.Core;
+﻿using MagFlow.Domain.CoreScope;
+using MagFlow.EF.Seeds.CompanyScope;
+using MagFlow.EF.Seeds.CoreScope;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

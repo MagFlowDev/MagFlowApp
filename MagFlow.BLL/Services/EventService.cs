@@ -1,5 +1,5 @@
 ﻿using MagFlow.BLL.Services.Interfaces;
-using MagFlow.DAL.Repositories.Core.Interfaces;
+using MagFlow.DAL.Repositories.CoreScope.Interfaces;
 using MagFlow.Shared.Models;
 using Microsoft.Extensions.Logging;
 using System;

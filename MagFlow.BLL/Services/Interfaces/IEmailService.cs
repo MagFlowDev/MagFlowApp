@@ -1,4 +1,4 @@
-﻿using MagFlow.Domain.Core;
+﻿using MagFlow.Domain.CoreScope;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;

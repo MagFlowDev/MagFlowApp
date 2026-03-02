@@ -1,0 +1,15 @@
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace MagFlow.EF.Seeds.CoreScope
+{
+    public interface ICoreSeeder
+    {
+        int Step { get; }
+
+        void Seed(CoreDbContext context);
+        Task SeedAsync(CoreDbContext context, CancellationToken cancellationToken);
+    }
+}

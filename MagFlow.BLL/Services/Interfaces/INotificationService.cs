@@ -1,4 +1,4 @@
-﻿using MagFlow.Shared.DTOs.Core;
+﻿using MagFlow.Shared.DTOs.CoreScope;
 using System;
 using System.Collections.Generic;
 using System.Linq;

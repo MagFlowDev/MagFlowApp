@@ -25,7 +25,7 @@ namespace MagFlow.EF.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationRole", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("ApplicationRoles", (string)null);
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationRoleClaim", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationRoleClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,7 +80,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("RoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUser", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -165,7 +165,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("ApplicationUsers", (string)null);
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUserClaim", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUserClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -189,7 +189,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("UserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUserLogin", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUserLogin", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -210,7 +210,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("UserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUserRole", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUserRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -225,7 +225,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("UserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUserSettings", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUserSettings", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -238,7 +238,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("ApplicationUserSettings");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUserToken", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUserToken", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -257,7 +257,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.AuditLog", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.AuditLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -296,7 +296,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("AuditLogs");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.AuditLogChange", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.AuditLogChange", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -326,7 +326,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("AuditLogChange");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.Company", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.Company", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -359,7 +359,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.CompanyModule", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.CompanyModule", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -392,7 +392,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("CompanyModules");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.CompanyModulePricing", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.CompanyModulePricing", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -425,7 +425,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("CompanyModulePricing");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.CompanyNotification", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.CompanyNotification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -455,7 +455,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("CompanyNotifications");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.CompanyUser", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.CompanyUser", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -473,7 +473,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("CompanyUsers");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.EventLog", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.EventLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -515,7 +515,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("EventLogs");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.Module", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.Module", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -543,7 +543,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("Modules");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ModulePackage", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ModulePackage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -577,7 +577,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("ModulePackages");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ModulePricing", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ModulePricing", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -616,7 +616,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("ModulePricing");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.Notification", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.Notification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -644,7 +644,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("Notification");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.SystemNotification", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.SystemNotification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -669,7 +669,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("SystemNotifications");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.UserNotification", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.UserNotification", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -702,7 +702,7 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("UserNotifications");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.UserSession", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.UserSession", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -754,51 +754,51 @@ namespace MagFlow.EF.Migrations
                     b.ToTable("ModulePackageModulePricing");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationRoleClaim", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationRoleClaim", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.ApplicationRole", null)
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUser", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUser", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.Company", "DefaultCompany")
+                    b.HasOne("MagFlow.Domain.CoreScope.Company", "DefaultCompany")
                         .WithMany()
                         .HasForeignKey("DefaultCompanyId");
 
                     b.Navigation("DefaultCompany");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUserClaim", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUserClaim", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.ApplicationUser", null)
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUserLogin", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUserLogin", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.ApplicationUser", null)
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUserRole", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUserRole", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.ApplicationRole", "Role")
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationRole", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MagFlow.Domain.Core.ApplicationUser", "User")
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationUser", "User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -809,29 +809,29 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUserSettings", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUserSettings", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.ApplicationUser", "User")
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationUser", "User")
                         .WithOne("UserSettings")
-                        .HasForeignKey("MagFlow.Domain.Core.ApplicationUserSettings", "UserId")
+                        .HasForeignKey("MagFlow.Domain.CoreScope.ApplicationUserSettings", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUserToken", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUserToken", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.ApplicationUser", null)
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.AuditLog", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.AuditLog", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.ApplicationUser", "User")
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationUser", "User")
                         .WithMany("AuditLogs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -840,9 +840,9 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.AuditLogChange", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.AuditLogChange", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.AuditLog", "AuditLog")
+                    b.HasOne("MagFlow.Domain.CoreScope.AuditLog", "AuditLog")
                         .WithMany("Changes")
                         .HasForeignKey("AuditLogId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -851,15 +851,15 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("AuditLog");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.CompanyModule", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.CompanyModule", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.Company", "Company")
+                    b.HasOne("MagFlow.Domain.CoreScope.Company", "Company")
                         .WithMany("Modules")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MagFlow.Domain.Core.Module", "Module")
+                    b.HasOne("MagFlow.Domain.CoreScope.Module", "Module")
                         .WithMany("CompanyModules")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -870,9 +870,9 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("Module");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.CompanyModulePricing", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.CompanyModulePricing", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.CompanyModule", "CompanyModule")
+                    b.HasOne("MagFlow.Domain.CoreScope.CompanyModule", "CompanyModule")
                         .WithMany("ModulePricings")
                         .HasForeignKey("CompanyModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -881,15 +881,15 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("CompanyModule");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.CompanyNotification", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.CompanyNotification", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.Company", "Company")
+                    b.HasOne("MagFlow.Domain.CoreScope.Company", "Company")
                         .WithMany("Notifications")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MagFlow.Domain.Core.Notification", "Notification")
+                    b.HasOne("MagFlow.Domain.CoreScope.Notification", "Notification")
                         .WithMany()
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -900,15 +900,15 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("Notification");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.CompanyUser", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.CompanyUser", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.Company", "Company")
+                    b.HasOne("MagFlow.Domain.CoreScope.Company", "Company")
                         .WithMany("Users")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("MagFlow.Domain.Core.ApplicationUser", "User")
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationUser", "User")
                         .WithMany("Companies")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -919,9 +919,9 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.EventLog", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.EventLog", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.ApplicationUser", "User")
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationUser", "User")
                         .WithMany("EventLogs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -930,9 +930,9 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ModulePricing", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ModulePricing", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.Module", "Module")
+                    b.HasOne("MagFlow.Domain.CoreScope.Module", "Module")
                         .WithMany("Pricings")
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -941,9 +941,9 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("Module");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.SystemNotification", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.SystemNotification", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.Notification", "Notification")
+                    b.HasOne("MagFlow.Domain.CoreScope.Notification", "Notification")
                         .WithMany()
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -952,15 +952,15 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("Notification");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.UserNotification", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.UserNotification", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.Notification", "Notification")
+                    b.HasOne("MagFlow.Domain.CoreScope.Notification", "Notification")
                         .WithMany()
                         .HasForeignKey("NotificationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MagFlow.Domain.Core.ApplicationUser", "User")
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationUser", "User")
                         .WithMany("Notifications")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -971,9 +971,9 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.UserSession", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.UserSession", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.ApplicationUser", "User")
+                    b.HasOne("MagFlow.Domain.CoreScope.ApplicationUser", "User")
                         .WithMany("Sessions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -984,25 +984,25 @@ namespace MagFlow.EF.Migrations
 
             modelBuilder.Entity("ModulePackageModulePricing", b =>
                 {
-                    b.HasOne("MagFlow.Domain.Core.ModulePricing", null)
+                    b.HasOne("MagFlow.Domain.CoreScope.ModulePricing", null)
                         .WithMany()
                         .HasForeignKey("ModulesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MagFlow.Domain.Core.ModulePackage", null)
+                    b.HasOne("MagFlow.Domain.CoreScope.ModulePackage", null)
                         .WithMany()
                         .HasForeignKey("PackagesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationRole", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationRole", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.ApplicationUser", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.ApplicationUser", b =>
                 {
                     b.Navigation("AuditLogs");
 
@@ -1019,12 +1019,12 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("UserSettings");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.AuditLog", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.AuditLog", b =>
                 {
                     b.Navigation("Changes");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.Company", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.Company", b =>
                 {
                     b.Navigation("Modules");
 
@@ -1033,12 +1033,12 @@ namespace MagFlow.EF.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.CompanyModule", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.CompanyModule", b =>
                 {
                     b.Navigation("ModulePricings");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.Core.Module", b =>
+            modelBuilder.Entity("MagFlow.Domain.CoreScope.Module", b =>
                 {
                     b.Navigation("CompanyModules");
 
