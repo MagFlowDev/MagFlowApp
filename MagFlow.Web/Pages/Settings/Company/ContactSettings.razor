@@ -17,7 +17,9 @@
             <MudTextField Label="@Localizer[Langs.Website]" Placeholder="@Localizer[Langs.ExampleWebsite]" AdornmentIcon="@Icons.Material.Outlined.Language" Adornment="Adornment.Start" Mask="_websiteMask" Variant="Variant.Outlined" T="string" @bind-Text="@_company?.CompanySettings?.Website" Class="w-100 my-0"></MudTextField>
         </div>
     </div>
-    <LoadingButton Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" OnClick="Update">@Localizer[Langs.Update]</LoadingButton>
+    <div class="d-flex flex-column align-items-start w-100" style="padding-bottom: 40px">
+        <LoadingButton Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" OnClick="Update">@Localizer[Langs.Save]</LoadingButton>
+    </div>
 </div>
 
 @code {
@@ -39,7 +41,7 @@
 
     private async Task Update()
     {
-        if (_isBusy || _company == null || !_company.Id.HasValue)
+        if (_isBusy || _company == null || !_company.Id.HasValue || _company.CompanySettings == null)
             return;
 
         try

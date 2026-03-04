@@ -916,4 +916,34 @@ i uprawnieniami użytkowników</value>
   <data name="ExampleEmail" xml:space="preserve">
     <value>kontakt@firma.pl</value>
   </data>
+  <data name="Monday" xml:space="preserve">
+    <value>Poniedziałek</value>
+  </data>
+  <data name="Tuesday" xml:space="preserve">
+    <value>Wtorek</value>
+  </data>
+  <data name="Wednesday" xml:space="preserve">
+    <value>Środa</value>
+  </data>
+  <data name="Thursday" xml:space="preserve">
+    <value>Czwartek</value>
+  </data>
+  <data name="Friday" xml:space="preserve">
+    <value>Piątek</value>
+  </data>
+  <data name="Saturday" xml:space="preserve">
+    <value>Sobota</value>
+  </data>
+  <data name="Sunday" xml:space="preserve">
+    <value>Niedziela</value>
+  </data>
+  <data name="FromTime" xml:space="preserve">
+    <value>Od</value>
+  </data>
+  <data name="ToTime" xml:space="preserve">
+    <value>Do</value>
+  </data>
+  <data name="Closed" xml:space="preserve">
+    <value>Zamknięte</value>
+  </data>
 </root>
