@@ -900,4 +900,19 @@
   <data name="Retry" xml:space="preserve">
     <value>Retry</value>
   </data>
+  <data name="MainPhone" xml:space="preserve">
+    <value>Main phone</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="ExamplePhoneNumber" xml:space="preserve">
+    <value>+48 000 000 000</value>
+  </data>
+  <data name="ExampleWebsite" xml:space="preserve">
+    <value>www.website.com</value>
+  </data>
+  <data name="ExampleEmail" xml:space="preserve">
+    <value>conctact@company.com</value>
+  </data>
 </root>

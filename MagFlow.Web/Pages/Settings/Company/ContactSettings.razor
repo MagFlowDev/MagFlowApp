@@ -1,5 +1,68 @@
-﻿<h3>ContactSettings</h3>
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models
+@using MagFlow.Web.Components.Buttons
+@using MudBlazor
+
+@inject ICompanyService CompanyService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 24px; padding-right: 40px;">
+    <div class="d-flex flex-column align-items-start w-100 align-self-stretch" style="gap: 40px;">
+        <MudText Typo="Typo.h5">@Localizer[Langs.ContactDetails]</MudText>
+        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 24px">
+            <MudTextField Label="@Localizer[Langs.MainPhone]" Placeholder="@Localizer[Langs.ExamplePhoneNumber]" AdornmentIcon="@Icons.Material.Outlined.Call" Adornment="Adornment.Start" Mask="_phoneNumberMask" Variant="Variant.Outlined" T="string" @bind-Text="@_company?.CompanySettings?.PhoneNumber" Class="w-100 my-0"></MudTextField>
+            <MudTextField Label="@Localizer[Langs.Email]" Placeholder="@Localizer[Langs.ExampleEmail]" AdornmentIcon="@Icons.Material.Outlined.Email" Adornment="Adornment.Start" Mask="_emailMask" Variant="Variant.Outlined" T="string" @bind-Text="@_company?.CompanySettings?.Email" Class="w-100 my-0"></MudTextField>
+            <MudTextField Label="@Localizer[Langs.Website]" Placeholder="@Localizer[Langs.ExampleWebsite]" AdornmentIcon="@Icons.Material.Outlined.Language" Adornment="Adornment.Start" Mask="_websiteMask" Variant="Variant.Outlined" T="string" @bind-Text="@_company?.CompanySettings?.Website" Class="w-100 my-0"></MudTextField>
+        </div>
+    </div>
+    <LoadingButton Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" OnClick="Update">@Localizer[Langs.Update]</LoadingButton>
+</div>
 
 @code {
+    [CascadingParameter(Name = "Company")]
+    CompanyDTO? _company { get; set; }
+
+    bool _loadingUpdate;
+    bool _isBusy;
+
+    IMask _phoneNumberMask = new RegexMask(@"^\+?[\d\s.-]{0,20}$");
+    IMask _emailMask = RegexMask.Email();
+    IMask _websiteMask = new RegexMask(@"^(https?:\/\/)?[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=%]{0,253}(\/[a-zA-Z0-9._~:/?#[\]@!$&'()*+,;=-]*)?$");
+
+    protected override void OnParametersSet()
+    {
+        if (_company != null && _company.CompanySettings == null)
+            _company.CompanySettings = new CompanySettingsDTO();
+    }
+
+    private async Task Update()
+    {
+        if (_isBusy || _company == null || !_company.Id.HasValue)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loadingUpdate = true;
+
+            var result = await CompanyService.UpdateCompanySettings(_company.Id.Value, _company.CompanySettings);
+            if (result == Enums.Result.Success)
+            {
+                Snackbar.Add(Localizer[Langs.SettingsSaved], Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.FailedUpdate], Severity.Error);
+            }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loadingUpdate = false;
+        }
+    }
+
 
 }
