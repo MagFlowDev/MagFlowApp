@@ -91,11 +91,14 @@
         NavigationManager.LocationChanged += OnLocationChanged;
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _user = await UserService.GetCurrentUser();
-        if(_user != null)
-            await LocalCacheService.SetCurrentUser(_user);
+        if(firstRender)
+        {
+            _user = await UserService.GetCurrentUser();
+            if (_user != null)
+                await LocalCacheService.SetCurrentUser(_user);
+        }
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)

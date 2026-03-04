@@ -901,4 +901,19 @@ i uprawnieniami użytkowników</value>
   <data name="Retry" xml:space="preserve">
     <value>Ponów</value>
   </data>
+  <data name="MainPhone" xml:space="preserve">
+    <value>Telefon główny</value>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Strona internetowa</value>
+  </data>
+  <data name="ExamplePhoneNumber" xml:space="preserve">
+    <value>+48 000 000 000</value>
+  </data>
+  <data name="ExampleWebsite" xml:space="preserve">
+    <value>www.strona.pl</value>
+  </data>
+  <data name="ExampleEmail" xml:space="preserve">
+    <value>kontakt@firma.pl</value>
+  </data>
 </root>
