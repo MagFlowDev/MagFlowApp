@@ -83,6 +83,14 @@ namespace MagFlow.BLL.Services
                 .ToDTO();
         }
         
+        public async Task<List<DefaultWorkingHourDTO>?> GetDefaultWorkingHours()
+        {
+            var result = await _workingHourRepository.GetAllAsync();
+            return result?.ToDTO();
+        }
+
+
+
         public async Task<Enums.Result> CreateCompany(CompanyDTO companyDTO)
         {
             Company company = companyDTO.ToEntity();
@@ -152,6 +160,14 @@ namespace MagFlow.BLL.Services
         {
             var existinDefaultWorkingHours = await _workingHourRepository.GetAllAsync();
             var updatedDefaultWorkingHours = defaultWorkingHourDTOs.ToEntity(existinDefaultWorkingHours);
+            foreach(var workingHours in updatedDefaultWorkingHours)
+            {
+                if(workingHours.IsClosed)
+                {
+                    workingHours.OpenTime = null;
+                    workingHours.CloseTime = null;
+                }
+            }
 
             var result = await _workingHourRepository.UpdateRangeAsync(updatedDefaultWorkingHours);
             return result;

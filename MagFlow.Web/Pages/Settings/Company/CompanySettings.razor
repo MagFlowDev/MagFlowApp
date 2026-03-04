@@ -22,6 +22,7 @@
                 <MudListItem Value="Enums.CompanySettingsSection.Information" Text="@Localizer[Langs.GeneralInformation]" Icon="@Icons.Material.Outlined.Apartment" IconColor="@GetIconColor(Enums.CompanySettingsSection.Information)" Class="@GetNavClass(Enums.CompanySettingsSection.Information)" />
                 <MudListItem Value="Enums.CompanySettingsSection.Logo" Text="@Localizer[Langs.Logo]" Icon="@Icons.Material.Outlined.PhotoSizeSelectActual" IconColor="@GetIconColor(Enums.CompanySettingsSection.Logo)" Class="@GetNavClass(Enums.CompanySettingsSection.Logo)" />
                 <MudListItem Value="Enums.CompanySettingsSection.Contact" Text="@Localizer[Langs.ContactDetails]" Icon="@Icons.Material.Outlined.Call" IconColor="@GetIconColor(Enums.CompanySettingsSection.Contact)" Class="@GetNavClass(Enums.CompanySettingsSection.Contact)" />
+                <MudListItem Value="Enums.CompanySettingsSection.Modules" Text="@Localizer[Langs.Modules]" Icon="@Icons.Material.Outlined.GridView" IconColor="@GetIconColor(Enums.CompanySettingsSection.Modules)" Class="@GetNavClass(Enums.CompanySettingsSection.Modules)" />
                 <MudListItem Value="Enums.CompanySettingsSection.WorkTime" Text="@Localizer[Langs.WorkingHours]" Icon="@Icons.Material.Outlined.Timer" IconColor="@GetIconColor(Enums.CompanySettingsSection.WorkTime)" Class="@GetNavClass(Enums.CompanySettingsSection.WorkTime)" />
             </MudList>
         </div>
@@ -37,6 +38,9 @@
                         break;
                     case Enums.CompanySettingsSection.Contact:
                         <ContactSettings />
+                        break;
+                    case Enums.CompanySettingsSection.Modules:
+                        <ModulesSettings />
                         break;
                     case Enums.CompanySettingsSection.WorkTime:
                         <WorkTimeSettings />
