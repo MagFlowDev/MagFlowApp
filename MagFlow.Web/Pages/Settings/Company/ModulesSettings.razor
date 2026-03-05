@@ -1,5 +1,36 @@
-﻿<h3>ModulesSettings</h3>
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models
+@using MudBlazor
+
+@inject ILocalCacheService LocalCacheService
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 24px; padding-right: 40px;">
+    <div class="d-flex flex-column align-items-start w-100 align-self-stretch" style="gap: 40px;">
+        <MudText Typo="Typo.h5">@Localizer[Langs.Modules]</MudText>
+        <div class="d-flex flex-column align-items-start w-100" style="gap: 24px;">
+            @* Active *@
+            @* Expiring *@
+            @* Additional *@
+        </div>
+    </div>
+</div>
 
 @code {
+    [CascadingParameter(Name = "Company")]
+    CompanyDTO? _company { get; set; }
 
+    UserDTO? _user = null;
+    bool _amPmEnabled;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (_company != null && _company.CompanyModules == null)
+            _company.CompanyModules = new List<CompanyModuleDTO>();
+
+        if (_user == null)
+            _user = await LocalCacheService.GetCurrentUser();
+        _amPmEnabled = _user?.Settings.TimeFormat == Enums.TimeFormat.HH_MM_12H;
+        StateHasChanged();
+    }
 }

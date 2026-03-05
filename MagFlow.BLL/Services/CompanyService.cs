@@ -62,7 +62,11 @@ namespace MagFlow.BLL.Services
                 if (!companyId.HasValue)
                     return null;
 
-                var company = await _companyRepository.GetByIdAsync(companyId.Value, s => s.Include(x => x.CompanySettings).Include(x => x.Logo));
+                var company = await _companyRepository.GetByIdAsync(companyId.Value, s => s
+                    .Include(x => x.CompanySettings)
+                    .Include(x => x.Logo)
+                    .Include(x => x.Modules).ThenInclude(y => y.Module));
+
                 return company?.ToDTO();
             }
             catch(Exception ex)
