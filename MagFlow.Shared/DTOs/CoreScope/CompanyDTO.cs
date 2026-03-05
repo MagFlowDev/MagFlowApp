@@ -17,5 +17,6 @@ namespace MagFlow.Shared.DTOs.CoreScope
         public byte[]? LogoData { get; set; }
         public string? LogoContentType { get; set; }
         public CompanySettingsDTO? CompanySettings { get; set; }
+        public List<CompanyModuleDTO>? CompanyModules { get; set; }
     }
 }
