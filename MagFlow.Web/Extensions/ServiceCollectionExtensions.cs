@@ -219,6 +219,7 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IEventLogRepository, EventLogRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
+            services.AddScoped<IModuleRepository, ModuleRepository>();
 
             // Company Scope
             services.AddScoped<IContractorRepository, ContractorRepository>();

@@ -13,6 +13,7 @@ namespace MagFlow.BLL.Services.Interfaces
     {
         Task<CompanyDTO?> GetCurrentCompany();
         Task<List<ModuleDTO>?> GetCompanyModules(Guid companyId);
+        Task<List<ModuleDTO>?> GetAllModules();
         Task<List<DefaultWorkingHourDTO>?> GetDefaultWorkingHours();
 
         Task<Enums.Result> CreateCompany(CompanyDTO companyDTO);

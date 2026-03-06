@@ -97,10 +97,10 @@
                     </div>
                 </div>
                 <div class="d-flex flex-column align-items-start" style="gap: 16px; flex: 1 1 auto; min-height: 0; overflow: auto; box-sizing: border-box">
-                    <div class="d-flex align-items-center align-self-stretch flex-wrap justify-content-center m-0 p-0" style="gap: 0;flex: 1 1 auto; min-height: 0; overflow: auto; box-sizing: border-box">
+                    <div class="d-flex align-items-center align-self-stretch flex-wrap justify-content-start m-0 p-0" style="gap: 0;flex: 1 1 auto; min-height: 0; overflow: auto; box-sizing: border-box">
                         @foreach (var module in _companyModules)
                         {
-                            <div class="d-flex align-items-center align-self-stretch" style="cursor: pointer; padding: 8px; box-sizing: border-box; min-width: 300px; flex: 1 1 25%;" @onclick="@(() => ToggleSelection(module.Id))">
+                            <div class="d-flex align-items-center align-self-stretch" style="cursor: pointer; padding: 8px; box-sizing: border-box; min-width: 300px; flex: 1 0 25%;" @onclick="@(() => ToggleSelection(module.Id))">
                                 <div class="d-flex flex-column align-items-start overflow-hidden overflow-y-auto" style="height: 175px; padding: 16px; gap: 16px; flex: 1 0 0; border-radius: 8px; background: #FFF; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);">
                                     <div class="d-flex align-items-start align-self-stretch" style="gap: 8px">
                                         <div class="d-flex justify-content-center align-items-center" style="@($"width: 40px; height: 40px; aspect-ratio: 1/1; border-radius: 8px; background: {Colors.Blue.Darken4}; color: #FFF")">

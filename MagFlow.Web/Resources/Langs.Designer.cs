@@ -115,11 +115,47 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Aktywne.
+        /// </summary>
+        public static string Active1 {
+            get {
+                return ResourceManager.GetString("Active1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dodatkowy.
+        /// </summary>
+        public static string Additional {
+            get {
+                return ResourceManager.GetString("Additional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dodatkowe.
+        /// </summary>
+        public static string Additional1 {
+            get {
+                return ResourceManager.GetString("Additional1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Panel administratora.
         /// </summary>
         public static string AdminPanel {
             get {
                 return ResourceManager.GetString("AdminPanel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zapytaj o ofertę.
+        /// </summary>
+        public static string AskForOffer {
+            get {
+                return ResourceManager.GetString("AskForOffer", resourceCulture);
             }
         }
         
@@ -394,6 +430,24 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu dzień.
+        /// </summary>
+        public static string Day {
+            get {
+                return ResourceManager.GetString("Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu dni.
+        /// </summary>
+        public static string Days {
+            get {
+                return ResourceManager.GetString("Days", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Separator dziesiętny.
         /// </summary>
         public static string DecimalSeparator {
@@ -561,6 +615,42 @@ namespace MagFlow.Web.Resources {
         public static string ExampleWebsite {
             get {
                 return ResourceManager.GetString("ExampleWebsite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wygasający.
+        /// </summary>
+        public static string Expiring {
+            get {
+                return ResourceManager.GetString("Expiring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wygasające.
+        /// </summary>
+        public static string Expiring1 {
+            get {
+                return ResourceManager.GetString("Expiring1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wygasa za.
+        /// </summary>
+        public static string ExpiringIn {
+            get {
+                return ResourceManager.GetString("ExpiringIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Przedłuż.
+        /// </summary>
+        public static string Extend {
+            get {
+                return ResourceManager.GetString("Extend", resourceCulture);
             }
         }
         
@@ -2425,6 +2515,24 @@ namespace MagFlow.Web.Resources {
         public static string Validation_Required {
             get {
                 return ResourceManager.GetString("Validation_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ważne bezterminowo.
+        /// </summary>
+        public static string ValidIndefinitely {
+            get {
+                return ResourceManager.GetString("ValidIndefinitely", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ważne do.
+        /// </summary>
+        public static string ValidUntil {
+            get {
+                return ResourceManager.GetString("ValidUntil", resourceCulture);
             }
         }
         

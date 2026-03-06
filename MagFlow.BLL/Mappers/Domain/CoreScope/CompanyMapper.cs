@@ -20,7 +20,7 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
                 LogoData = company.Logo?.ImageData,
                 LogoContentType = company.Logo?.ContentType,
                 CompanySettings = ToDTO(company.CompanySettings),
-                CompanyModules = ToDTO(company.Modules),
+                CompanyModules = company.Modules.ToDTO()
             };
         }
 
@@ -37,30 +37,6 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
                 PhoneNumber = companySettings?.PhoneNumber,
                 Website = companySettings?.Website,
             };
-        }
-
-        public static CompanyModuleDTO ToDTO(this CompanyModule companyModule)
-        {
-            return new CompanyModuleDTO()
-            {
-                ModuleId = companyModule.ModuleId,
-                AssignedAt = companyModule.AssignedAt,
-                EnabledFrom = companyModule.EnabledFrom,
-                EnabledTo = companyModule.EnabledTo,
-                IsActive = companyModule.IsActive,
-                Code = companyModule.Module?.Code ?? string.Empty,
-                Name = companyModule.Module?.Name ?? string.Empty,
-                Description = companyModule.Module?.Description,
-                Type = ModuleType.GetModuleType(companyModule.Module?.Name)
-            };
-        }
-
-        public static List<CompanyModuleDTO> ToDTO(this ICollection<CompanyModule> companyModules)
-        {
-            var groupedModules = companyModules
-                .GroupBy(x => x.ModuleId)
-                .Select(g => g.OrderByDescending(x => x.EnabledTo).FirstOrDefault());
-            return groupedModules?.Where(x => x != null).Select(x => x!.ToDTO()).ToList() ?? new List<CompanyModuleDTO>();
         }
 
 
