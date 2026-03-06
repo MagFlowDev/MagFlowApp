@@ -15,6 +15,7 @@ namespace MagFlow.Shared.DTOs.CoreScope
         public DateTime EnabledTo { get; set; }
         public DateTime AssignedAt { get; set; }
         public bool IsActive { get; set; }
+        public string? Icon { get; set; }
         public ModuleType? Type { get; set; }
     }
 }

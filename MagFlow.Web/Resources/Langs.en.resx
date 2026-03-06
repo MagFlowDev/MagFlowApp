@@ -945,4 +945,40 @@
   <data name="Closed" xml:space="preserve">
     <value>Closed</value>
   </data>
+  <data name="Extend" xml:space="preserve">
+    <value>Extend</value>
+  </data>
+  <data name="AskForOffer" xml:space="preserve">
+    <value>Ask for offer</value>
+  </data>
+  <data name="Active1" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Expiring1" xml:space="preserve">
+    <value>Expiring</value>
+  </data>
+  <data name="Expiring" xml:space="preserve">
+    <value>Expiring</value>
+  </data>
+  <data name="Additional" xml:space="preserve">
+    <value>Additional</value>
+  </data>
+  <data name="Additional1" xml:space="preserve">
+    <value>Additional</value>
+  </data>
+  <data name="ValidUntil" xml:space="preserve">
+    <value>Valid until</value>
+  </data>
+  <data name="ExpiringIn" xml:space="preserve">
+    <value>Expiring in</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>day</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>days</value>
+  </data>
+  <data name="ValidIndefinitely" xml:space="preserve">
+    <value>Valid indefinitely</value>
+  </data>
 </root>

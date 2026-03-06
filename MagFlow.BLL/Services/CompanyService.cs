@@ -31,6 +31,7 @@ namespace MagFlow.BLL.Services
         private readonly IWorkingHourRepository _workingHourRepository;
         private readonly IUserRepository _userRepository;
         private readonly INetworkService _networkService;
+        private readonly IModuleRepository _moduleRepository;
 
         private readonly ILogger<CompanyService> _logger;
 
@@ -39,6 +40,7 @@ namespace MagFlow.BLL.Services
             IUserRepository userRepository,
             IWorkDayRepository workDayRepository,
             IWorkingHourRepository workingHourRepository,
+            IModuleRepository moduleRepository,
             ILogger<CompanyService> logger)
         {
             _companyRepository = companyRepository;
@@ -46,6 +48,7 @@ namespace MagFlow.BLL.Services
             _workDayRepository = workDayRepository;
             _workingHourRepository = workingHourRepository;
             _userRepository = userRepository;
+            _moduleRepository = moduleRepository;
             _logger = logger;
         }
 
@@ -85,6 +88,12 @@ namespace MagFlow.BLL.Services
                 .Where(x => x.Module != null)
                 .Select(x => x.Module!)
                 .ToDTO();
+        }
+
+        public async Task<List<ModuleDTO>?> GetAllModules()
+        {
+            var modules = await _moduleRepository.GetAllAsync();
+            return modules?.ToDTO();
         }
         
         public async Task<List<DefaultWorkingHourDTO>?> GetDefaultWorkingHours()

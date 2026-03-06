@@ -946,4 +946,40 @@ i uprawnieniami użytkowników</value>
   <data name="Closed" xml:space="preserve">
     <value>Zamknięte</value>
   </data>
+  <data name="Extend" xml:space="preserve">
+    <value>Przedłuż</value>
+  </data>
+  <data name="AskForOffer" xml:space="preserve">
+    <value>Zapytaj o ofertę</value>
+  </data>
+  <data name="Active1" xml:space="preserve">
+    <value>Aktywne</value>
+  </data>
+  <data name="Expiring1" xml:space="preserve">
+    <value>Wygasające</value>
+  </data>
+  <data name="Expiring" xml:space="preserve">
+    <value>Wygasający</value>
+  </data>
+  <data name="Additional" xml:space="preserve">
+    <value>Dodatkowy</value>
+  </data>
+  <data name="Additional1" xml:space="preserve">
+    <value>Dodatkowe</value>
+  </data>
+  <data name="ValidUntil" xml:space="preserve">
+    <value>Ważne do</value>
+  </data>
+  <data name="ExpiringIn" xml:space="preserve">
+    <value>Wygasa za</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>dzień</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>dni</value>
+  </data>
+  <data name="ValidIndefinitely" xml:space="preserve">
+    <value>Ważne bezterminowo</value>
+  </data>
 </root>
