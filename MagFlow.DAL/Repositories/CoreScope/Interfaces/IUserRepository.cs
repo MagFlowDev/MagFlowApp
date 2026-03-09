@@ -10,9 +10,11 @@ namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
     public interface IUserRepository : IRepository<ApplicationUser, CoreDbContext>
     {
         Task<ApplicationUser?> GetByEmailAsync(string email);
-
         Task<List<UserSession>?> GetLastSessionsAsync(Guid userId, int historyLength = 1);
+        Task<List<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions queryOptions);
 
+        
+        
         Task<Enums.Result> UpdateSettingsAsync(ApplicationUserSettings settings);
     }
 }

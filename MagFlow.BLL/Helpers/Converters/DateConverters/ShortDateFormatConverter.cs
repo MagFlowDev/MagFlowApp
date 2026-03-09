@@ -6,13 +6,24 @@ using System.Text;
 
 namespace MagFlow.BLL.Helpers.Converters.DateConverters
 {
-    public class ShortDateFormatConverter : IConverter<DateTime?, string>
+    public class ShortDateFormatConverter : IReversibleConverter<DateTime?, string>
     {
         public string Convert(DateTime? input)
         {
             if (!input.HasValue) return string.Empty;
             var format = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
             return input.Value.ToString(format, CultureInfo.CurrentCulture);
+        }
+
+        public DateTime? ConvertBack(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return null;
+
+            if (DateTime.TryParse(input, CultureInfo.CurrentCulture, DateTimeStyles.None, out var dt))
+                return dt;
+
+            return null;
         }
     }
 }

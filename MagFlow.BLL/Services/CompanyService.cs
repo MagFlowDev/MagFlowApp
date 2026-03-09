@@ -106,6 +106,19 @@ namespace MagFlow.BLL.Services
             return result?.ToDTO();
         }
 
+        public async Task<List<UserDTO>?> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        {
+            var users = await _userRepository.GetCompanyUsersAsync(new QueryOptions()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Search = search,
+                SortBy = sortBy,
+                Descending = descending
+            });
+            return users?.Select(x => x.ToDTO()).ToList();
+        }
+        
 
 
         public async Task<Enums.Result> CreateCompany(CompanyDTO companyDTO)

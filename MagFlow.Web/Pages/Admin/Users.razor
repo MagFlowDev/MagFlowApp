@@ -1,6 +1,19 @@
-﻿<h3>Users</h3>
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MudBlazor
 
+@inject ICompanyService CompanyService
+
+<div class="d-flex flex-column align-items-start w-100" style="min-height: 0;">
+    <MudDataGrid T="UserDTO">
+        
+    </MudDataGrid>
+</div>
 
 @code {
 
+    protected override async Task OnInitializedAsync()
+    {
+        var users = await CompanyService.GetUsers(search: "admin magflow");
+    }
 }
