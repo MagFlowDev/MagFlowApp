@@ -1,12 +1,22 @@
-﻿@using MudBlazor
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models
+@using MagFlow.Web.Components.Buttons
+@using MudBlazor
+
+@inject ICompanyService CompanyService
+@inject ISnackbar Snackbar
 
 <MudDialog>
     <DialogContent>
-        Dialog Content
+        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 24px; width: 400px; min-width: 150px; max-width: 600px;">
+            <MudTextField Label="@Localizer[Langs.NameAndLastname]" Variant="Variant.Outlined" T="string" Text="@_username" Class="w-100 gray-label my-0" Disabled></MudTextField>
+            <MudTextField T="string" Label="@Localizer[Langs.Message]" Variant="Variant.Outlined" Lines="5" Sizing="InputSizing.Fixed" @bind-Text="_message" Class="w-100" />
+        </div>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">OK</MudButton>
+        <MudButton OnClick="Cancel" Variant="Variant.Text">@Localizer[Langs.Cancel]</MudButton>
+        <LoadingButton Loading="_loadingUpdate" Color="Color.Dark" OnClick="Submit" Variant="Variant.Filled">@Localizer[Langs.Send]</LoadingButton>
     </DialogActions>
 </MudDialog>
 
@@ -14,7 +24,72 @@
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; }
 
-    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    [Parameter, EditorRequired]
+    public UserDTO? User { get; set; }
+    string _username => string.Concat(User?.FirstName ?? "", " ", User?.LastName ?? "");
+
+    [Parameter, EditorRequired]
+    public Guid? CompanyId { get; set; }
+
+    [Parameter, EditorRequired]
+    public Guid? ModuleId { get; set; }
+
+    [Parameter, EditorRequired]
+    public string? ModuleName { get; set; }
+
+    string _message { get; set; }
+    bool _loadingUpdate;
+    bool _isBusy;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (ModuleName != null)
+                _message = string.Format(Localizer[Langs.TemplateExtendLicense], Localizer[ModuleName]);
+        }
+        catch { }
+    }
+
+    private async Task Submit()
+    {
+        if (_isBusy)
+            return;
+
+        bool result = false;
+        try
+        {
+            _isBusy = true;
+            _loadingUpdate = true;
+
+            if (!CompanyId.HasValue || !ModuleId.HasValue)
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], Severity.Error);
+            }
+            else
+            {
+                if (await CompanyService.SendExtendModuleRequest(CompanyId.Value, ModuleId.Value, _username, _message) == Enums.Result.Success)
+                {
+                    Snackbar.Add(Localizer[Langs.MessageSent], Severity.Success);
+                    result = true;
+                }
+                else
+                {
+                    Snackbar.Add(Localizer[Langs.ErrorOccured], Severity.Error);
+                }
+            }
+        }
+        catch (Exception)
+        {
+            result = false;
+        }
+        finally
+        {
+            _isBusy = false;
+            _loadingUpdate = false;
+            MudDialog.Close(DialogResult.Ok(result));
+        }
+    }
 
     private void Cancel() => MudDialog.Cancel();
 }
