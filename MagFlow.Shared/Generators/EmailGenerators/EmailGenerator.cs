@@ -41,5 +41,19 @@ Timestamp: {DateTime.UtcNow.ToLocalTime()}<br/>
 
             return body;
         }
+
+        public static MimeEntity SimpleCompanyMessage(string username, string company, string message)
+        {
+            var body = new MimeKit.TextPart(MimeKit.Text.TextFormat.Html);
+
+            body.Text = @$"<br/>
+Client: {username}<br/>
+Company: {company}<br/>
+Timestamp: {DateTime.UtcNow.ToLocalTime()}<br/><br/>
+Message: {message}<br/>
+            ";
+
+            return body;
+        }
     }
 }

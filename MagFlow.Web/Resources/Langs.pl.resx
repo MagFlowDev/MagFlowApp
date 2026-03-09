@@ -982,4 +982,28 @@ i uprawnieniami użytkowników</value>
   <data name="ValidIndefinitely" xml:space="preserve">
     <value>Ważne bezterminowo</value>
   </data>
+  <data name="ExtendLicense" xml:space="preserve">
+    <value>Przedłuż licencję</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Wyślij</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Wiadomość</value>
+  </data>
+  <data name="TemplateExtendLicense" xml:space="preserve">
+    <value>Proszę o przedłużenie licencji na moduł: {0}</value>
+  </data>
+  <data name="TemplateAskForModuleOffer" xml:space="preserve">
+    <value>Proszę o przygotowanie oferty na moduł: {0}</value>
+  </data>
+  <data name="ErrorOccured" xml:space="preserve">
+    <value>Wystąpił błąd podczas przetwarzania żądania. Spróbuj ponownie później.</value>
+  </data>
+  <data name="MessageSent" xml:space="preserve">
+    <value>Wysłano wiadomość</value>
+  </data>
 </root>

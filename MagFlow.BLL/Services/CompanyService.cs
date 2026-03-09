@@ -8,6 +8,7 @@ using MagFlow.Shared.Attributes;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Extensions;
+using MagFlow.Shared.Generators.EmailGenerators;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
 using Microsoft.AspNetCore.Http;
@@ -32,6 +33,7 @@ namespace MagFlow.BLL.Services
         private readonly IUserRepository _userRepository;
         private readonly INetworkService _networkService;
         private readonly IModuleRepository _moduleRepository;
+        private readonly IEmailService _emailService;
 
         private readonly ILogger<CompanyService> _logger;
 
@@ -41,6 +43,7 @@ namespace MagFlow.BLL.Services
             IWorkDayRepository workDayRepository,
             IWorkingHourRepository workingHourRepository,
             IModuleRepository moduleRepository,
+            IEmailService emailService,
             ILogger<CompanyService> logger)
         {
             _companyRepository = companyRepository;
@@ -49,6 +52,7 @@ namespace MagFlow.BLL.Services
             _workingHourRepository = workingHourRepository;
             _userRepository = userRepository;
             _moduleRepository = moduleRepository;
+            _emailService = emailService;
             _logger = logger;
         }
 
@@ -207,6 +211,45 @@ namespace MagFlow.BLL.Services
 
             var result = await _companyRepository.DeleteAsync(company);
             return result;
+        }
+
+
+
+        // Requests section
+        public async Task<Enums.Result> SendExtendModuleRequest(Guid companyId, Guid moduleId, string user, string message)
+        {
+            try
+            {
+                var company = await _companyRepository.GetByIdAsync(companyId);
+                if (company == null)
+                    return Enums.Result.Error;
+
+                await _emailService.SendToMeAsync("Extend module", EmailGenerator.SimpleCompanyMessage(user, $"{company.Name} ({companyId})", message));
+                return Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send message");
+                return Result.Error;
+            }
+        }
+
+        public async Task<Enums.Result> SendAskForModuleOfferRequest(Guid companyId, Guid moduleId, string user, string message)
+        {
+            try
+            {
+                var company = await _companyRepository.GetByIdAsync(companyId);
+                if (company == null)
+                    return Enums.Result.Error;
+
+                await _emailService.SendToMeAsync("Ask for offer", EmailGenerator.SimpleCompanyMessage(user, $"{company.Name} ({companyId})", message));
+                return Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send message");
+                return Result.Error;
+            }
         }
     }
 }

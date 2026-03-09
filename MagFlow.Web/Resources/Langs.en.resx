@@ -981,4 +981,28 @@
   <data name="ValidIndefinitely" xml:space="preserve">
     <value>Valid indefinitely</value>
   </data>
+  <data name="ExtendLicense" xml:space="preserve">
+    <value>Extend license</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="TemplateExtendLicense" xml:space="preserve">
+    <value>Please extend the licence for the module: {0}</value>
+  </data>
+  <data name="TemplateAskForModuleOffer" xml:space="preserve">
+    <value>Please provide a quote for the module: {0}</value>
+  </data>
+  <data name="ErrorOccured" xml:space="preserve">
+    <value>An error occurred while processing request. Please try again later.</value>
+  </data>
+  <data name="MessageSent" xml:space="preserve">
+    <value>Message sent</value>
+  </data>
 </root>

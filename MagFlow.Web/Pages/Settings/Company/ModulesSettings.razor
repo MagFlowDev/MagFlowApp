@@ -90,7 +90,7 @@
                                                     <MudText Style="@($"color: {Colors.Orange.Lighten1}")">@string.Concat(Localizer[Langs.ExpiringIn], " ", expiringInTime, " ", expiringInTime > 1 ? Localizer[Langs.Days] : Localizer[Langs.Day])</MudText>
                                                 </MudTooltip>
                                             </div>
-                                            <MudButton Color="Color.Dark" Variant="Variant.Filled" OnClick="(async () => await AskForOffer(companyModule.ModuleId))">@Localizer[Langs.Extend]</MudButton>
+                                            <MudButton Color="Color.Dark" Variant="Variant.Filled" OnClick="(async () => await ExtendModule(companyModule.ModuleId))">@Localizer[Langs.Extend]</MudButton>
                                         </div>
                                     </div>
                                 </div>
@@ -178,11 +178,39 @@
 
     private Task ExtendModule(Guid moduleId)
     {
-        return Dialog.ShowAsync<Dialogs.ExtendModuleDialog>("");
+        if (_user == null)
+            return Task.CompletedTask;
+
+        var module = _modules?.FirstOrDefault(x => x.Id == moduleId);
+        if (module == null)
+            return Task.CompletedTask;
+
+        var parameters = new DialogParameters<Dialogs.ExtendModuleDialog>
+        {
+            { x => x.User, _user },
+            { x => x.ModuleName, module.Name },
+            { x => x.ModuleId, moduleId },
+            { x => x.CompanyId, _company?.Id }
+        };
+        return Dialog.ShowAsync<Dialogs.ExtendModuleDialog>(Localizer[Langs.ExtendLicense], parameters);
     }
 
     private Task AskForOffer(Guid moduleId)
     {
-        return Dialog.ShowAsync<Dialogs.AskForOfferDialog>("");
+        if (_user == null)
+            return Task.CompletedTask;
+
+        var module = _modules?.FirstOrDefault(x => x.Id == moduleId);
+        if (module == null)
+            return Task.CompletedTask;
+
+        var parameters = new DialogParameters<Dialogs.AskForOfferDialog>
+        {
+            { x => x.User, _user },
+            { x => x.ModuleName, module.Name },
+            { x => x.ModuleId, moduleId },
+            { x => x.CompanyId, _company?.Id }
+        };
+        return Dialog.ShowAsync<Dialogs.AskForOfferDialog>(Localizer[Langs.AskForOffer], parameters);
     }
 }

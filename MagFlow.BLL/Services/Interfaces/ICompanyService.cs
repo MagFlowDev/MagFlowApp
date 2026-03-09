@@ -16,7 +16,11 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<List<ModuleDTO>?> GetAllModules();
         Task<List<DefaultWorkingHourDTO>?> GetDefaultWorkingHours();
 
+
+
         Task<Enums.Result> CreateCompany(CompanyDTO companyDTO);
+
+
 
         Task<Enums.Result> UpdateCompany(CompanyDTO companyDTO);
         Task<Enums.Result> UpdateCompanySettings(Guid companyId, CompanySettingsDTO companySettingsDTO);
@@ -27,5 +31,10 @@ namespace MagFlow.BLL.Services.Interfaces
 
 
         Task<Enums.Result> RemoveCompanyLogo(Guid companyId);
+
+
+
+        Task<Enums.Result> SendExtendModuleRequest(Guid companyId, Guid moduleId, string user, string message);
+        Task<Enums.Result> SendAskForModuleOfferRequest(Guid companyId, Guid moduleId, string user, string message);
     }
 }
