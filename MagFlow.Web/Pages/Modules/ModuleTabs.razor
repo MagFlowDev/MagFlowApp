@@ -12,14 +12,16 @@
 @inject IUserService UserService
 @inject ILocalCacheService LocalCacheService
 
-<div class="d-flex w-100 h-100" style="max-width: 100%;">
-    <MudTabs @ref="_tabsRef" @key="_tabsVersion" @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" OnItemDropped="MoveTab" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%" TabHeaderClass="bg-transparent" ActiveTabClass="bg-white">
+<div class="d-flex w-100 flex-grow-1" style="max-width: 100%;">
+    <MudTabs @ref="_tabsRef" @key="_tabsVersion" @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" OnItemDropped="MoveTab" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%; flex: 1 1 0; min-height: 0" TabHeaderClass="bg-transparent flex-0-0-auto" ActiveTabClass="bg-white" TabPanelsClass="flex-1-1-0">
         <ChildContent>
             @foreach(var tab in ActiveModules)
             {
                 <MudTabPanel @key="tab.Id" Tag="@tab.Id" Icon="@tab.ModuleComponent!.Icon">
                     <ChildContent>
-                        <DynamicComponent Type="@tab.ModuleComponent!.GetType()" />
+                        <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden;">
+                            <DynamicComponent Type="@tab.ModuleComponent!.GetType()" />
+                        </div>
                     </ChildContent>
                     <TabContent>
                         <div class="d-flex">

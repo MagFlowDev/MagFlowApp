@@ -201,3 +201,15 @@ h1:focus {
 .gray-label .mud-input-label {
     color: var(--mud-palette-text-secondary, rgba(0, 0, 0, 0.54)) !important;
 }
+
+.flex-0-0-auto {
+    flex: 0 0 auto;
+    min-height: 0;
+}
+
+.flex-1-1-0 {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    margin-top: 24px;
+}

@@ -1,6 +1,60 @@
 ﻿@page "/admin"
+@using MagFlow.BLL.Services.Interfaces
+@using MudBlazor
 
-<h3>AdminPanel</h3>
+@inject IUserService UserService
+@inject IJSRuntime JS
+
+<div class="d-flex flex-column w-100 flex-grow-1 px-4 pt-2" style="min-height: 0; gap: 24px;">
+    <div class="text-start d-flex align-items-start flex-shrink-0 mt-3" style="gap: 8px;">
+        @* <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.West" OnClick="@(async () => await JS.InvokeVoidAsync("history.back"))">@Localizer[Langs.GoBack]</MudButton> *@
+        <MudText Typo="Typo.h4" Style="font-weight: 700">@Localizer[Langs.AdminPanel]</MudText>
+    </div>
+    <div class="d-flex w-100 flex-grow-1" style="max-width: 100%;">
+        <MudTabs KeepPanelsAlive="false" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%; flex: 1 1 0; min-height: 0" TabHeaderClass="bg-transparent flex-0-0-auto" ActiveTabClass="bg-white" TabPanelsClass="flex-1-1-0">
+            <ChildContent>
+                @* Users *@
+                <MudTabPanel Icon="@Icons.Material.Outlined.People">
+                    <ChildContent>
+                         <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden;">
+                            <Users />
+                         </div>
+                    </ChildContent>
+                    <TabContent>
+                        <div class="d-flex">
+                            <MudIcon Icon="@Icons.Material.Outlined.People" Class="lh-1" />
+                            <MudText Class="px-2">Użytkownicy</MudText>
+                        </div>
+                    </TabContent>
+                </MudTabPanel>
+                @* Companies *@
+                <MudTabPanel Icon="@Icons.Material.Outlined.CorporateFare">
+                    <ChildContent>
+                        <Companies />
+                    </ChildContent>
+                    <TabContent>
+                        <div class="d-flex">
+                            <MudIcon Icon="@Icons.Material.Outlined.CorporateFare" Class="lh-1" />
+                            <MudText Class="px-2">Firmy</MudText>
+                        </div>
+                    </TabContent>
+                </MudTabPanel>
+                @* System settings *@
+                <MudTabPanel Icon="@Icons.Material.Outlined.Settings">
+                    <ChildContent>
+                        <SystemSettings />
+                    </ChildContent>
+                    <TabContent>
+                        <div class="d-flex">
+                            <MudIcon Icon="@Icons.Material.Outlined.Settings" Class="lh-1" />
+                            <MudText Class="px-2">Ustawienia systemu</MudText>
+                        </div>
+                    </TabContent>
+                </MudTabPanel>
+            </ChildContent>
+        </MudTabs>
+    </div>
+</div>
 
 @code {
 
