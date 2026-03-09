@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MagFlow.DAL.Helpers;
 
 namespace MagFlow.DAL.Repositories.CoreScope
 {
@@ -91,6 +92,30 @@ namespace MagFlow.DAL.Repositories.CoreScope
                         .OrderByDescending(x => x.LastTimeRecord)
                         .Take(historyLength)
                         .ToListAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<List<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions queryOptions)
+        {
+            try
+            {
+                using (var coreContext = _coreContextFactory.CreateDbContext())
+                {
+                    using (var companyContext = _companyContextFactory.CreateDbContext())
+                    {
+                        var companyUsers = await companyContext.Users
+                            .ApplyMultiColumnSearch(queryOptions.Search, u => u.FirstName, u => u.LastName, u => u.Email)
+                            .SortBy(queryOptions.SortBy, queryOptions.Descending)
+                            .Paginate(queryOptions.PageNumber, queryOptions.PageSize).ToListAsync();
+                        var companyUsersIds = companyUsers.Select(u => u.Id).ToList();
+                        return await coreContext.Users.Where(x => companyUsersIds.Contains(x.Id)).ToListAsync();
+                    }
                 }
             }
             catch (Exception ex)
