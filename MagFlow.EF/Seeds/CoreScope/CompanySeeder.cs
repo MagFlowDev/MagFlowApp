@@ -44,8 +44,27 @@ namespace MagFlow.EF.Seeds.CoreScope
                     CompanySettings = new CompanySettings()
                 };
                 await context.Companies.AddAsync(testCompany);
+                var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
+                if (adminUser != null)
+                {
+                    CompanyUser companyUser = new CompanyUser() { CompanyId = testCompany.Id, UserId = adminUser.Id, AssignedAt = now };
+                    await context.CompanyUsers.AddAsync(companyUser);
+                }
                 seed = true;
                 seededDbConnectionStrings.Add(testCompany.ConnectionString);
+            }
+            else
+            {
+                var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
+                if (adminUser != null)
+                {
+                    if (!await context.CompanyUsers.AnyAsync(x => x.UserId == adminUser.Id && x.CompanyId == testCompany.Id))
+                    {
+                        CompanyUser companyUser = new CompanyUser() { CompanyId = testCompany.Id, UserId = adminUser.Id, AssignedAt = now };
+                        await context.CompanyUsers.AddAsync(companyUser);
+                        seed = true;
+                    }
+                }
             }
             var demoCompany = await context.Companies.FirstOrDefaultAsync(c => c.NormalizedName.Equals("DEMO"));
             if (demoCompany == null)

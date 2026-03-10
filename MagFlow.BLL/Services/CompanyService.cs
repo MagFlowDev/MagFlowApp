@@ -106,9 +106,9 @@ namespace MagFlow.BLL.Services
             return result?.ToDTO();
         }
 
-        public async Task<List<UserDTO>?> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
         {
-            var users = await _userRepository.GetCompanyUsersAsync(new QueryOptions()
+            var queryResponse = await _userRepository.GetCompanyUsersAsync(new QueryOptions()
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -116,7 +116,19 @@ namespace MagFlow.BLL.Services
                 SortBy = sortBy,
                 Descending = descending
             });
-            return users?.Select(x => x.ToDTO()).ToList();
+            return new QueryResponse<UserDTO>()
+            {
+                Elements = queryResponse?.Elements.Select(x =>
+                {
+                    var dto = x.ToDTO();
+                    dto.Companies = x.Companies
+                        .Where(y => y.Company != null)
+                        .Select(y => y.Company!.ToDTO())
+                        .ToList();
+                    return dto;
+                }).ToList() ?? new List<UserDTO>(),
+                TotalCount = queryResponse?.TotalCount ?? 0
+            };
         }
         
 

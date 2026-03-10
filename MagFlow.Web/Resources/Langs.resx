@@ -1006,4 +1006,22 @@ i uprawnieniami użytkowników</value>
   <data name="MessageSent" xml:space="preserve">
     <value>Wysłano wiadomość</value>
   </data>
+  <data name="Users" xml:space="preserve">
+    <value>Użytkownicy</value>
+  </data>
+  <data name="Companies" xml:space="preserve">
+    <value>Firmy</value>
+  </data>
+  <data name="SystemSettings" xml:space="preserve">
+    <value>Ustawienia systemu</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="LastLogin" xml:space="preserve">
+    <value>Ostatnie logowanie</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
 </root>

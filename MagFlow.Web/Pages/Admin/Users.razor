@@ -5,15 +5,78 @@
 @inject ICompanyService CompanyService
 
 <div class="d-flex flex-column align-items-start w-100" style="min-height: 0;">
-    <MudDataGrid T="UserDTO">
-        
+    <MudDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" Class="align-self-stretch">
+        <ToolBarContent>
+            <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
+            <MudSpacer />
+        </ToolBarContent>
+        <Columns>
+            <TemplateColumn Title="@Localizer[Langs.Name]" Sortable="true">
+                <CellTemplate>
+                    <MudText>@string.Concat(context.Item.FirstName, " ", context.Item.LastName)</MudText>
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Title="@Localizer[Langs.Email]" Property="x => x.Email" Sortable="true"/>
+            <TemplateColumn Title="@Localizer[Langs.Companies]" Sortable="false">
+                <CellTemplate>
+                    <div class="d-flex align-items-center justify-content-start" style="gap: 4px">
+                        @if(context.Item.Companies != null && context.Item.Companies.Count <= 3)
+                        {
+                            foreach(var company in context.Item.Companies)
+                            {
+                                <MudChip Class="m-0" Variant="Variant.Outlined">@company.Name</MudChip>
+                            }
+                        }
+                    </div>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="@Localizer[Langs.Role]" Sortable="false">
+                <CellTemplate>
+                    <MudText>@context.Item.Roles.FirstOrDefault()?.Name</MudText>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="@Localizer[Langs.LastLogin]" Sortable="false">
+                <CellTemplate>
+                    <MudText>@context.Item.LastLogin.ToString()</MudText>
+                </CellTemplate>
+            </TemplateColumn>
+            <TemplateColumn Title="@Localizer[Langs.Status]" Sortable="false">
+                <CellTemplate>
+                    <MudChip Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive ? Color.Success : Color.Error)">@(context.Item.IsActive ? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="UserDTO" />
+        </PagerContent>
     </MudDataGrid>
 </div>
 
 @code {
+    MudDataGrid<UserDTO> _usersDataGrid;
+    string? _searchString = null;
 
     protected override async Task OnInitializedAsync()
     {
-        var users = await CompanyService.GetUsers(search: "admin magflow");
+        
+    }
+
+    private async Task<GridData<UserDTO>> ServerReloadUsers(GridState<UserDTO> state, CancellationToken token)
+    {
+        var sortDefinition = state.SortDefinitions.FirstOrDefault();
+        var response = await CompanyService.GetUsers(state.Page, state.PageSize, _searchString, sortDefinition?.SortBy, sortDefinition?.Descending == true);
+
+        return new GridData<UserDTO>
+        {
+            Items = response.Elements,
+            TotalItems = response.TotalCount,
+        };
+    }
+
+    private Task OnSearch(string text)
+    {
+        _searchString = text;
+        return _usersDataGrid.ReloadServerData();
     }
 }

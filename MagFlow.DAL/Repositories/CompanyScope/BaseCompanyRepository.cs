@@ -1,4 +1,5 @@
-﻿using MagFlow.EF;
+﻿using MagFlow.DAL.Helpers;
+using MagFlow.EF;
 using MagFlow.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -379,6 +380,31 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             {
                 _logger.LogError(ex, ex.Message);
                 return Array.Empty<TEntity>();
+            }
+        }
+
+        public virtual async Task<QueryResponse<TEntity>?> GetAsync(QueryOptions options)
+        {
+            try
+            {
+                using (var context = _companyContextFactory.CreateDbContext())
+                {
+                    var query = context.Set<TEntity>().AsQueryable();
+                    query = query.ApplyColumnFilters(options.Filters);
+                    query = query.SortBy(options.SortBy, options.Descending);
+                    var count = await query.CountAsync();
+                    var entities = await query.Paginate(options.PageNumber, options.PageSize).ToListAsync();
+                    return new QueryResponse<TEntity>()
+                    {
+                        Elements = entities,
+                        TotalCount = count
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
             }
         }
 
