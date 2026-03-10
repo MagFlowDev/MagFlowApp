@@ -213,3 +213,7 @@ h1:focus {
     overflow-y: auto;
     margin-top: 16px;
 }
+
+.mud-table-overflow-hidden .mud-table-container {
+    overflow: hidden !important;
+}
