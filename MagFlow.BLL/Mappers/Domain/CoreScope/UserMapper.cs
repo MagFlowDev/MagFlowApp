@@ -20,6 +20,7 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
                 LastName = applicationUser.LastName,
                 Email = applicationUser.Email ?? "",
                 CreatedAt = applicationUser.CreatedAt,
+                LastLogin = applicationUser.LastLogin,
                 IsActive = applicationUser.IsActive,
                 Roles = roles?.Where(x => x != null).Select(x => x!).ToList() ?? new List<Shared.Models.Enumerators.AppRole>(),
                 Settings = ToDTO(applicationUser.UserSettings)

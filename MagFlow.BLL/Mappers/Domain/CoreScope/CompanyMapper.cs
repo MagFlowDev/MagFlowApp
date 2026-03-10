@@ -19,8 +19,8 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
                 Address = company.Address,
                 LogoData = company.Logo?.ImageData,
                 LogoContentType = company.Logo?.ContentType,
-                CompanySettings = ToDTO(company.CompanySettings),
-                CompanyModules = company.Modules.ToDTO()
+                CompanySettings = company.CompanySettings?.ToDTO(),
+                CompanyModules = company.Modules?.ToDTO()
             };
         }
 

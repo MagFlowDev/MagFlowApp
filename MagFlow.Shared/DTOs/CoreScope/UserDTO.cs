@@ -14,10 +14,13 @@ namespace MagFlow.Shared.DTOs.CoreScope
         public string LastName { get; set; }
         public string Email { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime LastLogin { get; set; }
         public bool IsActive { get; set; }
 
         public UserSettingsDTO Settings { get; set; }
 
         public List<AppRole> Roles { get; set; }
+
+        public List<CompanyDTO>? Companies { get; set; }
     }
 }

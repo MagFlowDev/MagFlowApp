@@ -12,6 +12,7 @@ namespace MagFlow.DAL.Repositories
     public interface IRepository<TEntity, TContext> where TEntity : class where TContext : DbContext
     {
         IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null);
+        Task<QueryResponse<TEntity>?> GetAsync(QueryOptions options);
         Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null);
 
         IQueryable<TEntity>? Find(Expression<Func<TEntity, bool>> predicate);

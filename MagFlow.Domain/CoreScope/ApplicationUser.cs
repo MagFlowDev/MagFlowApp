@@ -16,6 +16,8 @@ namespace MagFlow.Domain.CoreScope
         public string LastName { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
+        [Required]
+        public DateTime LastLogin { get; set; }
         public Guid? DefaultCompanyId { get; set; }
         [Required]
         public bool IsActive { get; set; }

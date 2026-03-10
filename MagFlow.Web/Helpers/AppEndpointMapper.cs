@@ -86,6 +86,13 @@ namespace MagFlow.Web.Helpers
 
                 logger.LogInformation($"User {req.Email} logged in via IPv4 address: {ip}");
 
+                try
+                {
+                    user.LastLogin = DateTime.UtcNow;
+                    repo.UpdateAsync(user);
+                }
+                catch { }
+
                 var returnUrl = "/lobby";
                 return Results.Redirect(returnUrl);
             });

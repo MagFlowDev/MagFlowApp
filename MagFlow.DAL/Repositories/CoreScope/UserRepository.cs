@@ -101,7 +101,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public async Task<List<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions queryOptions)
+        public async Task<QueryResponse<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions queryOptions)
         {
             try
             {
@@ -109,12 +109,21 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 {
                     using (var companyContext = _companyContextFactory.CreateDbContext())
                     {
-                        var companyUsers = await companyContext.Users
+                        var companyUsersQuery = companyContext.Users
                             .ApplyMultiColumnSearch(queryOptions.Search, u => u.FirstName, u => u.LastName, u => u.Email)
-                            .SortBy(queryOptions.SortBy, queryOptions.Descending)
-                            .Paginate(queryOptions.PageNumber, queryOptions.PageSize).ToListAsync();
+                            .SortBy(queryOptions.SortBy, queryOptions.Descending);
+                        var companyUsers = await companyUsersQuery.Paginate(queryOptions.PageNumber, queryOptions.PageSize).ToListAsync();
+                        var companyUsersCount = await companyUsersQuery.CountAsync();
                         var companyUsersIds = companyUsers.Select(u => u.Id).ToList();
-                        return await coreContext.Users.Where(x => companyUsersIds.Contains(x.Id)).ToListAsync();
+                        var users = await coreContext.Users
+                            .Include(x => x.Companies).ThenInclude(y => y.Company)
+                            .Include(x => x.Roles).ThenInclude(y => y.Role)
+                            .Where(x => companyUsersIds.Contains(x.Id)).ToListAsync();
+                        return new QueryResponse<ApplicationUser>()
+                        {
+                            Elements = users,
+                            TotalCount = companyUsersCount
+                        };
                     }
                 }
             }
