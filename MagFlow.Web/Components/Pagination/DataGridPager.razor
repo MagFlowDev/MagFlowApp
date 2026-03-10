@@ -1,0 +1,68 @@
+﻿@using MudBlazor
+
+@typeparam T
+
+<div class="mud-toolbar mud-toolbar-gutters mud-table-pagination-toolbar" role="toolbar">
+    <div class="mud-table-pagination-spacer"></div>
+    <MudText Typo="Typo.body2" Class="mud-table-pagination-caption">@GetRangeText()</MudText>
+    <MudText Typo="Typo.body2" Class="mud-table-pagination-caption">@Localizer[Langs.RowsPerPage]</MudText>
+    <MudSelect Value="@RowsPerPage" MultiSelection="false" ValueChanged="(async (value) => await ChangeRowsPerPage(value))" T="int" Class="mud-table-pagination-select">
+        <MudSelectItem Value="10">10</MudSelectItem>
+        <MudSelectItem Value="25">25</MudSelectItem>
+        <MudSelectItem Value="50">50</MudSelectItem>
+        <MudSelectItem Value="100">100</MudSelectItem>
+    </MudSelect>
+    <div class="mud-table-pagination-actions">
+        <MudPagination Variant="Variant.Filled" ShowPageButtons="false" ShowFirstButton="true" ShowLastButton="true" Count="@GetPageCount()" Selected="@(DataGrid?.CurrentPage + 1 ?? 1)" SelectedChanged="OnPageChanged" Class="p-0" Style="gap: 10px;" />
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public MudDataGrid<T> DataGrid { get; set; }
+
+
+    public int RowsPerPage { get; set; } = 25;
+
+
+
+    private async Task ChangeRowsPerPage(int newValue)
+    {
+        if (DataGrid == null || RowsPerPage == newValue)
+            return;
+
+        RowsPerPage = newValue;
+        await DataGrid.SetRowsPerPageAsync(newValue);
+    }
+
+    private async Task OnPageChanged(int page)
+    {
+        if (DataGrid == null)
+            return;
+
+        DataGrid.CurrentPage = page - 1;
+        await DataGrid.ReloadServerData();
+    }
+
+    private int GetPageCount()
+    {
+        if (DataGrid == null || DataGrid.ServerItems.Count() == 0)
+            return 1;
+
+        var total = DataGrid.GetFilteredItemsCount();
+        return (int)Math.Ceiling((double)total / DataGrid.RowsPerPage);
+    }
+
+    private string GetRangeText()
+    {
+        var total = DataGrid?.GetFilteredItemsCount();
+        if (!total.HasValue || total.Value == 0)
+            return string.Format(Localizer[Langs.XOfY], "0", "0");
+
+
+        var start = DataGrid.CurrentPage * DataGrid.RowsPerPage + 1;
+        var end = Math.Min((DataGrid.CurrentPage + 1) * DataGrid.RowsPerPage, total.Value);
+
+        return string.Format(Localizer[Langs.XToYOfZ], start, end, total.Value);
+    }
+}

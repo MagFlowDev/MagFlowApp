@@ -1,11 +1,13 @@
 ﻿@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Web.Components.Pagination
+@using MagFlow.BLL.Helpers.Localization.Display
 @using MudBlazor
 
 @inject ICompanyService CompanyService
 
-<div class="d-flex flex-column align-items-start w-100" style="min-height: 0;">
-    <MudDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" Class="align-self-stretch">
+<div class="d-flex flex-column align-items-start w-100 h-100">
+    <MudDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden" Height="100%" RowsPerPage="25" Virtualize="true" FixedHeader="true">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
@@ -33,7 +35,7 @@
             </TemplateColumn>
             <TemplateColumn Title="@Localizer[Langs.Role]" Sortable="false">
                 <CellTemplate>
-                    <MudText>@context.Item.Roles.FirstOrDefault()?.Name</MudText>
+                    <MudText>@context.Item.Roles.FirstOrDefault()?.DisplayRole(Localizer)</MudText>
                 </CellTemplate>
             </TemplateColumn>
             <TemplateColumn Title="@Localizer[Langs.LastLogin]" Sortable="false">
@@ -48,7 +50,7 @@
             </TemplateColumn>
         </Columns>
         <PagerContent>
-            <MudDataGridPager T="UserDTO" />
+            <DataGridPager T="UserDTO" DataGrid="_usersDataGrid" />
         </PagerContent>
     </MudDataGrid>
 </div>
@@ -57,10 +59,6 @@
     MudDataGrid<UserDTO> _usersDataGrid;
     string? _searchString = null;
 
-    protected override async Task OnInitializedAsync()
-    {
-        
-    }
 
     private async Task<GridData<UserDTO>> ServerReloadUsers(GridState<UserDTO> state, CancellationToken token)
     {
@@ -79,4 +77,5 @@
         _searchString = text;
         return _usersDataGrid.ReloadServerData();
     }
+
 }
