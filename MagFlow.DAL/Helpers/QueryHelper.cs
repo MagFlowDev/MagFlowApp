@@ -103,9 +103,9 @@ namespace MagFlow.DAL.Helpers
             return query.Where(lambda);
         }
         
-        public static IQueryable<T> ApplyMultiColumnSearch<T>(this IQueryable<T> query, string? search, params Expression<Func<T, string?>>[] columns)
+        public static IQueryable<T> ApplyMultiColumnSearch<T>(this IQueryable<T> query, string? search, Expression<Func<T, string?>>[]? columns)
         {
-            if (string.IsNullOrWhiteSpace(search) || columns.Length == 0)
+            if (string.IsNullOrWhiteSpace(search) || columns == null || columns.Length == 0)
                 return query;
 
             var tokens = search.Split(' ', StringSplitOptions.RemoveEmptyEntries);

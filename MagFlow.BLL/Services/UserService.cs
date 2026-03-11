@@ -66,6 +66,37 @@ namespace MagFlow.BLL.Services
             return await GetUser(userId.Value);
         }
 
+        [MinimumRole(nameof(AppRole.SysAdmin))]
+        public async Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        {
+            var queryResponse = await _userRepository.GetAsync(new QueryOptions<ApplicationUser>()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Search = search,
+                SearchColumns = new System.Linq.Expressions.Expression<Func<ApplicationUser, string?>>[]
+                {
+                    u => u.FirstName, u => u.LastName, u => u.Email
+                },
+                SortBy = sortBy,
+                Descending = descending
+            }, query => query.Include(x => x.Companies).ThenInclude(y => y.Company)
+                             .Include(x => x.Roles).ThenInclude(y => y.Role));
+            return new QueryResponse<UserDTO>()
+            {
+                Elements = queryResponse?.Elements.Select(x =>
+                {
+                    var dto = x.ToDTO();
+                    dto.Companies = x.Companies
+                        .Where(y => y.Company != null)
+                        .Select(y => y.Company!.ToDTO())
+                        .ToList();
+                    return dto;
+                }).ToList() ?? new List<UserDTO>(),
+                TotalCount = queryResponse?.TotalCount ?? 0
+            };
+        }
+
 
 
         // Settings section

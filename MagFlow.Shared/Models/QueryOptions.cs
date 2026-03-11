@@ -1,9 +1,12 @@
+using System.Linq.Expressions;
+
 namespace MagFlow.Shared.Models
 {
 
-    public class QueryOptions
+    public class QueryOptions<T>
     {
         public string? Search { get; set; }
+        public Expression<Func<T, string?>>[]? SearchColumns { get; set; }
 
         public Dictionary<string, object>? Filters { get; set; }
 

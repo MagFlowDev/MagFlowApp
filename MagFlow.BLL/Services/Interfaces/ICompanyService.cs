@@ -15,8 +15,8 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<List<ModuleDTO>?> GetCompanyModules(Guid companyId);
         Task<List<ModuleDTO>?> GetAllModules();
         Task<List<DefaultWorkingHourDTO>?> GetDefaultWorkingHours();
-        Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null,
-            bool descending = false);
+        Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
+        Task<QueryResponse<CompanyDTO>> GetCompanies(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
 
 
 

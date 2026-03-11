@@ -11,17 +11,17 @@ namespace MagFlow.DAL.Repositories
 {
     public interface IRepository<TEntity, TContext> where TEntity : class where TContext : DbContext
     {
-        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null);
-        Task<QueryResponse<TEntity>?> GetAsync(QueryOptions options);
-        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null);
+        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
+        Task<QueryResponse<TEntity>?> GetAsync(QueryOptions<TEntity> options, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
+        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
 
         IQueryable<TEntity>? Find(Expression<Func<TEntity, bool>> predicate);
 
         TEntity? GetById(object id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
         Task<TEntity?> GetByIdAsync(object id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
 
-        TEntity? Get(Expression<Func<TEntity, bool>> predicate);
-        Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate);
+        TEntity? Get(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
+        Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
 
         Enums.Result Add(TEntity entity, TContext? context = null);
         Task<Enums.Result> AddAsync(TEntity entity, TContext? context = null);
