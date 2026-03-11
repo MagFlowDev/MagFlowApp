@@ -1032,4 +1032,7 @@
   <data name="RowsPerPage" xml:space="preserve">
     <value>Rows per page:</value>
   </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
 </root>

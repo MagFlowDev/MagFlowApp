@@ -1,4 +1,5 @@
-﻿using MagFlow.Domain.CoreScope;
+﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.Domain.CoreScope;
 using MagFlow.EF;
 using MagFlow.Shared.Models;
 using System;
@@ -11,7 +12,7 @@ namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
     {
         Task<ApplicationUser?> GetByEmailAsync(string email);
         Task<List<UserSession>?> GetLastSessionsAsync(Guid userId, int historyLength = 1);
-        Task<QueryResponse<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions queryOptions);
+        Task<QueryResponse<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions<User> queryOptions);
 
         
         

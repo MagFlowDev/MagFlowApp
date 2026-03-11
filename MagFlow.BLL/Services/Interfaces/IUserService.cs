@@ -12,6 +12,7 @@ namespace MagFlow.BLL.Services.Interfaces
     {
         Task<UserDTO> GetUser(Guid id);
         Task<UserDTO?> GetCurrentUser();
+        Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
 
         Task<Enums.Result> UpdateUserSettings(UserSettingsDTO userSettingsDTO);
 

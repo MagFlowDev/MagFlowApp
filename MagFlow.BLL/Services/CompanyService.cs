@@ -3,6 +3,7 @@ using MagFlow.BLL.Mappers.Domain.CoreScope;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
 using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Domain.CompanyScope;
 using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.Attributes;
 using MagFlow.Shared.DTOs.CompanyScope;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using static MagFlow.Shared.Models.Enums;
@@ -106,13 +108,18 @@ namespace MagFlow.BLL.Services
             return result?.ToDTO();
         }
 
+        [MinimumRole(nameof(AppRole.CompanyAdmin))]
         public async Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
         {
-            var queryResponse = await _userRepository.GetCompanyUsersAsync(new QueryOptions()
+            var queryResponse = await _userRepository.GetCompanyUsersAsync(new QueryOptions<User>()
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 Search = search,
+                SearchColumns = new Expression<Func<User, string?>>[]
+                {
+                    u => u.FirstName, u => u.LastName, u => u.Email
+                },
                 SortBy = sortBy,
                 Descending = descending
             });
@@ -130,9 +137,34 @@ namespace MagFlow.BLL.Services
                 TotalCount = queryResponse?.TotalCount ?? 0
             };
         }
-        
+
+        [MinimumRole(nameof(AppRole.SysAdmin))]
+        public async Task<QueryResponse<CompanyDTO>> GetCompanies(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        {
+            var queryResponse = await _companyRepository.GetAsync(new QueryOptions<Company>()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Search = search,
+                SearchColumns = new System.Linq.Expressions.Expression<Func<Company, string?>>[]
+                {
+                    s => s.Name, s => s.Address.Line1, s => s.Address.ZipCode, s => s.Address.City, s => s.Address.Country, s => s.TaxNumber
+                },
+                SortBy = sortBy,
+                Descending = descending
+            });
+            return new QueryResponse<CompanyDTO>()
+            {
+                Elements = queryResponse?.Elements
+                    .Select(x => x.ToDTO())
+                    .ToList() ?? new List<CompanyDTO>(),
+                TotalCount = queryResponse?.TotalCount ?? 0
+            };
+        }
 
 
+
+        [MinimumRole(nameof(AppRole.SysAdmin))]
         public async Task<Enums.Result> CreateCompany(CompanyDTO companyDTO)
         {
             Company company = companyDTO.ToEntity();

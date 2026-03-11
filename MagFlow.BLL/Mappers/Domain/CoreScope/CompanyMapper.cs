@@ -16,6 +16,7 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
                 Name = company.Name,
                 TaxNumber = company.TaxNumber,
                 CreatedAt = company.CreatedAt,
+                IsActive = company.IsActive,
                 Address = company.Address,
                 LogoData = company.Logo?.ImageData,
                 LogoContentType = company.Logo?.ContentType,

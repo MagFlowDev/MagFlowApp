@@ -14,6 +14,7 @@ namespace MagFlow.Shared.DTOs.CoreScope
         public string TaxNumber { get; set; } 
         public DateTime CreatedAt { get; set; }
         public Address? Address { get; set; }
+        public bool IsActive { get; set; }
         public byte[]? LogoData { get; set; }
         public string? LogoContentType { get; set; }
         public CompanySettingsDTO? CompanySettings { get; set; }

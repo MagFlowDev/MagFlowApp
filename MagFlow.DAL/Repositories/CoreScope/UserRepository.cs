@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MagFlow.DAL.Helpers;
+using MagFlow.Domain.CompanyScope;
 
 namespace MagFlow.DAL.Repositories.CoreScope
 {
@@ -101,7 +102,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public async Task<QueryResponse<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions queryOptions)
+        public async Task<QueryResponse<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions<User> queryOptions)
         {
             try
             {
@@ -110,7 +111,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                     using (var companyContext = _companyContextFactory.CreateDbContext())
                     {
                         var companyUsersQuery = companyContext.Users
-                            .ApplyMultiColumnSearch(queryOptions.Search, u => u.FirstName, u => u.LastName, u => u.Email)
+                            .ApplyMultiColumnSearch(queryOptions.Search, queryOptions.SearchColumns)
                             .SortBy(queryOptions.SortBy, queryOptions.Descending);
                         var companyUsers = await companyUsersQuery.Paginate(queryOptions.PageNumber, queryOptions.PageSize).ToListAsync();
                         var companyUsersCount = await companyUsersQuery.CountAsync();

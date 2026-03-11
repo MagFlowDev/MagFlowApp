@@ -1,5 +1,85 @@
-﻿<h3>Companies</h3>
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Web.Components.Pagination
+@using MagFlow.BLL.Helpers.Localization.Display
+@using MudBlazor
+@using System.Globalization
+
+@inject ICompanyService CompanyService
+
+<div class="d-flex flex-column align-items-start w-100 h-100">
+    <MudDataGrid @ref="_companiesDataGrid" T="CompanyDTO" ServerData="ServerReloadCompanies" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden" Height="100%" RowsPerPage="25" Virtualize="true" FixedHeader="true">
+        <ToolBarContent>
+            <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
+            <MudSpacer />
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Title="@Localizer[Langs.Name]" Property="x => x.Name" Sortable="true" />
+            <TemplateColumn Title="@Localizer[Langs.Address]" Sortable="true" Tag="@($"{nameof(CompanyDTO.Address)}")">
+                <CellTemplate>
+                    @if(context.Item.Address != null)
+                    {
+                        string country = "";
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(context.Item.Address.Country))
+                            {
+                                RegionInfo region = new RegionInfo(context.Item.Address.Country);
+                                country = region.DisplayName;
+                            }
+                        }
+                        catch { }
+                        <MudText>@string.Concat(context.Item.Address.Line1, " ", context.Item.Address.City, " ", context.Item.Address.ZipCode, " ", country)</MudText>
+                    }
+                    else
+                    {
+                        <MudText></MudText>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Title="@Localizer[Langs.TaxNumber]" Property="x => x.TaxNumber" Sortable="true" />
+
+            <TemplateColumn Title="@Localizer[Langs.Status]" Sortable="false">
+                <CellTemplate>
+                    <MudChip Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive? Color.Success: Color.Error)">@(context.Item.IsActive? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+        <PagerContent>
+            <DataGridPager T="CompanyDTO" DataGrid="_companiesDataGrid" />
+        </PagerContent>
+    </MudDataGrid>
+</div>
 
 @code {
+    MudDataGrid<CompanyDTO> _companiesDataGrid;
+    string? _searchString = null;
+
+
+    private async Task<GridData<CompanyDTO>> ServerReloadCompanies(GridState<CompanyDTO> state, CancellationToken token)
+    {
+        var sortDefinition = state.SortDefinitions.FirstOrDefault();
+        string? sortBy = sortDefinition?.SortBy;
+        if (Guid.TryParse(sortBy, out _))
+        {
+            var column = _companiesDataGrid.RenderedColumns.FirstOrDefault(c => c.PropertyName == sortBy);
+            sortBy = column?.Tag?.ToString();
+        }
+        sortBy = sortBy ?? nameof(CompanyDTO.Name);
+        var response = await CompanyService.GetCompanies(state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
+
+        return new GridData<CompanyDTO>
+        {
+            Items = response.Elements,
+            TotalItems = response.TotalCount,
+        };
+    }
+
+    private Task OnSearch(string text)
+    {
+        _searchString = text;
+        return _companiesDataGrid.ReloadServerData();
+    }
 
 }

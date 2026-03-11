@@ -312,46 +312,54 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public virtual TEntity? Get(Expression<Func<TEntity, bool>> predicate)
-        {
-            try
-            {
-                using (var context = _coreContextFactory.CreateDbContext())
-                {
-                    return context.Set<TEntity>().Where(predicate).FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return null;
-            }
-        }
-
-
-        public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            try
-            {
-                using (var context = _coreContextFactory.CreateDbContext())
-                {
-                    return await context.Set<TEntity>().Where(predicate).FirstOrDefaultAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return null;
-            }
-        }
-
-        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null)
+        public virtual TEntity? Get(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
         {
             try
             {
                 using (var context = _coreContextFactory.CreateDbContext())
                 {
                     var query = context.Set<TEntity>().AsQueryable();
+                    if (include != null)
+                        query = include(query);
+                    return query.Where(predicate).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+
+        public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    var query = context.Set<TEntity>().AsQueryable();
+                    if (include != null)
+                        query = include(query);
+                    return await query.Where(predicate).FirstOrDefaultAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    var query = context.Set<TEntity>().AsQueryable();
+                    if (include != null)
+                        query = include(query);
                     if (predicate != null)
                         query = query.Where(predicate).AsQueryable();
                     return query.ToList();
@@ -364,13 +372,15 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
         {
             try
             {
                 using (var context = _coreContextFactory.CreateDbContext())
                 {
                     var query = context.Set<TEntity>().AsQueryable();
+                    if (include != null)
+                        query = include(query);
                     if (predicate != null)
                         query = query.Where(predicate).AsQueryable();
                     return await query.ToListAsync();
@@ -383,14 +393,17 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public virtual async Task<QueryResponse<TEntity>?> GetAsync(QueryOptions options)
+        public virtual async Task<QueryResponse<TEntity>?> GetAsync(QueryOptions<TEntity> options, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
         {
             try
             {
                 using (var context = _coreContextFactory.CreateDbContext())
                 {
                     var query = context.Set<TEntity>().AsQueryable();
+                    if (include != null)
+                        query = include(query);
                     query = query.ApplyColumnFilters(options.Filters);
+                    query = query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                     query = query.SortBy(options.SortBy, options.Descending);
                     var count = await query.CountAsync();
                     var entities = await query.Paginate(options.PageNumber, options.PageSize).ToListAsync();
