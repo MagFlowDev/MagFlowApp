@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagFlow.Shared.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,7 @@ namespace MagFlow.BLL.Services.Interfaces
     {
         string? GetUserIp();
         Guid? GetUserId();
+
+        Task<Enums.Result> SendPost<TRequest>(TRequest request, string address);
     }
 }

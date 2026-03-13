@@ -1,7 +1,12 @@
 ﻿using MagFlow.BLL.Services.Interfaces;
+using MagFlow.DAL.Repositories.CoreScope;
 using MagFlow.DAL.Repositories.CoreScope.Interfaces;
 using MagFlow.Domain.CoreScope;
+using MagFlow.Shared.Attributes;
+using MagFlow.Shared.DTOs.CoreScope;
+using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Auth;
+using MagFlow.Shared.Models.Enumerators;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +14,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Crypto.Generators;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MagFlow.Web.Helpers
 {
@@ -95,6 +101,79 @@ namespace MagFlow.Web.Helpers
 
                 var returnUrl = "/lobby";
                 return Results.Redirect(returnUrl);
+            });
+
+            authGroup.MapPost("/Register", async (
+                [FromBody] SignUpModel req,
+                [FromServices] SignInManager<ApplicationUser> signInManager,
+                ILogger<Program> logger,
+                IUserRepository repo,
+                HttpContext http) =>
+            {
+                var ip = http.Connection.RemoteIpAddress?.MapToIPv4().ToString();
+                logger.LogInformation($"Attemption to create user from IPv4 address: {ip}");
+
+                var userIdString = http?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!Guid.TryParse(userIdString, out var userId))
+                {
+                    logger.LogError($"Cannot get actual user");
+                    return Enums.Result.Error;
+                }
+                var user = await repo.GetByIdAsync(userId);
+                if(user == null)
+                {
+                    logger.LogError($"Cannot get actual user");
+                    return Enums.Result.Error;
+                }
+
+                var tempUser = await repo.GetByEmailAsync(req.Email);
+                if (tempUser != null)
+                {
+                    logger.LogError($"Cannot create user because already exists({req.Email})");
+                    return Enums.Result.Error;
+                }
+                
+                if (string.IsNullOrEmpty(req.Email) || string.IsNullOrEmpty(req.FirstName) || string.IsNullOrEmpty(req.LastName) || string.IsNullOrEmpty(req.Password))
+                {
+                    logger.LogError($"Error while creating user - form is invalid");
+                    return Enums.Result.Error;
+                }
+                var now = DateTime.UtcNow;
+                ApplicationUser newUser = new ApplicationUser()
+                {
+                    Id = Guid.NewGuid(),
+                    Email = req.Email.ToLower(),
+                    NormalizedEmail = req.Email.Normalize().ToUpper(),
+                    UserName = req.Email.ToLower(),
+                    NormalizedUserName = req.Email.Normalize().ToUpper(),
+                    FirstName = req.FirstName,
+                    LastName = req.LastName,
+                    CreatedAt = now,
+                    LastLogin = now,
+                    IsActive = true,
+                    EmailConfirmed = true,
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    UserSettings = new ApplicationUserSettings
+                    {
+                        Language = user.UserSettings?.Language ?? Shared.Models.Enums.Language.Polish,
+                        ThemeMode = user.UserSettings?.ThemeMode ?? Shared.Models.Enums.ThemeMode.LightMode,
+                        DecimalSeparator = user.UserSettings?.DecimalSeparator ?? Shared.Models.Enums.DecimalSeparator.Comma,
+                        DateFormat = user.UserSettings?.DateFormat ?? Shared.Models.Enums.DateFormat.DD_MM_RRRR_DOTS,
+                        TimeFormat = user.UserSettings?.TimeFormat ?? Shared.Models.Enums.TimeFormat.HH_MM_24H,
+                        TimeZone = user.UserSettings?.TimeZone ?? Shared.Models.Enums.TimeZone.Europe_Warsaw
+                    }
+                };
+                var password = new PasswordHasher<ApplicationUser>();
+                newUser.PasswordHash = password.HashPassword(newUser, req.Password);
+
+                var result = await repo.AddAsync(newUser);
+                if(result != Enums.Result.Success)
+                {
+                    logger.LogWarning($"Error while creating user");
+                    return Enums.Result.Error;
+                }
+                logger.LogInformation($"User {user.Email} created user {newUser.Email}");
+                return Enums.Result.Success;
             });
 
             authGroup.MapPost("/Logout", async (

@@ -2,24 +2,27 @@
 using MagFlow.BLL.Mappers.Domain.CoreScope;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Domain.CompanyScope;
 using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.Attributes;
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Generators.EmailGenerators;
+using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Auth;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Shared.Models.Settings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Ocsp;
+using Serilog.Core;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Web;
-using MagFlow.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace MagFlow.BLL.Services
 {
@@ -95,6 +98,72 @@ namespace MagFlow.BLL.Services
                 }).ToList() ?? new List<UserDTO>(),
                 TotalCount = queryResponse?.TotalCount ?? 0
             };
+        }
+
+
+
+        [MinimumRole(nameof(AppRole.CompanyAdmin))]
+        public async Task<Enums.Result> CreateUser(SignUpModel model)
+        {
+            var userId = _networkService.GetUserId();
+            if (!userId.HasValue)
+                return Enums.Result.Error;
+            var user = await _userRepository.GetByIdAsync(userId.Value);
+            if (user == null)
+            {
+                _logger.LogError($"Cannot get actual user");
+                return Enums.Result.Error;
+            }
+            if(!user.DefaultCompanyId.HasValue)
+            {
+                _logger.LogError($"Cannot create user because no company is selected");
+                return Enums.Result.Error;
+            }
+
+            var tempUser = await _userRepository.GetByEmailAsync(model.Email);
+            if (tempUser != null)
+            {
+                _logger.LogError($"Cannot create user because already exists ({model.Email})");
+                return Enums.Result.Error;
+            }
+
+            if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.FirstName) || string.IsNullOrEmpty(model.LastName) || string.IsNullOrEmpty(model.Password) || model.Password != model.ConfirmPassword)
+            {
+                _logger.LogError($"Error while creating user - form is invalid");
+                return Enums.Result.Error;
+            }
+
+            var now = DateTime.UtcNow;
+            ApplicationUser newUser = new ApplicationUser()
+            {
+                Id = Guid.NewGuid(),
+                Email = model.Email.ToLower(),
+                NormalizedEmail = model.Email.Normalize().ToUpper(),
+                UserName = model.Email.ToLower(),
+                NormalizedUserName = model.Email.Normalize().ToUpper(),
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                CreatedAt = now,
+                LastLogin = now,
+                IsActive = true,
+                EmailConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString("D"),
+                DefaultCompanyId = user.DefaultCompanyId.Value,
+                UserSettings = new ApplicationUserSettings
+                {
+                    Language = user.UserSettings?.Language ?? Shared.Models.Enums.Language.Polish,
+                    ThemeMode = user.UserSettings?.ThemeMode ?? Shared.Models.Enums.ThemeMode.LightMode,
+                    DecimalSeparator = user.UserSettings?.DecimalSeparator ?? Shared.Models.Enums.DecimalSeparator.Comma,
+                    DateFormat = user.UserSettings?.DateFormat ?? Shared.Models.Enums.DateFormat.DD_MM_RRRR_DOTS,
+                    TimeFormat = user.UserSettings?.TimeFormat ?? Shared.Models.Enums.TimeFormat.HH_MM_24H,
+                    TimeZone = user.UserSettings?.TimeZone ?? Shared.Models.Enums.TimeZone.Europe_Warsaw
+                }
+            };
+            var password = new PasswordHasher<ApplicationUser>();
+            newUser.PasswordHash = password.HashPassword(newUser, model.Password);
+
+            var result = await _userRepository.AddAsync(newUser);
+            return result;
         }
 
 
