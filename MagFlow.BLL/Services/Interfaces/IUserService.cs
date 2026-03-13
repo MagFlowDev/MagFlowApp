@@ -15,6 +15,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
 
         Task<Enums.Result> CreateUser(SignUpModel model);
+        Task<Enums.Result> CreateUser(SignSomeoneUpModel model);
 
         Task<Enums.Result> UpdateUserSettings(UserSettingsDTO userSettingsDTO);
 

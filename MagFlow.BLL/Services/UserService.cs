@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.Mappers.Domain;
+﻿using MagFlow.BLL.Helpers.Auth;
+using MagFlow.BLL.Mappers.Domain;
 using MagFlow.BLL.Mappers.Domain.CoreScope;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.CoreScope.Interfaces;
@@ -164,6 +165,20 @@ namespace MagFlow.BLL.Services
 
             var result = await _userRepository.AddAsync(newUser);
             return result;
+        }
+
+        [MinimumRole(nameof(AppRole.CompanyAdmin))]
+        public async Task<Enums.Result> CreateUser(SignSomeoneUpModel model)
+        {
+            var password = PasswordGenerator.Generate();
+            return await CreateUser(new SignUpModel()
+            {
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Password = password,
+                ConfirmPassword = password
+            });
         }
 
 
