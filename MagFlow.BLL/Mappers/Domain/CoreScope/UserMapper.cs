@@ -27,6 +27,26 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
             };
         }
 
+        public static ApplicationUser ToEntity(this UserDTO userDTO)
+        {
+            var now = DateTime.UtcNow;
+            var id = userDTO.Id != Guid.Empty ? userDTO.Id : Guid.NewGuid();
+            return new ApplicationUser()
+            {
+                Id = id,
+                CreatedAt = userDTO.CreatedAt ?? now,
+                LastLogin = userDTO.LastLogin ?? now,
+                IsActive = userDTO.IsActive,
+                FirstName = userDTO.FirstName,
+                LastName = userDTO.LastName,
+                Email = userDTO.Email,
+                UserSettings = userDTO.Settings.ToEntity(id),
+            };
+        }
+
+
+
+
         public static UserSettingsDTO ToDTO(this ApplicationUserSettings? applicationUserSettings)
         {
             return new UserSettingsDTO()

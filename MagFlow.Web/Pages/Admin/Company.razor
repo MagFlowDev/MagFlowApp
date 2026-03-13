@@ -1,0 +1,21 @@
+﻿@page "/admin/company/{CompanyId}"
+
+@inject NavigationManager NavigationManager
+
+<h3>Company</h3>
+
+@code {
+    [Parameter]
+    public string CompanyId { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            if(string.IsNullOrEmpty(CompanyId))
+            {
+                NavigationManager.NavigateTo("/admin");
+            }
+        }
+    }
+}

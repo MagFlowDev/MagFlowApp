@@ -40,7 +40,7 @@
             </TemplateColumn>
             <TemplateColumn Title="@Localizer[Langs.LastLogin]" Sortable="false">
                 <CellTemplate>
-                    <MudText>@context.Item.LastLogin.ToString()</MudText>
+                    <MudText>@context.Item.LastLogin?.ToString()</MudText>
                 </CellTemplate>
             </TemplateColumn>
             <TemplateColumn Title="@Localizer[Langs.Status]" Sortable="false">

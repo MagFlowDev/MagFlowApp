@@ -1,6 +1,8 @@
 ﻿using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Shared.Extensions;
+using MagFlow.Shared.Models;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +15,12 @@ namespace MagFlow.BLL.Services
     public class NetworkService : INetworkService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HttpClient _httpClient;
 
-        public NetworkService(IHttpContextAccessor httpContextAccessor)
+        public NetworkService(IHttpContextAccessor httpContextAccessor, HttpClient httpClient)
         {
             _httpContextAccessor = httpContextAccessor;
+            _httpClient = httpClient;
         }
 
         public Guid? GetUserId()
@@ -38,6 +42,25 @@ namespace MagFlow.BLL.Services
             }
 
             return context.Connection.RemoteIpAddress?.ToString();
+        }
+
+        public async Task<Enums.Result> SendPost<TRequest>(TRequest request, string address)
+        {
+            try
+            {
+                var json = JsonConvert.SerializeObject(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync(address, content);
+                if (response.IsSuccessStatusCode)
+                    return Enums.Result.Success;
+                else
+                    return Enums.Result.Error;
+            }
+            catch (Exception)
+            {
+                return Enums.Result.Error;
+            }
         }
     }
 }

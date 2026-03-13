@@ -60,7 +60,9 @@ namespace MagFlow.Web.Extensions
             services.AddHttpClient();
             services.AddScoped(sp =>
             {
-                var navigationManager = sp.GetRequiredService<NavigationManager>();
+                var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+                var context = httpContextAccessor.HttpContext;
+                string baseUri = context != null ? $"{context.Request.Scheme}://{context.Request.Host}{context.Request.PathBase}/" : "http://localhost";
                 var handler = new HttpClientHandler
                 {
                     UseCookies = true,
@@ -68,7 +70,7 @@ namespace MagFlow.Web.Extensions
                 };
                 return new HttpClient(handler)
                 {
-                    BaseAddress = new Uri(navigationManager.BaseUri)
+                    BaseAddress = new Uri(baseUri)
                 };
             });
             services.AddSingleton<IServerNotificationService, ServerNotificationsService>();

@@ -1,0 +1,34 @@
+﻿@page "/admin/company/add"
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.Models.Auth
+@using MudBlazor
+
+@inject IUserService UserService
+
+<EditForm OnValidSubmit="Send" EditContext="context">
+    <div class="d-flex flex-column">
+        <MudTextField @bind-Value="model?.FirstName" Label="FirstName" />
+        <MudTextField @bind-Value="model?.LastName" Label="LastName" />
+        <MudTextField @bind-Value="model?.Email" Label="Email" />
+        <MudTextField @bind-Value="model?.Password" Label="Password" />
+        <MudTextField @bind-Value="model?.ConfirmPassword" Label="ConfirmPassword" />
+        <MudButton ButtonType="ButtonType.Submit">Ok</MudButton>
+    </div>
+</EditForm>
+
+@code {
+    private SignUpModel model;
+    private EditContext context;
+
+    protected override async Task OnInitializedAsync()
+    {
+        model = new SignUpModel();
+
+        context = new EditContext(model);
+    }
+
+    private async Task Send()
+    {
+        var test = await UserService.CreateUser(model);
+    }
+}
