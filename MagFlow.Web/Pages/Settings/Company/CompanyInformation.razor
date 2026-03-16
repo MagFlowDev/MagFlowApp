@@ -32,7 +32,7 @@
                 <MudSelectExtended T="CountryItem?" ItemCollection="@_countries" Label="@Localizer[Langs.Country]" SearchBoxAutoFocus="true" SearchBox="true" Variant="Variant.Outlined" @bind-Value="_selectedCountry" ToStringFunc="@(new Func<CountryItem,string?>(CountryStringFunc))" SearchFunc="@(new Func<CountryItem, string, bool>(CountrySearchFunc))"/>
             </div>
         </div>
-        <LoadingButton Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" Class="mt-3" OnClick="Update">@Localizer[Langs.Save]</LoadingButton>
+        <LoadingButton Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Class="mt-3" OnClick="Update">@Localizer[Langs.Save]</LoadingButton>
     </div>
     
 </div>

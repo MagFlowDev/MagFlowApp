@@ -17,7 +17,7 @@
         <MudButton Class="w-100 align-self-stretch justify-content-start" Style="@($"border-radius: 8px; height: 64px; border: {GetBorder(Enums.ThemeMode.DarkMode)}")" Variant="Variant.Outlined" Color="Color.Default" EndIcon="@GetEndIcon(Enums.ThemeMode.DarkMode)" IconClass="flex-grow-1 lh-1 justify-content-end" IconColor="Color.Primary" OnClick="@(() => ChangeTheme(Enums.ThemeMode.DarkMode))">
             <MudIcon Icon="@Icons.Material.Outlined.DarkMode" Class="mb-1 mr-3" /> @Localizer[Langs.Dark]
         </MudButton>
-        <LoadingButton Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Dark" Size="Size.Large" Class="ml-1 mt-3" OnClick="Update">@Localizer[Langs.Update]</LoadingButton>
+        <LoadingButton Loading="_loadingUpdate" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" Class="ml-1 mt-3" OnClick="Update">@Localizer[Langs.Update]</LoadingButton>
     </div>
 </div>
 
