@@ -74,6 +74,11 @@ namespace MagFlow.Web.Helpers
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(Claims.CompanyClaim, user.DefaultCompanyId?.ToString() ?? Guid.Empty.ToString())
                 };
+                foreach(var role in user.Roles)
+                {
+                    if(!string.IsNullOrEmpty(role.Role?.Name))
+                        claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
+                }
 
                 var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
                 var principal = new ClaimsPrincipal(identity);

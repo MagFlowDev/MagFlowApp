@@ -1,6 +1,10 @@
 ﻿@page "/admin/company/{CompanyId}"
+@using MagFlow.Shared.Models.Enumerators
+@using Microsoft.AspNetCore.Authorization
 
 @inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
 
 <h3>Company</h3>
 

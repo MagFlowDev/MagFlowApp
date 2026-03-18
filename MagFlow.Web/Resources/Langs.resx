@@ -1039,4 +1039,7 @@ i uprawnieniami użytkowników</value>
   <data name="AddCompany" xml:space="preserve">
     <value>Dodaj firmę</value>
   </data>
+  <data name="ActiveModules" xml:space="preserve">
+    <value>Aktywne moduły</value>
+  </data>
 </root>

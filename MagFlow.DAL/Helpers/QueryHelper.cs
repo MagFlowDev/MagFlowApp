@@ -6,14 +6,14 @@ namespace MagFlow.DAL.Helpers
     {
         public static IQueryable<T> Paginate<T>(this IQueryable<T> query, int pageNumber, int pageSize)
         {
-            if (pageNumber < 1)
-                pageNumber = 1;
+            if (pageNumber < 0)
+                pageNumber = 0;
 
             if (pageSize < 1)
                 pageSize = 25;
             
             return query
-                .Skip((pageNumber - 1) * pageSize)
+                .Skip(pageNumber * pageSize)
                 .Take(pageSize);
         }
         

@@ -1,9 +1,13 @@
 ﻿@page "/admin"
 @using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.Models.Enumerators
+@using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
 @inject IUserService UserService
 @inject IJSRuntime JS
+
+@attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
 
 <div class="d-flex flex-column w-100 flex-grow-1 px-4 pt-2" style="min-height: 0; gap: 16px;">
     <div class="text-start d-flex align-items-start flex-shrink-0 mt-3" style="gap: 8px;">

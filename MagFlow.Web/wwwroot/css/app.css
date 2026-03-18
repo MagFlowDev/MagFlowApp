@@ -214,10 +214,36 @@ h1:focus {
     margin-top: 16px;
 }
 
-.mud-table-overflow-hidden .mud-table-container {
-    overflow: hidden !important;
-}
+
 
 .mud-table-pagination {
     margin-top: auto !important; 
+}
+
+.dg-fixed-pager {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.dg-fixed-pager .mud-data-grid-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.dg-fixed-pager .mud-table-container {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.dg-fixed-pager .mud-data-grid-virtualize {
+    min-height: 0;
+}
+
+.dg-fixed-pager .mud-data-grid-pager {
+    flex-shrink: 0;
 }

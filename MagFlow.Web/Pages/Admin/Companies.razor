@@ -9,16 +9,16 @@
 @inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100 h-100">
-    <MudDataGrid @ref="_companiesDataGrid" T="CompanyDTO" ServerData="ServerReloadCompanies" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 d-flex flex-column" RowsPerPage="25" Virtualize="true" FixedHeader="true" RowClick="OnRowClick">
+    <MudDataGrid @ref="_companiesDataGrid" T="CompanyDTO" ServerData="ServerReloadCompanies" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager" RowsPerPage="25" Virtualize="true" FixedHeader="true" RowClick="OnRowClick">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
             <MudSpacer />
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddCompanyWizard">@Localizer[Langs.AddCompany]</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddCompanyWizard" Class="mx-2">@Localizer[Langs.AddCompany]</MudButton>
         </ToolBarContent>
         <Columns>
             <PropertyColumn Title="@Localizer[Langs.Name]" Property="x => x.Name" Sortable="true" />
-            <TemplateColumn Title="@Localizer[Langs.Address]" Sortable="true" Tag="@($"{nameof(CompanyDTO.Address)}")">
+            <TemplateColumn Title="@Localizer[Langs.Address]" Sortable="false" Tag="@($"{nameof(CompanyDTO.Address)}")">
                 <CellTemplate>
                     @if(context.Item.Address != null)
                     {
@@ -40,8 +40,13 @@
                     }
                 </CellTemplate>
             </TemplateColumn>
-            <PropertyColumn Title="@Localizer[Langs.TaxNumber]" Property="x => x.TaxNumber" Sortable="true" />
-
+            <PropertyColumn Title="@Localizer[Langs.TaxNumber]" Property="x => x.TaxNumber" Sortable="false" />
+            <PropertyColumn Title="@Localizer[Langs.CreationDate]" Property="x => x.CreatedAt.ToShortDateString()" Sortable="false"/>
+            <TemplateColumn Title="@Localizer[Langs.ActiveModules]">
+                <CellTemplate>
+                    <MudText>@context.Item.CompanyModules?.Where(x => x.IsActive && x.EnabledTo >= DateTime.UtcNow).Count()</MudText>
+                </CellTemplate>
+            </TemplateColumn>
             <TemplateColumn Title="@Localizer[Langs.Status]" Sortable="false">
                 <CellTemplate>
                     <MudChip Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive? Color.Success: Color.Error)">@(context.Item.IsActive? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
