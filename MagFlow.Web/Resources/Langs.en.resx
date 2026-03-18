@@ -1038,4 +1038,7 @@
   <data name="AddCompany" xml:space="preserve">
     <value>Add company</value>
   </data>
+  <data name="ActiveModules" xml:space="preserve">
+    <value>Active modules</value>
+  </data>
 </root>

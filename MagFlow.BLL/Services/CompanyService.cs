@@ -152,7 +152,7 @@ namespace MagFlow.BLL.Services
                 },
                 SortBy = sortBy,
                 Descending = descending
-            });
+            }, query => query.Include(x => x.Modules));
             return new QueryResponse<CompanyDTO>()
             {
                 Elements = queryResponse?.Elements

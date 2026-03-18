@@ -6,10 +6,10 @@
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
-@* @attribute [Authorize(Roles = $"{nameof(AppRole.CompanyAdmin)} {nameof(AppRole.SysAdmin)} {nameof(AppRole.SuperAdmin)}")] *@
-
 @inject ICompanyService CompanyService
 @inject IJSRuntime JS
+
+@attribute [Authorize(Roles = $"{nameof(AppRole.CompanyAdmin)},{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")] 
 
 <div class="d-flex flex-column w-100 flex-grow-1 px-4 pt-2" style="min-height: 0">
     <div class="text-start d-flex align-items-start flex-column flex-shrink-0">

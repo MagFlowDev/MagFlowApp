@@ -1,9 +1,13 @@
 ﻿@page "/admin/company/add"
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.Models.Auth
+@using MagFlow.Shared.Models.Enumerators
+@using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
 @inject IUserService UserService
+
+@attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
 
 <EditForm OnValidSubmit="Send" EditContext="context">
     <div class="d-flex flex-column">

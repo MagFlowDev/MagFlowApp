@@ -1,14 +1,18 @@
 ﻿@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models.Enumerators
 @using MagFlow.Web.Components.Pagination
 @using MagFlow.BLL.Helpers.Localization.Display
+@using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
 
-<div class="d-flex flex-column align-items-start w-100 h-100">
-    <MudDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 d-flex flex-column" RowsPerPage="25" Virtualize="true" FixedHeader="true" RowClick="OnRowClick">
+@attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
+
+<div class="d-flex flex-column align-items-start w-100 h-100 overflow-hidden">
+    <MudDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager" RowsPerPage="25" Virtualize="true" FixedHeader="true" RowClick="OnRowClick">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
