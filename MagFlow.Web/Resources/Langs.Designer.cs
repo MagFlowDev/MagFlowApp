@@ -124,6 +124,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dodaj firmę.
+        /// </summary>
+        public static string AddCompany {
+            get {
+                return ResourceManager.GetString("AddCompany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dodatkowy.
         /// </summary>
         public static string Additional {

@@ -6,13 +6,15 @@
 @using System.Globalization
 
 @inject ICompanyService CompanyService
+@inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100 h-100">
-    <MudDataGrid @ref="_companiesDataGrid" T="CompanyDTO" ServerData="ServerReloadCompanies" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden" Height="100%" RowsPerPage="25" Virtualize="true" FixedHeader="true">
+    <MudDataGrid @ref="_companiesDataGrid" T="CompanyDTO" ServerData="ServerReloadCompanies" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 d-flex flex-column" RowsPerPage="25" Virtualize="true" FixedHeader="true" RowClick="OnRowClick">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
             <MudSpacer />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddCompanyWizard">@Localizer[Langs.AddCompany]</MudButton>
         </ToolBarContent>
         <Columns>
             <PropertyColumn Title="@Localizer[Langs.Name]" Property="x => x.Name" Sortable="true" />
@@ -76,10 +78,33 @@
         };
     }
 
+
     private Task OnSearch(string text)
     {
         _searchString = text;
         return _companiesDataGrid.ReloadServerData();
     }
 
+
+
+    private void OnRowClick(DataGridRowClickEventArgs<CompanyDTO> clickEventArgs)
+    {
+        if (!clickEventArgs.Item.Id.HasValue)
+            return;
+
+        if(clickEventArgs.MouseEventArgs.Detail == 2)
+        {
+            OpenCompanyDetails(clickEventArgs.Item.Id.Value);
+        }
+    }
+
+    private void OpenCompanyDetails(Guid companyId)
+    {
+        NavigationManager.NavigateTo($"/admin/company/{companyId}");
+    }
+
+    private void OpenAddCompanyWizard()
+    {
+        NavigationManager.NavigateTo($"/admin/company/add");
+    }
 }

@@ -1,0 +1,21 @@
+﻿@page "/admin/user/{UserId}"
+
+@inject NavigationManager NavigationManager
+
+<h3>User</h3>
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (string.IsNullOrEmpty(UserId))
+            {
+                NavigationManager.NavigateTo("/admin");
+            }
+        }
+    }
+}

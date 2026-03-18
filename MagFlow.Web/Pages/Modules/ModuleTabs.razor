@@ -17,9 +17,9 @@
         <ChildContent>
             @foreach(var tab in ActiveModules)
             {
-                <MudTabPanel @key="tab.Id" Tag="@tab.Id" Icon="@tab.ModuleComponent!.Icon">
+                <MudTabPanel @key="tab.Id" Tag="@tab.Id" Icon="@tab.ModuleComponent!.Icon" PanelClass="h-100">
                     <ChildContent>
-                        <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden;">
+                        <div class="flex-grow-1 d-flex flex-column align-items-start h-100" style="min-height: 0; overflow-x: hidden;">
                             <DynamicComponent Type="@tab.ModuleComponent!.GetType()" />
                         </div>
                     </ChildContent>
