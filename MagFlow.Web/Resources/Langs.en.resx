@@ -1035,4 +1035,7 @@
   <data name="Address" xml:space="preserve">
     <value>Address</value>
   </data>
+  <data name="AddCompany" xml:space="preserve">
+    <value>Add company</value>
+  </data>
 </root>

@@ -217,3 +217,7 @@ h1:focus {
 .mud-table-overflow-hidden .mud-table-container {
     overflow: hidden !important;
 }
+
+.mud-table-pagination {
+    margin-top: auto !important; 
+}

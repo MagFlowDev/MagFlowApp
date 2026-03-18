@@ -1036,4 +1036,7 @@ i uprawnieniami użytkowników</value>
   <data name="Address" xml:space="preserve">
     <value>Adres</value>
   </data>
+  <data name="AddCompany" xml:space="preserve">
+    <value>Dodaj firmę</value>
+  </data>
 </root>

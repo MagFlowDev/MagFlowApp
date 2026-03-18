@@ -5,9 +5,10 @@
 @using MudBlazor
 
 @inject IUserService UserService
+@inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100 h-100">
-    <MudDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden" Height="100%" RowsPerPage="25" Virtualize="true" FixedHeader="true">
+    <MudDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 d-flex flex-column" RowsPerPage="25" Virtualize="true" FixedHeader="true" RowClick="OnRowClick">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
@@ -85,4 +86,21 @@
         return _usersDataGrid.ReloadServerData();
     }
 
+
+
+    private void OnRowClick(DataGridRowClickEventArgs<UserDTO> clickEventArgs)
+    {
+        if (clickEventArgs.Item.Id == Guid.Empty)
+            return;
+
+        if (clickEventArgs.MouseEventArgs.Detail == 2)
+        {
+            OpenUserDetails(clickEventArgs.Item.Id);
+        }
+    }
+
+    private void OpenUserDetails(Guid userId)
+    {
+        NavigationManager.NavigateTo($"/admin/user/{userId}");
+    }
 }
