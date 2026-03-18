@@ -1,6 +1,7 @@
 ﻿@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
 @using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Web.Components.DataGrid
 @using MagFlow.Web.Components.Pagination
 @using MagFlow.BLL.Helpers.Localization.Display
 @using Microsoft.AspNetCore.Authorization
@@ -12,52 +13,49 @@
 @attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
 
 <div class="d-flex flex-column align-items-start w-100 h-100 overflow-hidden">
-    <MudDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager" RowsPerPage="25" Virtualize="true" FixedHeader="true" RowClick="OnRowClick">
+    <MagFlowDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" OnRowClicked="OpenUserDetails">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
             <MudSpacer />
         </ToolBarContent>
         <Columns>
-            <TemplateColumn Title="@Localizer[Langs.Name]" Sortable="true" Tag="@($"{nameof(UserDTO.LastName)}")" >
+            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Name]" Sortable="true" Tag="@($"{nameof(UserDTO.LastName)}")" >
                 <CellTemplate>
                     <MudText>@string.Concat(context.Item.FirstName, " ", context.Item.LastName)</MudText>
                 </CellTemplate>
             </TemplateColumn>
-            <PropertyColumn Title="@Localizer[Langs.Email]" Property="x => x.Email" Sortable="true"/>
-            <TemplateColumn Title="@Localizer[Langs.Companies]" Sortable="false">
+            <PropertyColumn T="UserDTO" TProperty="string" Title="@Localizer[Langs.Email]" Property="x => x.Email" Sortable="true"/>
+            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Companies]" Sortable="false">
                 <CellTemplate>
                     <div class="d-flex align-items-center justify-content-start" style="gap: 4px">
                         @if(context.Item.Companies != null && context.Item.Companies.Count <= 3)
                         {
                             foreach(var company in context.Item.Companies)
                             {
-                                <MudChip Class="m-0" Variant="Variant.Outlined">@company.Name</MudChip>
+                                <MudChip T="string" Class="m-0" Variant="Variant.Outlined">@company.Name</MudChip>
                             }
                         }
                     </div>
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn Title="@Localizer[Langs.Role]" Sortable="false">
+            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Role]" Sortable="false">
                 <CellTemplate>
                     <MudText>@context.Item.Roles.FirstOrDefault()?.DisplayRole(Localizer)</MudText>
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn Title="@Localizer[Langs.LastLogin]" Sortable="false">
+            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.LastLogin]" Sortable="false">
                 <CellTemplate>
                     <MudText>@context.Item.LastLogin?.ToString()</MudText>
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn Title="@Localizer[Langs.Status]" Sortable="false">
+            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Status]" Sortable="false">
                 <CellTemplate>
-                    <MudChip Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive ? Color.Success : Color.Error)">@(context.Item.IsActive ? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
+                    <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive ? Color.Success : Color.Error)">@(context.Item.IsActive ? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
                 </CellTemplate>
             </TemplateColumn>
         </Columns>
-        <PagerContent>
-            <DataGridPager T="UserDTO" DataGrid="_usersDataGrid" />
-        </PagerContent>
-    </MudDataGrid>
+    </MagFlowDataGrid>
 </div>
 
 @code {
@@ -92,19 +90,8 @@
 
 
 
-    private void OnRowClick(DataGridRowClickEventArgs<UserDTO> clickEventArgs)
+    private void OpenUserDetails(UserDTO user)
     {
-        if (clickEventArgs.Item.Id == Guid.Empty)
-            return;
-
-        if (clickEventArgs.MouseEventArgs.Detail == 2)
-        {
-            OpenUserDetails(clickEventArgs.Item.Id);
-        }
-    }
-
-    private void OpenUserDetails(Guid userId)
-    {
-        NavigationManager.NavigateTo($"/admin/user/{userId}");
+        NavigationManager.NavigateTo($"/admin/user/{user.Id}");
     }
 }

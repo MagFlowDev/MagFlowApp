@@ -247,3 +247,7 @@ h1:focus {
 .dg-fixed-pager .mud-data-grid-pager {
     flex-shrink: 0;
 }
+
+.mud-table-row-selected {
+    background-color: var(--mud-palette-table-striped);
+}

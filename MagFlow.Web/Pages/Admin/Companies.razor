@@ -1,5 +1,6 @@
 ﻿@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Web.Components.DataGrid
 @using MagFlow.Web.Components.Pagination
 @using MagFlow.BLL.Helpers.Localization.Display
 @using MudBlazor
@@ -9,7 +10,7 @@
 @inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100 h-100">
-    <MudDataGrid @ref="_companiesDataGrid" T="CompanyDTO" ServerData="ServerReloadCompanies" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager" RowsPerPage="25" Virtualize="true" FixedHeader="true" RowClick="OnRowClick">
+    <MagFlowDataGrid @ref="_companiesDataGrid" T="CompanyDTO" ServerData="ServerReloadCompanies" Filterable="false" OnRowClicked="OpenCompanyDetails">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
@@ -17,8 +18,8 @@
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddCompanyWizard" Class="mx-2">@Localizer[Langs.AddCompany]</MudButton>
         </ToolBarContent>
         <Columns>
-            <PropertyColumn Title="@Localizer[Langs.Name]" Property="x => x.Name" Sortable="true" />
-            <TemplateColumn Title="@Localizer[Langs.Address]" Sortable="false" Tag="@($"{nameof(CompanyDTO.Address)}")">
+            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.Name]" Property="x => x.Name" Sortable="true" />
+            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Address]" Sortable="false" Tag="@($"{nameof(CompanyDTO.Address)}")">
                 <CellTemplate>
                     @if(context.Item.Address != null)
                     {
@@ -40,23 +41,20 @@
                     }
                 </CellTemplate>
             </TemplateColumn>
-            <PropertyColumn Title="@Localizer[Langs.TaxNumber]" Property="x => x.TaxNumber" Sortable="false" />
-            <PropertyColumn Title="@Localizer[Langs.CreationDate]" Property="x => x.CreatedAt.ToShortDateString()" Sortable="false"/>
-            <TemplateColumn Title="@Localizer[Langs.ActiveModules]">
+            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.TaxNumber]" Property="x => x.TaxNumber" Sortable="false" />
+            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.CreationDate]" Property="x => x.CreatedAt.ToShortDateString()" Sortable="false" />
+            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.ActiveModules]">
                 <CellTemplate>
                     <MudText>@context.Item.CompanyModules?.Where(x => x.IsActive && x.EnabledTo >= DateTime.UtcNow).Count()</MudText>
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn Title="@Localizer[Langs.Status]" Sortable="false">
+            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Status]" Sortable="false">
                 <CellTemplate>
-                    <MudChip Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive? Color.Success: Color.Error)">@(context.Item.IsActive? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
+                    <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive? Color.Success: Color.Error)">@(context.Item.IsActive? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
                 </CellTemplate>
             </TemplateColumn>
         </Columns>
-        <PagerContent>
-            <DataGridPager T="CompanyDTO" DataGrid="_companiesDataGrid" />
-        </PagerContent>
-    </MudDataGrid>
+    </MagFlowDataGrid>
 </div>
 
 @code {
@@ -83,7 +81,6 @@
         };
     }
 
-
     private Task OnSearch(string text)
     {
         _searchString = text;
@@ -92,20 +89,11 @@
 
 
 
-    private void OnRowClick(DataGridRowClickEventArgs<CompanyDTO> clickEventArgs)
+    private void OpenCompanyDetails(CompanyDTO company)
     {
-        if (!clickEventArgs.Item.Id.HasValue)
+        if (!company.Id.HasValue)
             return;
-
-        if(clickEventArgs.MouseEventArgs.Detail == 2)
-        {
-            OpenCompanyDetails(clickEventArgs.Item.Id.Value);
-        }
-    }
-
-    private void OpenCompanyDetails(Guid companyId)
-    {
-        NavigationManager.NavigateTo($"/admin/company/{companyId}");
+        NavigationManager.NavigateTo($"/admin/company/{company.Id.Value}");
     }
 
     private void OpenAddCompanyWizard()
