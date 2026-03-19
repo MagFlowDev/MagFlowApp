@@ -1041,4 +1041,7 @@
   <data name="ActiveModules" xml:space="preserve">
     <value>Active modules</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
 </root>

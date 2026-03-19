@@ -1042,4 +1042,7 @@ i uprawnieniami użytkowników</value>
   <data name="ActiveModules" xml:space="preserve">
     <value>Aktywne moduły</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
 </root>

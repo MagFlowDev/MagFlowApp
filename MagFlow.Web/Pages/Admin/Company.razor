@@ -1,16 +1,79 @@
 ﻿@page "/admin/company/{CompanyId}"
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
 @using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Web.Components.Buttons
 @using Microsoft.AspNetCore.Authorization
+@using MudBlazor
 
+@inject ICompanyService CompanyService
+@inject IJSRuntime JS
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
 
-<h3>Company</h3>
+<div class="d-flex flex-column w-100 flex-grow-1 px-4 pt-2" style="min-height: 0">
+    <div class="text-start d-flex align-items-start flex-column flex-shrink-0">
+        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.West" OnClick="@(async () => await JS.InvokeVoidAsync("history.back"))">@Localizer[Langs.GoBack]</MudButton>
+    </div>
+    <div class="d-flex w-100 mt-6" style="flex: 1 1 0; min-height: 0">
+        <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden;">
+            <div class="d-flex flex-column align-items-start w-100" style="gap: 16px; flex: 1 1 auto; min-height: 0;">
+                @* Header *@
+                <div class="d-flex align-items-center align-self-stretch w-100" style="height: 104px; border-radius: 4px; background: var(--mud-palette-primary-text); padding: 0px;">
+                    <div class="d-flex align-items-center align-self-stretch justify-content-between w-100 overflow-x-auto overflow-y-hidden h-100" style="margin: 0 24px; gap: 24px;">
+                        <div class="d-flex align-items-center" style="gap: 24px">
+                            <div class="d-flex align-items-center" style="gap: 16px">
+                                <MudIcon Color="Color.Dark" Size="Size.Large" Icon="@Icons.Material.Outlined.Apartment" Style="width: 48px; height: 48px; color: black !important;"/>
+                                <div class="d-flex flex-column align-items-start">
+                                    <MudText Typo="Typo.h6" Class="text-nowrap">@_company?.Name</MudText>
+                                    <MudText Typo="Typo.body2" Class="text-nowrap" Color="Color.Secondary">@string.Concat(_company?.Address?.Line1, " ", _company?.Address?.City, " ", _company?.Address?.ZipCode, " ", _company?.Address?.Country)</MudText>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center flex-shrink-1" style="gap: 24px">
+                            <div class="d-flex flex-column align-items-start" style="gap: 8px">
+                                <div class="d-flex align-items-center align-self-stretch" style="gap: 16px">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.Email" Style="color: var(--mud-palette-drawer-icon)"/>
+                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@(!string.IsNullOrWhiteSpace(_company?.CompanySettings?.Email) ? _company?.CompanySettings?.Email : "---")</MudText>
+                                </div>
+                                <div class="d-flex align-items-end" style="gap: 16px">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.Phone" Style="color: var(--mud-palette-drawer-icon)"/>
+                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@(!string.IsNullOrWhiteSpace(_company?.CompanySettings?.PhoneNumber) ? _company?.CompanySettings?.PhoneNumber : "---")</MudText>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column align-items-start" style="gap: 8px">
+                                <div class="d-flex align-items-center align-self-stretch" style="gap: 16px">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.CardTravel" Style="color: var(--mud-palette-drawer-icon)"/>
+                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@string.Concat(Localizer[Langs.TaxNumber], ": ", _company?.TaxNumber ?? "---")</MudText>
+                                </div>
+                                <div class="d-flex align-items-end" style="gap: 16px">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.DateRange" Style="color: var(--mud-palette-drawer-icon)"/>
+                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@string.Concat(Localizer[Langs.CreationDate], ": ", _company?.CreatedAt.ToShortDateString() ?? "---")</MudText>
+                                </div>
+                            </div>
+                            <LoadingButton Loading="_loading" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" OnClick="DeleteCompany">@Localizer[Langs.Delete]</LoadingButton>
+                        </div>
+                    </div>
+                </div>
+                @* Modules *@
+                <div class="d-flex flex-column align-items-start" style="gap: 16px; flex: 1 1 auto; min-height: 0; overflow: auto;">
+                    <div class="d-flex align-items-center align-self-stretch flex-wrap justify-content-start m-0 p-0" style="gap: 0;flex: 1 1 auto; min-height: 0; overflow: auto;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter]
     public string CompanyId { get; set; }
+    private CompanyDTO? _company { get; set; }
+
+    private bool _isBusy;
+    private bool _loading;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -20,6 +83,34 @@
             {
                 NavigationManager.NavigateTo("/admin");
             }
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(CompanyId) && _company == null)
+        {
+            if (Guid.TryParse(CompanyId, out var uid))
+                _company = await CompanyService.GetCompany(uid);
+        }
+    }
+
+    private async Task DeleteCompany()
+    {
+        if (_isBusy || _company == null)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loading = true;
+
+            await Task.Delay(2000);
+        }
+        finally
+        {
+            _isBusy = false;
+            _loading = false;
         }
     }
 }

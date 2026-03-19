@@ -56,10 +56,23 @@ namespace MagFlow.BLL.Services
         }
 
 
-        public async Task<UserDTO?> GetUser(Guid id)
+        public async Task<UserDTO?> GetUser(Guid id, bool includeCompanies = false)
         {
-            var user = await _userRepository.GetByIdAsync(id);
-            return user?.ToDTO();
+            ApplicationUser? user = null;
+            if (includeCompanies)
+                user = await _userRepository.GetByIdAsync(id, query => query
+                    .Include(x => x.Companies)
+                    .ThenInclude(y => y.Company));
+            else
+                user = await _userRepository.GetByIdAsync(id);
+
+            UserDTO? userDTO = user?.ToDTO();
+            if (includeCompanies)
+                userDTO?.Companies = user?.Companies?
+                    .Where(x => x.Company != null)
+                    .Select(x => x.Company!.ToDTO())
+                    .ToList();
+            return userDTO;
         }
 
         public async Task<UserDTO?> GetCurrentUser()

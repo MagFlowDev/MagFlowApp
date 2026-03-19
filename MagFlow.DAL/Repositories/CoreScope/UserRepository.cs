@@ -49,10 +49,13 @@ namespace MagFlow.DAL.Repositories.CoreScope
 
                 using (var context = _coreContextFactory.CreateDbContext())
                 {
-                    return await context.ApplicationUsers
+                    var query = context.ApplicationUsers.AsQueryable();
+                    query = query
                         .Include(u => u.UserSettings)
-                        .Include(u => u.Roles).ThenInclude(r => r.Role)
-                        .FirstOrDefaultAsync(i => i.Id == guid);
+                        .Include(u => u.Roles).ThenInclude(r => r.Role);
+                    if (include != null)
+                        query = include(query);
+                    return await query.FirstOrDefaultAsync(i => i.Id == guid);
                 }
             }
             catch (Exception ex)
