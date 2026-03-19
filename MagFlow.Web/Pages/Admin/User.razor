@@ -1,12 +1,100 @@
 ﻿@page "/admin/user/{UserId}"
+@using MagFlow.BLL.Helpers.Localization.Display
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Web.Components.Buttons
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
 
+@inject IUserService UserService
+@inject IJSRuntime JS
 @inject NavigationManager NavigationManager
 
-<h3>User</h3>
+@attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
+
+<div class="d-flex flex-column w-100 flex-grow-1 px-4 pt-2" style="min-height: 0">
+    <div class="text-start d-flex align-items-start flex-column flex-shrink-0">
+        <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Filled.West" OnClick="@(async () => await JS.InvokeVoidAsync("history.back"))">@Localizer[Langs.GoBack]</MudButton>
+    </div>
+    <div class="d-flex w-100 mt-6" style="flex: 1 1 0; min-height: 0">
+        <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden;">
+            <div class="d-flex flex-column align-items-start w-100" style="gap: 16px; flex: 1 1 auto; min-height: 0;">
+                @* Header *@
+                <div class="d-flex align-items-center align-self-stretch justify-content-between w-100" style="height: 104px; border-radius: 4px; background: var(--mud-palette-primary-text); padding: 0px;">
+                    <div class="d-flex align-items-center align-self-stretch justify-content-between w-100 overflow-x-auto overflow-y-hidden h-100" style="margin: 0 24px; gap: 24px;">
+                        <div class="d-flex align-items-center" style="gap: 24px">
+                            <div class="d-flex align-items-center" style="gap: 16px">
+                                <MudAvatar Color="Color.Default" Variant="Variant.Filled" Size="Size.Large">@string.Concat(_user?.FirstName?.FirstOrDefault().ToString() ?? "", _user?.LastName?.FirstOrDefault().ToString() ?? "")</MudAvatar>
+                                <div class="d-flex flex-column align-items-start">
+                                    <MudText Typo="Typo.h6" Class="text-nowrap">@string.Concat(_user?.FirstName ?? "", " ", _user?.LastName ?? "")</MudText>
+                                    <MudText Typo="Typo.body2" Class="text-nowrap" Color="Color.Secondary">@_user?.Roles.FirstOrDefault()?.DisplayRole(Localizer)</MudText>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center" style="gap: 8px">
+                                @if (_user?.Companies?.Any() == true)
+                                {
+                                    int i = 0;
+                                    @foreach (var company in _user.Companies)
+                                    {
+                                        if (i < 2)
+                                        {
+                                            <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default" Class="m-0">@company.Name</MudChip>
+                                        }
+
+                                        i++;
+                                    }
+
+                                    if (i > 2)
+                                    {
+                                        <MudChip T="string" Variant="Variant.Outlined" Color="Color.Default" Class="m-0">+@(i - 2)</MudChip>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center" style="gap: 24px">
+                            <div class="d-flex flex-column align-items-start" style="gap: 8px">
+                                <div class="d-flex align-items-center align-self-stretch" style="gap: 16px">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.Email" Style="color: var(--mud-palette-drawer-icon)"/>
+                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@_user?.Email</MudText>
+                                </div>
+                                <div class="d-flex align-items-end" style="gap: 16px">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.Phone" Style="color: var(--mud-palette-drawer-icon)"/>
+                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@(!string.IsNullOrWhiteSpace(_user?.PhoneNumber) ? _user?.PhoneNumber : "---")</MudText>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column align-items-start" style="gap: 8px">
+                                <div class="d-flex align-items-center align-self-stretch" style="gap: 16px">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.DateRange" Style="color: var(--mud-palette-drawer-icon)"/>
+                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@string.Concat(Localizer[Langs.CreationDate], ": ", _user?.CreatedAt?.ToShortDateString() ?? "---")</MudText>
+                                </div>
+                                <div class="d-flex align-items-end" style="gap: 16px">
+                                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.Login" Style="color: var(--mud-palette-drawer-icon)"/>
+                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@string.Concat(Localizer[Langs.LastLogin], ": ", _user?.LastLogin?.ToShortDateString() ?? "---")</MudText>
+                                </div>
+                            </div>
+                            <LoadingButton Loading="_loading" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" OnClick="DeleteUser">@Localizer[Langs.Delete]</LoadingButton>
+                        </div>
+                    </div>
+                </div>
+                @* Journal *@
+                <div class="d-flex flex-column align-items-start" style="gap: 16px; flex: 1 1 auto; min-height: 0; overflow: auto;">
+                    <div class="d-flex align-items-center align-self-stretch flex-wrap justify-content-start m-0 p-0" style="gap: 0;flex: 1 1 auto; min-height: 0; overflow: auto;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter]
     public string UserId { get; set; }
+    private UserDTO? _user { get; set; }
+
+    private bool _isBusy;
+    private bool _loading;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -16,6 +104,34 @@
             {
                 NavigationManager.NavigateTo("/admin");
             }
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(UserId) && _user == null)
+        {
+            if(Guid.TryParse(UserId, out var uid))
+                _user = await UserService.GetUser(uid, true);
+        }
+    }
+
+    private async Task DeleteUser()
+    {
+        if (_isBusy || _user == null)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loading = true;
+
+            await Task.Delay(2000);
+        }
+        finally
+        {
+            _isBusy = false;
+            _loading = false;
         }
     }
 }

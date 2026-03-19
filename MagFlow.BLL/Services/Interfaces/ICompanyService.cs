@@ -12,6 +12,7 @@ namespace MagFlow.BLL.Services.Interfaces
     public interface ICompanyService
     {
         Task<CompanyDTO?> GetCurrentCompany();
+        Task<CompanyDTO?> GetCompany(Guid companyId);
         Task<List<ModuleDTO>?> GetCompanyModules(Guid companyId);
         Task<List<ModuleDTO>?> GetAllModules();
         Task<List<DefaultWorkingHourDTO>?> GetDefaultWorkingHours();

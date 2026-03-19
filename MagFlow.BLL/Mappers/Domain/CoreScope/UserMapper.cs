@@ -19,6 +19,7 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
                 FirstName = applicationUser.FirstName,
                 LastName = applicationUser.LastName,
                 Email = applicationUser.Email ?? "",
+                PhoneNumber = applicationUser.PhoneNumber,
                 CreatedAt = applicationUser.CreatedAt,
                 LastLogin = applicationUser.LastLogin,
                 IsActive = applicationUser.IsActive,
@@ -40,6 +41,7 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
                 FirstName = userDTO.FirstName,
                 LastName = userDTO.LastName,
                 Email = userDTO.Email,
+                PhoneNumber = userDTO.PhoneNumber,
                 UserSettings = userDTO.Settings.ToEntity(id),
             };
         }

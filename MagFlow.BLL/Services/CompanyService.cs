@@ -85,6 +85,25 @@ namespace MagFlow.BLL.Services
             }
         }
 
+        [MinimumRole(nameof(AppRole.SysAdmin))]
+        public async Task<CompanyDTO?> GetCompany(Guid companyId)
+        {
+            try
+            {
+                var company = await _companyRepository.GetByIdAsync(companyId, s => s
+                    .Include(x => x.CompanySettings)
+                    .Include(x => x.Logo)
+                    .Include(x => x.Modules).ThenInclude(y => y.Module));
+
+                return company?.ToDTO();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get user company");
+                return null;
+            }
+        }
+
         public async Task<List<ModuleDTO>?> GetCompanyModules(Guid companyId)
         {
             var modules = await _companyRepository.GetCompanyModules(companyId);
