@@ -251,3 +251,7 @@ h1:focus {
 .mud-table-row-selected {
     background-color: var(--mud-palette-table-striped);
 }
+
+.striped-grid .mud-table-body tr:nth-child(even) {
+    background-color: #f5f5f5;
+}

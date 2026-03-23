@@ -32,7 +32,7 @@ namespace MagFlow.Web.Components.DataGrid
             Virtualize = true;
             Dense = true;
             RowsPerPage = 25;
-            Class = "align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager";
+            Class = "align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager striped-grid";
 
             RowClick = EventCallback.Factory.Create<DataGridRowClickEventArgs<T>>(this, OnRowClick);
             RowClassFunc = SelectedRowClassFunc;
