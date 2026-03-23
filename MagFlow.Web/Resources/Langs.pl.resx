@@ -1045,4 +1045,7 @@ i uprawnieniami użytkowników</value>
   <data name="Delete" xml:space="preserve">
     <value>Usuń</value>
   </data>
+  <data name="Activate" xml:space="preserve">
+    <value>Aktywuj</value>
+  </data>
 </root>

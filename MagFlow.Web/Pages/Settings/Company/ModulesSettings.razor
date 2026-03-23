@@ -153,7 +153,6 @@
         => _company?.CompanyModules?.Where(x => x.EnabledTo > _now && x.EnabledTo <= _now.AddDays(7) && x.IsActive).ToList() ?? new List<CompanyModuleDTO>();
 
     UserDTO? _user = null;
-    bool _amPmEnabled;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -162,7 +161,6 @@
 
         if (_user == null)
             _user = await LocalCacheService.GetCurrentUser();
-        _amPmEnabled = _user?.Settings.TimeFormat == Enums.TimeFormat.HH_MM_12H;
 
         if (_modules == null)
             _modules = await CompanyService.GetAllModules();
