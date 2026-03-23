@@ -71,7 +71,7 @@
                                     }
                                     else
                                     {
-                                        <LoadingButton Loading="_loadingActivateModule" OnClick="ExtendModules" Color="Color.Primary" Variant="Variant.Filled">@string.Concat(Localizer[Langs.Extend], " (", _selectedActiveModules.Count, ")")</LoadingButton>
+                                        <LoadingButton Loading="_loadingExtendModule" OnClick="ExtendModules" Color="Color.Primary" Variant="Variant.Filled">@string.Concat(Localizer[Langs.Extend], " (", _selectedActiveModules.Count, ")")</LoadingButton>
                                         <MudButton OnClick="DeselectAllActive" Style="background-color: #FFF" Color="Color.Secondary" Variant="Variant.Outlined">@Localizer[Langs.Clear]</MudButton>
                                     }
                                 </div>
@@ -170,7 +170,7 @@
                                     }
                                     else
                                     {
-                                        <LoadingButton Loading="_loadingExtendModule" OnClick="ActivateModules" Color="Color.Primary" Variant="Variant.Filled">@string.Concat(Localizer[Langs.Activate], " (", _selectedAdditionalModules.Count, ")")</LoadingButton>
+                                        <LoadingButton Loading="_loadingActivateModule" OnClick="ActivateModules" Color="Color.Primary" Variant="Variant.Filled">@string.Concat(Localizer[Langs.Activate], " (", _selectedAdditionalModules.Count, ")")</LoadingButton>
                                         <MudButton OnClick="DeselectAllAdditional" Style="background-color: #FFF" Color="Color.Secondary" Variant="Variant.Outlined">@Localizer[Langs.Clear]</MudButton>
                                     }
                                 </div>
