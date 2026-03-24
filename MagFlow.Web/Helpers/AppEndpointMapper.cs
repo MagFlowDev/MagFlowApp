@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Crypto.Generators;
 using System.Security.Claims;
+using MagFlow.Web.Resources;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MagFlow.Web.Helpers
@@ -44,6 +45,7 @@ namespace MagFlow.Web.Helpers
                 [FromForm] SignInModel req,
                 ILogger<Program> logger,
                 IUserRepository repo,
+                IEventService eventService,
                 HttpContext http) =>
             {
                 var ip = http.Connection.RemoteIpAddress?.MapToIPv4().ToString();
@@ -101,6 +103,8 @@ namespace MagFlow.Web.Helpers
                 {
                     user.LastLogin = DateTime.UtcNow;
                     repo.UpdateAsync(user);
+                    eventService.AddEventAsync(user.Id, Enums.EventLogCategory.Logging, Enums.EventLogLevel.INFO,
+                        nameof(Langs.UserLoggedIn), string.Empty, ip, string.Empty);
                 }
                 catch { }
 

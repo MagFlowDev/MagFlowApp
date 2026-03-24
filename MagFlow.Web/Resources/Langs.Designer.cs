@@ -232,6 +232,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kategoria.
+        /// </summary>
+        public static string Category {
+            get {
+                return ResourceManager.GetString("Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zmień ekran na większy, żeby wyświetlić treść..
         /// </summary>
         public static string ChangeScreenToLarger {
@@ -520,6 +529,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Szczegóły.
+        /// </summary>
+        public static string Details {
+            get {
+                return ResourceManager.GetString("Details", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 1234,56.
         /// </summary>
         public static string DigitSeparatorCommaExample {
@@ -660,6 +678,24 @@ namespace MagFlow.Web.Resources {
         public static string ErrorOccured {
             get {
                 return ResourceManager.GetString("ErrorOccured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dziennik zdarzeń.
+        /// </summary>
+        public static string EventLog {
+            get {
+                return ResourceManager.GetString("EventLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czas zdarzenia.
+        /// </summary>
+        public static string EventTime {
+            get {
+                return ResourceManager.GetString("EventTime", resourceCulture);
             }
         }
         
@@ -988,6 +1024,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adres IP.
+        /// </summary>
+        public static string IPAddress {
+            get {
+                return ResourceManager.GetString("IPAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Jan.
         /// </summary>
         public static string John {
@@ -1065,6 +1110,15 @@ namespace MagFlow.Web.Resources {
         public static string LessManualWork {
             get {
                 return ResourceManager.GetString("LessManualWork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Poziom.
+        /// </summary>
+        public static string Level {
+            get {
+                return ResourceManager.GetString("Level", resourceCulture);
             }
         }
         
@@ -2595,6 +2649,15 @@ namespace MagFlow.Web.Resources {
         public static string UserForeman {
             get {
                 return ResourceManager.GetString("UserForeman", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Użytkownik zalogował się.
+        /// </summary>
+        public static string UserLoggedIn {
+            get {
+                return ResourceManager.GetString("UserLoggedIn", resourceCulture);
             }
         }
         
