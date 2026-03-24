@@ -1048,4 +1048,25 @@ i uprawnieniami użytkowników</value>
   <data name="Activate" xml:space="preserve">
     <value>Aktywuj</value>
   </data>
+  <data name="UserLoggedIn" xml:space="preserve">
+    <value>Użytkownik zalogował się</value>
+  </data>
+  <data name="EventLog" xml:space="preserve">
+    <value>Dziennik zdarzeń</value>
+  </data>
+  <data name="EventTime" xml:space="preserve">
+    <value>Czas zdarzenia</value>
+  </data>
+  <data name="IPAddress" xml:space="preserve">
+    <value>Adres IP</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Szczegóły</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Kategoria</value>
+  </data>
+  <data name="Level" xml:space="preserve">
+    <value>Poziom</value>
+  </data>
 </root>

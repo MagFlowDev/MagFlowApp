@@ -1,13 +1,16 @@
 ﻿@page "/admin/user/{UserId}"
+@using MagFlow.BLL.Helpers
 @using MagFlow.BLL.Helpers.Localization.Display
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
 @using MagFlow.Shared.Models.Enumerators
 @using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Components.DataGrid
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
 @inject IUserService UserService
+@inject IEventService EventService
 @inject IJSRuntime JS
 @inject NavigationManager NavigationManager
 
@@ -78,9 +81,26 @@
                     </div>
                 </div>
                 @* Journal *@
-                <div class="d-flex flex-column align-items-start" style="gap: 16px; flex: 1 1 auto; min-height: 0; overflow: auto;">
+                <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px; flex: 1 1 auto; min-height: 0; overflow: auto;">
                     <div class="d-flex align-items-center align-self-stretch flex-wrap justify-content-start m-0 p-0" style="gap: 0;flex: 1 1 auto; min-height: 0; overflow: auto;">
-
+                        <div class="d-flex flex-column align-items-start align-self-stretch w-100 h-100">
+                            <MagFlowDataGrid @ref="_eventLogsDataGrid" T="EventLogDTO" ServerData="ServerReloadEventLogs" Filterable="false">
+                                <ToolBarContent>
+                                    <MudText Typo="Typo.h6">@Localizer[Langs.EventLog]</MudText>
+                                    <MudSpacer/>
+                                    <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
+                                </ToolBarContent>
+                                <Columns>
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.EventTime]" Property="x => x.OccuredAt.ToString()" Sortable="true"  />
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Category]" Property="x => x.Category.GetDisplayName(Localizer)" />
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Level]" Property="x => x.Level.GetDisplayName(Localizer)" />
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Message]" Property="x => Localizer[x.Message]" />
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Details]" Property="x => x.Details ?? string.Empty" />
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.IPAddress]" Property="x => x.IpAddress" />
+                                </Columns>
+                            </MagFlowDataGrid>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -92,6 +112,9 @@
     [Parameter]
     public string UserId { get; set; }
     private UserDTO? _user { get; set; }
+
+    MudDataGrid<EventLogDTO> _eventLogsDataGrid;
+    string? _searchString = null;
 
     private bool _isBusy;
     private bool _loading;
@@ -133,5 +156,35 @@
             _isBusy = false;
             _loading = false;
         }
+    }
+
+
+
+    private async Task<GridData<EventLogDTO>> ServerReloadEventLogs(GridState<EventLogDTO> state, CancellationToken token)
+    {
+        if (_user == null)
+            return new GridData<EventLogDTO>();
+
+        var sortDefinition = state.SortDefinitions.FirstOrDefault();
+        string? sortBy = sortDefinition?.SortBy;
+        if (Guid.TryParse(sortBy, out _))
+        {
+            var column = _eventLogsDataGrid.RenderedColumns.FirstOrDefault(c => c.PropertyName == sortBy);
+            sortBy = column?.Tag?.ToString();
+        }
+        sortBy = sortBy ?? nameof(EventLogDTO.OccuredAt);
+        var response = await EventService.GetUserEvents(_user.Id, state.Page, state.PageSize, _searchString, sortBy,  sortDefinition == null ? true : sortDefinition.Descending == true);
+
+        return new GridData<EventLogDTO>
+        {
+            Items = response.Elements,
+            TotalItems = response.TotalCount,
+        };
+    }
+
+    private Task OnSearch(string text)
+    {
+        _searchString = text;
+        return _eventLogsDataGrid.ReloadServerData();
     }
 }

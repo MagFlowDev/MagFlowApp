@@ -1047,4 +1047,25 @@
   <data name="Activate" xml:space="preserve">
     <value>Activate</value>
   </data>
+  <data name="UserLoggedIn" xml:space="preserve">
+    <value>User logged in</value>
+  </data>
+  <data name="EventLog" xml:space="preserve">
+    <value>Event log</value>
+  </data>
+  <data name="EventTime" xml:space="preserve">
+    <value>Event time</value>
+  </data>
+  <data name="IPAddress" xml:space="preserve">
+    <value>IP address</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Level" xml:space="preserve">
+    <value>Level</value>
+  </data>
 </root>
