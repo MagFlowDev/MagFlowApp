@@ -12,24 +12,38 @@ using System.Text;
 
 namespace MagFlow.BLL.Helpers.Auth
 {
-    public class IdentityRevalidatingAuthenticationStateProvider(
-        ILoggerFactory loggerFactory,
-        IServiceScopeFactory scopeFactory,
-        IOptions<IdentityOptions> options) 
-        : RevalidatingServerAuthenticationStateProvider(loggerFactory)
+    public class IdentityRevalidatingAuthenticationStateProvider : RevalidatingServerAuthenticationStateProvider
     {
-        protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(30);
+        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IOptions<IdentityOptions> _options;
+        private readonly ILogger<IdentityRevalidatingAuthenticationStateProvider> _logger;
 
-        public async Task<bool> RevalidateNowAsync(ClaimsPrincipal principal)
+        public IdentityRevalidatingAuthenticationStateProvider(ILoggerFactory loggerFactory,
+            IServiceScopeFactory scopeFactory,
+            IOptions<IdentityOptions> options,
+            ILogger<IdentityRevalidatingAuthenticationStateProvider> logger) : base(loggerFactory)
         {
-            return await ValidateAuthenticationStateAsync(new AuthenticationState(principal), CancellationToken.None);
+            _scopeFactory = scopeFactory;
+            _options = options;
+            _logger = logger;
         }
 
-        protected override async Task<bool> ValidateAuthenticationStateAsync(
-        AuthenticationState authenticationState, CancellationToken cancellationToken)
+        protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(5);
+
+        public async Task RevalidateNowAsync()
         {
-            // Get the user manager from a new scope to ensure it fetches fresh data
-            await using var scope = scopeFactory.CreateAsyncScope();
+            var authState = await GetAuthenticationStateAsync();
+            var valid = await ValidateAuthenticationStateAsync(authState, CancellationToken.None);
+            if(!valid)
+            {
+                var emptyUser = new ClaimsPrincipal(new ClaimsIdentity());
+                NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(emptyUser)));
+            }
+        }
+
+        protected override async Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState, CancellationToken cancellationToken)
+        {
+            using var scope = _scopeFactory.CreateScope();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             return await ValidateSecurityStampAsync(userManager, authenticationState.User);
         }
@@ -47,7 +61,7 @@ namespace MagFlow.BLL.Helpers.Auth
             }
             else
             {
-                var principalStamp = principal.FindFirstValue(options.Value.ClaimsIdentity.SecurityStampClaimType);
+                var principalStamp = principal.FindFirstValue(_options.Value.ClaimsIdentity.SecurityStampClaimType);
                 var userStamp = await userManager.GetSecurityStampAsync(user);
                 return principalStamp == userStamp;
             }

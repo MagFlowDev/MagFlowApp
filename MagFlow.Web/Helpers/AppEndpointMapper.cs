@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.Services.Interfaces;
+﻿using MagFlow.BLL.Helpers.Auth;
+using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.CoreScope;
 using MagFlow.DAL.Repositories.CoreScope.Interfaces;
 using MagFlow.Domain.CoreScope;
@@ -7,16 +8,16 @@ using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Auth;
 using MagFlow.Shared.Models.Enumerators;
+using MagFlow.Web.Resources;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Org.BouncyCastle.Crypto.Generators;
 using System.Security.Claims;
-using MagFlow.BLL.Helpers.Auth;
-using MagFlow.Web.Resources;
-using Microsoft.AspNetCore.Components.Authorization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MagFlow.Web.Helpers
@@ -37,6 +38,15 @@ namespace MagFlow.Web.Helpers
 
                 return Results.Redirect("/NotFound");
             });
+
+
+            app.MapGet("/ForceLogout", async (HttpContext context,
+                [FromServices] SignInManager<ApplicationUser> signInManager,
+                [FromServices] AuthenticationStateProvider authProvider) =>
+            {
+                await context.SignOutAsync(IdentityConstants.ApplicationScheme);
+                return Results.Redirect("/Login");
+            });
         }
 
         public static IEndpointConventionBuilder MapAuth(this IEndpointRouteBuilder endpoints)
@@ -45,47 +55,64 @@ namespace MagFlow.Web.Helpers
 
             authGroup.MapPost("/Login", async (
                 [FromForm] SignInModel req,
+                [FromServices] SignInManager<ApplicationUser> signInManager,
                 ILogger<Program> logger,
                 IUserRepository repo,
                 IEventService eventService,
-                HttpContext http) =>
+                IUserRevocationService revocationService,
+                HttpContext http,
+                IOptions<IdentityOptions> identityOptions) =>
             {
                 var ip = http.Connection.RemoteIpAddress?.MapToIPv4().ToString();
                 logger.LogInformation($"User {req.Email} is attempting to login from IPv4 address: {ip}");
                 
                 var user = await repo.GetByEmailAsync(req.Email);
-                if (user is null)
+                if (user is null || user.RemovedAt.HasValue)
                 {
                     logger.LogWarning($"Invalid login ({req.Email}) attempt from IPv4 address: {ip}");
                     return Results.Redirect("/Login?error=1");
                 }
 
-                var hasher = new PasswordHasher<ApplicationUser>();
-                var verified = hasher.VerifyHashedPassword(
-                    user,
-                    user.PasswordHash,
-                    req.Password);
-
-                if (verified == PasswordVerificationResult.Failed)
+                var result = await signInManager.CheckPasswordSignInAsync(user, req.Password, lockoutOnFailure: true);
+                if (!result.Succeeded)
                 {
                     logger.LogWarning($"Invalid login ({req.Email}) attempt from IPv4 address: {ip}");
                     return Results.Redirect("/Login?error=1");
                 }
 
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(Claims.CompanyClaim, user.DefaultCompanyId?.ToString() ?? Guid.Empty.ToString())
-                };
-                foreach(var role in user.Roles)
-                {
-                    if(!string.IsNullOrEmpty(role.Role?.Name))
-                        claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
-                }
+                //var hasher = new PasswordHasher<ApplicationUser>();
+                //var verified = hasher.VerifyHashedPassword(
+                //    user,
+                //    user.PasswordHash,
+                //    req.Password);
 
-                var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
-                var principal = new ClaimsPrincipal(identity);
+                //if (verified == PasswordVerificationResult.Failed)
+                //{
+                //    logger.LogWarning($"Invalid login ({req.Email}) attempt from IPv4 address: {ip}");
+                //    return Results.Redirect("/Login?error=1");
+                //}
+
+                //var claims = new List<Claim>
+                //{
+                //    new Claim(ClaimTypes.Email, user.Email),
+                //    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                //    new Claim(Claims.CompanyClaim, user.DefaultCompanyId?.ToString() ?? Guid.Empty.ToString()),
+                //    new Claim(identityOptions.Value.ClaimsIdentity.SecurityStampClaimType, user?.SecurityStamp ?? Guid.NewGuid().ToString())
+                //};
+                //foreach(var role in user.Roles)
+                //{
+                //    if(!string.IsNullOrEmpty(role.Role?.Name))
+                //        claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
+                //}
+                //var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
+                //var principal = new ClaimsPrincipal(identity);
+
+                var principal = await signInManager.CreateUserPrincipalAsync(user);
+                var identity = (ClaimsIdentity)principal.Identity;
+                if (!identity.HasClaim(c => c.Type == identityOptions.Value.ClaimsIdentity.SecurityStampClaimType))
+                    identity.AddClaim(new Claim(identityOptions.Value.ClaimsIdentity.SecurityStampClaimType, user.SecurityStamp));
+                if (!identity.HasClaim(c => c.Type == Claims.CompanyClaim))
+                    identity.AddClaim(new Claim(Claims.CompanyClaim, user.DefaultCompanyId?.ToString() ?? Guid.Empty.ToString()));
 
                 var authProps = new AuthenticationProperties()
                 {
@@ -94,10 +121,13 @@ namespace MagFlow.Web.Helpers
                 if (req.RememberMe)
                     authProps.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(14);
 
-                await http.SignInAsync(
-                    IdentityConstants.ApplicationScheme,
-                    principal,
-                    authProps);
+                //await http.SignInAsync(
+                //    IdentityConstants.ApplicationScheme,
+                //    principal,
+                //    authProps);
+
+                await signInManager.Context.SignInAsync(IdentityConstants.ApplicationScheme, principal, authProps);
+                revocationService.UnrevokeUser(user.Id.ToString());
 
                 logger.LogInformation($"User {req.Email} logged in via IPv4 address: {ip}");
 
@@ -194,23 +224,6 @@ namespace MagFlow.Web.Helpers
             {
                 await signInManager.SignOutAsync();
                 return TypedResults.LocalRedirect($"~/{returnUrl}");
-            });
-
-            authGroup.MapPost("/ForceLogout", async (HttpContext context, 
-                [FromServices] SignInManager<ApplicationUser> signInManager,
-                [FromServices] AuthenticationStateProvider authProvider) =>
-            {
-                await signInManager.SignOutAsync();
-                context.Response.Cookies.Append("MagFlow.Auth", "", new CookieOptions()
-                {
-                    Path = "/",
-                    HttpOnly = true,
-                    Secure = true,
-                    Expires =DateTimeOffset.UnixEpoch,
-                    SameSite = SameSiteMode.Lax
-                });
-                await ((IdentityRevalidatingAuthenticationStateProvider)authProvider).RevalidateNowAsync(context.User);
-                context.Response.StatusCode = 200;
             });
 
             return authGroup;
