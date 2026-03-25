@@ -11,5 +11,8 @@ namespace MagFlow.Shared.Constants
         public const string COMPANYDB = "CompanyDb";
         public const string COMPANYDB_NAME = "MagFlow_CompanyDb";
         public const string COMPANYDB_NAME_TEMPLATE = "MagFlow_CompanyDb_{Company}";
+
+        public const string REMOVEDAT_PROPERTY = "RemovedAt";
+        public const string ISACTIVE_PROPERTY = "IsActive";
     }
 }

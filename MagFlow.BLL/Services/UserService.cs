@@ -21,6 +21,7 @@ using Org.BouncyCastle.Ocsp;
 using Serilog.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Security.Claims;
 using System.Text;
 using System.Web;
@@ -34,6 +35,7 @@ namespace MagFlow.BLL.Services
         private readonly ICompanyRepository _companyRepository;
         private readonly IEmailService _emailService;
         private readonly INetworkService _networkService;
+        private readonly IServerNotificationService _serverNotificationService;
         
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UserService> _logger;
@@ -43,6 +45,7 @@ namespace MagFlow.BLL.Services
             ISessionRepository sessionRepository,
             ICompanyRepository companyRepository,
             INetworkService networkService,
+            IServerNotificationService serverNotificationService,
             UserManager<ApplicationUser> userManager,
             ILogger<UserService> logger)
         {
@@ -53,6 +56,7 @@ namespace MagFlow.BLL.Services
             _userManager = userManager;
             _networkService = networkService;
             _emailService = emailService;
+            _serverNotificationService = serverNotificationService;
         }
 
 
@@ -481,6 +485,36 @@ namespace MagFlow.BLL.Services
                 _logger.LogError(ex, "Error while changing user password");
             }
             return false;
+        }
+
+
+
+        // Delete section
+        [MinimumRole(nameof(AppRole.CompanyAdmin))]
+        public async Task<Enums.Result> DeleteUser(UserDTO userDTO)
+        {
+            if (userDTO == null || userDTO.Id == Guid.Empty)
+                return Enums.Result.Error;
+            var user = await _userManager.FindByIdAsync(userDTO.Id.ToString());
+            if (user == null)
+                return Enums.Result.Error;
+
+            var result = await _userRepository.DeleteAsync(user);
+            if (result == Enums.Result.Success)
+            {
+                try
+                {
+                    await _userManager.UpdateSecurityStampAsync(user);
+                    var test = _userManager.SupportsUserSecurityStamp;
+                    await _serverNotificationService.ForceUserLogoutAsync(user.Id.ToString());
+                    
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to logout user");
+                }
+            }
+            return result;
         }
     }
 }

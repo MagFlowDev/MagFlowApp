@@ -19,27 +19,38 @@ namespace MagFlow.BLL.Services.Notifications
     {
         private readonly NavigationManager _navigationManager;
         private readonly ILogger<ClientNotificationService> _logger;
+        private readonly HttpClient _httpClient;
         private HubConnection? _hubConnection;
 
         public event Action<NotificationMessage>? OnNotificationReceived;
         public bool IsConnected => _hubConnection?.State == HubConnectionState.Connected;
 
         public ClientNotificationService(NavigationManager navigationManager,
+            HttpClient httpClient,
             ILogger<ClientNotificationService> logger)
         {
             _navigationManager = navigationManager;
             _logger = logger;
+            _httpClient = httpClient;
         }
 
-        public Task StartAsync()
+        public async Task StartAsync(string userId)
         {
             if (_hubConnection is not null)
-                return Task.CompletedTask;
+                return;
 
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl(_navigationManager.ToAbsoluteUri(APP_URL.NOTIFICATION_HUB))
                 .WithAutomaticReconnect()
                 .Build();
+
+            _hubConnection.Reconnected += async (newConnectionId) =>
+            {
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    await _hubConnection.SendAsync("RegisterUser", userId);
+                }
+            };
 
             _hubConnection.On<object>("ReceiveNotification", payload =>
             {
@@ -76,7 +87,18 @@ namespace MagFlow.BLL.Services.Notifications
                 }
             });
 
-            return _hubConnection.StartAsync();
+            _hubConnection.On("ForceLogout", async () =>
+            {
+                var _ = await _httpClient.PostAsync(_navigationManager.ToAbsoluteUri("/Auth/ForceLogout"), null);
+                _navigationManager.NavigateTo("/", true);
+            });
+
+            await _hubConnection.StartAsync();
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await _hubConnection.SendAsync("RegisterUser", userId);
+            }
         }
 
         public Task StopAsync()

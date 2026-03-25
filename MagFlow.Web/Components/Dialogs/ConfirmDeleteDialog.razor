@@ -1,0 +1,35 @@
+﻿@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudText>@ContentText</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@Localizer[Langs.Cancel]</MudButton>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="Submit">@Localizer[Langs.Delete]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public string ContentText { get; set; }
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+
+    private void Cancel() => MudDialog.Cancel();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        this.MudDialog.SetOptionsAsync(new DialogOptions()
+        {
+            CloseButton = true,
+            Position = DialogPosition.Center
+        });
+    }
+
+}

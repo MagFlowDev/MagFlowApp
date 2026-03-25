@@ -3,15 +3,19 @@
 @using MagFlow.BLL.Helpers.Localization.Display
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models
 @using MagFlow.Shared.Models.Enumerators
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Components.Dialogs
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
 @inject IUserService UserService
 @inject IEventService EventService
 @inject IJSRuntime JS
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
@@ -88,16 +92,16 @@
                                 <ToolBarContent>
                                     <MudText Typo="Typo.h6">@Localizer[Langs.EventLog]</MudText>
                                     <MudSpacer/>
-                                    <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
+                                    <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start" 
+                                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mw-400px"></MudTextField>
                                 </ToolBarContent>
                                 <Columns>
                                     <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.EventTime]" Property="x => x.OccuredAt.ToString()" Sortable="true"  />
-                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Category]" Property="x => x.Category.GetDisplayName(Localizer)" />
-                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Level]" Property="x => x.Level.GetDisplayName(Localizer)" />
-                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Message]" Property="x => Localizer[x.Message]" />
-                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Details]" Property="x => x.Details ?? string.Empty" />
-                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.IPAddress]" Property="x => x.IpAddress" />
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Message]" Property="x => Localizer[x.Message]" Sortable="false" />
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Details]" Property="x => x.Details ?? string.Empty" Sortable="false" />
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Category]" Property="x => x.Category.GetDisplayName(Localizer)" Sortable="false" />
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.Type]" Property="x => x.Level.GetDisplayName(Localizer)" Sortable="false" />
+                                    <PropertyColumn T="EventLogDTO" TProperty="string" Title="@Localizer[Langs.IPAddress]" Property="x => x.IpAddress" Sortable="false" />
                                 </Columns>
                             </MagFlowDataGrid>
                         </div>
@@ -149,7 +153,22 @@
             _isBusy = true;
             _loading = true;
 
-            await Task.Delay(2000);
+            var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, string.Format(Localizer[Langs.DeleteUserConfirmation], _user.Email) } };
+            var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteUser], parameters);
+            var confirmation = await dialog.Result;
+            if (confirmation != null && !confirmation.Canceled)
+            {
+                var result = await UserService.DeleteUser(_user);
+                if (result == Enums.Result.Success)
+                {
+                    Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                    NavigationManager.NavigateTo("/admin");
+                }
+                else
+                {
+                    Snackbar.Add(Localizer[Langs.DeleteFailed], Severity.Error);
+                }
+            }
         }
         finally
         {

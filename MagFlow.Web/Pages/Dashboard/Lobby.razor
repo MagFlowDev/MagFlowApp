@@ -245,7 +245,7 @@
             }
             else
             {
-                Snackbar.Add("Nie udało się rozpocząć nowej sesji. Spróbuj później", Severity.Error);
+                Snackbar.Add(Localizer[Langs.StartSessionFailed], Severity.Error);
             }
         }
         finally
@@ -266,7 +266,7 @@
             _loadingStartSession = true;
 
             if (!_selectedModules.Any())
-                Snackbar.Add("Nie wybrano żadnego modułu", Severity.Error);
+                Snackbar.Add(Localizer[Langs.NoModuleSelected], Severity.Error);
 
             var selectedModules = _companyModules.Where(x => _selectedModules.Contains(x.Id)).ToList();
             var result = await UserService.StartNewSession(selectedModules);

@@ -14,7 +14,9 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Crypto.Generators;
 using System.Security.Claims;
+using MagFlow.BLL.Helpers.Auth;
 using MagFlow.Web.Resources;
+using Microsoft.AspNetCore.Components.Authorization;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MagFlow.Web.Helpers
@@ -192,6 +194,23 @@ namespace MagFlow.Web.Helpers
             {
                 await signInManager.SignOutAsync();
                 return TypedResults.LocalRedirect($"~/{returnUrl}");
+            });
+
+            authGroup.MapPost("/ForceLogout", async (HttpContext context, 
+                [FromServices] SignInManager<ApplicationUser> signInManager,
+                [FromServices] AuthenticationStateProvider authProvider) =>
+            {
+                await signInManager.SignOutAsync();
+                context.Response.Cookies.Append("MagFlow.Auth", "", new CookieOptions()
+                {
+                    Path = "/",
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires =DateTimeOffset.UnixEpoch,
+                    SameSite = SameSiteMode.Lax
+                });
+                await ((IdentityRevalidatingAuthenticationStateProvider)authProvider).RevalidateNowAsync(context.User);
+                context.Response.StatusCode = 200;
             });
 
             return authGroup;

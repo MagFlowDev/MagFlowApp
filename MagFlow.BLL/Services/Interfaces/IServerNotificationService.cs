@@ -12,5 +12,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task NotifyAllAsync(string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null);
         Task NotifyUserAsync(string userId, string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null);
         Task NotifyUsersAsync(List<string> userIds, string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null);
+
+        Task ForceUserLogoutAsync(string userId);
     }
 }

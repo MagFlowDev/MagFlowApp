@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MagFlow.Shared.Models.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace MagFlow.Domain.CoreScope
 {
-    public class ApplicationUser : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser<Guid>, ISoftDeletable
     {
         [Required]
         public string FirstName { get; set; }
@@ -21,6 +22,8 @@ namespace MagFlow.Domain.CoreScope
         public Guid? DefaultCompanyId { get; set; }
         [Required]
         public bool IsActive { get; set; }
+
+        public DateTime? RemovedAt { get; set; }
 
 
         [ForeignKey(nameof(DefaultCompanyId))]

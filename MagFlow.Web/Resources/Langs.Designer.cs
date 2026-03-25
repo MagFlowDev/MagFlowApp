@@ -529,6 +529,42 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nie udało się usunąć zasobu. Spróbuj później.
+        /// </summary>
+        public static string DeleteFailed {
+            get {
+                return ResourceManager.GetString("DeleteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zasób został usunięty.
+        /// </summary>
+        public static string DeleteSuccess {
+            get {
+                return ResourceManager.GetString("DeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usuń użytkownika.
+        /// </summary>
+        public static string DeleteUser {
+            get {
+                return ResourceManager.GetString("DeleteUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć użytkownika {0}?.
+        /// </summary>
+        public static string DeleteUserConfirmation {
+            get {
+                return ResourceManager.GetString("DeleteUserConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Szczegóły.
         /// </summary>
         public static string Details {
@@ -1717,6 +1753,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nie wybrano żadnego modułu.
+        /// </summary>
+        public static string NoModuleSelected {
+            get {
+                return ResourceManager.GetString("NoModuleSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Brak ostatnich sesji.
         /// </summary>
         public static string NoRecentSessions {
@@ -2586,6 +2631,15 @@ namespace MagFlow.Web.Resources {
         public static string Tuesday {
             get {
                 return ResourceManager.GetString("Tuesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Typ.
+        /// </summary>
+        public static string Type {
+            get {
+                return ResourceManager.GetString("Type", resourceCulture);
             }
         }
         
