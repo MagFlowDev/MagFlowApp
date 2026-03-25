@@ -502,7 +502,7 @@ namespace MagFlow.BLL.Services
             if (user == null)
                 return Enums.Result.Error;
 
-            var result = Enums.Result.Success; // await _userRepository.DeleteAsync(user);
+            var result = await _userRepository.DeleteAsync(user);
             if (result == Enums.Result.Success)
             {
                 try
