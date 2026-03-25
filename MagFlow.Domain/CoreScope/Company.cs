@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using MagFlow.Shared.Models.Interfaces;
 
 namespace MagFlow.Domain.CoreScope
 {
-    public class Company
+    public class Company : ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -25,6 +26,8 @@ namespace MagFlow.Domain.CoreScope
         [Required]
         public bool IsActive { get; set; }
         public Address Address { get; set; } = new();
+
+        public DateTime? RemovedAt { get; set; }
 
 
         public virtual CompanySettings? CompanySettings { get; set; }

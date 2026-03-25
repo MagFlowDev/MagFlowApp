@@ -20,6 +20,11 @@ namespace MagFlow.BLL.Helpers.Auth
     {
         protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(30);
 
+        public async Task<bool> RevalidateNowAsync(ClaimsPrincipal principal)
+        {
+            return await ValidateAuthenticationStateAsync(new AuthenticationState(principal), CancellationToken.None);
+        }
+
         protected override async Task<bool> ValidateAuthenticationStateAsync(
         AuthenticationState authenticationState, CancellationToken cancellationToken)
         {

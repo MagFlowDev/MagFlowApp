@@ -1,11 +1,14 @@
-﻿@using MagFlow.BLL.Services.Notifications
+﻿@using System.Security.Claims
+@using MagFlow.BLL.Services.Notifications
 @using MagFlow.Shared.Models
+@using Microsoft.AspNetCore.Components.Authorization
 @inject ClientNotificationService ClientNotificationService
+@inject AuthenticationStateProvider AuthStateProvider
 @implements IAsyncDisposable
 
 @if (_last != null)
 {
-    <div class="w-100 flex-grow-1 notification-bar @GetCssClass(_last)">
+    <div class="w-100 flex-grow-1 align-items-center justify-content-center d-flex flex-column notification-bar @GetCssClass(_last)">
         @if (!string.IsNullOrEmpty(_last.Title))
         {
             <strong>@_last.Title</strong>
@@ -17,12 +20,26 @@
 }
 
 @code {
-    private NotificationMessage? _last = new NotificationMessage("Title", "Message", DateTime.UtcNow, Enums.NotificationType.System, null);
+    private NotificationMessage? _last = null;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        ClientNotificationService.OnNotificationReceived += OnNotification;
-        await ClientNotificationService.StartAsync();
+        if (firstRender)
+        {
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    await ClientNotificationService.StartAsync(userId);
+                    ClientNotificationService.OnNotificationReceived += OnNotification;
+                }
+            }
+        }
     }
 
     private void OnNotification(NotificationMessage message)

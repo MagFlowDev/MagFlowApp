@@ -9,7 +9,7 @@ using System.Text;
 namespace MagFlow.EF
 {
     public class FactoryUserStore : UserStore<ApplicationUser, ApplicationRole, CoreDbContext, Guid,
-        ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin, ApplicationUserToken, ApplicationRoleClaim>
+        ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin, ApplicationUserToken, ApplicationRoleClaim>, IUserSecurityStampStore<ApplicationUser>
     {
         private readonly IDbContextFactory<CoreDbContext> _contextFactory;
 
@@ -17,6 +17,17 @@ namespace MagFlow.EF
             : base(contextFactory.CreateDbContext(), describer)
         {
             _contextFactory = contextFactory;
+        }
+
+        public Task SetSecurityStampAsync(ApplicationUser user, string stamp, CancellationToken cancellationToken)
+        {
+            user.SecurityStamp = stamp;
+            return Task.CompletedTask;
+        }
+
+        public Task<string> GetSecurityStampAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.SecurityStamp);
         }
     }
 }

@@ -26,5 +26,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<List<UserSessionDTO>?> GetLastSessions(int historyLength = 1);
         Task<Enums.Result> UpdateLastSession(UserSessionDTO sessionDTO);
         Task<Enums.Result> StartNewSession(List<ModuleDTO> modules);
+
+        Task<Enums.Result> DeleteUser(UserDTO userDTO);
     }
 }

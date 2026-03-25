@@ -26,23 +26,39 @@ namespace MagFlow.BLL.Services.Notifications
             _logger = logger;
         }
 
-        public Task NotifyAllAsync(string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null)
+        public async Task NotifyAllAsync(string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null)
         {
             var payload = new { Title = title, Message = message, Timestamp = DateTime.UtcNow, Type = type, ExpireAt = ExpireAt };
             var serialized = JsonSerializer.Serialize(payload);
-            return _hubContext.Clients.All.SendAsync("ReceiveNotification", serialized);
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", serialized);
         }
 
-        public Task NotifyUserAsync(string userId, string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null)
+        public async Task NotifyUserAsync(string userId, string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null)
         {
             var payload = new { Title = title, Message = message, Timestamp = DateTime.UtcNow, Type = type, ExpireAt = ExpireAt };
-            return _hubContext.Clients.User(userId).SendAsync("ReceiveNotification", payload);
+            var connectionId = NotificationHub.GetConnectionId(userId);
+            if(!string.IsNullOrEmpty(connectionId))
+                await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveNotification", payload);
         }
 
-        public Task NotifyUsersAsync(List<string> userIds, string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null)
+        public async Task NotifyUsersAsync(List<string> userIds, string title, string message, Enums.NotificationType type, DateTime? ExpireAt = null)
         {
             var payload = new { Title = title, Message = message, Timestamp = DateTime.UtcNow, Type = type, ExpireAt = ExpireAt };
-            return _hubContext.Clients.Users(userIds).SendAsync("ReceiveNotification", payload);
+            List<string> connectionIds = new List<string>();
+            foreach (var userId in userIds)
+            {
+                var connectionId = NotificationHub.GetConnectionId(userId);
+                if (!string.IsNullOrEmpty(connectionId))
+                    connectionIds.Add(connectionId);
+            }
+            await _hubContext.Clients.Clients(connectionIds).SendAsync("ReceiveNotification", payload);
+        }
+
+        public async Task ForceUserLogoutAsync(string userId)
+        {
+            var connectionId = NotificationHub.GetConnectionId(userId);
+            if (!string.IsNullOrEmpty(connectionId))
+                await _hubContext.Clients.Client(connectionId).SendAsync("ForceLogout");
         }
     }
 }

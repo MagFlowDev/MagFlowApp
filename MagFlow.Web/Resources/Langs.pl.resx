@@ -1069,4 +1069,22 @@ i uprawnieniami użytkowników</value>
   <data name="Level" xml:space="preserve">
     <value>Poziom</value>
   </data>
+  <data name="Type" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="DeleteUser" xml:space="preserve">
+    <value>Usuń użytkownika</value>
+  </data>
+  <data name="DeleteUserConfirmation" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć użytkownika {0}?</value>
+  </data>
+  <data name="NoModuleSelected" xml:space="preserve">
+    <value>Nie wybrano żadnego modułu</value>
+  </data>
+  <data name="DeleteFailed" xml:space="preserve">
+    <value>Nie udało się usunąć zasobu. Spróbuj później</value>
+  </data>
+  <data name="DeleteSuccess" xml:space="preserve">
+    <value>Zasób został usunięty</value>
+  </data>
 </root>
