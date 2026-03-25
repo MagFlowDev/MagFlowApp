@@ -1,6 +1,10 @@
-﻿using MagFlow.Shared.Constants;
+﻿using MagFlow.BLL.Helpers.Auth;
+using MagFlow.Domain.CoreScope;
+using MagFlow.Shared.Constants;
 using MagFlow.Shared.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
@@ -19,6 +23,8 @@ namespace MagFlow.BLL.Services.Notifications
     {
         private readonly NavigationManager _navigationManager;
         private readonly ILogger<ClientNotificationService> _logger;
+        private readonly AuthenticationStateProvider _authStateProvider;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly HttpClient _httpClient;
         private HubConnection? _hubConnection;
 
@@ -26,12 +32,16 @@ namespace MagFlow.BLL.Services.Notifications
         public bool IsConnected => _hubConnection?.State == HubConnectionState.Connected;
 
         public ClientNotificationService(NavigationManager navigationManager,
+            AuthenticationStateProvider authStateProvider,
+            SignInManager<ApplicationUser> signInManager,
             HttpClient httpClient,
             ILogger<ClientNotificationService> logger)
         {
             _navigationManager = navigationManager;
             _logger = logger;
             _httpClient = httpClient;
+            _authStateProvider = authStateProvider;
+            _signInManager = signInManager;
         }
 
         public async Task StartAsync(string userId)
@@ -89,8 +99,7 @@ namespace MagFlow.BLL.Services.Notifications
 
             _hubConnection.On("ForceLogout", async () =>
             {
-                var _ = await _httpClient.PostAsync(_navigationManager.ToAbsoluteUri("/Auth/ForceLogout"), null);
-                _navigationManager.NavigateTo("/", true);
+                _navigationManager.NavigateTo("/ForceLogout", true);
             });
 
             await _hubConnection.StartAsync();

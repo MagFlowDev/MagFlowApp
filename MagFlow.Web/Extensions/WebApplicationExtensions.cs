@@ -53,9 +53,9 @@ namespace MagFlow.Web.Extensions
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
 
-            app.MapHubs();
-
+            app.UseRevokedUserMiddleware();
             app.UseMiddleware<RequestLocalizationMiddleware>();
+            app.MapHubs();
 
             app.MapMagFlowHealthChecks();
             return app;

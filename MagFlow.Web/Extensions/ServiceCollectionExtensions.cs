@@ -18,6 +18,7 @@ using MagFlow.Shared.Models.Settings;
 using MagFlow.Web.HealthChecks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
@@ -79,6 +80,7 @@ namespace MagFlow.Web.Extensions
             services.ConfigureOpenTelemetry();
             services.AddHttpContextAccessor();
             services.AddLocalization();
+            services.AddMemoryCache();
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
@@ -119,17 +121,11 @@ namespace MagFlow.Web.Extensions
             services.AddCascadingAuthenticationState();
             services.AddScoped<IdentityUserAccessor>();
             services.AddScoped<IdentityRedirectManager>();
-            services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
-            services.AddScoped<UserManager<ApplicationUser>>();
-            services.AddScoped<RoleManager<ApplicationRole>>();
-            services.AddScoped<SignInManager<ApplicationUser>>();
-            services.AddScoped<IEmailSender<ApplicationUser>>(sp => sp.GetRequiredService<IEmailService>());
-            services.AddScoped<IUserStore<ApplicationUser>, FactoryUserStore>();
-            services.AddScoped<IRoleStore<ApplicationRole>, FactoryRoleStore>();
 
             services.AddAuthentication(o =>
                 {
                     o.DefaultScheme = IdentityConstants.ApplicationScheme;
+                    o.DefaultSignOutScheme = IdentityConstants.ApplicationScheme;
                     o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                 })
                 .AddIdentityCookies();
@@ -149,6 +145,15 @@ namespace MagFlow.Web.Extensions
                 .AddRoleManager<RoleManager<ApplicationRole>>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
+
+            services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+            services.AddScoped<UserManager<ApplicationUser>>();
+            services.AddScoped<RoleManager<ApplicationRole>>();
+            services.AddScoped<SignInManager<ApplicationUser>>();
+            services.AddScoped<IEmailSender<ApplicationUser>>(sp => sp.GetRequiredService<IEmailService>());
+            services.AddScoped<IUserStore<ApplicationUser>, FactoryUserStore>();
+            services.AddScoped<IRoleStore<ApplicationRole>, FactoryRoleStore>();
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Login";
@@ -164,10 +169,6 @@ namespace MagFlow.Web.Extensions
                 options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                 options.Cookie.SameSite = SameSiteMode.Lax;
             });
-            services.Configure<SecurityStampValidatorOptions>(options =>
-            {
-                options.ValidationInterval = TimeSpan.FromMinutes(30);
-            });
         }
 
         private static void RegisterScopes(this IServiceCollection services)
@@ -178,6 +179,8 @@ namespace MagFlow.Web.Extensions
             // It uses SecurityInterceptor as middleware between blazor pages code and BLL services
             // It checks user permissions to functions/methods with attribute MinimumRole/MustHaveRole
             services.RegisterServicesWithProxy();
+
+            services.AddSingleton<IUserRevocationService, UserRevocationService>();
         }
 
         private static void RegisterServices(this IServiceCollection services)

@@ -36,6 +36,7 @@ namespace MagFlow.BLL.Services
         private readonly IEmailService _emailService;
         private readonly INetworkService _networkService;
         private readonly IServerNotificationService _serverNotificationService;
+        private readonly IUserRevocationService _userRevocationService;
         
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UserService> _logger;
@@ -46,6 +47,7 @@ namespace MagFlow.BLL.Services
             ICompanyRepository companyRepository,
             INetworkService networkService,
             IServerNotificationService serverNotificationService,
+            IUserRevocationService userRevocationService,
             UserManager<ApplicationUser> userManager,
             ILogger<UserService> logger)
         {
@@ -57,6 +59,7 @@ namespace MagFlow.BLL.Services
             _networkService = networkService;
             _emailService = emailService;
             _serverNotificationService = serverNotificationService;
+            _userRevocationService = userRevocationService;
         }
 
 
@@ -499,15 +502,14 @@ namespace MagFlow.BLL.Services
             if (user == null)
                 return Enums.Result.Error;
 
-            var result = await _userRepository.DeleteAsync(user);
+            var result = Enums.Result.Success; // await _userRepository.DeleteAsync(user);
             if (result == Enums.Result.Success)
             {
                 try
                 {
                     await _userManager.UpdateSecurityStampAsync(user);
-                    var test = _userManager.SupportsUserSecurityStamp;
+                    _userRevocationService.RevokeUser(user.Id.ToString());
                     await _serverNotificationService.ForceUserLogoutAsync(user.Id.ToString());
-                    
                 }
                 catch (Exception ex)
                 {
