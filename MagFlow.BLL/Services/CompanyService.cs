@@ -1,6 +1,8 @@
-﻿using MagFlow.BLL.Mappers.Domain.CompanyScope;
+﻿using MagFlow.BLL.Helpers.Auth;
+using MagFlow.BLL.Mappers.Domain.CompanyScope;
 using MagFlow.BLL.Mappers.Domain.CoreScope;
 using MagFlow.BLL.Services.Interfaces;
+using MagFlow.BLL.Services.Notifications;
 using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
 using MagFlow.DAL.Repositories.CoreScope.Interfaces;
 using MagFlow.Domain.CompanyScope;
@@ -36,6 +38,8 @@ namespace MagFlow.BLL.Services
         private readonly INetworkService _networkService;
         private readonly IModuleRepository _moduleRepository;
         private readonly IEmailService _emailService;
+        private readonly IServerNotificationService _serverNotificationService;
+        private readonly IUserRevocationService _userRevocationService;
 
         private readonly ILogger<CompanyService> _logger;
 
@@ -46,6 +50,8 @@ namespace MagFlow.BLL.Services
             IWorkingHourRepository workingHourRepository,
             IModuleRepository moduleRepository,
             IEmailService emailService,
+            IServerNotificationService serverNotificationService,
+            IUserRevocationService userRevocationService,
             ILogger<CompanyService> logger)
         {
             _companyRepository = companyRepository;
@@ -55,6 +61,8 @@ namespace MagFlow.BLL.Services
             _userRepository = userRepository;
             _moduleRepository = moduleRepository;
             _emailService = emailService;
+            _serverNotificationService = serverNotificationService;
+            _userRevocationService = userRevocationService;
             _logger = logger;
         }
 
@@ -284,6 +292,18 @@ namespace MagFlow.BLL.Services
             var company = await _companyRepository.GetByIdAsync(companyId);
             if (company == null)
                 return Enums.Result.Error;
+
+            var companyUsers = await _companyRepository.RemoveAllUsersFromCompanyAsync(company);
+            if (companyUsers == null)
+                return Enums.Result.Error;
+
+            try
+            {
+                List<string> userIds = companyUsers!.Select(x => x.ToString()).ToList();
+                await _serverNotificationService.ForceUserLogoutAsync(userIds);
+                userIds.ForEach(x => _userRevocationService.RevokeUser(x));
+            }
+            catch { }
 
             var result = await _companyRepository.DeleteAsync(company);
             return result;

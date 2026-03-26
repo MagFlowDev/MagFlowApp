@@ -125,10 +125,6 @@ namespace MagFlow.DAL.Repositories.CoreScope
         {
             try
             {
-                //using (var context = _companyContextFactory.CreateDbContext(entity.ConnectionString))
-                //{
-                //    context.Database.EnsureDeleted();
-                //}
                 return base.Delete(entity);
             }
             catch (Exception ex)
@@ -138,20 +134,81 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
+        public List<Guid>? RemoveAllUsersFromCompany(Company entity)
+        {
+            try
+            {
+                using (var coreContext = _coreContextFactory.CreateDbContext())
+                {
+                    using (var companyContext = _companyContextFactory.CreateDbContext())
+                    {
+                        var companyUsersIds = companyContext.Users
+                            .Select(u => u.Id)
+                            .ToList();
+
+                        coreContext.Users
+                            .Where(x => companyUsersIds.Contains(x.Id))
+                            .ExecuteUpdate(setters => setters.SetProperty(u => u.DefaultCompanyId, u => null));
+
+                        coreContext.CompanyUsers
+                            .Where(x => companyUsersIds.Contains(x.UserId) && x.CompanyId == entity.Id)
+                            .ExecuteDelete();
+
+                        coreContext.SaveChanges();
+                        return companyUsersIds;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
         public override async Task<Enums.Result> DeleteAsync(Company entity, CoreDbContext? coreDbContext = null)
         {
             try
             {
-                //using (var context = _companyContextFactory.CreateDbContext(entity.ConnectionString))
-                //{
-                //    await context.Database.EnsureDeletedAsync();
-                //}
                 return await base.DeleteAsync(entity);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return Enums.Result.Error;
+            }
+        }
+
+        public async Task<List<Guid>?> RemoveAllUsersFromCompanyAsync(Company entity)
+        {
+            try
+            {
+                using (var coreContext = _coreContextFactory.CreateDbContext())
+                {
+                    using (var companyContext = _companyContextFactory.CreateDbContext())
+                    {
+                        var companyUsersIds = await companyContext.Users
+                            .Select(u => u.Id)
+                            .ToListAsync();
+
+                        await coreContext.Users
+                            .Where(x => companyUsersIds.Contains(x.Id))
+                            .Include(x => x.Companies).ThenInclude(y => y.Company)
+                            .ExecuteUpdateAsync(setters => setters.SetProperty(u => u.DefaultCompanyId, u => null));
+
+                        await coreContext.CompanyUsers
+                            .Where(x => companyUsersIds.Contains(x.UserId) && x.CompanyId == entity.Id)
+                            .ExecuteDeleteAsync();
+
+                        await coreContext.SaveChangesAsync();
+                        return companyUsersIds;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
             }
         }
 
@@ -169,11 +226,6 @@ namespace MagFlow.DAL.Repositories.CoreScope
                     {
                         try
                         {
-                            //using (var dbContext = _companyContextFactory.CreateDbContext(entity.ConnectionString))
-                            //{
-                            //    context.Database.EnsureDeleted();
-                            //}
-                            //context.Companies.Remove(entity);
                             entity.RemovedAt = DateTime.UtcNow;
                             context.Companies.Update(entity);
                         }
@@ -208,11 +260,6 @@ namespace MagFlow.DAL.Repositories.CoreScope
                     {
                         try
                         {
-                            //using (var dbContext = _companyContextFactory.CreateDbContext(entity.ConnectionString))
-                            //{
-                            //    await context.Database.EnsureDeletedAsync();
-                            //}
-                            //context.Companies.Remove(entity);
                             entity.RemovedAt = DateTime.UtcNow;
                             context.Companies.Update(entity);
                         }
