@@ -16,5 +16,8 @@ namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
         Task<Enums.Result> UpdateLogoAsync(Guid companyId, byte[] data, string contentType);
         Task<Enums.Result> RemoveLogoAsync(Guid companyId);
         Task<Enums.Result> UpdateSettingsAsync(CompanySettings companySettings);
+
+        List<Guid>? RemoveAllUsersFromCompany(Company entity);
+        Task<List<Guid>?> RemoveAllUsersFromCompanyAsync(Company entity);
     }
 }

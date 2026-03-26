@@ -60,5 +60,12 @@ namespace MagFlow.BLL.Services.Notifications
             if (!string.IsNullOrEmpty(connectionId))
                 await _hubContext.Clients.Client(connectionId).SendAsync("ForceLogout");
         }
+
+        public async Task ForceUserLogoutAsync(List<string> userId)
+        {
+            var connectionIds = userId.Select(x => NotificationHub.GetConnectionId(x)).Where(x => x != null);
+            if(connectionIds.Any())
+                await _hubContext.Clients.Clients(connectionIds).SendAsync("ForceLogout");
+        }
     }
 }
