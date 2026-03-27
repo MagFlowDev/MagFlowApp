@@ -8,7 +8,7 @@
         <MudTextField Label="@Localizer[Langs.NameAndLastname]" Variant="Variant.Outlined" T="string" Text="@string.Concat(_user?.FirstName ?? "", " ", _user?.LastName ?? "")" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)" Disabled></MudTextField>
         <MudTextField Label="@Localizer[Langs.Email]" Variant="Variant.Outlined" T="string" Text="@_user?.Email" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)" Disabled></MudTextField>
         <MudTextField Label="@Localizer[Langs.Role]" Variant="Variant.Outlined" T="string" Text="@_user?.Roles.FirstOrDefault()?.DisplayRole(Localizer)" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)" Disabled></MudTextField>
-        <MudTextField Label="@Localizer[Langs.JoiningDate]" Variant="Variant.Outlined" T="string" Text="@_user?.CreatedAt?.ToShortDateString()" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)" Disabled></MudTextField>
+        <MudTextField Label="@Localizer[Langs.JoiningDate]" Variant="Variant.Outlined" T="string" Text="@_user?.CreatedAt?.ToLocalTime().ToShortDateString()" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)" Disabled></MudTextField>
         <MudTextField Label="@Localizer[Langs.AccountStatus]" Variant="Variant.Outlined" T="string" Text="@(_user?.IsActive == true ? Localizer[Langs.Active] : Localizer[Langs.Inactive])" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)" Disabled></MudTextField>
     </div>
 </div>

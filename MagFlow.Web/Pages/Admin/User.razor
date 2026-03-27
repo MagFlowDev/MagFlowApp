@@ -73,11 +73,11 @@
                             <div class="d-flex flex-column align-items-start" style="gap: 8px">
                                 <div class="d-flex align-items-center align-self-stretch" style="gap: 16px">
                                     <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.DateRange" Style="color: var(--mud-palette-drawer-icon)"/>
-                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@string.Concat(Localizer[Langs.CreationDate], ": ", _user?.CreatedAt?.ToShortDateString() ?? "---")</MudText>
+                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@string.Concat(Localizer[Langs.CreationDate], ": ", _user?.CreatedAt?.ToLocalTime().ToShortDateString() ?? "---")</MudText>
                                 </div>
                                 <div class="d-flex align-items-end" style="gap: 16px">
                                     <MudIcon Size="Size.Small" Icon="@Icons.Material.Outlined.Login" Style="color: var(--mud-palette-drawer-icon)"/>
-                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@string.Concat(Localizer[Langs.LastLogin], ": ", _user?.LastLogin?.ToShortDateString() ?? "---")</MudText>
+                                    <MudText Typo="Typo.subtitle2" Style="color: var(--mud-palette-drawer-text)" Class="text-nowrap">@string.Concat(Localizer[Langs.LastLogin], ": ", _user?.LastLogin?.ToLocalTime().ToShortDateString() ?? "---")</MudText>
                                 </div>
                             </div>
                             <LoadingButton Loading="_loading" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" OnClick="DeleteUser">@Localizer[Langs.Delete]</LoadingButton>

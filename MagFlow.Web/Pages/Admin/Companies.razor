@@ -47,7 +47,7 @@
                 </CellTemplate>
             </TemplateColumn>
             <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.TaxNumber]" Property="x => x.TaxNumber" Sortable="false" />
-            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.CreationDate]" Property="x => x.CreatedAt.ToShortDateString()" Sortable="false" />
+            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.CreationDate]" Property="x => x.CreatedAt.ToLocalTime().ToShortDateString()" Sortable="false" />
             <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.ActiveModules]">
                 <CellTemplate>
                     <MudText>@context.Item.CompanyModules?.Where(x => x.IsActive && x.EnabledTo >= DateTime.UtcNow).Count()</MudText>

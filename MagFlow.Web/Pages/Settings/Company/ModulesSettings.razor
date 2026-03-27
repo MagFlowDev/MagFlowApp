@@ -47,7 +47,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <MudText Style="@($"color: {Colors.Green.Darken4}")">@string.Concat(Localizer[Langs.ValidUntil], ": ", companyModule.EnabledTo.ToShortDateString())</MudText>
+                                                    <MudText Style="@($"color: {Colors.Green.Darken4}")">@string.Concat(Localizer[Langs.ValidUntil], ": ", companyModule.EnabledTo.ToLocalTime().ToShortDateString())</MudText>
                                                 }
                                             </div>
                                         </div>
@@ -86,7 +86,7 @@
                                             }
                                             <div class="d-flex align-items-center justify-content-center" style="gap: 8px">
                                                 <MudIcon Icon="@Icons.Material.Outlined.CalendarMonth" Style="@($"color: {Colors.Orange.Lighten1}")" />
-                                                <MudTooltip Text="@string.Concat(Localizer[Langs.ValidUntil], ": ", companyModule.EnabledTo.ToShortDateString())" RootClass="d-flex flex-column justify-content-center">
+                                                <MudTooltip Text="@string.Concat(Localizer[Langs.ValidUntil], ": ", companyModule.EnabledTo.ToLocalTime().ToShortDateString())" RootClass="d-flex flex-column justify-content-center">
                                                     <MudText Style="@($"color: {Colors.Orange.Lighten1}")">@string.Concat(Localizer[Langs.ExpiringIn], " ", expiringInTime, " ", expiringInTime > 1 ? Localizer[Langs.Days] : Localizer[Langs.Day])</MudText>
                                                 </MudTooltip>
                                             </div>
