@@ -259,6 +259,11 @@
                 CompanyId = string.Empty;
         }
 
+        await RefreshCompanyModules();
+    }
+
+    private async Task RefreshCompanyModules()
+    {
         if (_company != null && _company.CompanyModules == null)
             _company.CompanyModules = new List<CompanyModuleDTO>();
 
@@ -270,6 +275,8 @@
 
         if (_modules != null && _modules.Any())
             _modules.ForEach(x => x.ModuleComponent = IModuleMapper.GetIModule(x.Type));
+
+        StateHasChanged();
     }
 
     private async Task DeleteCompany()
@@ -308,7 +315,7 @@
 
     private async Task ExtendModules()
     {
-        if (_isBusy || _company == null)
+        if (_isBusy || _company == null || !_company.Id.HasValue)
             return;
 
         try
@@ -316,7 +323,38 @@
             _isBusy = true;
             _loadingExtendModule = true;
 
-            await Task.Delay(2000);
+            var parameters = new DialogParameters<TimePeriodDialog> { { x => x.ButtonText, Localizer[Langs.Extend] } };
+            var dialog = await DialogService.ShowAsync<TimePeriodDialog>(Localizer[Langs.ExtendLicense], parameters);
+            var confirmation = await dialog.Result;
+            Enums.Result? result = null;
+            if (confirmation != null && !confirmation.Canceled)
+            {
+                if (confirmation.Data is Tuple<DateTime?, Enums.LongTimePeriod?> data)
+                {
+                    if (!data.Item1.HasValue && !data.Item2.HasValue)
+                        return;
+                    if (data.Item1.HasValue)
+                    {
+                        result = await CompanyService.UpdateModulesLicense(_company, _selectedActiveModules, data.Item1.Value, false);
+                    }
+                    else if (data.Item2.HasValue)
+                    {
+                        result = await CompanyService.UpdateModulesLicense(_company, _selectedActiveModules, data.Item2.Value, false);
+                    }
+                }
+            }
+
+            if (result == Enums.Result.Success)
+            {
+                Snackbar.Add(Localizer[Langs.LicenseExtended], Severity.Success);
+                _company = await CompanyService.GetCompany(_company.Id.Value);
+                _selectedActiveModules.Clear();
+                await RefreshCompanyModules();
+            }
+            else if (result == Enums.Result.Error)
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], Severity.Error);
+            }
         }
         finally
         {
@@ -327,7 +365,7 @@
 
     private async Task ActivateModules()
     {
-        if (_isBusy || _company == null)
+        if (_isBusy || _company == null || !_company.Id.HasValue)
             return;
 
         try
@@ -335,7 +373,38 @@
             _isBusy = true;
             _loadingActivateModule = true;
 
-            await Task.Delay(2000);
+            var parameters = new DialogParameters<TimePeriodDialog> { { x => x.ButtonText, Localizer[Langs.Activate] } };
+            var dialog = await DialogService.ShowAsync<TimePeriodDialog>(Localizer[Langs.ActivateModule_s], parameters);
+            var confirmation = await dialog.Result;
+            Enums.Result? result = null;
+            if (confirmation != null && !confirmation.Canceled)
+            {
+                if (confirmation.Data is Tuple<DateTime?, Enums.LongTimePeriod?> data)
+                {
+                    if (!data.Item1.HasValue && !data.Item2.HasValue)
+                        return;
+                    if (data.Item1.HasValue)
+                    {
+                        result = await CompanyService.UpdateModulesLicense(_company, _selectedAdditionalModules, data.Item1.Value, true);
+                    }
+                    else if (data.Item2.HasValue)
+                    {
+                        result = await CompanyService.UpdateModulesLicense(_company, _selectedAdditionalModules, data.Item2.Value, true);
+                    }
+                }
+            }
+
+            if(result == Enums.Result.Success)
+            {
+                Snackbar.Add(Localizer[Langs.ModulesActivated], Severity.Success);
+                _company = await CompanyService.GetCompany(_company.Id.Value);
+                _selectedAdditionalModules.Clear();
+                await RefreshCompanyModules();
+            }
+            else if (result == Enums.Result.Error)
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], Severity.Error);
+            }
         }
         finally
         {

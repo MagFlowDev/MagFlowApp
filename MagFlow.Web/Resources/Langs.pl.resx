@@ -1093,4 +1093,28 @@ i uprawnieniami użytkowników</value>
   <data name="DeleteCompanyConfirmation" xml:space="preserve">
     <value>Czy na pewno chcesz usunąć firmę {0}?</value>
   </data>
+  <data name="ActivateModule_s" xml:space="preserve">
+    <value>Aktywuj moduł/y</value>
+  </data>
+  <data name="CustomPeriod" xml:space="preserve">
+    <value>Niestandardowy okres</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Miesiąc</value>
+  </data>
+  <data name="Quarter" xml:space="preserve">
+    <value>Kwartał</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Rok</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="LicenseExtended" xml:space="preserve">
+    <value>Licencja została przedłużona</value>
+  </data>
+  <data name="ModulesActivated" xml:space="preserve">
+    <value>Moduły zostały aktywowane</value>
+  </data>
 </root>

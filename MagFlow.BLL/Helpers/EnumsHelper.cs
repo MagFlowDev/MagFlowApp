@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Localization;
+﻿using MagFlow.Shared.Models;
+using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,6 +33,18 @@ namespace MagFlow.BLL.Helpers
                 return enumValue.ToString();
 
             return localizer[name];
+        }
+
+        public static string ToDateFormat(this Enums.DateFormat dateFormat)
+        {
+            return dateFormat switch
+            {
+                Enums.DateFormat.DD_MM_RRRR_DOTS => "dd.MM.yyyy",
+                Enums.DateFormat.MM_DD_RRRR_SLASHES => "MM'/'dd'/'yyyy",
+                Enums.DateFormat.RRRR_MM_DD_DASHES => "yyyy-MM-dd",
+                Enums.DateFormat.DD_MM_RRRR_DASHES => "dd-MM-yyyy",
+                _ => "dd.MM.yyyy"
+            };
         }
 
     }

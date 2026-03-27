@@ -1,0 +1,80 @@
+﻿@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models
+@using MudBlazor
+
+@inject ILocalCacheService LocalCacheService
+
+<MudDialog>
+    <DialogContent>
+        <div class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px;">
+            <div class="d-flex align-items-center justify-content-center w-100" style="gap: 8px; padding: 0 8px 0 0;">
+                <MudRadioGroup Value="_selectedTimePeriod" ValueChanged="SelectedTimePeriodChanged" T="Enums.LongTimePeriod?">
+                    <MudRadio T="Enums.LongTimePeriod?" Value="Enums.LongTimePeriod.Month" Color="Color.Default">@Localizer[Langs.Month]</MudRadio>
+                    <MudRadio T="Enums.LongTimePeriod?" Value="Enums.LongTimePeriod.Quarter" Color="Color.Default">@Localizer[Langs.Quarter]</MudRadio>
+                    <MudRadio T="Enums.LongTimePeriod?" Value="Enums.LongTimePeriod.Year" Color="Color.Default">@Localizer[Langs.Year]</MudRadio>
+                </MudRadioGroup>
+            </div>
+            <div class="d-flex align-items-center justify-content-center w-100" style="gap: 8px">
+                <MudDatePicker Variant="Variant.Outlined" Label="@Localizer[Langs.CustomPeriod]" Placeholder="@_placeholder" DateFormat="@_dateFormat.ToDateFormat()" Date="_selectedDate" DateChanged="SelectedDateChanged" />
+            </div>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@Localizer[Langs.Cancel]</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@(!string.IsNullOrEmpty(ButtonText) ? ButtonText : Localizer[Langs.Ok])</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+    UserDTO? _user = null;
+    Enums.DateFormat _dateFormat => _user?.Settings?.DateFormat ?? Enums.DateFormat.DD_MM_RRRR_DOTS;
+    string _placeholder => _dateFormat.GetDisplayName(Localizer);
+
+
+    Enums.LongTimePeriod? _selectedTimePeriod = null;
+    DateTime? _selectedDate = null;
+
+    public void SelectedTimePeriodChanged(Enums.LongTimePeriod? value)
+    {
+        _selectedTimePeriod = value;
+        if (value.HasValue)
+            SelectedDateChanged(null);
+    }
+
+    public void SelectedDateChanged(DateTime? value)
+    {
+        _selectedDate = value;
+        if (value.HasValue)
+            SelectedTimePeriodChanged(null);
+    }
+
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(new Tuple<DateTime?, Enums.LongTimePeriod?>(_selectedDate, _selectedTimePeriod)));
+
+    private void Cancel() => MudDialog.Cancel();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await this.MudDialog.SetOptionsAsync(new DialogOptions()
+        {
+            CloseButton = true,
+            Position = DialogPosition.Center
+        });
+
+        _user = await LocalCacheService.GetCurrentUser();
+
+        StateHasChanged();
+    }
+
+}

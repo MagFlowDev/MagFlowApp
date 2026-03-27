@@ -27,6 +27,9 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> UpdateDefaultWorkingHours(List<DefaultWorkingHourDTO> defaultWorkingHourDTOs);
         Task<Enums.Result> UpdateWorkDays(List<WorkDayDTO> workDayDTOs);
 
+        Task<Enums.Result> UpdateModulesLicense(CompanyDTO companyDTO, List<Guid> moduleIds, DateTime expireDate, bool activate = false);
+        Task<Enums.Result> UpdateModulesLicense(CompanyDTO companyDTO, List<Guid> moduleIds, Enums.LongTimePeriod timePeriod, bool activate = false);
+
         Task<Enums.Result> RemoveCompanyLogo(Guid companyId);
 
         Task<Enums.Result> DeleteCompany(CompanyDTO companyDTO);
