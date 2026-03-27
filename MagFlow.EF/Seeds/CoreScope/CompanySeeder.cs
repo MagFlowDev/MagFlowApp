@@ -16,7 +16,7 @@ namespace MagFlow.EF.Seeds.CoreScope
 {
     public class CompanySeeder : ICoreSeeder
     {
-        public int Step => 3;
+        public int Step => 1;
 
         public void Seed(CoreDbContext context)
         {
@@ -41,7 +41,14 @@ namespace MagFlow.EF.Seeds.CoreScope
                     IsActive = true,
                     ConnectionString = StringExtensions.GetCompanyConnectionString("Test") ?? "",
                     TaxNumber = "1563555295",
-                    CompanySettings = new CompanySettings()
+                    CompanySettings = new CompanySettings(),
+                    Address = new Shared.Models.Address()
+                    {
+                        City = "Krakow",
+                        Country = "PL",
+                        Line1 = "Warszawska 1",
+                        ZipCode = "12-345"
+                    }
                 };
                 await context.Companies.AddAsync(testCompany);
                 var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
@@ -78,7 +85,14 @@ namespace MagFlow.EF.Seeds.CoreScope
                     IsActive = true,
                     ConnectionString = StringExtensions.GetCompanyConnectionString("Demo") ?? "",
                     TaxNumber = "7591487315",
-                    CompanySettings = new CompanySettings()
+                    CompanySettings = new CompanySettings(),
+                    Address = new Shared.Models.Address()
+                    {
+                        City = "Warszawa",
+                        Country = "PL",
+                        Line1 = "Krakowska 1",
+                        ZipCode = "99-123"
+                    }
                 };
                 await context.Companies.AddAsync(demoCompany);
                 var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
@@ -115,10 +129,17 @@ namespace MagFlow.EF.Seeds.CoreScope
                 }
             }
 
-            if (seed)
-                await context.SaveChangesAsync();
+            try
+            {
+                if (seed)
+                    await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
 
-            if(seededDbConnectionStrings.Any())
+            }
+
+            if (seededDbConnectionStrings.Any())
             {
                 foreach(var connectionString in seededDbConnectionStrings)
                 {

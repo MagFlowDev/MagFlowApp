@@ -150,6 +150,7 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<UserManager<ApplicationUser>>();
             services.AddScoped<RoleManager<ApplicationRole>>();
             services.AddScoped<SignInManager<ApplicationUser>>();
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
             services.AddScoped<IEmailSender<ApplicationUser>>(sp => sp.GetRequiredService<IEmailService>());
             services.AddScoped<IUserStore<ApplicationUser>, FactoryUserStore>();
             services.AddScoped<IRoleStore<ApplicationRole>, FactoryRoleStore>();

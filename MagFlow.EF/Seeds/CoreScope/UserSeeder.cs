@@ -10,7 +10,7 @@ namespace MagFlow.EF.Seeds.CoreScope
 {
     public class UserSeeder : ICoreSeeder
     {
-        public int Step => 1;
+        public int Step => 3;
 
         public void Seed(CoreDbContext context)
         {

@@ -287,9 +287,11 @@ namespace MagFlow.BLL.Services
 
 
         [MinimumRole(nameof(AppRole.SysAdmin))]
-        public async Task<Enums.Result> DeleteCompany(Guid companyId)
+        public async Task<Enums.Result> DeleteCompany(CompanyDTO companyDTO)
         {
-            var company = await _companyRepository.GetByIdAsync(companyId);
+            if (companyDTO == null || !companyDTO.Id.HasValue)
+                return Enums.Result.Error;
+            var company = await _companyRepository.GetByIdAsync(companyDTO.Id.Value);
             if (company == null)
                 return Enums.Result.Error;
 
