@@ -18,11 +18,12 @@
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
             <MudSpacer />
+            <MudIconButton Color="Color.Primary" OnClick="_usersDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
         </ToolBarContent>
         <Columns>
             <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Name]" Sortable="true" Tag="@($"{nameof(UserDTO.LastName)}")" >
                 <CellTemplate>
-                    <MudText>@string.Concat(context.Item.FirstName, " ", context.Item.LastName)</MudText>
+                    <MudLink Color="Color.Primary" Href="@($"/admin/user/{context.Item.Id}")">@string.Concat(context.Item.FirstName, " ", context.Item.LastName)</MudLink>
                 </CellTemplate>
             </TemplateColumn>
             <PropertyColumn T="UserDTO" TProperty="string" Title="@Localizer[Langs.Email]" Property="x => x.Email" Sortable="true"/>

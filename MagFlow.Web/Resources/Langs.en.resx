@@ -1086,4 +1086,10 @@
   <data name="DeleteSuccess" xml:space="preserve">
     <value>The resource has been deleted</value>
   </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="DeleteCompanyConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete company {0}?</value>
+  </data>
 </root>

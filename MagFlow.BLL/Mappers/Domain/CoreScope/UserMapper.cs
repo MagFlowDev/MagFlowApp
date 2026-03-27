@@ -16,6 +16,7 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
             return new UserDTO()
             {
                 Id = applicationUser.Id,
+                CurrentCompanyId = applicationUser.DefaultCompanyId,
                 FirstName = applicationUser.FirstName,
                 LastName = applicationUser.LastName,
                 Email = applicationUser.Email ?? "",

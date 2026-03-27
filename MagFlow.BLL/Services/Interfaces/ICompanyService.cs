@@ -19,11 +19,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
         Task<QueryResponse<CompanyDTO>> GetCompanies(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
 
-
-
         Task<Enums.Result> CreateCompany(CompanyDTO companyDTO);
-
-
 
         Task<Enums.Result> UpdateCompany(CompanyDTO companyDTO);
         Task<Enums.Result> UpdateCompanySettings(Guid companyId, CompanySettingsDTO companySettingsDTO);
@@ -31,11 +27,9 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> UpdateDefaultWorkingHours(List<DefaultWorkingHourDTO> defaultWorkingHourDTOs);
         Task<Enums.Result> UpdateWorkDays(List<WorkDayDTO> workDayDTOs);
 
-
-
         Task<Enums.Result> RemoveCompanyLogo(Guid companyId);
 
-
+        Task<Enums.Result> DeleteCompany(CompanyDTO companyDTO);
 
         Task<Enums.Result> SendExtendModuleRequest(Guid companyId, Guid moduleId, string user, string message);
         Task<Enums.Result> SendAskForModuleOfferRequest(Guid companyId, Guid moduleId, string user, string message);

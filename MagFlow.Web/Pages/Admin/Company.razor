@@ -1,14 +1,18 @@
 ﻿@page "/admin/company/{CompanyId}"
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models
 @using MagFlow.Shared.Models.Enumerators
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Authorization
+@using MagFlow.Web.Components.Dialogs
 @using MudBlazor
 
 @inject ICompanyService CompanyService
 @inject IJSRuntime JS
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
@@ -63,7 +67,7 @@
                         @if (_activeCompanyModules.Any())
                         {
                             <div class="w-100 align-self-stretch d-flex align-items-start justify-content-between" style="margin-top: 24px; margin-bottom: 8px;">
-                                <MudText Typo="Typo.body1" Style="font-weight: 500">@Localizer[Langs.Active1]</MudText>
+                                <MudText Typo="Typo.h6" Style="font-weight: 500">@Localizer[Langs.Active1]</MudText>
                                 <div class="d-flex justify-content-end align-items-center text-nowrap mr-3" style="gap: 8px">
                                     @if (!_selectedActiveModules.Any())
                                     {
@@ -119,7 +123,7 @@
                         @if (_expiringCompanyModules.Any())
                         {
                             <div class="w-100 align-self-stretch d-flex align-items-start" style="margin-top: 24px; margin-bottom: 8px;">
-                                <MudText Typo="Typo.body1" Style="font-weight: 500">@Localizer[Langs.Expiring1]</MudText>
+                                <MudText Typo="Typo.h6" Style="font-weight: 500">@Localizer[Langs.Expiring1]</MudText>
                             </div>
                             @foreach (var companyModule in _expiringCompanyModules)
                             {
@@ -162,7 +166,7 @@
                         @if (_additionalModules.Any())
                         {
                             <div class="w-100 align-self-stretch d-flex align-items-start justify-content-between" style="margin-top: 24px; margin-bottom: 8px;">
-                                <MudText Typo="Typo.body1" Style="font-weight: 500">@Localizer[Langs.Additional1]</MudText>
+                                <MudText Typo="Typo.h6" Style="font-weight: 500">@Localizer[Langs.Additional1]</MudText>
                                 <div class="d-flex justify-content-end align-items-center text-nowrap mr-3" style="gap: 8px">
                                     @if (!_selectedAdditionalModules.Any())
                                     {
@@ -251,6 +255,8 @@
         {
             if (Guid.TryParse(CompanyId, out var uid))
                 _company = await CompanyService.GetCompany(uid);
+            if (_company == null)
+                CompanyId = string.Empty;
         }
 
         if (_company != null && _company.CompanyModules == null)
@@ -276,7 +282,22 @@
             _isBusy = true;
             _loadingDelete = true;
 
-            await Task.Delay(2000);
+            var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, string.Format(Localizer[Langs.DeleteCompanyConfirmation], _company.Name) } };
+            var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteUser], parameters);
+            var confirmation = await dialog.Result;
+            if (confirmation != null && !confirmation.Canceled)
+            {
+                var result = await CompanyService.DeleteCompany(_company);
+                if (result == Enums.Result.Success)
+                {
+                    Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                    NavigationManager.NavigateTo("/admin");
+                }
+                else
+                {
+                    Snackbar.Add(Localizer[Langs.DeleteFailed], Severity.Error);
+                }
+            }
         }
         finally
         {

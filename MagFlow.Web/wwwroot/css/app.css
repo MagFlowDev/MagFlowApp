@@ -249,11 +249,15 @@ h1:focus {
 }
 
 .mud-table-row-selected {
-    background-color: var(--mud-palette-table-striped);
+    background-color: #E3F2FD;
 }
 
 .striped-grid .mud-table-body tr:nth-child(even) {
-    background-color: #f5f5f5;
+    background-color: var(--mud-palette-table-striped);
+}
+
+.striped-grid .mud-table-body tr.mud-table-row-selected {
+    background-color: #E3F2FD;
 }
 
 .mw-400px {

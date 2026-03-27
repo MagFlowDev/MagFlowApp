@@ -13,12 +13,17 @@
     <MagFlowDataGrid @ref="_companiesDataGrid" T="CompanyDTO" ServerData="ServerReloadCompanies" Filterable="false" OnRowClicked="OpenCompanyDetails">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
+                            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mw-400px"></MudTextField>
             <MudSpacer />
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddCompanyWizard" Class="mx-2">@Localizer[Langs.AddCompany]</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddCompanyWizard" Class="mr-2">@Localizer[Langs.AddCompany]</MudButton>
+            <MudIconButton Color="Color.Primary" OnClick="_companiesDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh"/>
         </ToolBarContent>
         <Columns>
-            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.Name]" Property="x => x.Name" Sortable="true" />
+            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Name]" Sortable="true" Tag="@($"{nameof(CompanyDTO.Name)}")">
+                <CellTemplate>
+                    <MudLink Color="Color.Primary" Href="@($"/admin/company/{context.Item.Id ?? Guid.Empty}")">@context.Item.Name</MudLink>
+                </CellTemplate>
+            </TemplateColumn>
             <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Address]" Sortable="false" Tag="@($"{nameof(CompanyDTO.Address)}")">
                 <CellTemplate>
                     @if(context.Item.Address != null)

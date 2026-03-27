@@ -1087,4 +1087,10 @@ i uprawnieniami użytkowników</value>
   <data name="DeleteSuccess" xml:space="preserve">
     <value>Zasób został usunięty</value>
   </data>
+  <data name="Refresh" xml:space="preserve">
+    <value>Odśwież</value>
+  </data>
+  <data name="DeleteCompanyConfirmation" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć firmę {0}?</value>
+  </data>
 </root>

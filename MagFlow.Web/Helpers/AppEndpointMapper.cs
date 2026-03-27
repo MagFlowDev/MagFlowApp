@@ -56,6 +56,7 @@ namespace MagFlow.Web.Helpers
             authGroup.MapPost("/Login", async (
                 [FromForm] SignInModel req,
                 [FromServices] SignInManager<ApplicationUser> signInManager,
+                [FromServices] UserManager<ApplicationUser> userManager,
                 ILogger<Program> logger,
                 IUserRepository repo,
                 IEventService eventService,
@@ -65,8 +66,8 @@ namespace MagFlow.Web.Helpers
             {
                 var ip = http.Connection.RemoteIpAddress?.MapToIPv4().ToString();
                 logger.LogInformation($"User {req.Email} is attempting to login from IPv4 address: {ip}");
-                
-                var user = await repo.GetByEmailAsync(req.Email);
+
+                var user = await userManager.FindByEmailAsync(req.Email);
                 if (user is null || user.RemovedAt.HasValue)
                 {
                     logger.LogWarning($"Invalid login ({req.Email}) attempt from IPv4 address: {ip}");
@@ -79,33 +80,6 @@ namespace MagFlow.Web.Helpers
                     logger.LogWarning($"Invalid login ({req.Email}) attempt from IPv4 address: {ip}");
                     return Results.Redirect("/Login?error=1");
                 }
-
-                //var hasher = new PasswordHasher<ApplicationUser>();
-                //var verified = hasher.VerifyHashedPassword(
-                //    user,
-                //    user.PasswordHash,
-                //    req.Password);
-
-                //if (verified == PasswordVerificationResult.Failed)
-                //{
-                //    logger.LogWarning($"Invalid login ({req.Email}) attempt from IPv4 address: {ip}");
-                //    return Results.Redirect("/Login?error=1");
-                //}
-
-                //var claims = new List<Claim>
-                //{
-                //    new Claim(ClaimTypes.Email, user.Email),
-                //    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                //    new Claim(Claims.CompanyClaim, user.DefaultCompanyId?.ToString() ?? Guid.Empty.ToString()),
-                //    new Claim(identityOptions.Value.ClaimsIdentity.SecurityStampClaimType, user?.SecurityStamp ?? Guid.NewGuid().ToString())
-                //};
-                //foreach(var role in user.Roles)
-                //{
-                //    if(!string.IsNullOrEmpty(role.Role?.Name))
-                //        claims.Add(new Claim(ClaimTypes.Role, role.Role.Name));
-                //}
-                //var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
-                //var principal = new ClaimsPrincipal(identity);
 
                 var principal = await signInManager.CreateUserPrincipalAsync(user);
                 var identity = (ClaimsIdentity)principal.Identity;
@@ -120,11 +94,6 @@ namespace MagFlow.Web.Helpers
                 };
                 if (req.RememberMe)
                     authProps.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(14);
-
-                //await http.SignInAsync(
-                //    IdentityConstants.ApplicationScheme,
-                //    principal,
-                //    authProps);
 
                 await signInManager.Context.SignInAsync(IdentityConstants.ApplicationScheme, principal, authProps);
                 revocationService.UnrevokeUser(user.Id.ToString());

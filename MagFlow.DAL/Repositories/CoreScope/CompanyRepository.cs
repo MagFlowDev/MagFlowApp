@@ -138,9 +138,12 @@ namespace MagFlow.DAL.Repositories.CoreScope
         {
             try
             {
+                if (string.IsNullOrEmpty(entity.ConnectionString))
+                    return null;
+
                 using (var coreContext = _coreContextFactory.CreateDbContext())
                 {
-                    using (var companyContext = _companyContextFactory.CreateDbContext())
+                    using (var companyContext = new CompanyDbContext(entity.ConnectionString))
                     {
                         var companyUsersIds = companyContext.Users
                             .Select(u => u.Id)
@@ -151,7 +154,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                             .ExecuteUpdate(setters => setters.SetProperty(u => u.DefaultCompanyId, u => null));
 
                         coreContext.CompanyUsers
-                            .Where(x => companyUsersIds.Contains(x.UserId) && x.CompanyId == entity.Id)
+                            .Where(x => x.CompanyId == entity.Id)
                             .ExecuteDelete();
 
                         coreContext.SaveChanges();
@@ -183,9 +186,12 @@ namespace MagFlow.DAL.Repositories.CoreScope
         {
             try
             {
+                if(string.IsNullOrEmpty(entity.ConnectionString))
+                    return null;
+
                 using (var coreContext = _coreContextFactory.CreateDbContext())
                 {
-                    using (var companyContext = _companyContextFactory.CreateDbContext())
+                    using (var companyContext = new CompanyDbContext(entity.ConnectionString))
                     {
                         var companyUsersIds = await companyContext.Users
                             .Select(u => u.Id)
@@ -197,7 +203,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                             .ExecuteUpdateAsync(setters => setters.SetProperty(u => u.DefaultCompanyId, u => null));
 
                         await coreContext.CompanyUsers
-                            .Where(x => companyUsersIds.Contains(x.UserId) && x.CompanyId == entity.Id)
+                            .Where(x => x.CompanyId == entity.Id)
                             .ExecuteDeleteAsync();
 
                         await coreContext.SaveChangesAsync();

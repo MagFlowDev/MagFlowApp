@@ -64,7 +64,7 @@
         </div>
     </MudDrawerHeader>
     <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Start" Href="/lobby">@Localizer[Langs.StartPanel]</MudNavLink>
-    @if (_user?.Roles.HasMinimumRole(AppRole.CompanyAdmin) == true)
+    @if (_user?.Roles.HasMinimumRole(AppRole.CompanyAdmin) == true && _user?.CurrentCompanyId.HasValue == true)
     {
         <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.SettingsApplications" Href="/company/settings">@Localizer[Langs.SettingsCompany]</MudNavLink>
     }
