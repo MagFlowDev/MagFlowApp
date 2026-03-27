@@ -1,5 +1,4 @@
 ﻿using MagFlow.Shared.DTOs.CoreScope;
-using MagFlow.Web.Components.Pagination;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using MudBlazor;
@@ -41,7 +40,7 @@ namespace MagFlow.Web.Components.DataGrid
             {
                 PagerContent = builder =>
                 {
-                    builder.OpenComponent<DataGridPager<T>>(100);
+                    builder.OpenComponent<MagFlow.Web.Components.Pagination.DataGridPager<T>>(100);
                     builder.AddAttribute(101, "DataGrid", this);
                     builder.CloseComponent();
                 };
