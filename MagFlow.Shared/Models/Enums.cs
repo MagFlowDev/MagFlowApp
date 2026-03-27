@@ -158,6 +158,18 @@ namespace MagFlow.Shared.Models
             Dot
         }
         
+        public enum LongTimePeriod
+        {
+            [Display(Name = "Month")]
+            Month = 0,
+
+            [Display(Name = "Quarter")]
+            Quarter = 1,
+
+            [Display(Name = "Year")]
+            Year = 2
+        }
+
         public enum DateFormat
         {
             [Display(Name = "DateFormatExample1")]

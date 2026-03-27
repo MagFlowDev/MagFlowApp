@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -42,6 +43,46 @@ namespace MagFlow.DAL.Repositories.CoreScope
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
+            }
+        }
+
+        public async Task<Enums.Result> UpdateCompanyModules(IEnumerable<CompanyModule> modules)
+        {
+            try
+            {
+                if (!modules.Any())
+                    return Enums.Result.Success;
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    context.CompanyModules.UpdateRange(modules);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<Enums.Result> AddCompanyModules(IEnumerable<CompanyModule> modules)
+        {
+            try
+            {
+                if (!modules.Any())
+                    return Enums.Result.Success;
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    context.CompanyModules.AddRange(modules);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
             }
         }
 

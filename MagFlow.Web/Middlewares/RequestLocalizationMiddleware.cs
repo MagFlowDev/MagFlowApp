@@ -85,8 +85,8 @@ namespace MagFlow.Web.Middlewares
                 culture.DateTimeFormat.ShortTimePattern = shortTimePattern;
                 culture.DateTimeFormat.FullDateTimePattern = $"{shortDatePattern} {longTimePattern}";
             }
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
 
             await _next(context);
         }

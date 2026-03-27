@@ -13,6 +13,9 @@ namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
     {
         Task<List<CompanyModule>?> GetCompanyModules(Guid companyId);
 
+        Task<Enums.Result> UpdateCompanyModules(IEnumerable<CompanyModule> modules);
+        Task<Enums.Result> AddCompanyModules(IEnumerable<CompanyModule> modules);
+
         Task<Enums.Result> UpdateLogoAsync(Guid companyId, byte[] data, string contentType);
         Task<Enums.Result> RemoveLogoAsync(Guid companyId);
         Task<Enums.Result> UpdateSettingsAsync(CompanySettings companySettings);

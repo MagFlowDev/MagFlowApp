@@ -115,6 +115,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Aktywuj moduł/y.
+        /// </summary>
+        public static string ActivateModule_s {
+            get {
+                return ResourceManager.GetString("ActivateModule_s", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Aktywny.
         /// </summary>
         public static string Active {
@@ -426,6 +435,15 @@ namespace MagFlow.Web.Resources {
         public static string CurrentPassword {
             get {
                 return ResourceManager.GetString("CurrentPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Niestandardowy okres.
+        /// </summary>
+        public static string CustomPeriod {
+            get {
+                return ResourceManager.GetString("CustomPeriod", resourceCulture);
             }
         }
         
@@ -1168,6 +1186,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Licencja została przedłużona.
+        /// </summary>
+        public static string LicenseExtended {
+            get {
+                return ResourceManager.GetString("LicenseExtended", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Jasny.
         /// </summary>
         public static string Light {
@@ -1627,6 +1654,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Moduły zostały aktywowane.
+        /// </summary>
+        public static string ModulesActivated {
+            get {
+                return ResourceManager.GetString("ModulesActivated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu {0} moduły.
         /// </summary>
         public static string ModulesFew {
@@ -1735,6 +1771,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Miesiąc.
+        /// </summary>
+        public static string Month {
+            get {
+                return ResourceManager.GetString("Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Nazwa.
         /// </summary>
         public static string Name {
@@ -1803,6 +1848,15 @@ namespace MagFlow.Web.Resources {
         public static string Notifications {
             get {
                 return ResourceManager.GetString("Notifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ok.
+        /// </summary>
+        public static string Ok {
+            get {
+                return ResourceManager.GetString("Ok", resourceCulture);
             }
         }
         
@@ -2001,6 +2055,15 @@ namespace MagFlow.Web.Resources {
         public static string ProductionPlanModuleDescription {
             get {
                 return ResourceManager.GetString("ProductionPlanModuleDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Kwartał.
+        /// </summary>
+        public static string Quarter {
+            get {
+                return ResourceManager.GetString("Quarter", resourceCulture);
             }
         }
         
@@ -2956,6 +3019,15 @@ namespace MagFlow.Web.Resources {
         public static string XToYOfZ {
             get {
                 return ResourceManager.GetString("XToYOfZ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Rok.
+        /// </summary>
+        public static string Year {
+            get {
+                return ResourceManager.GetString("Year", resourceCulture);
             }
         }
         

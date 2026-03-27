@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -281,6 +282,115 @@ namespace MagFlow.BLL.Services
             var updatedWorkDays = workDayDTOs.ToEntity(existingWorkDays);
 
             var result = await _workDayRepository.UpdateRangeAsync(existingWorkDays);
+            return result;
+        }
+
+        [MinimumRole(nameof(AppRole.SysAdmin))]
+        public async Task<Enums.Result> UpdateModulesLicense(CompanyDTO companyDTO, List<Guid> moduleIds, DateTime expireDate, bool activate = false)
+        {
+            if (!companyDTO.Id.HasValue)
+                return Enums.Result.Error;
+            if (expireDate < DateTime.UtcNow.Date.AddDays(1))
+                return Enums.Result.Error;
+            var company = await _companyRepository.GetByIdAsync(companyDTO.Id.Value, s => s
+                   .Include(x => x.Modules).ThenInclude(y => y.Module));
+            if (company == null)
+                return Enums.Result.Error;
+
+            var modules = await _moduleRepository.GetAllAsync();
+            var existingModules = company.Modules.Where(x => moduleIds.Contains(x.ModuleId)).ToList();
+            var modulesToActivateIds = moduleIds.Except(existingModules.Select(x => x.ModuleId));
+            var modulesToActivate = modules.Where(x => modulesToActivateIds.Contains(x.Id)).ToList();
+
+            List<CompanyModule> modulesToAdd = new List<CompanyModule>();
+            List<CompanyModule> modulesToUpdate = new List<CompanyModule>();
+
+            var now = DateTime.UtcNow;
+            expireDate = new DateTime(expireDate.Year, expireDate.Month, expireDate.Day, 23, 59, 59);
+            foreach (var module in modulesToActivate)
+            {
+                CompanyModule companyModule = new CompanyModule()
+                {
+                    Id = Guid.NewGuid(),
+                    CompanyId = company.Id,
+                    AssignedAt = now,
+                    IsActive = true,
+                    ModuleId = module.Id,
+                    EnabledFrom = now,
+                    EnabledTo = expireDate,
+                };
+                modulesToAdd.Add(companyModule);
+            }
+            existingModules.ForEach(x =>
+            {
+                x.EnabledTo = expireDate;
+                x.IsActive = true;
+                modulesToUpdate.Add(x);
+            });
+
+            var result = await _companyRepository.UpdateCompanyModules(modulesToUpdate);
+            if(result != Enums.Result.Success)
+                return result;
+            result = await _companyRepository.AddCompanyModules(modulesToAdd);
+            return result;
+        }
+
+        [MinimumRole(nameof(AppRole.SysAdmin))]
+        public async Task<Enums.Result> UpdateModulesLicense(CompanyDTO companyDTO, List<Guid> moduleIds, Enums.LongTimePeriod timePeriod, bool activate = false)
+        {
+            if (!companyDTO.Id.HasValue)
+                return Enums.Result.Error;
+            var company = await _companyRepository.GetByIdAsync(companyDTO.Id.Value, s => s
+                   .Include(x => x.Modules).ThenInclude(y => y.Module));
+            if (company == null)
+                return Enums.Result.Error;
+
+            var modules = await _moduleRepository.GetAllAsync();
+            var existingModules = company.Modules.Where(x => moduleIds.Contains(x.ModuleId)).ToList();
+            var modulesToActivateIds = moduleIds.Except(existingModules.Select(x => x.ModuleId));
+            var modulesToActivate = modules.Where(x => modulesToActivateIds.Contains(x.Id)).ToList();
+
+            List<CompanyModule> modulesToAdd = new List<CompanyModule>();
+            List<CompanyModule> modulesToUpdate = new List<CompanyModule>();
+
+            var now = DateTime.UtcNow;
+            var expireDate = timePeriod switch
+            {
+                Enums.LongTimePeriod.Month => now.AddMonths(1),
+                Enums.LongTimePeriod.Quarter => now.AddMonths(3),
+                Enums.LongTimePeriod.Year => now.AddYears(1),
+                _ => now
+            };
+            expireDate = new DateTime(expireDate.Year, expireDate.Month, expireDate.Day, 23, 59, 59);
+            foreach (var module in modulesToActivate)
+            {
+                CompanyModule companyModule = new CompanyModule()
+                {
+                    Id = Guid.NewGuid(),
+                    CompanyId = company.Id,
+                    AssignedAt = now,
+                    IsActive = true,
+                    ModuleId = module.Id,
+                    EnabledFrom = now,
+                    EnabledTo = expireDate,
+                };
+                modulesToAdd.Add(companyModule);
+            }
+            existingModules.ForEach(x =>
+            {
+                if (x.EnabledTo > now.AddYears(100)) x.EnabledTo = x.EnabledTo;
+                else if (x.EnabledTo < now) x.EnabledTo = expireDate;
+                else if(timePeriod == LongTimePeriod.Month) x.EnabledTo = x.EnabledTo.AddMonths(1);
+                else if(timePeriod == LongTimePeriod.Quarter) x.EnabledTo = x.EnabledTo.AddMonths(3);
+                else if(timePeriod == LongTimePeriod.Year) x.EnabledTo = x.EnabledTo.AddYears(1);
+                x.IsActive = true;
+                modulesToUpdate.Add(x);
+            });
+
+            var result = await _companyRepository.UpdateCompanyModules(modulesToUpdate);
+            if (result != Enums.Result.Success)
+                return result;
+            result = await _companyRepository.AddCompanyModules(modulesToAdd);
             return result;
         }
 
