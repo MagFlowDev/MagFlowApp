@@ -1116,4 +1116,13 @@
   <data name="ModulesActivated" xml:space="preserve">
     <value>The modules have been activated</value>
   </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="LastStep" xml:space="preserve">
+    <value>Last step</value>
+  </data>
+  <data name="NextStep" xml:space="preserve">
+    <value>Next step</value>
+  </data>
 </root>

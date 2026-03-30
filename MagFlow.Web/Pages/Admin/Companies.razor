@@ -13,7 +13,7 @@
     <MagFlowDataGrid @ref="_companiesDataGrid" T="CompanyDTO" ServerData="ServerReloadCompanies" Filterable="false" OnRowClicked="OpenCompanyDetails">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mw-400px"></MudTextField>
+                            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 maxw-400px"></MudTextField>
             <MudSpacer />
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddCompanyWizard" Class="mr-2">@Localizer[Langs.AddCompany]</MudButton>
             <MudIconButton Color="Color.Primary" OnClick="_companiesDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh"/>
