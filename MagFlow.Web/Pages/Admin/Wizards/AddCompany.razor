@@ -2,27 +2,89 @@
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.Models.Auth
 @using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Web.Components.Buttons
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
 @inject IUserService UserService
+@inject IJSRuntime JS
 
 @attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
 
-<EditForm OnValidSubmit="Send" EditContext="context">
-    <div class="d-flex flex-column">
-        <MudTextField @bind-Value="model?.FirstName" Label="FirstName" />
-        <MudTextField @bind-Value="model?.LastName" Label="LastName" />
-        <MudTextField @bind-Value="model?.Email" Label="Email" />
-        <MudTextField @bind-Value="model?.Password" Label="Password" />
-        <MudTextField @bind-Value="model?.ConfirmPassword" Label="ConfirmPassword" />
-        <MudButton ButtonType="ButtonType.Submit">Ok</MudButton>
+<div class="d-flex flex-column w-100 flex-grow-1 px-4 pt-2" style="min-height: 0; gap: 16px;">
+    <div class="d-flex flex-grow-1 flex-column align-items-center pt-8">
+        <div class="d-flex flex-column flex-grow-1 w-100" style="gap: 8px; min-height: 0; flex: 1 1 0; max-width: 804px;">
+            <div class="d-flex justify-content-between align-items-start">
+                <MudText Typo="Typo.h5" Style="font-weight: 700">@Localizer[Langs.AddCompany]</MudText>
+                <MudIconButton Size="Size.Small" Icon="@Icons.Material.Outlined.Close" OnClick="@(async () => await JS.InvokeVoidAsync("history.back"))" />
+            </div>
+            <MudStepper @ref="_stepper" NonLinear ActiveIndex="_step" ActiveIndexChanged="StepChanged" Class="flex-grow-1 d-flex flex-column h-100" Style="min-height: 0;" StepClass="d-flex flex-column flex-grow-1" NavClass="minh-72px" OnPreviewInteraction="OnPreviewInteraction">
+                <ChildContent>
+                    <MudStep Title="Informacje ogólne" Style="min-height: 0; height: 100%">
+                        <div style="overflow-y: auto; flex-grow: 1; min-height: 0;">
+                            
+                        </div>
+                    </MudStep>
+                    <MudStep Title="Dane kontaktowe" Style="min-height: 0; height: 100%">
+                        <div style="overflow-y: auto; flex-grow: 1; min-height: 0;">
+                        </div>
+                    </MudStep>
+                    <MudStep Title="Moduły" Style="min-height: 0; height: 100%">
+                        <div style="overflow-y: auto; flex-grow: 1; min-height: 0;">
+                        </div>
+                    </MudStep>
+                    <MudStep Title="Konto administratora" Style="min-height: 0; height: 100%">
+                        <div style="overflow-y: auto; flex-grow: 1; min-height: 0;">
+                        </div>
+                    </MudStep>
+                </ChildContent>
+                <ActionContent Context="stepper">
+                    @if(_step == 0)
+                    {
+                        <MudButton OnClick="@(async () => await Cancel(stepper))" Variant="Variant.Text" Color="Color.Default">@Localizer[Langs.Cancel]</MudButton>
+                    }
+                    else
+                    {
+                        <MudButton OnClick="@(() => stepper.ResetAsync())" StartIcon="@Icons.Material.Outlined.FirstPage" Color="Color.Default">@Localizer[Langs.Reset]</MudButton>
+                        <MudButton OnClick="@(() => stepper.PreviousStepAsync())" StartIcon="@Icons.Material.Outlined.NavigateBefore" Color="Color.Default">@Localizer[Langs.LastStep]</MudButton>
+                    }
+                    <MudSpacer />
+                    @if(_step == (stepper.Steps.Count-1))
+                    {
+                        <LoadingButton Loading="_loading" Variant="Variant.Filled" OnClick="@(async () => await Save())" Color="Color.Primary">@Localizer[Langs.Save]</LoadingButton>
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Text" OnClick="@(() => stepper.NextStepAsync())" StartIcon="@Icons.Material.Outlined.NavigateNext" Color="Color.Primary">@Localizer[Langs.NextStep]</MudButton>
+                    }
+                </ActionContent>
+            </MudStepper>
+        </div>
     </div>
-</EditForm>
+</div>
 
 @code {
+    private MudStepper _stepper;
     private SignUpModel model;
     private EditContext context;
+
+    private int _step;
+
+    private bool _isBusy;
+    private bool _loading;
+
+    private void StepChanged(int value)
+    {
+        _step = value;
+    }
+
+    private async Task OnPreviewInteraction(StepperInteractionEventArgs arg)
+    {
+        if (arg.Action == StepAction.Complete)
+            await ControlStepCompletion(arg);
+        else if(arg.Action == StepAction.Activate)
+            await ControlStepNavigation(arg);
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,8 +93,48 @@
         context = new EditContext(model);
     }
 
-    private async Task Send()
+
+    private async Task Save()
     {
-        var test = await UserService.CreateUser(model);
+        if (_isBusy)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loading = true;
+
+            await Task.Delay(2000);
+            //var test = await UserService.CreateUser(model);
+        }
+        finally
+        {
+            _isBusy = false;
+            _loading = false;
+        }
+    }
+
+    private async Task Cancel(MudStepper stepper)
+    {
+        if (_isBusy)
+            return;
+
+        await stepper.ResetAsync();
+        await JS.InvokeVoidAsync("history.back");
+    }
+
+    private async Task ControlStepCompletion(StepperInteractionEventArgs arg)
+    {
+        // Check if all form data on current step is correct
+        //var step = _stepper.Steps[arg.StepIndex];
+    }
+
+    private async Task ControlStepNavigation(StepperInteractionEventArgs arg)
+    {
+        if (arg.StepIndex == 0)
+            return;
+        var step = _stepper.Steps[arg.StepIndex-1];
+        if(!step.Completed)
+            arg.Cancel = true;
     }
 }

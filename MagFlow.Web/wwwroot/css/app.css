@@ -260,6 +260,10 @@ h1:focus {
     background-color: #E3F2FD;
 }
 
-.mw-400px {
+.maxw-400px {
     max-width: 400px !important; 
+}
+
+.minh-72px {
+    min-height: 72px !important;
 }

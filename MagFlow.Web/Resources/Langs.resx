@@ -1117,4 +1117,13 @@ i uprawnieniami użytkowników</value>
   <data name="ModulesActivated" xml:space="preserve">
     <value>Moduły zostały aktywowane</value>
   </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Zresetuj</value>
+  </data>
+  <data name="LastStep" xml:space="preserve">
+    <value>Poprzedni krok</value>
+  </data>
+  <data name="NextStep" xml:space="preserve">
+    <value>Następny krok</value>
+  </data>
 </root>
