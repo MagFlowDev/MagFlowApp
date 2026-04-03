@@ -11,6 +11,7 @@ namespace MagFlow.Shared.DTOs.CoreScope
     {
         public Guid? Id { get; set; }
         public string Name { get; set; }
+        public string DbName { get; set; }
         public string TaxNumber { get; set; } 
         public DateTime CreatedAt { get; set; }
         public Address? Address { get; set; }

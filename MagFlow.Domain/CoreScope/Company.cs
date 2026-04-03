@@ -16,6 +16,8 @@ namespace MagFlow.Domain.CoreScope
         [Required]
         public string Name { get; set; }
         [Required]
+        public string DbName { get; set; }
+        [Required]
         public string NormalizedName { get; set; }
         [Required]
         public string ConnectionString { get; set; }

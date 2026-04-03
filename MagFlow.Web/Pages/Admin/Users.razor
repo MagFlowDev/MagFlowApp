@@ -34,7 +34,7 @@
                         {
                             foreach(var company in context.Item.Companies)
                             {
-                                <MudChip T="string" Class="m-0" Variant="Variant.Outlined">@company.Name</MudChip>
+                                <MudChip T="string" Class="m-0" Variant="Variant.Outlined">@company.DbName</MudChip>
                             }
                         }
                     </div>

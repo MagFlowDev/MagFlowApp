@@ -226,6 +226,7 @@ namespace MagFlow.Web.Extensions
         {
             // Core Scope
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IEventLogRepository, EventLogRepository>();
             services.AddScoped<ISessionRepository, SessionRepository>();

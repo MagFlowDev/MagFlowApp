@@ -1,7 +1,10 @@
 ﻿using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Domain.CompanyScope;
 using MagFlow.Domain.CoreScope;
 using MagFlow.EF;
+using MagFlow.EF.Seeds.CompanyScope;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Settings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,6 +25,52 @@ namespace MagFlow.DAL.Repositories.CoreScope
             ILogger<CompanyRepository> logger) : base(coreContextFactory, companyContextFactory, logger)
         {
             
+        }
+
+        public async Task<Enums.Result> AddCompanyUser(Company company, User user)
+        {
+            try
+            {
+                if (user.Id == Guid.Empty || string.IsNullOrEmpty(user.Email))
+                    return Enums.Result.Error;
+
+                using (var context = new CompanyDbContext(company.ConnectionString))
+                {
+                    if(await context.Users.AnyAsync(x => x.Id == user.Id))
+                        return Enums.Result.Error;
+
+                    context.Users.Add(user);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
+        public override async Task<Enums.Result> AddAsync(Company entity, CoreDbContext? context = null)
+        {
+            try
+            {
+                var result = await base.AddAsync(entity, context);
+                if(result != Enums.Result.Success)
+                    return result;
+
+                using (var companyDbContext = new CompanyDbContext(entity.ConnectionString))
+                {
+                    await companyDbContext.Database.MigrateAsync();
+                    await CompanyDbSeeder.SeedAsync(companyDbContext, CancellationToken.None);
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error; ;
+            }
         }
 
         public async Task<List<CompanyModule>?> GetCompanyModules(Guid companyId)
