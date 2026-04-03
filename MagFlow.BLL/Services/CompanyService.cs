@@ -34,6 +34,7 @@ namespace MagFlow.BLL.Services
     public class CompanyService : ICompanyService
     {
         private readonly ICompanyRepository _companyRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly IWorkDayRepository _workDayRepository;
         private readonly IWorkingHourRepository _workingHourRepository;
         private readonly IUserRepository _userRepository;
@@ -46,6 +47,7 @@ namespace MagFlow.BLL.Services
         private readonly ILogger<CompanyService> _logger;
 
         public CompanyService(ICompanyRepository companyRepository,
+            IRoleRepository roleRepository,
             INetworkService networkService,
             IUserRepository userRepository,
             IWorkDayRepository workDayRepository,
@@ -57,6 +59,7 @@ namespace MagFlow.BLL.Services
             ILogger<CompanyService> logger)
         {
             _companyRepository = companyRepository;
+            _roleRepository = roleRepository;
             _networkService = networkService;
             _workDayRepository = workDayRepository;
             _workingHourRepository = workingHourRepository;
@@ -196,10 +199,38 @@ namespace MagFlow.BLL.Services
         [MinimumRole(nameof(AppRole.SysAdmin))]
         public async Task<Enums.Result> CreateCompany(CompanyFormModel model)
         {
-            return Result.Error;
-            CompanyDTO companyDTO = new CompanyDTO();
-            Company company = companyDTO.ToEntity();
+            var userId = _networkService.GetUserId();
+            if (!userId.HasValue)
+                return Result.Error;
+            var user = await _userRepository.GetByIdAsync(userId.Value);
+            if (user == null)
+                return Result.Error;
+            var currentUser = user?.ToDTO();
+
+            Company company = model.ToEntity();
             var result = await _companyRepository.AddAsync(company);
+            if (result != Enums.Result.Success)
+                return result;
+
+            ApplicationRole? role = await _roleRepository.GetAsync(x => x.Name == AppRole.CompanyAdmin.Name);
+            ApplicationUser adminUser = model.ToEntity(company.Id, role, currentUser);
+            result = await _userRepository.AddAsync(adminUser);
+            if (result != Enums.Result.Success)
+                return result;
+
+            User companyUser = new User()
+            {
+                Id = adminUser.Id,
+                FirstName = adminUser.FirstName,
+                LastName = adminUser.LastName,
+                Email = adminUser.Email ?? model.AdminAccount.Email
+            };
+            result = await _companyRepository.AddCompanyUser(company, companyUser);
+            if (result != Enums.Result.Success)
+                return result;
+
+            if (model.Modules.SelectedModules.Any() && model.Modules.LicenseValidTo.HasValue)
+                result = await UpdateModulesLicense(company.ToDTO(), model.Modules.SelectedModules.ToList(), model.Modules.LicenseValidTo.Value, true);
             return result;
         }
 

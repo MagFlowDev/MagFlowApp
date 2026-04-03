@@ -40,6 +40,7 @@
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
                                         <MudTextField Label="@Localizer[Langs.CompanyName]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.Name" For="@(() => _model.GeneralInformation.Name)" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.DbName]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.DbName" For="@(() => _model.GeneralInformation.DbName)" Class="w-100 my-0"></MudTextField>
                                         <MudTextField Label="@Localizer[Langs.TaxNumber]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.TaxNumber" For="@(() => _model.GeneralInformation.TaxNumber)" Class="w-100 my-0"></MudTextField>
                                         <MudTextField Label="@Localizer[Langs.StreetAndNumber]" T="string" @bind-Value="@_model.GeneralInformation.Address.Line1" For="@(() => _model.GeneralInformation.Address.Line1)" Class="w-100 my-0" Variant="Variant.Outlined"></MudTextField>
                                         <div class="d-flex w-100 align-self-stretch my-0 align-items-center justify-content-between" style="gap: 16px">

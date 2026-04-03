@@ -3,6 +3,7 @@ using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
+using MagFlow.Shared.Models.FormModels;
 
 namespace MagFlow.BLL.Mappers.Domain.CoreScope
 {
@@ -14,6 +15,7 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
             {
                 Id = company.Id,
                 Name = company.Name,
+                DbName = company.DbName,
                 TaxNumber = company.TaxNumber,
                 CreatedAt = company.CreatedAt,
                 IsActive = company.IsActive,
@@ -50,9 +52,10 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
             {
                 Id = companyDTO.Id ?? Guid.NewGuid(),
                 Name = companyDTO.Name,
+                DbName = companyDTO.DbName,
                 NormalizedName = companyDTO.Name.ToUpper(),
                 TaxNumber = companyDTO.TaxNumber,
-                ConnectionString = StringExtensions.GetCompanyConnectionString(companyDTO.Name) ?? string.Empty,
+                ConnectionString = StringExtensions.GetCompanyConnectionString(companyDTO.DbName) ?? string.Empty,
                 IsActive = isActive,
                 CreatedAt = createdAt.Value,
                 Address = companyDTO.Address ?? new Address()
@@ -76,6 +79,34 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
             actualSettings.PhoneNumber = userSettingsDTO.PhoneNumber ?? actualSettings.PhoneNumber;
             actualSettings.Website = userSettingsDTO.Website ?? actualSettings.Website;
             return actualSettings;
+        }
+
+        public static Company ToEntity(this CompanyFormModel model)
+        {
+            return new Company()
+            {
+                Id = Guid.NewGuid(),
+                Name = model.GeneralInformation.Name,
+                NormalizedName = model.GeneralInformation.Name.Normalize().ToUpper(),
+                DbName = model.GeneralInformation.DbName,
+                TaxNumber = model.GeneralInformation.TaxNumber,
+                ConnectionString = StringExtensions.GetCompanyConnectionString(model.GeneralInformation.DbName) ?? string.Empty,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                Address = new Address()
+                {
+                    Line1 = model.GeneralInformation.Address.Line1,
+                    City = model.GeneralInformation.Address.City,
+                    ZipCode = model.GeneralInformation.Address.ZipCode,
+                    Country = model.GeneralInformation.Address.Country
+                },
+                CompanySettings = new CompanySettings()
+                {
+                    Email = model.ContactData.Email,
+                    PhoneNumber = model.ContactData.PhoneNumber,
+                    Website = model.ContactData.Website
+                }
+            };
         }
 
 

@@ -13,6 +13,7 @@ namespace MagFlow.Shared.Validators.Company
         public CompanyGeneralInformationValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.CompanyNameRequired]);
+            RuleFor(x => x.DbName).NotEmpty().WithMessage(localizer[Validations.DbNameRequired]);
             RuleFor(x => x.TaxNumber).NotEmpty().WithMessage(localizer[Validations.TaxNumberRequired]);
 
             RuleFor(x => x.Address)

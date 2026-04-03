@@ -24,6 +24,7 @@ namespace MagFlow.Shared.Models.FormModels
     public class CompanyFormGeneralInformation
     {
         public string Name { get; set; }
+        public string DbName { get; set; }
         public string TaxNumber { get; set; }
         public Address Address { get; set; }
 

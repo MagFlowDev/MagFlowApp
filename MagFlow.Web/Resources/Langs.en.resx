@@ -1131,4 +1131,7 @@
   <data name="ActionSucceed" xml:space="preserve">
     <value>Action succeed.</value>
   </data>
+  <data name="DbName" xml:space="preserve">
+    <value>Database name</value>
+  </data>
 </root>

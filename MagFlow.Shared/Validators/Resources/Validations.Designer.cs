@@ -88,6 +88,15 @@ namespace MagFlow.Shared.Validators.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Nazwa bazy jest wymagana..
+        /// </summary>
+        public static string DbNameRequired {
+            get {
+                return ResourceManager.GetString("DbNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Email jest wymagany..
         /// </summary>
         public static string EmailRequired {

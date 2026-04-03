@@ -1,4 +1,5 @@
-﻿using MagFlow.Domain.CoreScope;
+﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.Domain.CoreScope;
 using MagFlow.EF;
 using MagFlow.Shared.Models;
 using System;
@@ -12,6 +13,8 @@ namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
     public interface ICompanyRepository : IRepository<Company, CoreDbContext>
     {
         Task<List<CompanyModule>?> GetCompanyModules(Guid companyId);
+
+        Task<Enums.Result> AddCompanyUser(Company company, User user);
 
         Task<Enums.Result> UpdateCompanyModules(IEnumerable<CompanyModule> modules);
         Task<Enums.Result> AddCompanyModules(IEnumerable<CompanyModule> modules);

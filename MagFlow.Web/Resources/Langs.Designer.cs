@@ -538,6 +538,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Nazwa bazy.
+        /// </summary>
+        public static string DbName {
+            get {
+                return ResourceManager.GetString("DbName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Separator dziesiętny.
         /// </summary>
         public static string DecimalSeparator {

@@ -147,4 +147,7 @@
   <data name="ZipCodeRequired" xml:space="preserve">
     <value>Kod pocztowy jest wymagany.</value>
   </data>
+  <data name="DbNameRequired" xml:space="preserve">
+    <value>Nazwa bazy jest wymagana.</value>
+  </data>
 </root>

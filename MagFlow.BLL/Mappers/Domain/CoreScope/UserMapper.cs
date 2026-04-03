@@ -1,5 +1,6 @@
 ﻿using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.DTOs.CoreScope;
+using MagFlow.Shared.Models.FormModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,49 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
                 Email = userDTO.Email,
                 PhoneNumber = userDTO.PhoneNumber,
                 UserSettings = userDTO.Settings.ToEntity(id),
+            };
+        }
+
+        public static ApplicationUser ToEntity(this CompanyFormModel model, Guid companyId, ApplicationRole? role = null, UserDTO? actualUser = null)
+        {
+            var uid = Guid.NewGuid();
+            List<ApplicationUserRole> roles = new List<ApplicationUserRole>();
+            if (role != null)
+                roles.Add(new ApplicationUserRole()
+                {
+                    RoleId = role.Id,
+                    UserId = uid
+                });
+            return new ApplicationUser()
+            {
+                Id = uid,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true,
+                FirstName = model.AdminAccount.FirstName,
+                LastName = model.AdminAccount.LastName,
+                UserName = model.AdminAccount.Email,
+                NormalizedUserName = model.AdminAccount.Email.Normalize().ToUpper(),
+                Email = model.AdminAccount.Email,
+                NormalizedEmail = model.AdminAccount.Email.Normalize().ToUpper(),
+                EmailConfirmed = true,
+                DefaultCompanyId = companyId,
+                Companies = new List<CompanyUser>()
+                {
+                    new CompanyUser(){ AssignedAt = DateTime.UtcNow, UserId = uid, CompanyId = companyId }
+                },
+                Roles = roles,
+                UserSettings = new ApplicationUserSettings()
+                {
+                    Language = actualUser?.Settings?.Language ?? Shared.Models.Enums.Language.Polish,
+                    ThemeMode = actualUser?.Settings?.ThemeMode ?? Shared.Models.Enums.ThemeMode.LightMode,
+                    DecimalSeparator = actualUser?.Settings?.DecimalSeparator ?? Shared.Models.Enums.DecimalSeparator.Comma,
+                    DateFormat = actualUser?.Settings?.DateFormat ?? Shared.Models.Enums.DateFormat.DD_MM_RRRR_DOTS,
+                    TimeFormat = actualUser?.Settings?.TimeFormat ?? Shared.Models.Enums.TimeFormat.HH_MM_24H,
+                    TimeZone = actualUser?.Settings?.TimeZone ?? Shared.Models.Enums.TimeZone.Europe_Warsaw,
+                    SystemAlertsEnabled = actualUser?.Settings?.SystemAlertsEnabled ?? false,
+                    ProductionNotificationsEnabled = actualUser?.Settings?.ProductionNotificationsEnabled ?? false,
+                    EmailNotificationsEnabled = actualUser?.Settings?.EmailNotificationsEnabled ?? false,
+                },
             };
         }
 
