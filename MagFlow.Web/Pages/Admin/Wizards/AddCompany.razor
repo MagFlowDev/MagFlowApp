@@ -1,13 +1,26 @@
 ﻿@page "/admin/company/add"
+@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Helpers.Localization
 @using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models
 @using MagFlow.Shared.Models.Auth
 @using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
 @using MagFlow.Web.Components.Buttons
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
+@using System.Globalization
+@using MudExtensions
+@using System.ComponentModel.DataAnnotations
 
 @inject IUserService UserService
+@inject ICompanyService CompanyService
+@inject ILocalCacheService LocalCacheService
+@inject IServiceProvider Services
 @inject IJSRuntime JS
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 @attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
 
@@ -18,60 +31,129 @@
                 <MudText Typo="Typo.h5" Style="font-weight: 700">@Localizer[Langs.AddCompany]</MudText>
                 <MudIconButton Size="Size.Small" Icon="@Icons.Material.Outlined.Close" OnClick="@(async () => await JS.InvokeVoidAsync("history.back"))" />
             </div>
-            <MudStepper @ref="_stepper" NonLinear ActiveIndex="_step" ActiveIndexChanged="StepChanged" Class="flex-grow-1 d-flex flex-column h-100" Style="min-height: 0;" StepClass="d-flex flex-column flex-grow-1" NavClass="minh-72px" OnPreviewInteraction="OnPreviewInteraction">
-                <ChildContent>
-                    <MudStep Title="Informacje ogólne" Style="min-height: 0; height: 100%">
-                        <div style="overflow-y: auto; flex-grow: 1; min-height: 0;">
-                            
-                        </div>
-                    </MudStep>
-                    <MudStep Title="Dane kontaktowe" Style="min-height: 0; height: 100%">
-                        <div style="overflow-y: auto; flex-grow: 1; min-height: 0;">
-                        </div>
-                    </MudStep>
-                    <MudStep Title="Moduły" Style="min-height: 0; height: 100%">
-                        <div style="overflow-y: auto; flex-grow: 1; min-height: 0;">
-                        </div>
-                    </MudStep>
-                    <MudStep Title="Konto administratora" Style="min-height: 0; height: 100%">
-                        <div style="overflow-y: auto; flex-grow: 1; min-height: 0;">
-                        </div>
-                    </MudStep>
-                </ChildContent>
-                <ActionContent Context="stepper">
-                    @if(_step == 0)
-                    {
-                        <MudButton OnClick="@(async () => await Cancel(stepper))" Variant="Variant.Text" Color="Color.Default">@Localizer[Langs.Cancel]</MudButton>
-                    }
-                    else
-                    {
-                        <MudButton OnClick="@(() => stepper.ResetAsync())" StartIcon="@Icons.Material.Outlined.FirstPage" Color="Color.Default">@Localizer[Langs.Reset]</MudButton>
-                        <MudButton OnClick="@(() => stepper.PreviousStepAsync())" StartIcon="@Icons.Material.Outlined.NavigateBefore" Color="Color.Default">@Localizer[Langs.LastStep]</MudButton>
-                    }
-                    <MudSpacer />
-                    @if(_step == (stepper.Steps.Count-1))
-                    {
-                        <LoadingButton Loading="_loading" Variant="Variant.Filled" OnClick="@(async () => await Save())" Color="Color.Primary">@Localizer[Langs.Save]</LoadingButton>
-                    }
-                    else
-                    {
-                        <MudButton Variant="Variant.Text" OnClick="@(() => stepper.NextStepAsync())" StartIcon="@Icons.Material.Outlined.NavigateNext" Color="Color.Primary">@Localizer[Langs.NextStep]</MudButton>
-                    }
-                </ActionContent>
-            </MudStepper>
+            @if (_model != null)
+            {
+                <EditForm EditContext="@_context" class="flex-grow-1 d-flex flex-column h-100" style="min-height: 0;">
+                    <MudStepper @ref="_stepper" NonLinear ActiveIndex="_step" ActiveIndexChanged="StepChanged" Class="flex-grow-1 d-flex flex-column h-100" Style="min-height: 0;" StepClass="d-flex flex-column flex-grow-1" NavClass="minh-72px" OnPreviewInteraction="OnPreviewInteraction">
+                        <ChildContent>
+                            <MudStep Title="Informacje ogólne" Style="min-height: 0; height: 100%">
+                                <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
+                                    <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
+                                        <MudTextField Label="@Localizer[Langs.CompanyName]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.Name" For="@(() => _model.GeneralInformation.Name)" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.TaxNumber]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.TaxNumber" For="@(() => _model.GeneralInformation.TaxNumber)" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.StreetAndNumber]" T="string" @bind-Value="@_model.GeneralInformation.Address.Line1" For="@(() => _model.GeneralInformation.Address.Line1)" Class="w-100 my-0" Variant="Variant.Outlined"></MudTextField>
+                                        <div class="d-flex w-100 align-self-stretch my-0 align-items-center justify-content-between" style="gap: 16px">
+                                            <MudTextField Label="@Localizer[Langs.ZipCode]" Mask="@BLL.Helpers.Masks.ZIP_CODE" T="string" @bind-Value="@_model.GeneralInformation.Address.ZipCode" For="@(() => _model.GeneralInformation.Address.ZipCode)" Class="my-0" Variant="Variant.Outlined"></MudTextField>
+                                            <MudTextField Label="@Localizer[Langs.City]" T="string" @bind-Value="@_model.GeneralInformation.Address.City" For="@(() => _model.GeneralInformation.Address.City)" Class="my-0" Variant="Variant.Outlined"></MudTextField>
+                                        </div>
+                                        <div class="w-100 d-flex align-items-stretch">
+                                            <MudSelectExtended T="CountryItem" ItemCollection="@_countries" Label="@Localizer[Langs.Country]" SearchBoxAutoFocus="true" SearchBox="true" Variant="Variant.Outlined" For="@(() => _selectedCountry)" @bind-Value="_selectedCountry" ToStringFunc="@(new Func<CountryItem, string?>(CountryStringFunc))" SearchFunc="@(new Func<CountryItem, string, bool>(CountrySearchFunc))" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </MudStep>
+                            <MudStep Title="Dane kontaktowe" Style="min-height: 0; height: 100%">
+                                <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
+                                    <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
+                                        <MudTextField Label="@Localizer[Langs.MainPhone]" Placeholder="@Localizer[Langs.ExamplePhoneNumber]" AdornmentIcon="@Icons.Material.Outlined.Call" Adornment="Adornment.Start" Mask="@BLL.Helpers.Masks.PHONE_NUMBER" Variant="Variant.Outlined" T="string" @bind-Value="@_model.ContactData.PhoneNumber" For="@(() => _model.ContactData.PhoneNumber)" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.Email]" Placeholder="@Localizer[Langs.ExampleEmail]" AdornmentIcon="@Icons.Material.Outlined.Email" Adornment="Adornment.Start" Mask="@BLL.Helpers.Masks.EMAIL" Variant="Variant.Outlined" T="string" @bind-Value="@_model.ContactData.Email" For="@(() => _model.ContactData.Email)" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.Website]" Placeholder="@Localizer[Langs.ExampleWebsite]" AdornmentIcon="@Icons.Material.Outlined.Language" Adornment="Adornment.Start" Mask="@BLL.Helpers.Masks.WEBSITE" Variant="Variant.Outlined" T="string" @bind-Value="@_model.ContactData.Website" For="@(() => _model.ContactData.Website)" Class="w-100 my-0"></MudTextField>
+                                    </div>
+                                </div>
+                            </MudStep>
+                            <MudStep Title="Moduły" Style="min-height: 0; height: 100%">
+                                <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
+                                    <div class="d-flex flex-column align-items-start w-100" style="gap: 16px; max-width: 550px;">
+                                        <div class="d-flex flex-column justify-content-center align-items-center align-self-stretch" style="padding-top: 16px; gap: 16px;">
+                                            <div class="d-flex justify-content-between align-items-center align-self-stretch" style="gap: 10px">
+                                                <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.ModulesList]</MudText>
+                                            </div>
+                                            <div class="d-flex align-items-center align-self-stretch" style="gap: 16px">
+                                                <MudList T="Guid" @bind-SelectedValues="_model.Modules.SelectedModules" SelectionMode="SelectionMode.MultiSelection" CheckBoxColor="Color.Primary">
+                                                    @foreach(var module in _modules)
+                                                    {
+                                                        <MudListItem Text="@Localizer[module.Name]" Value="@module.Id"/>
+                                                    }
+                                                </MudList>
+                                            </div>
+                                            <MudDivider DividerType="DividerType.Middle"/>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column align-items-center align-self-stretch pt-3" >
+                                    <div class="d-flex w-100" style="max-width: 550px; padding: 16px;">
+                                        <MudDatePicker Variant="Variant.Outlined" Label="@Localizer[Langs.CustomPeriod]" Placeholder="@_placeholder" DateFormat="@_dateFormat.ToDateFormat()" @bind-Date="_model.Modules.LicenseValidTo" For="@(() => _model.Modules.LicenseValidTo)" />
+                                    </div>
+                                </div>
+                            </MudStep>
+                            <MudStep Title="Konto administratora" Style="min-height: 0; height: 100%">
+                                <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
+                                    <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
+                                        <MudTextField Label="@Localizer[Langs.FirstName]" Placeholder="@Localizer[Langs.John]" AdornmentIcon="@Icons.Material.Outlined.Person" Adornment="Adornment.Start" Variant="Variant.Outlined" T="string" @bind-Value="@_model.AdminAccount.FirstName" For="@(() => _model.AdminAccount.FirstName)" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.LastName]" Placeholder="@Localizer[Langs.Smith]" AdornmentIcon="@Icons.Material.Outlined.Person" Adornment="Adornment.Start" Variant="Variant.Outlined" T="string" @bind-Value="@_model.AdminAccount.LastName" For="@(() => _model.AdminAccount.LastName)" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.Email]" Placeholder="@Localizer[Langs.ExampleEmail]" AdornmentIcon="@Icons.Material.Outlined.Email" Adornment="Adornment.Start" Mask="@BLL.Helpers.Masks.EMAIL" Variant="Variant.Outlined" T="string" @bind-Value="@_model.AdminAccount.Email" For="@(() => _model.AdminAccount.Email)" Class="w-100 my-0"></MudTextField>
+                                    </div>
+                                </div>
+                            </MudStep>
+                        </ChildContent>
+                        <ActionContent Context="stepper">
+                            @if (_step == 0)
+                            {
+                                <MudButton OnClick="@(async () => await Cancel(stepper))" Variant="Variant.Text" Color="Color.Default">@Localizer[Langs.Cancel]</MudButton>
+                            }
+                            else
+                            {
+                                <MudButton OnClick="@(async () => await ResetForm(stepper))" StartIcon="@Icons.Material.Outlined.FirstPage" Color="Color.Default">@Localizer[Langs.Reset]</MudButton>
+                                <MudButton OnClick="@(() => stepper.PreviousStepAsync())" StartIcon="@Icons.Material.Outlined.NavigateBefore" Color="Color.Default">@Localizer[Langs.LastStep]</MudButton>
+                            }
+                            <MudSpacer />
+                            @if (_step == (stepper.Steps.Count - 1))
+                            {
+                            <LoadingButton Loading="_loading" Variant="Variant.Filled" OnClick="@(async () => await Save())" Color="Color.Primary">@Localizer[Langs.Save]</LoadingButton>
+                            }
+                            else
+                            {
+                                <MudButton Variant="Variant.Text" OnClick="@(() => stepper.NextStepAsync())" StartIcon="@Icons.Material.Outlined.NavigateNext" Color="Color.Primary">@Localizer[Langs.NextStep]</MudButton>
+                            }
+                        </ActionContent>
+                    </MudStepper>
+                </EditForm>
+            }
         </div>
     </div>
 </div>
 
 @code {
     private MudStepper _stepper;
-    private SignUpModel model;
-    private EditContext context;
+    private CompanyFormModel _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
 
+    List<ModuleDTO> _modules = new List<ModuleDTO>();
+
+    private Dictionary<int, Func<object>> _stepSections;
     private int _step;
+
+    UserDTO? _user = null;
+    Enums.DateFormat _dateFormat => _user?.Settings?.DateFormat ?? Enums.DateFormat.DD_MM_RRRR_DOTS;
+    string _placeholder => _dateFormat.GetDisplayName(Localizer);
 
     private bool _isBusy;
     private bool _loading;
+
+    private List<CountryItem> _countries = new();
+    private CountryItem? _selectedCountry
+    {
+        get;
+        set
+        {
+            _model?.GeneralInformation.Address?.Country = value?.Code ?? string.Empty;
+            field = value;
+        }
+    }
+
+
 
     private void StepChanged(int value)
     {
@@ -80,17 +162,48 @@
 
     private async Task OnPreviewInteraction(StepperInteractionEventArgs arg)
     {
+        var currentStep = _stepper.Steps[_step];
+        if(currentStep.Completed && arg.StepIndex != _step)
+        {
+            if (!await ValidateStep(_step))
+            {
+                await currentStep.SetCompletedAsync(false);
+                arg.Cancel = true;
+                return;
+            }
+        }
+
         if (arg.Action == StepAction.Complete)
             await ControlStepCompletion(arg);
         else if(arg.Action == StepAction.Activate)
             await ControlStepNavigation(arg);
     }
 
+    private async Task ResetForm(MudStepper stepper)
+    {
+        _model = new CompanyFormModel();
+        _context = new EditContext(_model);
+        _messageStore = new ValidationMessageStore(_context);
+        await stepper.ResetAsync();
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        model = new SignUpModel();
+        _model = new CompanyFormModel();
+        _context = new EditContext(_model);
+        _messageStore = new ValidationMessageStore(_context);
+        _stepSections = new()
+            {
+                [0] = () => _model.GeneralInformation,
+                [1] = () => _model.ContactData,
+                [2] = () => _model.Modules,
+                [3] = () => _model.AdminAccount
+            };
 
-        context = new EditContext(model);
+        _countries = CountryHelper.GetCountries();
+
+        _user = await LocalCacheService.GetCurrentUser();
+        _modules = await CompanyService.GetAllModules() ?? new List<ModuleDTO>();
     }
 
 
@@ -99,13 +212,27 @@
         if (_isBusy)
             return;
 
+        var step = _stepper.Steps[_step];
+        if (step == null || !await ValidateStep(_step))
+            return;
+        await step.SetCompletedAsync(true);
+
         try
         {
             _isBusy = true;
             _loading = true;
 
-            await Task.Delay(2000);
-            //var test = await UserService.CreateUser(model);
+            var result = await CompanyService.CreateCompany(_model);
+            if (result == Enums.Result.Success)
+            {
+                NavigationManager.NavigateTo("/admin");
+                Snackbar.Add(Localizer[Langs.ActionSucceed], Severity.Success);
+                return;
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], Severity.Error);
+            }
         }
         finally
         {
@@ -125,16 +252,47 @@
 
     private async Task ControlStepCompletion(StepperInteractionEventArgs arg)
     {
-        // Check if all form data on current step is correct
-        //var step = _stepper.Steps[arg.StepIndex];
+        var step = _stepper.Steps[arg.StepIndex];
+        if (!await ValidateStep(arg.StepIndex))
+            arg.Cancel = true;
     }
 
     private async Task ControlStepNavigation(StepperInteractionEventArgs arg)
     {
         if (arg.StepIndex == 0)
             return;
-        var step = _stepper.Steps[arg.StepIndex-1];
-        if(!step.Completed)
-            arg.Cancel = true;
+        for(int i=0; i<=arg.StepIndex-1; i++)
+        {
+            var step = _stepper.Steps[i];
+            if (!step.Completed)
+                arg.Cancel = true;
+        }
+    }
+
+    private async Task<bool> ValidateStep(int step)
+    {
+        if (!_stepSections.TryGetValue(step, out var section))
+            return false;
+        var isValid = await _messageStore.IsSectionValid(Services, section());
+        _context.NotifyValidationStateChanged();
+        return isValid;
+    }
+
+
+
+    private bool CountrySearchFunc(CountryItem? value, string searchString)
+    {
+        if (string.IsNullOrEmpty(searchString))
+            return true;
+
+        if (value?.Name.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase) == true)
+            return true;
+
+        return false;
+    }
+
+    private string? CountryStringFunc(CountryItem? countryItem)
+    {
+        return countryItem?.Name;
     }
 }

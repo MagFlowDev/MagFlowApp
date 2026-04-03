@@ -55,6 +55,8 @@
     <PackageReference Include="Castle.Core" Version="5.2.1" />
     <PackageReference Include="Castle.Core.AsyncInterceptor" Version="2.1.0" />
     <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="9.0.1" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="MailKit" Version="4.15.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="10.0.3" />
@@ -98,6 +100,7 @@
     <ProjectReference Include="..\MagFlow.BLL\MagFlow.BLL.csproj" />
     <ProjectReference Include="..\MagFlow.Domain\MagFlow.Domain.csproj" />
     <ProjectReference Include="..\MagFlow.Shared\MagFlow.Shared.csproj" />
+    <ProjectReference Include="..\MagFlow.Tests\MagFlow.Tests.csproj" />
   </ItemGroup>
 	
   <ItemGroup>

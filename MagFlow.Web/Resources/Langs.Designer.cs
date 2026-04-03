@@ -106,6 +106,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Akcja zakończyła się sukcesem..
+        /// </summary>
+        public static string ActionSucceed {
+            get {
+                return ResourceManager.GetString("ActionSucceed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Aktywuj.
         /// </summary>
         public static string Activate {
@@ -1677,6 +1686,15 @@ namespace MagFlow.Web.Resources {
         public static string ModulesFew {
             get {
                 return ResourceManager.GetString("ModulesFew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Lista modułów.
+        /// </summary>
+        public static string ModulesList {
+            get {
+                return ResourceManager.GetString("ModulesList", resourceCulture);
             }
         }
         
