@@ -1,4 +1,5 @@
 ﻿@using MagFlow.BLL.Helpers.Converters.DateConverters
+@using MagFlow.BLL.Helpers.Localization
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
 @using MagFlow.Shared.Models
@@ -67,18 +68,7 @@
 
     protected override void OnInitialized()
     {
-        _countries = CultureInfo
-            .GetCultures(CultureTypes.SpecificCultures)
-            .Select(culture => new RegionInfo(culture.Name))
-            .GroupBy(region => region.TwoLetterISORegionName)
-            .Select(group => group.First())
-            .OrderBy(region => region.DisplayName)
-            .Select(region => new CountryItem
-            {
-                Code = region.TwoLetterISORegionName,
-                Name = region.DisplayName
-            })
-            .ToList();
+        _countries = CountryHelper.GetCountries();
     }
 
     private async Task Update()
@@ -122,11 +112,5 @@
     private string? CountryStringFunc(CountryItem? countryItem)
     {
         return countryItem?.Name;
-    }
-
-    class CountryItem
-    {
-        public string Code { get; set; } = default!;
-        public string Name { get; set; } = default!;
     }
 }

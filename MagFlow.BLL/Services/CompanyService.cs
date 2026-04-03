@@ -14,6 +14,7 @@ using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Generators.EmailGenerators;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
+using MagFlow.Shared.Models.FormModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -193,12 +194,11 @@ namespace MagFlow.BLL.Services
 
 
         [MinimumRole(nameof(AppRole.SysAdmin))]
-        public async Task<Enums.Result> CreateCompany(CompanyDTO companyDTO)
+        public async Task<Enums.Result> CreateCompany(CompanyFormModel model)
         {
+            return Result.Error;
+            CompanyDTO companyDTO = new CompanyDTO();
             Company company = companyDTO.ToEntity();
-            if (string.IsNullOrEmpty(company.Name) || string.IsNullOrEmpty(company.ConnectionString))
-                return Enums.Result.Error;
-
             var result = await _companyRepository.AddAsync(company);
             return result;
         }

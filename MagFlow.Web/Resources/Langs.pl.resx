@@ -1126,4 +1126,10 @@ i uprawnieniami użytkowników</value>
   <data name="NextStep" xml:space="preserve">
     <value>Następny krok</value>
   </data>
+  <data name="ModulesList" xml:space="preserve">
+    <value>Lista modułów</value>
+  </data>
+  <data name="ActionSucceed" xml:space="preserve">
+    <value>Akcja zakończyła się sukcesem.</value>
+  </data>
 </root>

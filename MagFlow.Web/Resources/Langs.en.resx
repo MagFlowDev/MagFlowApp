@@ -1125,4 +1125,10 @@
   <data name="NextStep" xml:space="preserve">
     <value>Next step</value>
   </data>
+  <data name="ModulesList" xml:space="preserve">
+    <value>Modules list</value>
+  </data>
+  <data name="ActionSucceed" xml:space="preserve">
+    <value>Action succeed.</value>
+  </data>
 </root>

@@ -1,6 +1,7 @@
 ﻿using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.FormModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
         Task<QueryResponse<CompanyDTO>> GetCompanies(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
 
-        Task<Enums.Result> CreateCompany(CompanyDTO companyDTO);
+        Task<Enums.Result> CreateCompany(CompanyFormModel model);
 
         Task<Enums.Result> UpdateCompany(CompanyDTO companyDTO);
         Task<Enums.Result> UpdateCompanySettings(Guid companyId, CompanySettingsDTO companySettingsDTO);

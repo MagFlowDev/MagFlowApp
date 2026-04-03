@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Castle.DynamicProxy;
+using FluentValidation;
 using MagFlow.BLL.ApplicationMonitor;
 using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Helpers.Auth;
@@ -15,6 +16,8 @@ using MagFlow.Domain.CoreScope;
 using MagFlow.EF;
 using MagFlow.EF.MultiTenancy;
 using MagFlow.Shared.Models.Settings;
+using MagFlow.Shared.Validators;
+using MagFlow.Shared.Validators.Resources;
 using MagFlow.Web.HealthChecks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -23,6 +26,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using MudBlazor.Services;
 using MudExtensions.Services;
@@ -76,10 +80,11 @@ namespace MagFlow.Web.Extensions
             });
             services.AddSingleton<IServerNotificationService, ServerNotificationsService>();
             services.AddSingleton<IUserIdProvider, HubUserIdProvider>();
-
+            services.AddValidatorsFromAssembly(typeof(BaseValidator).Assembly);
+            
+            services.AddLocalization();
             services.ConfigureOpenTelemetry();
             services.AddHttpContextAccessor();
-            services.AddLocalization();
             services.AddMemoryCache();
 
             services.Configure<ForwardedHeadersOptions>(options =>
