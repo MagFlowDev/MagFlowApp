@@ -1134,4 +1134,10 @@
   <data name="DbName" xml:space="preserve">
     <value>Database name</value>
   </data>
+  <data name="SetupPassword" xml:space="preserve">
+    <value>Setup password</value>
+  </data>
+  <data name="PasswordHasBeenSet" xml:space="preserve">
+    <value>Password has been set</value>
+  </data>
 </root>

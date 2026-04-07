@@ -91,6 +91,49 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
             };
         }
 
+        public static ApplicationUser ToEntity(this UserFormModel model, Guid companyId, UserDTO? actualUser = null, ApplicationUser? role = null)
+        {
+            var uid = Guid.NewGuid();
+            List<ApplicationUserRole> roles = new List<ApplicationUserRole>();
+            if (role != null)
+                roles.Add(new ApplicationUserRole()
+                {
+                    RoleId = role.Id,
+                    UserId = uid
+                });
+            return new ApplicationUser()
+            {
+                Id = uid,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true,
+                FirstName = model.GeneralInformation.FirstName,
+                LastName = model.GeneralInformation.LastName,
+                UserName = model.GeneralInformation.Email,
+                NormalizedUserName = model.GeneralInformation.Email.Normalize().ToUpper(),
+                Email = model.GeneralInformation.Email,
+                NormalizedEmail = model.GeneralInformation.Email.Normalize().ToUpper(),
+                EmailConfirmed = true,
+                DefaultCompanyId = companyId,
+                Companies = new List<CompanyUser>()
+                {
+                    new CompanyUser(){ AssignedAt = DateTime.UtcNow, UserId = uid, CompanyId = companyId }
+                },
+                Roles = roles,
+                UserSettings = new ApplicationUserSettings()
+                {
+                    Language = actualUser?.Settings?.Language ?? Shared.Models.Enums.Language.Polish,
+                    ThemeMode = actualUser?.Settings?.ThemeMode ?? Shared.Models.Enums.ThemeMode.LightMode,
+                    DecimalSeparator = actualUser?.Settings?.DecimalSeparator ?? Shared.Models.Enums.DecimalSeparator.Comma,
+                    DateFormat = actualUser?.Settings?.DateFormat ?? Shared.Models.Enums.DateFormat.DD_MM_RRRR_DOTS,
+                    TimeFormat = actualUser?.Settings?.TimeFormat ?? Shared.Models.Enums.TimeFormat.HH_MM_24H,
+                    TimeZone = actualUser?.Settings?.TimeZone ?? Shared.Models.Enums.TimeZone.Europe_Warsaw,
+                    SystemAlertsEnabled = actualUser?.Settings?.SystemAlertsEnabled ?? false,
+                    ProductionNotificationsEnabled = actualUser?.Settings?.ProductionNotificationsEnabled ?? false,
+                    EmailNotificationsEnabled = actualUser?.Settings?.EmailNotificationsEnabled ?? false,
+                },
+            };
+        }
+
 
 
 

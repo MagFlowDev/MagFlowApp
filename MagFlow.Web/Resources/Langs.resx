@@ -1135,4 +1135,10 @@ i uprawnieniami użytkowników</value>
   <data name="DbName" xml:space="preserve">
     <value>Nazwa bazy</value>
   </data>
+  <data name="SetupPassword" xml:space="preserve">
+    <value>Ustaw hasło</value>
+  </data>
+  <data name="PasswordHasBeenSet" xml:space="preserve">
+    <value>Hasło zostało ustawione</value>
+  </data>
 </root>

@@ -134,6 +134,7 @@ namespace MagFlow.Web.Extensions
                     o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
                 })
                 .AddIdentityCookies();
+            services.AddAuthorization(options => options.AddPolicies());
             services.AddIdentityCore<ApplicationUser>(options =>
                 {
                     options.Stores.MaxLengthForKeys = 128;

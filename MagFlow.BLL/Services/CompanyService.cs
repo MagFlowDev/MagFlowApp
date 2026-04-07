@@ -15,7 +15,9 @@ using MagFlow.Shared.Generators.EmailGenerators;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Shared.Models.FormModels;
+using MagFlow.Shared.Models.Settings;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -25,6 +27,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using static MagFlow.Shared.Models.Enums;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -44,6 +47,7 @@ namespace MagFlow.BLL.Services
         private readonly IServerNotificationService _serverNotificationService;
         private readonly IUserRevocationService _userRevocationService;
 
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<CompanyService> _logger;
 
         public CompanyService(ICompanyRepository companyRepository,
@@ -56,6 +60,7 @@ namespace MagFlow.BLL.Services
             IEmailService emailService,
             IServerNotificationService serverNotificationService,
             IUserRevocationService userRevocationService,
+            UserManager<ApplicationUser> userManager,
             ILogger<CompanyService> logger)
         {
             _companyRepository = companyRepository;
@@ -68,6 +73,7 @@ namespace MagFlow.BLL.Services
             _emailService = emailService;
             _serverNotificationService = serverNotificationService;
             _userRevocationService = userRevocationService;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -228,6 +234,22 @@ namespace MagFlow.BLL.Services
             result = await _companyRepository.AddCompanyUser(company, companyUser);
             if (result != Enums.Result.Success)
                 return result;
+
+            try
+            {
+                if (AppSettings.AppUri == null || string.IsNullOrEmpty(AppSettings.AppUri.AbsoluteUri))
+                    throw new Exception("Error while generating password reset link: AppUri is not configured.");
+                
+                var newUser = await _userRepository.GetByEmailAsync(adminUser.Email);
+                string token = await _userManager.GeneratePasswordResetTokenAsync(newUser);
+                var encodedToken = HttpUtility.UrlEncode(token);
+                var callback = new Uri(AppSettings.AppUri, "/SetupPassword?userId=" + newUser.Id + "&token=" + encodedToken);
+                await _emailService.SendPasswordSetupLinkAsync(newUser, newUser.Email, callback.ToString());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to send password change request to user.", ex);
+            }
 
             if (model.Modules.SelectedModules.Any() && model.Modules.LicenseValidTo.HasValue)
                 result = await UpdateModulesLicense(company.ToDTO(), model.Modules.SelectedModules.ToList(), model.Modules.LicenseValidTo.Value, true);
@@ -422,6 +444,60 @@ namespace MagFlow.BLL.Services
             if (result != Enums.Result.Success)
                 return result;
             result = await _companyRepository.AddCompanyModules(modulesToAdd);
+            return result;
+        }
+
+        public async Task<Enums.Result> AddCompanyUser(UserFormModel model)
+        {
+            var userId = _networkService.GetUserId();
+            if (!userId.HasValue)
+                return Result.Error;
+            var user = await _userRepository.GetByIdAsync(userId.Value);
+            if (user == null)
+                return Result.Error;
+            var currentUser = user?.ToDTO();
+
+            var companyId = user?.DefaultCompanyId;
+            if (!companyId.HasValue)
+                return Result.Error;
+
+            var company = await _companyRepository.GetByIdAsync(companyId.Value);
+            if(company == null)
+                return Result.Error;    
+
+            //ApplicationRole ? role = await _roleRepository.GetAsync(x => x.Name == AppRole.CompanyAdmin.Name);
+            ApplicationUser companyUser = model.ToEntity(company.Id, currentUser);
+            var result = await _userRepository.AddAsync(companyUser);
+            if (result != Enums.Result.Success)
+                return result;
+
+            User tempUser = new User()
+            {
+                Id = companyUser.Id,
+                FirstName = companyUser.FirstName,
+                LastName = companyUser.LastName,
+                Email = companyUser.Email ?? model.GeneralInformation.Email
+            };
+            result = await _companyRepository.AddCompanyUser(company, tempUser);
+            if (result != Enums.Result.Success)
+                return result;
+
+            try
+            {
+                if (AppSettings.AppUri == null || string.IsNullOrEmpty(AppSettings.AppUri.AbsoluteUri))
+                    throw new Exception("Error while generating password reset link: AppUri is not configured.");
+
+                var newUser = await _userRepository.GetByEmailAsync(companyUser.Email);
+                string token = await _userManager.GeneratePasswordResetTokenAsync(newUser);
+                var encodedToken = HttpUtility.UrlEncode(token);
+                var callback = new Uri(AppSettings.AppUri, "/SetupPassword?userId=" + newUser.Id + "&token=" + encodedToken);
+                await _emailService.SendPasswordSetupLinkAsync(newUser, newUser.Email, callback.ToString());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to send password change request to user.", ex);
+            }
+
             return result;
         }
 
