@@ -28,6 +28,14 @@ namespace MagFlow.Shared.Generators.EmailGenerators
             return body;
         }
 
+        public static MimeEntity SetupPasswordBody(string firstName, string lastName, string email, string setupLink, Enums.Language? language = Enums.Language.Polish)
+        {
+            var body = new MimeKit.TextPart(MimeKit.Text.TextFormat.Html);
+            string username = $"{firstName} {lastName}";
+            body.Text = SetupPasswordTemplate.Generate(username, email, setupLink, language ?? Enums.Language.Polish);
+            return body;
+        }
+
         public static MimeEntity ContactFormBody(string firstName, string lastName, string email, string company)
         {
             var body = new MimeKit.TextPart(MimeKit.Text.TextFormat.Html);

@@ -13,5 +13,6 @@ namespace MagFlow.BLL.Services.Interfaces
     {
         Task SendToMeAsync(string subject, MimeEntity body);
         Task SendAsync(string receiverName, string receiverEmail, string subject, MimeEntity body);
+        Task SendPasswordSetupLinkAsync(ApplicationUser user, string email, string setupLink);
     }
 }

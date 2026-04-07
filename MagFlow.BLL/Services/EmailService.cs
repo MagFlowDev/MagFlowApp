@@ -77,6 +77,12 @@ namespace MagFlow.BLL.Services
             await SendAsync(user.FirstName, user.LastName, email, "Reset Password", body);
         }
 
+        public async Task SendPasswordSetupLinkAsync(ApplicationUser user, string email, string setupLink)
+        {
+            var body = EmailGenerator.SetupPasswordBody(user.FirstName, user.LastName, email, setupLink, user.UserSettings?.Language);
+            await SendAsync(user.FirstName, user.LastName, email, "Setup Password", body);
+        }
+
         public Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink) => Task.CompletedTask;
 
         public Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode) => Task.CompletedTask;
