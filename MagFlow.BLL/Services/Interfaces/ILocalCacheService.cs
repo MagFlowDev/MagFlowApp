@@ -13,6 +13,8 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> SetSessionOrder(Guid sessionId, List<Guid> orderedIds);
         Task<List<Guid>?> GetSessionOrder(Guid sessionId);
 
+        Task<Enums.Result> SetCurrentModule(Guid sessionId, Guid moduleId);
+        Task<Guid?> GetCurrentModule(Guid sessionId);
 
         Task<Enums.Result> SetCurrentUser(UserDTO userDTO);
         Task<UserDTO?> GetCurrentUser();

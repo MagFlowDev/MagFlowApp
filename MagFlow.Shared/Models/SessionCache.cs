@@ -12,4 +12,11 @@ namespace MagFlow.Shared.Models
         public List<Guid> SessionOrder { get; set; }
         public DateTime LastUpdateDate { get; set; }
     }
+
+    public class SessionCurrentModule
+    {
+        public Guid SessionId { get; set; }
+        public Guid ModuleId { get; set; }
+        public DateTime LastUpdateDate { get; set; }
+    }
 }
