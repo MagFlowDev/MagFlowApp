@@ -1,10 +1,31 @@
 ﻿@using MagFlow.Shared.Models.Interfaces
+@using MudBlazor
 @implements IModule
 @inherits BaseModuleComponent
 
-<h3>Users</h3>
+<div class="d-flex flex-column w-100 flex-grow-1" style="min-height: 0">
+    <div class="d-flex w-100" style="flex: 1 1 0; min-height: 0">
+        <MudPaper Height="100%" Style="overflow:hidden; position:relative; background-color: transparent" Class="w-100" Elevation="0">
+            <MudDrawerContainer Class="mud-height-full">
+                <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None">
+                    <MudNavMenu>
+                        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Store</MudNavLink>
+                        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Library</MudNavLink>
+                        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Community</MudNavLink>
+                    </MudNavMenu>
+                </MudDrawer>
+                <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
+                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                        <div style="height: 1400px; width: 100px;"></div>
+                    </div>
+                </div>
+            </MudDrawerContainer>
+        </MudPaper>
+    </div>
+</div>
 
 @code {
+    private bool _isMenuOpened = false;
     public string TabTitle => "Users";
     public string Icon => "bi bi-people";
 

@@ -13,7 +13,7 @@
 @inject ILocalCacheService LocalCacheService
 
 <div class="d-flex w-100 flex-grow-1" style="max-width: 100%;">
-    <MudTabs @ref="_tabsRef" @key="_tabsVersion" @bind-ActivePanelIndex="_activeIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" OnItemDropped="MoveTab" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%; flex: 1 1 0; min-height: 0" TabHeaderClass="bg-transparent flex-0-0-auto" ActiveTabClass="bg-white" TabPanelsClass="flex-1-1-0">
+    <MudTabs @ref="_tabsRef" @key="_tabsVersion" @bind-ActivePanelIndex="ActiveIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" OnItemDropped="MoveTab" Centered="false" Elevation="0" Class="bg-transparent" Style="max-width: 100%; flex: 1 1 0; min-height: 0" TabHeaderClass="bg-transparent flex-0-0-auto" ActiveTabClass="bg-white" TabPanelsClass="flex-1-1-0">
         <ChildContent>
             @foreach(var tab in ActiveModules)
             {
@@ -69,7 +69,7 @@
         <TabPanelHeader>
             @if (ActiveModules.Count > 1)
             {
-                var isActive = ActiveModules.ElementAt(_activeIndex).Id.Equals(context.Tag);
+                var isActive = ActiveModules.ElementAt(ActiveIndex).Id.Equals(context.Tag);
                 <MudIconButton Class="ml-2 pa-1" Color="@(isActive ? Color.Primary : Color.Dark)"  Icon="@Icons.Material.Filled.Close" OnClick="async (_) => await RemoveTab(context)"/>
             }
         </TabPanelHeader>
@@ -86,7 +86,12 @@
     private MudTabs? _tabsRef;
     private MudMenu? _tabsMenu;
 
-    private int _activeIndex = 0;
+    private int ActiveIndex { get; set
+        {
+            UpdateCurrentModule();
+            field = value;
+        }
+    } = 0;
     private int? _nextIndex = null;
     private int _tabsVersion = 0;
 
@@ -141,6 +146,15 @@
            .ToList();
 
         await LocalCacheService.SetSessionOrder(UserSession.Id, orderedIds);
+    }
+
+    private async Task UpdateCurrentModule()
+    {
+        var currentTabTag = _tabsRef?.ActivePanel?.Tag;
+        if(currentTabTag is not null && currentTabTag is Guid currentModuleId)
+        {
+            await LocalCacheService.SetCurrentModule(UserSession.Id, currentModuleId);
+        }
     }
 
     private async Task RemoveTab(MudTabPanel tabPanel)
@@ -204,7 +218,7 @@
             .Select(id => _activeModules.First(x => x.Id == id))
             .ToList();
 
-        _activeIndex = dropInfo.IndexInZone;
+        ActiveIndex = dropInfo.IndexInZone;
         _tabsVersion++;
         StateHasChanged();
         UpdateLocalCache();
@@ -222,6 +236,14 @@
                     .Select(id => _activeModules.First(x => x.Id == id))
                     .ToList();
 
+                var sessionCurrentModule = await LocalCacheService.GetCurrentModule(UserSession.Id);
+                if(sessionCurrentModule.HasValue)
+                {
+                    var currentModuleIndex = validIds.IndexOf(sessionCurrentModule.Value);
+                    if (currentModuleIndex >= 0)
+                        ActiveIndex = currentModuleIndex;
+                }
+
                 _tabsVersion++;
                 StateHasChanged();
             }
@@ -229,7 +251,7 @@
 
         if (_nextIndex.HasValue)
         {
-            _activeIndex = _nextIndex.Value;
+            ActiveIndex = _nextIndex.Value;
             _nextIndex = null;
             StateHasChanged();
         }

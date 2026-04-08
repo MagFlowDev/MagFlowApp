@@ -152,9 +152,84 @@ namespace MagFlow.BLL.Services
             }
         }
 
+        public async Task<Enums.Result> SetCurrentModule(Guid sessionId, Guid moduleId)
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return Enums.Result.Error;
+                var cache = await GetCache<List<SessionCurrentModule>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_CURRENT_MODULE);
+                if (cache == null)
+                {
+                    await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_CURRENT_MODULE, new List<SessionCurrentModule>());
+                    cache = await GetCache<List<SessionCurrentModule>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_CURRENT_MODULE);
+                    if (cache == null)
+                        return Enums.Result.Error;
+                }
+
+                var sessionCache = new SessionCurrentModule()
+                {
+                    SessionId = sessionId,
+                    ModuleId = moduleId,
+                    LastUpdateDate = DateTime.UtcNow
+                };
+                if (cache.Any(x => x.SessionId == sessionId))
+                {
+                    var oldSessionCache = cache.FirstOrDefault(x => x.SessionId == sessionId)!;
+                    cache.Remove(oldSessionCache);
+                }
+                cache.Add(sessionCache);
+
+                if (cache.Count > 5)
+                {
+                    var oldSessionCache = cache.OrderByDescending(x => x.LastUpdateDate).Skip(5).ToList();
+                    foreach (var toRemove in oldSessionCache)
+                        cache.Remove(toRemove);
+                }
+                await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_CURRENT_MODULE, cache);
+
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while saving session current module in local storage");
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<Guid?> GetCurrentModule(Guid sessionId)
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return null;
+
+                var cache = await GetCache<List<SessionCurrentModule>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_CURRENT_MODULE);
+                if (cache == null)
+                    return null;
+
+                var sessionCache = cache.FirstOrDefault(x => x.SessionId == sessionId);
+                if (sessionCache != null)
+                {
+                    sessionCache.LastUpdateDate = DateTime.UtcNow;
+                    await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_CURRENT_MODULE, cache);
+                }
+
+                return sessionCache?.ModuleId;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while getting session current module from local storage");
+                return null;
+            }
+        }
 
 
-        
+
+
+
 
         private async Task<T?> GetCache<T>(Guid userId, string key)
         {

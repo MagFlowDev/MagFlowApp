@@ -267,3 +267,9 @@ h1:focus {
 .minh-72px {
     min-height: 72px !important;
 }
+
+.mud-navmenu.mud-navmenu-default .mud-nav-link.active:not(.mud-nav-link-disabled)
+{
+    background-color: #FFF !important;
+    color: var(--mud-palette-text-primary) !important;
+}
