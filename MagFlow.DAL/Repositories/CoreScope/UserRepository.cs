@@ -83,7 +83,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public async Task<List<UserSession>?> GetLastSessionsAsync(Guid userId, int historyLength = 1)
+        public async Task<List<UserSession>?> GetLastSessionsAsync(Guid userId, Guid companyId, int historyLength = 1)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 {
 
                     return await context.UserSessions
-                        .Where(x => x.UserId == userId && !x.RevokedAt.HasValue && x.ExpiresAt > DateTime.UtcNow)
+                        .Where(x => x.UserId == userId && x.CompanyId == companyId && !x.RevokedAt.HasValue && x.ExpiresAt > DateTime.UtcNow)
                         .Include(x => x.SessionModules).ThenInclude(y => y.Module)
                         .OrderByDescending(x => x.LastTimeRecord)
                         .Take(historyLength)

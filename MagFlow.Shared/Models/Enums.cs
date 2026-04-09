@@ -38,25 +38,6 @@ namespace MagFlow.Shared.Models
             DarkMode
         }
 
-        public enum CompanySettingsSection
-        {
-            Information,
-            Logo,
-            Contact,
-            Modules,
-            WorkTime
-        }
-
-        public enum UserSettingsSection
-        {
-            Account,
-            Password,
-            Regional,
-            Language,
-            Theme,
-            Notifications
-        }
-
         public enum Language
         {
             [Display(Name = "Polish")]
@@ -77,27 +58,27 @@ namespace MagFlow.Shared.Models
         {
             Unknown
         }
-        
+
         public enum ValueType
         {
             Unknown
         }
-        
+
         public enum ImpactType
         {
             Unknown
         }
-        
+
         public enum Condition
         {
             Unknown
         }
-        
+
         public enum ProcessOriginType
         {
             Unknown
         }
-        
+
         public enum IODirection
         {
             In,
@@ -114,7 +95,7 @@ namespace MagFlow.Shared.Models
         {
             Unknown
         }
-        
+
         public enum OverallState
         {
             Unknown = 0,
@@ -126,12 +107,12 @@ namespace MagFlow.Shared.Models
         {
             Unknown
         }
-        
+
         public enum ProcessStatus
         {
             Unknown
         }
-        
+
         public enum OrderStatus
         {
             Unknown
@@ -157,7 +138,7 @@ namespace MagFlow.Shared.Models
             [Display(Name = "DigitSeparatorDotExample")]
             Dot
         }
-        
+
         public enum LongTimePeriod
         {
             [Display(Name = "Month")]
@@ -234,6 +215,34 @@ namespace MagFlow.Shared.Models
         public enum NotificationEntityType
         {
             Unknown
+        }
+    }
+
+    public static class SectionsEnums
+    {
+        public enum UserModuleSection
+        {
+            UsersList,
+            RolesList
+        }
+
+        public enum CompanySettingsSection
+        {
+            Information,
+            Logo,
+            Contact,
+            Modules,
+            WorkTime
+        }
+
+        public enum UserSettingsSection
+        {
+            Account,
+            Password,
+            Regional,
+            Language,
+            Theme,
+            Notifications
         }
     }
 }

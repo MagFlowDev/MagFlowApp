@@ -1,4 +1,5 @@
-﻿@using MagFlow.Shared.Models.Interfaces
+﻿@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Interfaces
 @using MudBlazor
 @implements IModule
 @inherits BaseModuleComponent
@@ -7,17 +8,32 @@
     <div class="d-flex w-100" style="flex: 1 1 0; min-height: 0">
         <MudPaper Height="100%" Style="overflow:hidden; position:relative; background-color: transparent" Class="w-100" Elevation="0">
             <MudDrawerContainer Class="mud-height-full">
-                <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Breakpoint="Breakpoint.None">
+                <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" Breakpoint="Breakpoint.None">
                     <MudNavMenu>
-                        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Store">Store</MudNavLink>
-                        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.LibraryBooks">Library</MudNavLink>
-                        <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Group">Community</MudNavLink>
+                        <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
+                        <MudTooltip Text="@Localizer[Langs.Users]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Group" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.UsersList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.UsersList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.UsersList)">@Localizer[Langs.Users]</MudNavLink>
+                        </MudTooltip>
+                        <MudTooltip Text="@Localizer[Langs.RolesList]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.SettingsAccessibility" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.RolesList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.RolesList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.RolesList)">@Localizer[Langs.RolesList]</MudNavLink>
+                        </MudTooltip>
                     </MudNavMenu>
                 </MudDrawer>
                 <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
-                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
-                        <div style="height: 1400px; width: 100px;"></div>
-                    </div>
+                    @switch(_currentSection)
+                    {
+                        case SectionsEnums.UserModuleSection.UsersList:
+                            <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
+                                <UsersList />
+                            </div>
+                            break;
+                        case SectionsEnums.UserModuleSection.RolesList:
+                            <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+
+                            </div>
+                            break;
+                        default: break;
+                    }
                 </div>
             </MudDrawerContainer>
         </MudPaper>
@@ -26,7 +42,9 @@
 
 @code {
     private bool _isMenuOpened = false;
+    private SectionsEnums.UserModuleSection _currentSection = SectionsEnums.UserModuleSection.UsersList;
     public string TabTitle => "Users";
     public string Icon => "bi bi-people";
+
 
 }

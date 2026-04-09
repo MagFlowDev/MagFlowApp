@@ -7,6 +7,9 @@
     <RazorPage_SelectedScaffolderCategoryPath>root/Common/RazorPage</RazorPage_SelectedScaffolderCategoryPath>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Update="Resources\Langs.pl.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Langs.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

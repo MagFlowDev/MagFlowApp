@@ -1,0 +1,80 @@
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Web.Components.DataGrid
+@using MagFlow.BLL.Helpers.Localization.Display
+@using MudBlazor
+
+@inject IUserService UserService
+@inject ICompanyService CompanyService
+@inject NavigationManager NavigationManager
+
+<MagFlowDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" OnRowClicked="OpenUserDetails" MultiSelection="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">@Localizer[Langs.UsersList]</MudText>
+        <MudSpacer />
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="mr-2">@Localizer[Langs.AddUser]</MudButton>
+        <MudIconButton Color="Color.Primary" OnClick="_usersDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
+    </ToolBarContent>
+    <Columns>
+        <SelectColumn T="UserDTO"/>
+        <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Status]" Sortable="false">
+            <CellTemplate>
+                <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive? Color.Success: Color.Error)">@(context.Item.IsActive? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
+            </CellTemplate>
+        </TemplateColumn>
+        <PropertyColumn T="UserDTO" TProperty="string" Title="@Localizer[Langs.FirstName]" Property="x => x.FirstName" Sortable="true" />
+        <PropertyColumn T="UserDTO" TProperty="string" Title="@Localizer[Langs.LastName]" Property="x => x.LastName" Sortable="true" />
+        <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Email]" Sortable="true" Tag="@($"{nameof(UserDTO.Email)}")">
+            <CellTemplate>
+                <MudLink Color="Color.Primary" Href="@($"/user/{context.Item.Id}")">@context.Item.Email</MudLink>
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn T="UserDTO" Title="@Localizer[Langs.RoleSingle]" Sortable="false">
+            <CellTemplate>
+                <MudText>@context.Item.Roles.FirstOrDefault()?.DisplayRole(Localizer)</MudText>
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn T="UserDTO" Title="@Localizer[Langs.LastLogin]" Sortable="false">
+            <CellTemplate>
+                <MudText>@context.Item.LastLogin?.ToLocalTime().ToString()</MudText>
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Actions]" Sortable="false">
+            <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" />
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Block" />
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" />
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MagFlowDataGrid>
+
+@code {
+    MudDataGrid<UserDTO> _usersDataGrid;
+    string? _searchString = null;
+
+    private async Task<GridData<UserDTO>> ServerReloadUsers(GridState<UserDTO> state, CancellationToken token)
+    {
+        var sortDefinition = state.SortDefinitions.FirstOrDefault();
+        string? sortBy = sortDefinition?.SortBy;
+        if (Guid.TryParse(sortBy, out _))
+        {
+            var column = _usersDataGrid.RenderedColumns.FirstOrDefault(c => c.PropertyName == sortBy);
+            sortBy = column?.Tag?.ToString();
+        }
+        sortBy = sortBy ?? nameof(UserDTO.LastName);
+        var response = await CompanyService.GetUsers(state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
+
+        return new GridData<UserDTO>
+        {
+            Items = response.Elements,
+            TotalItems = response.TotalCount,
+        };
+    }
+
+
+    private void OpenUserDetails(UserDTO user)
+    {
+        NavigationManager.NavigateTo($"/user/{user.Id}");
+    }
+}

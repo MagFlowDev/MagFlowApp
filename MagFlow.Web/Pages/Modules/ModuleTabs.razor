@@ -20,7 +20,10 @@
                 <MudTabPanel @key="tab.Id" Tag="@tab.Id" Icon="@tab.ModuleComponent!.Icon" PanelClass="h-100">
                     <ChildContent>
                         <div class="flex-grow-1 d-flex flex-column align-items-start h-100" style="min-height: 0; overflow-x: hidden;">
-                            <DynamicComponent Type="@tab.ModuleComponent!.GetType()" />
+                            @if(_firstRendered)
+                            {
+                                <DynamicComponent Type="@tab.ModuleComponent!.GetType()" />
+                            }
                         </div>
                     </ChildContent>
                     <TabContent>
@@ -77,6 +80,8 @@
 </div>
 
 @code {
+    private bool _firstRendered;
+
     [CascadingParameter]
     private Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
@@ -86,9 +91,11 @@
     private MudTabs? _tabsRef;
     private MudMenu? _tabsMenu;
 
+
     private int ActiveIndex { get; set
         {
-            UpdateCurrentModule();
+            if(_firstRendered)
+                UpdateCurrentModule();
             field = value;
         }
     } = 0;
@@ -228,24 +235,45 @@
     {
         if (firstRender)
         {
-            var sessionCache = await LocalCacheService.GetSessionOrder(UserSession.Id);
-            if (sessionCache != null)
+            try
             {
-                var validIds = sessionCache.Where(id => _activeModules.Any(m => m.Id == id)).ToList();
-                _activeModules = validIds
-                    .Select(id => _activeModules.First(x => x.Id == id))
-                    .ToList();
-
+                var sessionCache = await LocalCacheService.GetSessionOrder(UserSession.Id);
                 var sessionCurrentModule = await LocalCacheService.GetCurrentModule(UserSession.Id);
-                if(sessionCurrentModule.HasValue)
+                if (sessionCache != null)
                 {
-                    var currentModuleIndex = validIds.IndexOf(sessionCurrentModule.Value);
-                    if (currentModuleIndex >= 0)
-                        ActiveIndex = currentModuleIndex;
-                }
+                    var validIds = sessionCache.Where(id => _activeModules.Any(m => m.Id == id)).ToList();
+                    _activeModules = validIds
+                        .Select(id => _activeModules.First(x => x.Id == id))
+                        .ToList();
 
-                _tabsVersion++;
-                StateHasChanged();
+                    if (sessionCurrentModule.HasValue)
+                    {
+                        var currentModuleIndex = validIds.IndexOf(sessionCurrentModule.Value);
+                        if (currentModuleIndex >= 0)
+                            ActiveIndex = currentModuleIndex;
+                    }
+
+                    _tabsVersion++;
+                    StateHasChanged();
+                }
+                else if (sessionCurrentModule != null)
+                {
+                    var orderedIds = _tabsRef?.Panels
+                       .Select(p => p.Tag)
+                       .OfType<Guid>()
+                       .ToList();
+                    if (sessionCurrentModule.HasValue && orderedIds != null)
+                    {
+                        var currentModuleIndex = orderedIds.IndexOf(sessionCurrentModule.Value);
+                        if (currentModuleIndex >= 0)
+                            ActiveIndex = currentModuleIndex;
+                    }
+                    StateHasChanged();
+                }
+            }
+            finally
+            {
+                _firstRendered = true;
             }
         }
 

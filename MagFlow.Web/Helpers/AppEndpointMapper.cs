@@ -17,8 +17,10 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Ocsp;
 using System.Security.Claims;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using static System.Net.WebRequestMethods;
 
 namespace MagFlow.Web.Helpers
 {
@@ -52,6 +54,44 @@ namespace MagFlow.Web.Helpers
         public static IEndpointConventionBuilder MapAuth(this IEndpointRouteBuilder endpoints)
         {
             var authGroup = endpoints.MapGroup("/Auth");
+
+            authGroup.MapGet("/SwitchCompany", async (HttpContext context,
+               [FromServices] SignInManager<ApplicationUser> signInManager,
+               [FromServices] UserManager<ApplicationUser> userManager,
+               ILogger<Program> logger,
+               IUserRepository repo,
+               IEventService eventService,
+               IOptions<IdentityOptions> identityOptions) =>
+            {
+                var ip = context.Connection.RemoteIpAddress?.MapToIPv4().ToString();
+                var userId = context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+                var user = await userManager.FindByIdAsync(userId);
+                if (user is null || user.RemovedAt.HasValue)
+                {
+                    return Results.Redirect("/Login?error=1");
+                }
+
+                var principal = await signInManager.CreateUserPrincipalAsync(user);
+                var identity = (ClaimsIdentity)principal.Identity;
+                if (!identity.HasClaim(c => c.Type == identityOptions.Value.ClaimsIdentity.SecurityStampClaimType))
+                    identity.AddClaim(new Claim(identityOptions.Value.ClaimsIdentity.SecurityStampClaimType, user.SecurityStamp));
+                if (!identity.HasClaim(c => c.Type == Claims.CompanyClaim))
+                    identity.AddClaim(new Claim(Claims.CompanyClaim, user.DefaultCompanyId?.ToString() ?? Guid.Empty.ToString()));
+
+                await signInManager.Context.SignInAsync(IdentityConstants.ApplicationScheme, principal, new AuthenticationProperties { IsPersistent = true });
+
+                try
+                {
+                    user.LastLogin = DateTime.UtcNow;
+                    repo.UpdateAsync(user);
+                    eventService.AddEventAsync(user.Id, Enums.EventLogCategory.Logging, Enums.EventLogLevel.INFO,
+                        nameof(Langs.UserLoggedIn), string.Empty, ip, string.Empty);
+                }
+                catch { }
+
+                var returnUrl = "/lobby";
+                return Results.Redirect(returnUrl);
+            });
 
             authGroup.MapPost("/Login", async (
                 [FromForm] SignInModel req,
