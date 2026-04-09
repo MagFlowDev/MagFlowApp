@@ -325,6 +325,7 @@ namespace MagFlow.BLL.Services
                 UserSession newSession = new UserSession()
                 {
                     UserId = userId,
+                    CompanyId = userCompanyId,
                     CreatedDate = now,
                     LastTimeRecord = now,
                     ExpiresAt = DateTime.MaxValue,
@@ -347,7 +348,10 @@ namespace MagFlow.BLL.Services
             try
             {
                 var userId = _networkService.GetUserId() ?? Guid.Empty;
-                var session = (await _userRepository.GetLastSessionsAsync(userId))?.FirstOrDefault();
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user == null)
+                    return null;
+                var session = (await _userRepository.GetLastSessionsAsync(userId, user.DefaultCompanyId ?? Guid.Empty))?.FirstOrDefault();
                 if (session == null)
                     return null;
                 var sessionModules = await _sessionRepository.GetSessionModules(session.Id);
@@ -367,7 +371,10 @@ namespace MagFlow.BLL.Services
             try
             {
                 var userId = _networkService.GetUserId() ?? Guid.Empty;
-                var userSessions = await _userRepository.GetLastSessionsAsync(userId, historyLength);
+                var user = await _userRepository.GetByIdAsync(userId);
+                if (user == null)
+                    return null;
+                var userSessions = await _userRepository.GetLastSessionsAsync(userId, user.DefaultCompanyId ?? Guid.Empty, historyLength);
                 return userSessions?.ToDTO();
             }
             catch (Exception ex)

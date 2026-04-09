@@ -1,5 +1,6 @@
 ﻿@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
 @using MagFlow.Web.Components.Pagination
 @using MagFlow.BLL.Helpers.Localization.Display
@@ -7,6 +8,8 @@
 @using System.Globalization
 
 @inject ICompanyService CompanyService
+@inject ILocalCacheService LocalCacheService
+@inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100 h-100">
@@ -58,14 +61,22 @@
                     <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive? Color.Success: Color.Error)">@(context.Item.IsActive? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
                 </CellTemplate>
             </TemplateColumn>
+            <TemplateColumn T="CompanyDTO" Title="" Sortable="false">
+                <CellTemplate>
+                    <LoadingButton Loading="_loading" Disabled="_user?.CurrentCompanyId == context.Item.Id" Color="Color.Primary" Variant="Variant.Filled" OnClick="@(() => SelectCompany(context.Item))">@Localizer[Langs.Select]</LoadingButton>
+                </CellTemplate>
+            </TemplateColumn>
         </Columns>
     </MagFlowDataGrid>
 </div>
 
 @code {
     MudDataGrid<CompanyDTO> _companiesDataGrid;
+    UserDTO? _user = null;
     string? _searchString = null;
 
+    private bool _isBusy;
+    private bool _loading;
 
     private async Task<GridData<CompanyDTO>> ServerReloadCompanies(GridState<CompanyDTO> state, CancellationToken token)
     {
@@ -92,7 +103,41 @@
         return _companiesDataGrid.ReloadServerData();
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        _user = await LocalCacheService.GetCurrentUser();
+    }
 
+
+
+    private async Task SelectCompany(CompanyDTO company)
+    {
+        if (_isBusy || _user == null)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loading = true;
+
+            var result = await CompanyService.AdminSelectCompany(company);
+            if(result == MagFlow.Shared.Models.Enums.Result.Success)
+            {
+                _user.CurrentCompanyId = company.Id;
+                await LocalCacheService.SetCurrentUser(_user);
+                NavigationManager.NavigateTo("/Auth/SwitchCompany", true);
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], Severity.Error);
+            }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loading = false;
+        }
+    }
 
     private void OpenCompanyDetails(CompanyDTO company)
     {

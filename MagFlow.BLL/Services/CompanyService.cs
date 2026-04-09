@@ -258,6 +258,38 @@ namespace MagFlow.BLL.Services
 
 
 
+        public async Task<Enums.Result> SelectCompany(CompanyDTO companyDTO)
+        {
+            var userId = _networkService.GetUserId();
+            if (!userId.HasValue)
+                return Result.Error;
+            var user = await _userRepository.GetByIdAsync(userId.Value, x => x.Include(y => y.Companies));
+            if (user == null)
+                return Result.Error;
+
+            if (!user.Companies.Any(x => x.CompanyId == companyDTO.Id))
+                return Result.Error;
+
+            user.DefaultCompanyId = companyDTO.Id;
+            var result = await _userRepository.UpdateAsync(user);
+            return result;
+        }
+
+        [MinimumRole(nameof(AppRole.SysAdmin))]
+        public async Task<Enums.Result> AdminSelectCompany(CompanyDTO companyDTO)
+        {
+            var userId = _networkService.GetUserId();
+            if (!userId.HasValue)
+                return Result.Error;
+            var user = await _userRepository.GetByIdAsync(userId.Value);
+            if (user == null)
+                return Result.Error;
+
+            user.DefaultCompanyId = companyDTO.Id;
+            var result = await _userRepository.UpdateAsync(user);
+            return result;
+        }
+
         // Settings section
         [MinimumRole(nameof(AppRole.CompanyAdmin))]
         public async Task<Enums.Result> UpdateCompany(CompanyDTO companyDTO)

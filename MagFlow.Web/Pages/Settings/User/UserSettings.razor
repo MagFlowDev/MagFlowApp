@@ -14,35 +14,35 @@
     <div class="d-flex w-100 mt-6" style="gap: 100px; flex: 1 1 0; min-height: 0">
         <div class="d-flex flex-column justify-content-start align-items-start" style="min-width: 300px; flex: 0 0 auto; gap: 24px; min-height: 0; overflow-x: hidden">
             <MudText Typo="Typo.h5" Style="font-weight: 700;">@Localizer[Langs.Settings]</MudText>
-            <MudList T="Enums.UserSettingsSection" SelectionMode="SelectionMode.SingleSelection" SelectedValue="@_currentSection" SelectedValueChanged="OnSectionChanged">
-                <MudListItem Value="Enums.UserSettingsSection.Account" Text="@Localizer[Langs.AccountInformation]" Icon="@Icons.Material.Outlined.Person" IconColor="@GetIconColor(Enums.UserSettingsSection.Account)" Class="@GetNavClass(Enums.UserSettingsSection.Account)" />
-                <MudListItem Value="Enums.UserSettingsSection.Password" Text="@Localizer[Langs.Password]" Icon="@Icons.Material.Outlined.Lock" IconColor="@GetIconColor(Enums.UserSettingsSection.Password)" Class="@GetNavClass(Enums.UserSettingsSection.Password)" />
-                <MudListItem Value="Enums.UserSettingsSection.Regional" Text="@Localizer[Langs.Regional]" Icon="@Icons.Material.Outlined.Place" IconColor="@GetIconColor(Enums.UserSettingsSection.Regional)" Class="@GetNavClass(Enums.UserSettingsSection.Regional)" />
-                <MudListItem Value="Enums.UserSettingsSection.Language" Text="@Localizer[Langs.Language]" Icon="@Icons.Material.Outlined.Language" IconColor="@GetIconColor(Enums.UserSettingsSection.Language)" Class="@GetNavClass(Enums.UserSettingsSection.Language)" />
-                <MudListItem Value="Enums.UserSettingsSection.Theme" Text="@Localizer[Langs.Theme]" Icon="@Icons.Material.Outlined.ColorLens" IconColor="@GetIconColor(Enums.UserSettingsSection.Theme)" Class="@GetNavClass(Enums.UserSettingsSection.Theme)" />
-                <MudListItem Value="Enums.UserSettingsSection.Notifications" Text="@Localizer[Langs.Notifications]" Icon="@Icons.Material.Outlined.Notifications" IconColor="@GetIconColor(Enums.UserSettingsSection.Notifications)" Class="@GetNavClass(Enums.UserSettingsSection.Notifications)" />
+            <MudList T="SectionsEnums.UserSettingsSection" SelectionMode="SelectionMode.SingleSelection" SelectedValue="@_currentSection" SelectedValueChanged="OnSectionChanged">
+                <MudListItem Value="SectionsEnums.UserSettingsSection.Account" Text="@Localizer[Langs.AccountInformation]" Icon="@Icons.Material.Outlined.Person" IconColor="@GetIconColor(SectionsEnums.UserSettingsSection.Account)" Class="@GetNavClass(SectionsEnums.UserSettingsSection.Account)" />
+                <MudListItem Value="SectionsEnums.UserSettingsSection.Password" Text="@Localizer[Langs.Password]" Icon="@Icons.Material.Outlined.Lock" IconColor="@GetIconColor(SectionsEnums.UserSettingsSection.Password)" Class="@GetNavClass(SectionsEnums.UserSettingsSection.Password)" />
+                <MudListItem Value="SectionsEnums.UserSettingsSection.Regional" Text="@Localizer[Langs.Regional]" Icon="@Icons.Material.Outlined.Place" IconColor="@GetIconColor(SectionsEnums.UserSettingsSection.Regional)" Class="@GetNavClass(SectionsEnums.UserSettingsSection.Regional)" />
+                <MudListItem Value="SectionsEnums.UserSettingsSection.Language" Text="@Localizer[Langs.Language]" Icon="@Icons.Material.Outlined.Language" IconColor="@GetIconColor(SectionsEnums.UserSettingsSection.Language)" Class="@GetNavClass(SectionsEnums.UserSettingsSection.Language)" />
+                <MudListItem Value="SectionsEnums.UserSettingsSection.Theme" Text="@Localizer[Langs.Theme]" Icon="@Icons.Material.Outlined.ColorLens" IconColor="@GetIconColor(SectionsEnums.UserSettingsSection.Theme)" Class="@GetNavClass(SectionsEnums.UserSettingsSection.Theme)" />
+                <MudListItem Value="SectionsEnums.UserSettingsSection.Notifications" Text="@Localizer[Langs.Notifications]" Icon="@Icons.Material.Outlined.Notifications" IconColor="@GetIconColor(SectionsEnums.UserSettingsSection.Notifications)" Class="@GetNavClass(SectionsEnums.UserSettingsSection.Notifications)" />
             </MudList>
         </div>
         <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden; gap: 40px;">
             <CascadingValue Value="@_user" TValue="UserDTO" Name="User">
                 @switch(_currentSection)
                 {
-                    case Enums.UserSettingsSection.Account:
+                    case SectionsEnums.UserSettingsSection.Account:
                         <AccountInformation/>
                         break;
-                    case Enums.UserSettingsSection.Password:
+                    case SectionsEnums.UserSettingsSection.Password:
                         <PasswordSettings />
                         break;
-                    case Enums.UserSettingsSection.Regional:
+                    case SectionsEnums.UserSettingsSection.Regional:
                         <RegionalSettings />
                         break;
-                    case Enums.UserSettingsSection.Language:
+                    case SectionsEnums.UserSettingsSection.Language:
                         <LanguageSettings />
                         break;
-                    case Enums.UserSettingsSection.Theme:
+                    case SectionsEnums.UserSettingsSection.Theme:
                         <ThemeSettings />
                         break;
-                    case Enums.UserSettingsSection.Notifications:
+                    case SectionsEnums.UserSettingsSection.Notifications:
                         <NotificationsSettings />
                         break;
                     default: break;
@@ -55,9 +55,9 @@
 @code {
     UserDTO? _user { get; set; }
 
-    private Enums.UserSettingsSection _currentSection = Enums.UserSettingsSection.Account;
+    private SectionsEnums.UserSettingsSection _currentSection = SectionsEnums.UserSettingsSection.Account;
 
-    private void OnSectionChanged(Enums.UserSettingsSection section)
+    private void OnSectionChanged(SectionsEnums.UserSettingsSection section)
     {
         if (_currentSection == section)
             return;
@@ -74,14 +74,14 @@
     }
 
 
-    private string GetNavClass(Enums.UserSettingsSection section)
+    private string GetNavClass(SectionsEnums.UserSettingsSection section)
     {
         return _currentSection == section
             ? "mud-primary-text mud-nav-link-active"
             : "";
     }
 
-    private Color GetIconColor(Enums.UserSettingsSection section)
+    private Color GetIconColor(SectionsEnums.UserSettingsSection section)
     {
         return _currentSection == section
             ? Color.Primary

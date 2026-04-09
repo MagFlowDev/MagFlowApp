@@ -15,6 +15,8 @@ namespace MagFlow.Domain.CoreScope
         [Required]
         public Guid UserId { get; set; }
         [Required]
+        public Guid CompanyId { get; set; }
+        [Required]
         public string UserAgent { get; set; }
         [Required]
         public string IpAddress { get; set; }
@@ -30,6 +32,8 @@ namespace MagFlow.Domain.CoreScope
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser? User { get; set; }
+        [ForeignKey(nameof(CompanyId))]
+        public Company? Company { get; set; }
 
         public ICollection<SessionModule> SessionModules { get; set; }
     }

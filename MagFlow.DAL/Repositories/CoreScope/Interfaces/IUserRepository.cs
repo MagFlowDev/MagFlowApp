@@ -11,7 +11,7 @@ namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
     public interface IUserRepository : IRepository<ApplicationUser, CoreDbContext>
     {
         Task<ApplicationUser?> GetByEmailAsync(string email);
-        Task<List<UserSession>?> GetLastSessionsAsync(Guid userId, int historyLength = 1);
+        Task<List<UserSession>?> GetLastSessionsAsync(Guid userId, Guid companyId, int historyLength = 1);
         Task<QueryResponse<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions<User> queryOptions);
 
         

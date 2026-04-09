@@ -18,31 +18,31 @@
     <div class="d-flex w-100 mt-6" style="gap: 100px; flex: 1 1 0; min-height: 0">
         <div class="d-flex flex-column justify-content-start align-items-start" style="min-width: 300px; flex: 0 0 auto; gap: 24px; min-height: 0; overflow-x: hidden">
             <MudText Typo="Typo.h5" Style="font-weight: 700;">@Localizer[Langs.SettingsCompany]</MudText>
-            <MudList T="Enums.CompanySettingsSection" SelectionMode="SelectionMode.SingleSelection" SelectedValue="@_currentSection" SelectedValueChanged="OnSectionChanged">
-                <MudListItem Value="Enums.CompanySettingsSection.Information" Text="@Localizer[Langs.GeneralInformation]" Icon="@Icons.Material.Outlined.Apartment" IconColor="@GetIconColor(Enums.CompanySettingsSection.Information)" Class="@GetNavClass(Enums.CompanySettingsSection.Information)" />
-                <MudListItem Value="Enums.CompanySettingsSection.Logo" Text="@Localizer[Langs.Logo]" Icon="@Icons.Material.Outlined.PhotoSizeSelectActual" IconColor="@GetIconColor(Enums.CompanySettingsSection.Logo)" Class="@GetNavClass(Enums.CompanySettingsSection.Logo)" />
-                <MudListItem Value="Enums.CompanySettingsSection.Contact" Text="@Localizer[Langs.ContactDetails]" Icon="@Icons.Material.Outlined.Call" IconColor="@GetIconColor(Enums.CompanySettingsSection.Contact)" Class="@GetNavClass(Enums.CompanySettingsSection.Contact)" />
-                <MudListItem Value="Enums.CompanySettingsSection.Modules" Text="@Localizer[Langs.Modules]" Icon="@Icons.Material.Outlined.GridView" IconColor="@GetIconColor(Enums.CompanySettingsSection.Modules)" Class="@GetNavClass(Enums.CompanySettingsSection.Modules)" />
-                <MudListItem Value="Enums.CompanySettingsSection.WorkTime" Text="@Localizer[Langs.WorkingHours]" Icon="@Icons.Material.Outlined.Timer" IconColor="@GetIconColor(Enums.CompanySettingsSection.WorkTime)" Class="@GetNavClass(Enums.CompanySettingsSection.WorkTime)" />
+            <MudList T="SectionsEnums.CompanySettingsSection" SelectionMode="SelectionMode.SingleSelection" SelectedValue="@_currentSection" SelectedValueChanged="OnSectionChanged">
+                <MudListItem Value="SectionsEnums.CompanySettingsSection.Information" Text="@Localizer[Langs.GeneralInformation]" Icon="@Icons.Material.Outlined.Apartment" IconColor="@GetIconColor(SectionsEnums.CompanySettingsSection.Information)" Class="@GetNavClass(SectionsEnums.CompanySettingsSection.Information)" />
+                <MudListItem Value="SectionsEnums.CompanySettingsSection.Logo" Text="@Localizer[Langs.Logo]" Icon="@Icons.Material.Outlined.PhotoSizeSelectActual" IconColor="@GetIconColor(SectionsEnums.CompanySettingsSection.Logo)" Class="@GetNavClass(SectionsEnums.CompanySettingsSection.Logo)" />
+                <MudListItem Value="SectionsEnums.CompanySettingsSection.Contact" Text="@Localizer[Langs.ContactDetails]" Icon="@Icons.Material.Outlined.Call" IconColor="@GetIconColor(SectionsEnums.CompanySettingsSection.Contact)" Class="@GetNavClass(SectionsEnums.CompanySettingsSection.Contact)" />
+                <MudListItem Value="SectionsEnums.CompanySettingsSection.Modules" Text="@Localizer[Langs.Modules]" Icon="@Icons.Material.Outlined.GridView" IconColor="@GetIconColor(SectionsEnums.CompanySettingsSection.Modules)" Class="@GetNavClass(SectionsEnums.CompanySettingsSection.Modules)" />
+                <MudListItem Value="SectionsEnums.CompanySettingsSection.WorkTime" Text="@Localizer[Langs.WorkingHours]" Icon="@Icons.Material.Outlined.Timer" IconColor="@GetIconColor(SectionsEnums.CompanySettingsSection.WorkTime)" Class="@GetNavClass(SectionsEnums.CompanySettingsSection.WorkTime)" />
             </MudList>
         </div>
         <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden; gap: 40px;">
             <CascadingValue Value="@_company" TValue="CompanyDTO" Name="Company">
                 @switch(_currentSection)
                 {
-                    case Enums.CompanySettingsSection.Information:
+                    case SectionsEnums.CompanySettingsSection.Information:
                         <CompanyInformation/>
                         break;
-                    case Enums.CompanySettingsSection.Logo:
+                    case SectionsEnums.CompanySettingsSection.Logo:
                         <LogoSettings />
                         break;
-                    case Enums.CompanySettingsSection.Contact:
+                    case SectionsEnums.CompanySettingsSection.Contact:
                         <ContactSettings />
                         break;
-                    case Enums.CompanySettingsSection.Modules:
+                    case SectionsEnums.CompanySettingsSection.Modules:
                         <ModulesSettings />
                         break;
-                    case Enums.CompanySettingsSection.WorkTime:
+                    case SectionsEnums.CompanySettingsSection.WorkTime:
                         <WorkTimeSettings />
                         break;
                     default: break;
@@ -55,9 +55,9 @@
 @code {
     CompanyDTO? _company { get; set; }
 
-    private Enums.CompanySettingsSection _currentSection = Enums.CompanySettingsSection.Information;
+    private SectionsEnums.CompanySettingsSection _currentSection = SectionsEnums.CompanySettingsSection.Information;
 
-    private void OnSectionChanged(Enums.CompanySettingsSection section)
+    private void OnSectionChanged(SectionsEnums.CompanySettingsSection section)
     {
         if (_currentSection == section)
             return;
@@ -74,14 +74,14 @@
     }
 
 
-    private string GetNavClass(Enums.CompanySettingsSection section)
+    private string GetNavClass(SectionsEnums.CompanySettingsSection section)
     {
         return _currentSection == section
             ? "mud-primary-text mud-nav-link-active"
             : "";
     }
 
-    private Color GetIconColor(Enums.CompanySettingsSection section)
+    private Color GetIconColor(SectionsEnums.CompanySettingsSection section)
     {
         return _currentSection == section
             ? Color.Primary

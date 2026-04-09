@@ -40,7 +40,7 @@
                     </div>
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Role]" Sortable="false">
+            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.RoleSingle]" Sortable="false">
                 <CellTemplate>
                     <MudText>@context.Item.Roles.FirstOrDefault()?.DisplayRole(Localizer)</MudText>
                 </CellTemplate>
