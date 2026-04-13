@@ -1,0 +1,11 @@
+﻿@page "/user/add"
+
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.USER_ADD_OR_ADMIN)]
+
+<h3>AddUser</h3>
+
+@code {
+
+}

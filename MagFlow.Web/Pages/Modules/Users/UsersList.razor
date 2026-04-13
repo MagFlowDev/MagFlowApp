@@ -12,7 +12,7 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer[Langs.UsersList]</MudText>
         <MudSpacer />
-        <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="mr-2">@Localizer[Langs.AddUser]</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="mr-2" OnClick="OpenAddUserModal">@Localizer[Langs.AddUser]</MudButton>
         <MudIconButton Color="Color.Primary" OnClick="_usersDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
     </ToolBarContent>
     <Columns>
@@ -70,6 +70,11 @@
             Items = response.Elements,
             TotalItems = response.TotalCount,
         };
+    }
+
+    private async Task OpenAddUserModal()
+    {
+        NavigationManager.NavigateTo($"/user/add");
     }
 
 

@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using MagFlow.BLL.Security.Requirements;
 using MagFlow.Shared.Models.Enumerators;
 using Microsoft.AspNetCore.Authorization;
 
@@ -28,6 +29,9 @@ namespace MagFlow.Web.Extensions
 
                     return false;
                 }));
+
+            options.AddPolicy(Shared.Constants.Policies.USER_ADD_OR_ADMIN, policy =>
+                policy.Requirements.Add(new RoleOrPermissionRequirement("SuperAdmin", "User.Edit")));
 
             return options;
         }
