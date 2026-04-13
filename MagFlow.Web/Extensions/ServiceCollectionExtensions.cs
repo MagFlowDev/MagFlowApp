@@ -5,6 +5,8 @@ using MagFlow.BLL.ApplicationMonitor;
 using MagFlow.BLL.Helpers;
 using MagFlow.BLL.Helpers.Auth;
 using MagFlow.BLL.Hubs;
+using MagFlow.BLL.Security;
+using MagFlow.BLL.Security.Handlers;
 using MagFlow.BLL.Services;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.BLL.Services.Notifications;
@@ -19,6 +21,7 @@ using MagFlow.Shared.Models.Settings;
 using MagFlow.Shared.Validators;
 using MagFlow.Shared.Validators.Resources;
 using MagFlow.Web.HealthChecks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
@@ -152,6 +155,8 @@ namespace MagFlow.Web.Extensions
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
 
+            services.AddSingleton<IAuthorizationPolicyProvider, DynamicAuthorizationPolicyProvider>();
+            services.AddScoped<IAuthorizationHandler, RoleOrPermissionHandler>();
             services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
             services.AddScoped<UserManager<ApplicationUser>>();
             services.AddScoped<RoleManager<ApplicationRole>>();
