@@ -22,7 +22,7 @@
                 foreach (var workingHourDTO in _company.CompanySettings.DefaultWorkingHourDTOs)
                 {
                     <div class="d-flex align-items-center align-self-stretch w-100" style="@($"padding: 10px 4px; border-bottom: 1px solid {Colors.Gray.Lighten2}")">
-                        <MudCheckBox T="bool" Value="@(!workingHourDTO.IsClosed)" ValueChanged="((bool value) => ToggleClosedDay(workingHourDTO, value))" />
+                        <MudCheckBox Color="Color.Primary" T="bool" Value="@(!workingHourDTO.IsClosed)" ValueChanged="((bool value) => ToggleClosedDay(workingHourDTO, value))" />
                         <MudText Typo="Typo.body1" Style="font-weight: 600">@workingHourDTO.DayOfWeek.GetDisplayName(Localizer)</MudText>
                         <div class=" d-flex flex-fill align-items-end justify-content-end ml-2" style="gap: 24px;">
                             @if (!workingHourDTO.IsClosed)

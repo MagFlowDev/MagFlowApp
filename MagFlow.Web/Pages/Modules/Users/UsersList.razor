@@ -16,7 +16,7 @@
         <MudIconButton Color="Color.Primary" OnClick="_usersDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
     </ToolBarContent>
     <Columns>
-        <SelectColumn T="UserDTO"/>
+        <SelectColumn T="UserDTO" />
         <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Status]" Sortable="false">
             <CellTemplate>
                 <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive? Color.Success: Color.Error)">@(context.Item.IsActive? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
