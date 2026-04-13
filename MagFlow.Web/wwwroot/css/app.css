@@ -273,3 +273,17 @@ h1:focus {
     background-color: #FFF !important;
     color: var(--mud-palette-text-primary) !important;
 }
+
+.mud-data-grid .mud-checkbox-false .mud-icon-root {
+    /*color: var(--mud-palette-action-default) !important;*/
+    color: var(--mud-palette-primary) !important;
+}
+
+.mud-data-grid .mud-checkbox-true .mud-icon-root {
+    color: var(--mud-palette-primary) !important;
+}
+ 
+.modules-tabs .mud-tabs-tabbar-content {
+    width: auto !important;
+    flex: 0 1 auto !important;
+}
