@@ -275,8 +275,8 @@ h1:focus {
 }
 
 .mud-data-grid .mud-checkbox-false .mud-icon-root {
-    /*color: var(--mud-palette-action-default) !important;*/
-    color: var(--mud-palette-primary) !important;
+    color: var(--mud-palette-action-default) !important;
+    /*color: var(--mud-palette-primary) !important;*/
 }
 
 .mud-data-grid .mud-checkbox-true .mud-icon-root {

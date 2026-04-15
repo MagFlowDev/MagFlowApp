@@ -6,6 +6,7 @@
 
 @inject IUserService UserService
 @inject ICompanyService CompanyService
+@inject IDialogService DialogService
 @inject NavigationManager NavigationManager
 
 <MagFlowDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" Filterable="false" OnRowClicked="OpenUserDetails" MultiSelection="true">
@@ -41,9 +42,9 @@
         </TemplateColumn>
         <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Actions]" Sortable="false">
             <CellTemplate>
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" />
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Block" />
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" />
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" OnClick="() => OpenUserDetails(context.Item)" />
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Block" OnClick="() => BlockUser(context.Item)" />
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteUser(context.Item)" />
             </CellTemplate>
         </TemplateColumn>
     </Columns>
@@ -74,12 +75,26 @@
 
     private async Task OpenAddUserModal()
     {
-        NavigationManager.NavigateTo($"/user/add");
+        var dialog = await DialogService.ShowAsync<AddUserDialog>(Localizer[Langs.AddUser]);
+        var confirmation = await dialog.Result;
+        if (confirmation?.Data is bool result && result == true)
+            await _usersDataGrid.ReloadServerData();
     }
 
 
     private void OpenUserDetails(UserDTO user)
     {
         NavigationManager.NavigateTo($"/user/{user.Id}");
+    }
+
+    
+    private async Task BlockUser(UserDTO user)
+    {
+        
+    }
+
+    private async Task DeleteUser(UserDTO user)
+    {
+        
     }
 }

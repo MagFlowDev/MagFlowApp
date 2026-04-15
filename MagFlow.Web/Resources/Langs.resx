@@ -1165,4 +1165,10 @@ i uprawnieniami użytkowników</value>
   <data name="Block" xml:space="preserve">
     <value>Zablokuj</value>
   </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="UserCreated" xml:space="preserve">
+    <value>Dodano użytkownika</value>
+  </data>
 </root>

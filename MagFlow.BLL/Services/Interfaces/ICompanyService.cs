@@ -1,6 +1,7 @@
 ﻿using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Shared.Models.FormModels;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> UpdateModulesLicense(CompanyDTO companyDTO, List<Guid> moduleIds, DateTime expireDate, bool activate = false);
         Task<Enums.Result> UpdateModulesLicense(CompanyDTO companyDTO, List<Guid> moduleIds, Enums.LongTimePeriod timePeriod, bool activate = false);
 
-        Task<Enums.Result> AddCompanyUser(UserFormModel model);
+        Task<Enums.Result> AddCompanyUser(UserFormModel model, AppRole appRole);
 
         Task<Enums.Result> RemoveCompanyLogo(Guid companyId);
 

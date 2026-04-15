@@ -479,7 +479,7 @@ namespace MagFlow.BLL.Services
             return result;
         }
 
-        public async Task<Enums.Result> AddCompanyUser(UserFormModel model)
+        public async Task<Enums.Result> AddCompanyUser(UserFormModel model, AppRole appRole)
         {
             var userId = _networkService.GetUserId();
             if (!userId.HasValue)
@@ -497,8 +497,8 @@ namespace MagFlow.BLL.Services
             if(company == null)
                 return Result.Error;    
 
-            //ApplicationRole ? role = await _roleRepository.GetAsync(x => x.Name == AppRole.CompanyAdmin.Name);
-            ApplicationUser companyUser = model.ToEntity(company.Id, currentUser);
+            ApplicationRole? role = await _roleRepository.GetAsync(x => x.Name == appRole.Name);
+            ApplicationUser companyUser = model.ToEntity(company.Id, currentUser, role);
             var result = await _userRepository.AddAsync(companyUser);
             if (result != Enums.Result.Success)
                 return result;
