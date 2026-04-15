@@ -1,0 +1,107 @@
+﻿@using FluentValidation
+@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Validators.Company
+@using MagFlow.Shared.Validators.Resources
+@using MagFlow.BLL.Helpers.Localization.Display
+@using MagFlow.Web.Components.Buttons
+@using MudBlazor
+
+@inject ICompanyService CompanyService
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<Validations> Validations
+
+<MudDialog Style="max-width: 420px;" Class="test1">
+    <DialogContent>
+        <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">
+            <div class="d-flex align-items-center w-100" style="gap: 16px">
+                <MudTextField Label="@Localizer[Langs.FirstName]" Class="my-0" Placeholder="@Localizer[Langs.John]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.FirstName" For="@(() => _model.GeneralInformation.FirstName)"></MudTextField>
+                <MudTextField Label="@Localizer[Langs.LastName]" Class="my-0" Placeholder="@Localizer[Langs.Smith]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.LastName" For="@(() => _model.GeneralInformation.LastName)"></MudTextField>
+            </div>
+            <MudTextField Label="@Localizer[Langs.Email]" Placeholder="@Localizer[Langs.JohnSmithCompanyCom]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.Email" For="@(() => _model.GeneralInformation.Email)" Class="w-100 my-0"></MudTextField>
+            <MudTextField Label="@Localizer[Langs.Phone]" Placeholder="@Localizer[Langs.ExamplePhoneNumber]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.PhoneNumber" For="@(() => _model.GeneralInformation.PhoneNumber)" Class="w-100 my-0"></MudTextField>
+            <MudSelect @bind-Value="_selectedRole" MultiSelection="false" T="AppRole" OuterClass="w-100" Variant="Variant.Outlined">
+                @foreach (var appRole in Enumeration<Guid>.GetAll<AppRole>())
+                {
+                    <MudSelectItem Value="appRole">@appRole.DisplayRole(Localizer)</MudSelectItem>
+                }
+            </MudSelect>
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@Localizer[Langs.Cancel]</MudButton>
+        <LoadingButton Loading="_loading" Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@Localizer[Langs.Save]</LoadingButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    private IValidator _validator;
+    private UserFormModel _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
+
+    private AppRole _selectedRole;
+
+    private bool _isBusy;
+    private bool _loading;
+
+    private async Task Submit()
+    {
+        if (_isBusy)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loading = true;
+
+            var isValid = await _messageStore.IsFormValid(_validator, _model);
+            _context.NotifyValidationStateChanged();
+
+            if (!isValid)
+                return;
+
+            var result = await CompanyService.AddCompanyUser(_model, _selectedRole);
+            if (result == MagFlow.Shared.Models.Enums.Result.Success)
+            {
+                Snackbar.Add(Localizer[Langs.UserCreated], MudBlazor.Severity.Success);
+                MudDialog.Close(DialogResult.Ok(true));
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], MudBlazor.Severity.Error);
+                MudDialog.Close(DialogResult.Ok(false));
+            }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loading = false;
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _model = new UserFormModel();
+        _context = new EditContext(_model);
+        _validator = new UserCreateFormValidator(Validations);
+        _messageStore = new ValidationMessageStore(_context);
+        _selectedRole = AppRole.Foreman;
+
+        this.MudDialog.SetOptionsAsync(new DialogOptions()
+        {
+            CloseButton = true,
+            Position = DialogPosition.Center
+        });
+    }
+
+}

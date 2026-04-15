@@ -69,6 +69,7 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
                 NormalizedUserName = model.AdminAccount.Email.Normalize().ToUpper(),
                 Email = model.AdminAccount.Email,
                 NormalizedEmail = model.AdminAccount.Email.Normalize().ToUpper(),
+                SecurityStamp = Guid.NewGuid().ToString("D"),
                 EmailConfirmed = true,
                 DefaultCompanyId = companyId,
                 Companies = new List<CompanyUser>()
@@ -91,7 +92,7 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
             };
         }
 
-        public static ApplicationUser ToEntity(this UserFormModel model, Guid companyId, UserDTO? actualUser = null, ApplicationUser? role = null)
+        public static ApplicationUser ToEntity(this UserFormModel model, Guid companyId, UserDTO? actualUser = null, ApplicationRole? role = null)
         {
             var uid = Guid.NewGuid();
             List<ApplicationUserRole> roles = new List<ApplicationUserRole>();
@@ -107,12 +108,14 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true,
                 FirstName = model.GeneralInformation.FirstName,
+                PhoneNumber = model.GeneralInformation.PhoneNumber,
                 LastName = model.GeneralInformation.LastName,
                 UserName = model.GeneralInformation.Email,
                 NormalizedUserName = model.GeneralInformation.Email.Normalize().ToUpper(),
                 Email = model.GeneralInformation.Email,
                 NormalizedEmail = model.GeneralInformation.Email.Normalize().ToUpper(),
                 EmailConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString("D"),
                 DefaultCompanyId = companyId,
                 Companies = new List<CompanyUser>()
                 {

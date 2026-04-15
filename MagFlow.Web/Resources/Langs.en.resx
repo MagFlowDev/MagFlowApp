@@ -1164,4 +1164,10 @@
   <data name="Block" xml:space="preserve">
     <value>Block</value>
   </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="UserCreated" xml:space="preserve">
+    <value>User created</value>
+  </data>
 </root>

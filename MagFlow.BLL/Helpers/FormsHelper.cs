@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using static System.Collections.Specialized.BitVector32;
 
 namespace MagFlow.BLL.Helpers
 {
@@ -25,6 +26,24 @@ namespace MagFlow.BLL.Helpers
             foreach (var failure in result.Errors)
             {
                 var fieldIdentifier = CreateFieldIdentifier(section, failure.PropertyName);
+                messages.Add(fieldIdentifier, failure.ErrorMessage);
+            }
+
+            return result.IsValid;
+        }
+
+        public static async Task<bool> IsFormValid(this ValidationMessageStore messages, IValidator validator, object model)
+        {
+            if (model == null) return false;
+            if (validator == null) return false;
+
+            var context = new FluentValidation.ValidationContext<object>(model);
+            FluentValidation.Results.ValidationResult result = await validator.ValidateAsync(context);
+            messages.Clear();
+
+            foreach (var failure in result.Errors)
+            {
+                var fieldIdentifier = CreateFieldIdentifier(model, failure.PropertyName);
                 messages.Add(fieldIdentifier, failure.ErrorMessage);
             }
 

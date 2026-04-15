@@ -2059,6 +2059,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Telefon.
+        /// </summary>
+        public static string Phone {
+            get {
+                return ResourceManager.GetString("Phone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zaplanuj demo.
         /// </summary>
         public static string PlanDemo {
@@ -2910,6 +2919,15 @@ namespace MagFlow.Web.Resources {
         public static string UserCompanyAdmin {
             get {
                 return ResourceManager.GetString("UserCompanyAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dodano użytkownika.
+        /// </summary>
+        public static string UserCreated {
+            get {
+                return ResourceManager.GetString("UserCreated", resourceCulture);
             }
         }
         
