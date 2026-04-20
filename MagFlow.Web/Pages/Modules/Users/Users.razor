@@ -12,10 +12,10 @@
                     <MudNavMenu>
                         <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
                         <MudTooltip Text="@Localizer[Langs.Users]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
-                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Group" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.UsersList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.UsersList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.UsersList)">@Localizer[Langs.Users]</MudNavLink>
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Groups" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.UsersList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.UsersList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.UsersList)">@Localizer[Langs.Users]</MudNavLink>
                         </MudTooltip>
                         <MudTooltip Text="@Localizer[Langs.RolesList]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
-                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.SettingsAccessibility" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.RolesList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.RolesList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.RolesList)">@Localizer[Langs.RolesList]</MudNavLink>
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Shield" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.RolesList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.RolesList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.RolesList)">@Localizer[Langs.RolesList]</MudNavLink>
                         </MudTooltip>
                     </MudNavMenu>
                 </MudDrawer>
@@ -29,7 +29,7 @@
                             break;
                         case SectionsEnums.UserModuleSection.RolesList:
                             <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
-
+                                <RoleManagement/>
                             </div>
                             break;
                         default: break;
@@ -41,10 +41,6 @@
 </div>
 
 @code {
-    private bool _isMenuOpened = false;
-    private SectionsEnums.UserModuleSection _currentSection = SectionsEnums.UserModuleSection.UsersList;
     public string TabTitle => "Users";
     public string Icon => "bi bi-people";
-
-
 }

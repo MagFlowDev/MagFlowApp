@@ -2,7 +2,8 @@
 
 @using Microsoft.AspNetCore.Authorization
 
-@attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.USER_ADD_OR_ADMIN)]
+@inherits AuthComponentBase
+@attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.Claims.USER_EDIT)]
 
 <h3>User</h3>
 

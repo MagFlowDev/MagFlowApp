@@ -14,7 +14,7 @@
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<Validations> Validations
 
-@attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.USER_ADD_OR_ADMIN)]
+@attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.Claims.USER_EDIT)]
 
 <MudDialog Style="max-width: 420px;">
     <DialogContent>
