@@ -1,4 +1,4 @@
-﻿@page "/user/edit"
+﻿@page "/user/{UserId}"
 
 @using Microsoft.AspNetCore.Authorization
 
@@ -7,5 +7,6 @@
 <h3>User</h3>
 
 @code {
-
+    [Parameter]
+    public string UserId { get; set; }
 }

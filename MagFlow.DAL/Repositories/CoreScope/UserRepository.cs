@@ -1,14 +1,16 @@
-﻿using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+﻿using MagFlow.DAL.Helpers;
+using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Domain.CompanyScope;
 using MagFlow.Domain.CoreScope;
 using MagFlow.EF;
+using MagFlow.Shared.Constants.Identificators;
 using MagFlow.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using MagFlow.DAL.Helpers;
-using MagFlow.Domain.CompanyScope;
 
 namespace MagFlow.DAL.Repositories.CoreScope
 {
@@ -63,6 +65,122 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 _logger.LogError(ex, ex.Message);
                 return null;
             }
+        }
+
+        public async Task<List<Claim>> GetUserClaims(Guid userId)
+        {
+            List<Claim> claims = new List<Claim>();
+            try
+            {
+                var user = await GetByIdAsync(userId);
+                if (user != null && user.DefaultCompanyId.HasValue)
+                {
+                    foreach (var applicationUserRole in user.Roles)
+                    {
+                        var roleClaims = await GetRoleClaims(applicationUserRole.RoleId, user.DefaultCompanyId.Value);
+                        claims.AddRange(roleClaims);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
+            return claims.DistinctBy(x => x.Id).ToList();
+        }
+
+        public async Task<List<Claim>> GetRoleClaims(Guid roleId, Guid? companyId = null)
+        {
+            List<Claim> claims = new List<Claim>();
+            try
+            {
+                if (companyId.HasValue)
+                {
+                    using (var coreContext = _coreContextFactory.CreateDbContext())
+                    {
+                        var company = await coreContext.Companies.FirstOrDefaultAsync(x => x.Id == companyId.Value);
+                        if (company == null)
+                            return claims;
+                        using (var context = _companyContextFactory.CreateDbContext(company.ConnectionString))
+                        {
+                            var roleClaims = await context.RoleClaims
+                                .Where(x => x.RoleId == roleId)
+                                .Include(x => x.Claim)
+                                .Select(x => x.Claim)
+                                .ToListAsync();
+                            if (roleClaims != null)
+                            {
+                                return roleClaims.Where(x => x != null).ToList()!;
+                            }
+                        }
+                    }
+                    return claims;
+                }
+                using (var context = _companyContextFactory.CreateDbContext())
+                {
+                    var roleClaims = await context.RoleClaims
+                        .Where(x => x.RoleId == roleId)
+                        .Include(x => x.Claim)
+                        .Select(x => x.Claim)
+                        .ToListAsync();
+                    if (roleClaims != null)
+                    {
+                        return roleClaims.Where(x => x != null).ToList()!;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
+            return claims;
+        }
+
+        public async Task<List<Claim>> GetRoleClaims(string roleName, Guid? companyId = null)
+        {
+            List<Claim> claims = new List<Claim>();
+            try
+            {
+                if (companyId.HasValue)
+                {
+                    using (var coreContext = _coreContextFactory.CreateDbContext())
+                    {
+                        var company = await coreContext.Companies.FirstOrDefaultAsync(x => x.Id == companyId.Value);
+                        if (company == null)
+                            return claims;
+                        using (var context = _companyContextFactory.CreateDbContext(company.ConnectionString))
+                        {
+                            var roleClaims = await context.RoleClaims
+                                .Where(x => x.RoleName == roleName)
+                                .Include(x => x.Claim)
+                                .Select(x => x.Claim)
+                                .ToListAsync();
+                            if (roleClaims != null)
+                            {
+                                return roleClaims.Where(x => x != null).ToList()!;
+                            }
+                        }
+                    }
+                    return claims;
+                }
+                using (var context = _companyContextFactory.CreateDbContext())
+                {
+                    var roleClaims = await context.RoleClaims
+                        .Where(x => x.RoleName == roleName)
+                        .Include(x => x.Claim)
+                        .Select(x => x.Claim)
+                        .ToListAsync();
+                    if (roleClaims != null)
+                    {
+                        return roleClaims.Where(x => x != null).ToList()!;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
+            return claims;
         }
 
         public async Task<Enums.Result> UpdateSettingsAsync(ApplicationUserSettings settings)

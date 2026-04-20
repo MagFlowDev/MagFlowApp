@@ -19,6 +19,7 @@ using Microsoft.Extensions.Options;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Ocsp;
 using System.Security.Claims;
+using Microsoft.Extensions.Caching.Memory;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static System.Net.WebRequestMethods;
 
@@ -44,8 +45,16 @@ namespace MagFlow.Web.Helpers
 
             app.MapGet("/ForceLogout", async (HttpContext context,
                 [FromServices] SignInManager<ApplicationUser> signInManager,
-                [FromServices] AuthenticationStateProvider authProvider) =>
+                [FromServices] AuthenticationStateProvider authProvider,
+                IMemoryCache cache) =>
             {
+                var userId = context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value?.ToString();
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var cacheKey = $"user_permissions_{userId}";
+                    if(cache.TryGetValue(cacheKey, out var value))
+                        cache.Remove(cacheKey);
+                }
                 await context.SignOutAsync(IdentityConstants.ApplicationScheme);
                 return Results.Redirect("/Login");
             });
@@ -229,8 +238,16 @@ namespace MagFlow.Web.Helpers
             authGroup.MapPost("/Logout", async (
                ClaimsPrincipal user,
                [FromServices] SignInManager<ApplicationUser> signInManager,
-               [FromForm] string returnUrl) =>
+               [FromForm] string returnUrl,
+               IMemoryCache cache) =>
             {
+                var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value?.ToString();
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var cacheKey = $"user_permissions_{userId}";
+                    if (cache.TryGetValue(cacheKey, out var value))
+                        cache.Remove(cacheKey);
+                }
                 await signInManager.SignOutAsync();
                 return TypedResults.LocalRedirect($"~/{returnUrl}");
             });
