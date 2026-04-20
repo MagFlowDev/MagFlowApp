@@ -5,6 +5,9 @@ namespace MagFlow.Web.Pages.Modules.Users
 {
     public partial class Users : BaseModuleComponent
     {
+        private bool _isMenuOpened = false;
+        private SectionsEnums.UserModuleSection _currentSection = SectionsEnums.UserModuleSection.UsersList;
+
         protected override async Task OnInitializedAsync()
         {
 

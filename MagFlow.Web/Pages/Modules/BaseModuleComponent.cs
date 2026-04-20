@@ -2,7 +2,7 @@
 
 namespace MagFlow.Web.Pages.Modules
 {
-    public abstract class BaseModuleComponent : ComponentBase, IDisposable
+    public abstract class BaseModuleComponent : AuthComponentBase, IDisposable
     {
         private CancellationTokenSource _cts = new();
 

@@ -157,6 +157,7 @@ namespace MagFlow.Web.Extensions
 
             services.AddSingleton<IAuthorizationPolicyProvider, DynamicAuthorizationPolicyProvider>();
             services.AddScoped<IAuthorizationHandler, RoleOrPermissionHandler>();
+            services.AddScoped<IAuthorizationHandler, PermissionHandler>();
             services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
             services.AddScoped<UserManager<ApplicationUser>>();
             services.AddScoped<RoleManager<ApplicationRole>>();

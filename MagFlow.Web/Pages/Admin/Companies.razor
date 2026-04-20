@@ -22,12 +22,12 @@
             <MudIconButton Color="Color.Primary" OnClick="_companiesDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh"/>
         </ToolBarContent>
         <Columns>
-            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Name]" Sortable="true" Tag="@($"{nameof(CompanyDTO.Name)}")">
+            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Name]" Sortable="true" Tag="@($"{nameof(CompanyDTO.Name)}")" CellClass="text-nowrap">
                 <CellTemplate>
                     <MudLink Color="Color.Primary" Href="@($"/admin/company/{context.Item.Id ?? Guid.Empty}")">@context.Item.Name</MudLink>
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Address]" Sortable="false" Tag="@($"{nameof(CompanyDTO.Address)}")">
+            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Address]" Sortable="false" Tag="@($"{nameof(CompanyDTO.Address)}")" CellClass="text-nowrap">
                 <CellTemplate>
                     @if(context.Item.Address != null)
                     {
@@ -49,19 +49,19 @@
                     }
                 </CellTemplate>
             </TemplateColumn>
-            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.TaxNumber]" Property="x => x.TaxNumber" Sortable="false" />
-            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.CreationDate]" Property="x => x.CreatedAt.ToLocalTime().ToShortDateString()" Sortable="false" />
-            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.ActiveModules]">
+            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.TaxNumber]" Property="x => x.TaxNumber" Sortable="false" CellClass="text-nowrap" />
+            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.CreationDate]" Property="x => x.CreatedAt.ToLocalTime().ToShortDateString()" Sortable="false" CellClass="text-nowrap" />
+            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.ActiveModules]" CellClass="text-nowrap">
                 <CellTemplate>
                     <MudText>@context.Item.CompanyModules?.Where(x => x.IsActive && x.EnabledTo >= DateTime.UtcNow).Count()</MudText>
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Status]" Sortable="false">
+            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
                 <CellTemplate>
                     <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive? Color.Success: Color.Error)">@(context.Item.IsActive? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
                 </CellTemplate>
             </TemplateColumn>
-            <TemplateColumn T="CompanyDTO" Title="" Sortable="false">
+            <TemplateColumn T="CompanyDTO" Title="" Sortable="false" CellClass="text-nowrap">
                 <CellTemplate>
                     <LoadingButton Loading="_loading" Disabled="_user?.CurrentCompanyId == context.Item.Id" Color="Color.Secondary" Variant="Variant.Filled" OnClick="@(() => SelectCompany(context.Item))">@Localizer[Langs.Select]</LoadingButton>
                 </CellTemplate>

@@ -1,7 +1,8 @@
-﻿using System.Security.Claims;
-using MagFlow.BLL.Security.Requirements;
+﻿using MagFlow.BLL.Security.Requirements;
 using MagFlow.Shared.Models.Enumerators;
 using Microsoft.AspNetCore.Authorization;
+using System.Reflection;
+using System.Security.Claims;
 
 namespace MagFlow.Web.Extensions
 {
@@ -32,6 +33,31 @@ namespace MagFlow.Web.Extensions
 
             options.AddPolicy(Shared.Constants.Policies.USER_ADD_OR_ADMIN, policy =>
                 policy.Requirements.Add(new RoleOrPermissionRequirement("SuperAdmin", "User.Edit")));
+
+            options.AddClaimBasedPolicies();
+
+            return options;
+        }
+
+        public static AuthorizationOptions AddClaimBasedPolicies(this AuthorizationOptions options)
+        {
+            var claimDictionary = typeof(MagFlow.Shared.Constants.Policies.Claims)
+                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                .Where(f => f.IsLiteral && !f.IsInitOnly)
+                .ToDictionary(
+                    field => field.Name,
+                    field => field.GetValue(null)?.ToString()
+                );
+            if (claimDictionary == null)
+                return options;
+
+            foreach(var claim in claimDictionary)
+            {
+                if (string.IsNullOrEmpty(claim.Value))
+                    continue;
+                options.AddPolicy(claim.Value, policy =>
+                    policy.Requirements.Add(new PermissionRequirement(claim.Value)));
+            }
 
             return options;
         }
