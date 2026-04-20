@@ -10,6 +10,9 @@ namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
 {
     public interface IUserRepository : IRepository<ApplicationUser, CoreDbContext>
     {
+        Task<List<Claim>> GetUserClaims(Guid userId);
+        Task<List<Claim>> GetRoleClaims(Guid roleId, Guid? companyId = null);
+        Task<List<Claim>> GetRoleClaims(string roleName, Guid? companyId = null);
         Task<ApplicationUser?> GetByEmailAsync(string email);
         Task<List<UserSession>?> GetLastSessionsAsync(Guid userId, Guid companyId, int historyLength = 1);
         Task<QueryResponse<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions<User> queryOptions);

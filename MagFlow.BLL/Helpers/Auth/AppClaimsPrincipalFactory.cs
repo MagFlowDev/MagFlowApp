@@ -39,8 +39,8 @@ namespace MagFlow.BLL.Helpers.Auth
             var cacheKey = $"user_permissions_{user.Id}";
             if (!_cache.TryGetValue(cacheKey, out string[] permissions))
             {
-                var userEntity = await _userRepository.GetByIdAsync(user.Id);
-                permissions = MagFlow.BLL.Security.Handlers.PermissionHandler.ExtractPermissionNamesStatic(userEntity);
+                var userRoleClaims = await _userRepository.GetUserClaims(user.Id);
+                permissions = MagFlow.BLL.Security.Handlers.PermissionHandler.ExtractPermissionNamesStatic(userRoleClaims);
                 _cache.Set(cacheKey, permissions, CacheTtl);
             }
 

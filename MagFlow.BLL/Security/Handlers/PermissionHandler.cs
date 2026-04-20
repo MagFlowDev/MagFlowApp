@@ -1,5 +1,6 @@
 ﻿using MagFlow.BLL.Security.Requirements;
 using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Domain.CompanyScope;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using System;
@@ -42,21 +43,27 @@ namespace MagFlow.BLL.Security.Handlers
                 return;
             }
 
+            var userRole = context.User.FindFirst(ClaimTypes.Role)?.Value;
+
             var cacheKey = $"user_permissions_{userIdClaim}";
             if(!_cache.TryGetValue(cacheKey, out string[] permissions))
             {
                 try
                 {
-                    if (!Guid.TryParse(userIdClaim, out var uid))
+                    var userRoleClaims = new List<MagFlow.Domain.CompanyScope.Claim>();
+                    if (!string.IsNullOrEmpty(userRole))
                     {
-                        var userEntity = await _userRepository.GetByIdAsync(userIdClaim);
-                        permissions = ExtractPermissionNames(userEntity);
+                        userRoleClaims = await _userRepository.GetRoleClaims(userRole);
+                    }
+                    else if (!Guid.TryParse(userIdClaim, out var uid))
+                    {
+                        userRoleClaims = await _userRepository.GetUserClaims(uid);
                     }
                     else
                     {
-                        var userEntity = await _userRepository.GetByIdAsync(uid);
-                        permissions = ExtractPermissionNames(userEntity);
+                        userRoleClaims = await _userRepository.GetUserClaims(uid);
                     }
+                    permissions = ExtractPermissionNames(userRoleClaims);
                 }
                 catch
                 {
@@ -75,12 +82,14 @@ namespace MagFlow.BLL.Security.Handlers
             context.Fail();
         }
 
-        public static string[] ExtractPermissionNamesStatic(object? userEntity) => ExtractPermissionNames(userEntity);
+        public static string[] ExtractPermissionNamesStatic(List<MagFlow.Domain.CompanyScope.Claim>? userClaims) => ExtractPermissionNames(userClaims);
 
-        private static string[] ExtractPermissionNames(object? userEntity)
+        private static string[] ExtractPermissionNames(List<MagFlow.Domain.CompanyScope.Claim>? userEntity)
         {
             if (userEntity == null)
                 return Array.Empty<string>();
+
+            return userEntity.Select(x => x.Policy).ToArray();
 
             var userType = userEntity.GetType();
             var permProp = userType.GetProperty("Permissions");

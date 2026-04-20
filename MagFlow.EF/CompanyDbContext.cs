@@ -46,6 +46,8 @@ namespace MagFlow.EF
         public DbSet<Unit> Units { get; set; }
         public DbSet<UnitConversion> UnitConversions { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<RoleClaim> RoleClaims { get; set; }
+        public DbSet<Claim> Claims { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<WarehouseStorage> WarehouseStorages { get; set; }
         public DbSet<DefaultWorkingHour> DefaultWorkingHours { get; set; }
@@ -75,6 +77,12 @@ namespace MagFlow.EF
             builder.Entity<WorkDay>()
                 .HasIndex(x => new { x.Date })
                 .IsUnique();
+
+            builder.Entity<RoleClaim>().HasKey(e => new
+            {
+                e.RoleId,
+                e.ClaimId
+            });
 
             builder.Entity<Contractor>().HasMany(c => c.Orders).WithOne(o => o.Contractor);
             builder.Entity<Contractor>().HasMany(c => c.Documents).WithOne(d => d.Contractor);
