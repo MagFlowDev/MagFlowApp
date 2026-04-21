@@ -14,8 +14,6 @@
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<Validations> Validations
 
-@attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.Claims.USER_EDIT)]
-
 <MudDialog Style="max-width: 420px;">
     <DialogContent>
         <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">

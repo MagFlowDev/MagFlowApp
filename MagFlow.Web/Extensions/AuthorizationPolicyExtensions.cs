@@ -56,7 +56,7 @@ namespace MagFlow.Web.Extensions
                 if (string.IsNullOrEmpty(claim.Value))
                     continue;
                 options.AddPolicy(claim.Value, policy =>
-                    policy.Requirements.Add(new PermissionRequirement(claim.Value)));
+                    policy.Requirements.Add(new RoleOrPermissionRequirement("SuperAdmin", claim.Value)));
             }
 
             return options;

@@ -1,4 +1,6 @@
-﻿using MagFlow.Shared.Models.Enumerators;
+﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.DTOs.CoreScope;
+using MagFlow.Shared.Models.Enumerators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +39,36 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
             else if (roleId == Shared.Constants.Identificators.RoleID.SysAdmin) return AppRole.SysAdmin;
             else if (roleId == Shared.Constants.Identificators.RoleID.SuperAdmin) return AppRole.SuperAdmin;
             else return null;
+        }
+
+        public static ClaimDTO ToDTO(this Claim claim)
+        {
+            return new ClaimDTO()
+            {
+                Id = claim.Id,
+                Name = claim.Name,
+                Policy = claim.Policy
+            };
+        }
+
+        public static List<ClaimDTO> ToDTO(this IEnumerable<Claim> claims)
+        {
+            return claims.Select(c => c.ToDTO()).ToList();
+        }
+
+        public static Claim ToEntity(this ClaimDTO claimDTO)
+        {
+            return new Claim()
+            {
+                Id = claimDTO.Id != Guid.Empty ? claimDTO.Id : Guid.NewGuid(),
+                Name = claimDTO.Name,
+                Policy = claimDTO.Policy
+            };
+        }
+
+        public static List<Claim> ToEntity(this IEnumerable<ClaimDTO> claimsDTOs)
+        {
+            return claimsDTOs.Select(x => x.ToEntity()).ToList();
         }
     }
 }
