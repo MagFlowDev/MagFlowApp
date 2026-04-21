@@ -32,7 +32,7 @@ namespace MagFlow.Web.Pages.Modules.Users
 
         private async Task OpenAddUserModal()
         {
-            if (!HasModulePermission("Users", PermissionFlags.Create))
+            if (!HasModulePermission("Users", PermissionFlags.Add))
                 return;
 
             var dialog = await DialogService.ShowAsync<AddUserDialog>(Localizer[Langs.AddUser]);

@@ -6,6 +6,7 @@
 
 @inject IRoleService RoleService
 @inject ICompanyService CompanyService
+@inject ISnackbar Snackbar
 @inherits AuthComponentBase
 
 <MudPaper Class="align-self-stretch flex-grow-1 overflow-x-auto" Style="min-height: 0">
@@ -14,7 +15,7 @@
             <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.RolesAndAccess]</MudText>
             <div class="w-100 d-flex">
                 <MudSelect @bind-Value="_selectedRole" MultiSelection="false" T="AppRole" OuterClass="w-100" Variant="Variant.Outlined">
-                    @foreach (var appRole in Enumeration<Guid>.GetAll<AppRole>())
+                    @foreach (var appRole in Enumeration<Guid>.GetAll<AppRole>().Where(x => x.Id != AppRole.SuperAdmin.Id && x.Id != AppRole.SysAdmin.Id))
                     {
                         <MudSelectItem Value="appRole">@appRole.DisplayRole(Localizer)</MudSelectItem>
                     }
