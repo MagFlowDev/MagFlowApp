@@ -14,6 +14,7 @@ namespace MagFlow.Shared.Constants
 
         public static class Claims
         {
+            public const string USER_READ = "User.Read";
             public const string USER_EDIT = "User.Edit";
             public const string USER_ADD = "User.Add";
             public const string USER_DELETE = "User.Delete";

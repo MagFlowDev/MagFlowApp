@@ -79,6 +79,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Lista dostępów.
+        /// </summary>
+        public static string AccessList {
+            get {
+                return ResourceManager.GetString("AccessList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dostęp do systemu MagFlow.
         /// </summary>
         public static string AccessYourAccount {
@@ -178,6 +187,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dodawanie.
+        /// </summary>
+        public static string Adding {
+            get {
+                return ResourceManager.GetString("Adding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dodatkowy.
         /// </summary>
         public static string Additional {
@@ -210,6 +228,15 @@ namespace MagFlow.Web.Resources {
         public static string AddUser {
             get {
                 return ResourceManager.GetString("AddUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Szczególne uprawnienia.
+        /// </summary>
+        public static string AdminAccess {
+            get {
+                return ResourceManager.GetString("AdminAccess", resourceCulture);
             }
         }
         
@@ -637,6 +664,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Usuwanie.
+        /// </summary>
+        public static string Deleting {
+            get {
+                return ResourceManager.GetString("Deleting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Szczegóły.
         /// </summary>
         public static string Details {
@@ -714,6 +750,15 @@ namespace MagFlow.Web.Resources {
         public static string Edit {
             get {
                 return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Edytowanie.
+        /// </summary>
+        public static string Editing {
+            get {
+                return ResourceManager.GetString("Editing", resourceCulture);
             }
         }
         
@@ -2176,6 +2221,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Przeglądanie.
+        /// </summary>
+        public static string Reading {
+            get {
+                return ResourceManager.GetString("Reading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Odśwież.
         /// </summary>
         public static string Refresh {
@@ -2343,6 +2397,15 @@ namespace MagFlow.Web.Resources {
         public static string RoleOperator {
             get {
                 return ResourceManager.GetString("RoleOperator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Role i dostępy.
+        /// </summary>
+        public static string RolesAndAccess {
+            get {
+                return ResourceManager.GetString("RolesAndAccess", resourceCulture);
             }
         }
         

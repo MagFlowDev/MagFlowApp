@@ -1,4 +1,6 @@
 ﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Enumerators;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace MagFlow.Web.Pages.Modules.Users

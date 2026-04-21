@@ -1171,4 +1171,25 @@ i uprawnieniami użytkowników</value>
   <data name="UserCreated" xml:space="preserve">
     <value>Dodano użytkownika</value>
   </data>
+  <data name="RolesAndAccess" xml:space="preserve">
+    <value>Role i dostępy</value>
+  </data>
+  <data name="AccessList" xml:space="preserve">
+    <value>Lista dostępów</value>
+  </data>
+  <data name="Reading" xml:space="preserve">
+    <value>Przeglądanie</value>
+  </data>
+  <data name="Adding" xml:space="preserve">
+    <value>Dodawanie</value>
+  </data>
+  <data name="Editing" xml:space="preserve">
+    <value>Edytowanie</value>
+  </data>
+  <data name="Deleting" xml:space="preserve">
+    <value>Usuwanie</value>
+  </data>
+  <data name="AdminAccess" xml:space="preserve">
+    <value>Szczególne uprawnienia</value>
+  </data>
 </root>

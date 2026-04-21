@@ -1,44 +1,56 @@
 ﻿@using MagFlow.Shared.Models
 @using MagFlow.Shared.Models.Interfaces
+@using MagFlow.Web.Components.Status
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
+
+@inject NavigationManager NavigationManager
 @implements IModule
 @inherits BaseModuleComponent
 
-<div class="d-flex flex-column w-100 flex-grow-1" style="min-height: 0">
-    <div class="d-flex w-100" style="flex: 1 1 0; min-height: 0">
-        <MudPaper Height="100%" Style="overflow:hidden; position:relative; background-color: transparent" Class="w-100" Elevation="0">
-            <MudDrawerContainer Class="mud-height-full">
-                <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" Breakpoint="Breakpoint.None">
-                    <MudNavMenu>
-                        <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
-                        <MudTooltip Text="@Localizer[Langs.Users]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
-                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Groups" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.UsersList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.UsersList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.UsersList)">@Localizer[Langs.Users]</MudNavLink>
-                        </MudTooltip>
-                        <MudTooltip Text="@Localizer[Langs.RolesList]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
-                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Shield" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.RolesList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.RolesList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.RolesList)">@Localizer[Langs.RolesList]</MudNavLink>
-                        </MudTooltip>
-                    </MudNavMenu>
-                </MudDrawer>
-                <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
-                    @switch(_currentSection)
-                    {
-                        case SectionsEnums.UserModuleSection.UsersList:
-                            <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
-                                <UsersList />
-                            </div>
-                            break;
-                        case SectionsEnums.UserModuleSection.RolesList:
-                            <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
-                                <RoleManagement/>
-                            </div>
-                            break;
-                        default: break;
-                    }
-                </div>
-            </MudDrawerContainer>
-        </MudPaper>
-    </div>
-</div>
+<AuthorizeView> @* Policy="@MagFlow.Shared.Constants.Policies.Claims.USER_EDIT" *@
+    <Authorized>
+        <div class="d-flex flex-column w-100 flex-grow-1" style="min-height: 0">
+            <div class="d-flex w-100" style="flex: 1 1 0; min-height: 0">
+                <MudPaper Height="100%" Style="overflow:hidden; position:relative; background-color: transparent" Class="w-100" Elevation="0">
+                    <MudDrawerContainer Class="mud-height-full">
+                        <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" Breakpoint="Breakpoint.None">
+                            <MudNavMenu>
+                                <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
+                                <MudTooltip Text="@Localizer[Langs.Users]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Groups" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.UsersList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.UsersList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.UsersList)">@Localizer[Langs.Users]</MudNavLink>
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer[Langs.RolesList]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Shield" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.RolesList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.RolesList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.RolesList)">@Localizer[Langs.RolesList]</MudNavLink>
+                                </MudTooltip>
+                            </MudNavMenu>
+                        </MudDrawer>
+                        <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
+                            @switch(_currentSection)
+                            {
+                                case SectionsEnums.UserModuleSection.UsersList:
+                                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
+                                        <UsersList />
+                                    </div>
+                                    break;
+                                case SectionsEnums.UserModuleSection.RolesList:
+                                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                        <RoleManagement/>
+                                    </div>
+                                    break;
+                                default: break;
+                            }
+                        </div>
+                    </MudDrawerContainer>
+                </MudPaper>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <Denied/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     public string TabTitle => "Users";
