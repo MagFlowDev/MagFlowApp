@@ -1,5 +1,7 @@
 ﻿using MagFlow.BLL.Security.Handlers;
 using MagFlow.DAL.Repositories.CoreScope.Interfaces;
+using MagFlow.Shared.Extensions;
+using MagFlow.Shared.Models.Auth;
 using MagFlow.Shared.Models.Enumerators;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -14,7 +16,9 @@ namespace MagFlow.Web.Pages.Modules
         [Inject] protected AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
 
         private readonly ConcurrentDictionary<string, long> _moduleMasks = new(StringComparer.OrdinalIgnoreCase);
-        private ClaimsPrincipal? _currentUser;
+        protected ClaimsPrincipal? _currentUser;
+        protected Guid? _currentCompanyId;
+
         private bool _initialized;
         private bool _disposed;
 
@@ -53,6 +57,8 @@ namespace MagFlow.Web.Pages.Modules
 
             if (user == null || user.Identity?.IsAuthenticated != true)
                 return;
+
+            _currentCompanyId = user.FindFirst(Claims.CompanyClaim)?.Value.ToGuid();
 
             var moduleClaims = user.Claims
                 .Where(c => c.Type != null && c.Type.StartsWith("perms:", StringComparison.OrdinalIgnoreCase))

@@ -201,6 +201,7 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IRoleService, RoleService>();
 
             services.RegisterCommonServices();
         }
@@ -212,10 +213,12 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<UserService>();
             services.AddScoped<EventService>();
             services.AddScoped<CompanyService>();
+            services.AddScoped<RoleService>();
 
             services.AddScoped<IUserService>(sp => sp.GetRequiredService<UserService>().WithProxy<IUserService>(sp));
             services.AddScoped<IEventService>(sp => sp.GetRequiredService<EventService>().WithProxy<IEventService>(sp));
             services.AddScoped<ICompanyService>(sp => sp.GetRequiredService<CompanyService>().WithProxy<ICompanyService>(sp));
+            services.AddScoped<IRoleService>(sp => sp.GetRequiredService<RoleService>().WithProxy<IRoleService>(sp));
 
             services.RegisterCommonServices();
         }

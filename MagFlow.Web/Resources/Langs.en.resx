@@ -1170,4 +1170,25 @@
   <data name="UserCreated" xml:space="preserve">
     <value>User created</value>
   </data>
+  <data name="RolesAndAccess" xml:space="preserve">
+    <value>Roles and access</value>
+  </data>
+  <data name="AccessList" xml:space="preserve">
+    <value>Access list</value>
+  </data>
+  <data name="Reading" xml:space="preserve">
+    <value>Reading</value>
+  </data>
+  <data name="Adding" xml:space="preserve">
+    <value>Adding</value>
+  </data>
+  <data name="Editing" xml:space="preserve">
+    <value>Editing</value>
+  </data>
+  <data name="Deleting" xml:space="preserve">
+    <value>Deleting</value>
+  </data>
+  <data name="AdminAccess" xml:space="preserve">
+    <value>Special privileges</value>
+  </data>
 </root>

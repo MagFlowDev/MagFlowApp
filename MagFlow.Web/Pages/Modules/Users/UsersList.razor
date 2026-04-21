@@ -35,7 +35,7 @@
         <PropertyColumn T="UserDTO" TProperty="string" Title="@Localizer[Langs.LastName]" Property="x => x.LastName" Sortable="true" CellClass="text-nowrap" />
         <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Email]" Sortable="true" Tag="@($"{nameof(UserDTO.Email)}")" CellClass="text-nowrap">
             <CellTemplate>
-                <MudLink Color="Color.Primary" Href="@($"/user/{context.Item.Id}")">@context.Item.Email</MudLink>
+                <MudLink Color="Color.Primary" OnClick="@(() => OpenUserDetails(context.Item))">@context.Item.Email</MudLink>
             </CellTemplate>
         </TemplateColumn>
         <TemplateColumn T="UserDTO" Title="@Localizer[Langs.RoleSingle]" Sortable="false" CellClass="text-nowrap">
@@ -50,9 +50,21 @@
         </TemplateColumn>
         <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" OnClick="() => OpenUserDetails(context.Item)" />
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Block" OnClick="() => BlockUser(context.Item)" />
-                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteUser(context.Item)" />
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USER_READ">
+                    <Authorized context="authorized_context1">
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" OnClick="() => OpenUserDetails(context.Item)" />
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USER_EDIT">
+                    <Authorized context="authorized_context1">
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Block" OnClick="() => BlockUser(context.Item)" />
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USER_DELETE">
+                    <Authorized context="authorized_context1">
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteUser(context.Item)" />
+                    </Authorized>
+                </AuthorizeView>
             </CellTemplate>
         </TemplateColumn>
     </Columns>

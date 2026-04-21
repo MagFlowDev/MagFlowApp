@@ -1,8 +1,60 @@
-﻿
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.BLL.Helpers.Localization.Display
+@using MagFlow.Web.Components.Buttons
+@using MudBlazor
+
+@inject IRoleService RoleService
+@inject ICompanyService CompanyService
 @inherits AuthComponentBase
 
-<h3>RoleManagement</h3>
-
-@code {
-
-}
+<MudPaper Class="align-self-stretch flex-grow-1 overflow-x-auto" Style="min-height: 0">
+    <div class="d-flex flex-column align-items-center mud-height-full" style="padding: 24px; min-height: 0">
+        <div class="d-flex flex-column align-items-start w-100 mud-height-full" style="gap: 16px; max-width: 550px; min-height: 0">
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.RolesAndAccess]</MudText>
+            <div class="w-100 d-flex">
+                <MudSelect @bind-Value="_selectedRole" MultiSelection="false" T="AppRole" OuterClass="w-100" Variant="Variant.Outlined">
+                    @foreach (var appRole in Enumeration<Guid>.GetAll<AppRole>())
+                    {
+                        <MudSelectItem Value="appRole">@appRole.DisplayRole(Localizer)</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+            <div class="d-flex flex-column align-items-start align-self-stretch w-100" style="gap: 16px; padding-top: 8px; min-height: 0; flex: 1 1 0">
+                <div class="d-flex flex-column justify-content-center align-items-start align-self-stretch w-100" style="gap: 16px; min-height: 0; flex: 1 1 0">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.AccessList]</MudText>
+                    <div class="d-flex flex-column align-items-start align-self-stretch overflow-auto" style="gap: 8px; min-height: 0; flex: 1 1 0">
+                        @if(_modules != null)
+                        {
+                            <MudExpansionPanels Class="w-100" Style="padding: 0 10px;" MultiExpansion="false" Gutters="false" Elevation="0" >
+                                @foreach(var module in _modules)
+                                {
+                                    @if (_roleAccessList.ContainsKey(module.Id))
+                                    {
+                                        <MudExpansionPanel Disabled="!_roleAccessList[module.Id].Read">
+                                            <TitleContent>
+                                                <div class="d-flex align-items-center">
+                                                    <MudCheckBox @bind-Value="_roleAccessList[module.Id].Read" Dense="true" Color="Color.Primary" UncheckedColor="Color.Default"/>
+                                                    <MudText>@Localizer[module.Name]</MudText>
+                                                </div>
+                                            </TitleContent>
+                                            <ChildContent>
+                                                <div class="d-flex align-items-center flex-wrap" style="column-gap: 24px; row-gap: 8px; padding: 0 24px;">
+                                                    <MudCheckBox @bind-Value="_roleAccessList[module.Id].Add" Dense="true" Color="Color.Primary" UncheckedColor="Color.Default" Label="@Localizer[Langs.Adding]" Disabled="!_roleAccessList[module.Id].Read" />
+                                                    <MudCheckBox @bind-Value="_roleAccessList[module.Id].Edit" Dense="true" Color="Color.Primary" UncheckedColor="Color.Default" Label="@Localizer[Langs.Editing]" Disabled="!_roleAccessList[module.Id].Read" />
+                                                    <MudCheckBox @bind-Value="_roleAccessList[module.Id].Delete" Dense="true" Color="Color.Primary" UncheckedColor="Color.Default" Label="@Localizer[Langs.Deleting]" Disabled="!_roleAccessList[module.Id].Read" />
+                                                    <MudCheckBox @bind-Value="_roleAccessList[module.Id].Admin" Dense="true" Color="Color.Primary" UncheckedColor="Color.Default" Label="@Localizer[Langs.AdminAccess]" Disabled="!_roleAccessList[module.Id].Read" />
+                                                </div>
+                                            </ChildContent>
+                                        </MudExpansionPanel>
+                                    }
+                                }
+                            </MudExpansionPanels>
+                        }
+                    </div>
+                </div>
+            </div>
+            <LoadingButton Loading="_loading" Variant="Variant.Filled" Color="Color.Primary" OnClick="Save" Class="align-self-end">@Localizer[Langs.Save]</LoadingButton>
+        </div>
+    </div>
+</MudPaper>

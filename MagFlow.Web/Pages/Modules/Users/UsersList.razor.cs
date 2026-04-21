@@ -44,18 +44,23 @@ namespace MagFlow.Web.Pages.Modules.Users
 
         private void OpenUserDetails(UserDTO user)
         {
+            if (!HasModulePermission("Users", PermissionFlags.Read))
+                return;
+
             NavigationManager.NavigateTo($"/user/{user.Id}");
         }
 
 
         private async Task BlockUser(UserDTO user)
         {
-
+            if (!HasModulePermission("Users", PermissionFlags.Edit))
+                return;
         }
 
         private async Task DeleteUser(UserDTO user)
         {
-
+            if (!HasModulePermission("Users", PermissionFlags.Delete))
+                return;
         }
     }
 }
