@@ -16,6 +16,7 @@ namespace MagFlow.Web.Pages.Modules
         [Inject] protected AuthenticationStateProvider AuthStateProvider { get; set; } = default!;
 
         private readonly ConcurrentDictionary<string, long> _moduleMasks = new(StringComparer.OrdinalIgnoreCase);
+        protected string? _userRole;
         protected ClaimsPrincipal? _currentUser;
         protected Guid? _currentCompanyId;
 
@@ -59,6 +60,7 @@ namespace MagFlow.Web.Pages.Modules
                 return;
 
             _currentCompanyId = user.FindFirst(Claims.CompanyClaim)?.Value.ToGuid();
+            _userRole = user.FindFirst(ClaimTypes.Role)?.Value;
 
             var moduleClaims = user.Claims
                 .Where(c => c.Type != null && c.Type.StartsWith("perms:", StringComparison.OrdinalIgnoreCase))
@@ -74,6 +76,8 @@ namespace MagFlow.Web.Pages.Modules
 
         protected bool HasModulePermission(string moduleCode, PermissionFlags required)
         {
+            if (_currentUser?.IsInRole(nameof(AppRole.SuperAdmin)) == true)
+                return true;
             if (_moduleMasks.TryGetValue(moduleCode, out var mask))
                 return (((PermissionFlags)mask) & required) == required;
             return false;
@@ -81,6 +85,8 @@ namespace MagFlow.Web.Pages.Modules
 
         protected bool HasAnyPermissionAcrossModules(PermissionFlags anyOf)
         {
+            if (_currentUser?.IsInRole(nameof(AppRole.SuperAdmin)) == true)
+                return true;
             foreach (var kv in _moduleMasks)
                 if ((((PermissionFlags)kv.Value) & anyOf) != PermissionFlags.None) return true;
             return false;

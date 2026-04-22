@@ -1,0 +1,9 @@
+﻿@using MudBlazor
+@inject IJSRuntime JS
+
+<MudFab StartIcon="@Icons.Material.Outlined.ArrowBack" 
+        Color="Color.Default" 
+        Style="position: absolute; z-index: 999; top: 0; left: 0; transform: translate(-25%, -25%); box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.20);" 
+        Size="Size.Small" 
+        DropShadow="false"
+        OnClick="@(async () => await JS.InvokeVoidAsync("history.back"))" />

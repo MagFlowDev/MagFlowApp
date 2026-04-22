@@ -1,0 +1,53 @@
+﻿@* @page "/" *@
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models
+@using MagFlow.Web.Pages.Modules
+
+@inject NavigationManager NavigationManager
+@inject IUserService UserService
+
+@if (LastSession != null)
+{
+    <div class="d-flex flex-column w-100 flex-grow-1 pt-2" style="min-height: 0">
+        <ModuleTabs UserSession="LastSession"/>
+    </div>
+}
+
+@code {
+    UserSessionDTO? LastSession = null;
+    private bool _initialized = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || _initialized)
+            return;
+
+        _initialized = true;
+
+        try
+        {
+            LastSession = (await UserService.GetLastSessions())?.FirstOrDefault();
+
+            if (LastSession == null || LastSession.ExpiresAt <= DateTime.UtcNow)
+            {
+                NavigationManager.NavigateTo("/lobby");
+                return;
+            }
+            else
+            {
+                var updated = await UserService.UpdateLastSession(LastSession);
+                if (updated != Enums.Result.Success)
+                {
+                    NavigationManager.NavigateTo("/lobby");
+                    return;
+                }
+            }
+            StateHasChanged();
+        }
+        catch(Exception ex)
+        {
+            NavigationManager.NavigateTo("/lobby");
+        }
+    }
+}

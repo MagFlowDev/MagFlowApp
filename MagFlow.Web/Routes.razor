@@ -6,7 +6,7 @@
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(Program).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Pages.Layouts.MainLayout)" >
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Pages.Layouts.TabsLayout)" >
                 <NotAuthorized Context="authState">
                     @if (authState.User.Identity?.IsAuthenticated == true)
                     {
