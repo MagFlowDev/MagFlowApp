@@ -220,6 +220,12 @@ namespace MagFlow.Shared.Models
 
     public static class SectionsEnums
     {
+        public enum UserDetailsSection
+        {
+            Profile,
+            Journal
+        }
+
         public enum UserModuleSection
         {
             UsersList,

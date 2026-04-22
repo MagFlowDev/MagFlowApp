@@ -1191,4 +1191,7 @@
   <data name="AdminAccess" xml:space="preserve">
     <value>Special privileges</value>
   </data>
+  <data name="UserProfile" xml:space="preserve">
+    <value>User profile</value>
+  </data>
 </root>
