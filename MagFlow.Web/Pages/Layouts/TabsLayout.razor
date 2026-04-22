@@ -201,6 +201,14 @@
                 ModuleRoutes[module.Id] = $"/{relativePath}";
             }
         }
+        else
+        {
+            var currentTabTag = _tabsRef?.ActivePanel?.Tag;
+            if (currentTabTag is not null && currentTabTag is Guid currentModuleId)
+            {
+                ModuleRoutes[currentModuleId] = "/";
+            }
+        }
     }
 
     private async Task UpdateSession()
