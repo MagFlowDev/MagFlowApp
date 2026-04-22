@@ -1,0 +1,99 @@
+﻿@using MudBlazor
+
+
+    @if (Loading)
+    {
+        switch(this.Size)
+        {
+            case Size.Small:
+                {
+                    <MudProgressCircular Class="mb-n1 mr-2" Size="Size.Small" Style="width: 16px !important; height: 16px !important; margin-left: 2px;" Indeterminate="true" Color="@Color" />
+                }
+                break;
+            case Size.Medium:
+                {
+                    <MudProgressCircular Class="mb-n1 mr-2" Size="Size.Small" Indeterminate="true" Color="@Color"/>
+                }
+                break;
+            case Size.Large:
+                {
+                    <MudProgressCircular Class="mb-n1 mr-2" Size="Size.Medium" Indeterminate="true" Color="@Color"/>
+                }
+                break;
+            default:
+                {
+                    <MudProgressCircular Class="mb-n1 mr-2" Size="Size.Small" Indeterminate="true" Color="@Color" />
+                }
+                break;
+        }
+    }
+    else
+    {
+    <MudIconButton Disabled="@_disabled"
+                   Variant="@Variant"
+                   Color="@Color"
+                   Size="@Size"
+                   Class="@Class"
+                   ButtonType="@ButtonType"
+                   UserAttributes="@UserAttributes"
+                   Tag="@Tag"
+                   Href="@Href"
+                   Icon="@Icon"
+                   Rel="@Rel"
+                   Edge="@Edge"
+                   Style="@Style"
+                   DropShadow="@DropShadow"
+                   HtmlTag="@HtmlTag"
+                   Ripple="@Ripple"
+                   ClickPropagation="@ClickPropagation"
+                   OnClick="@OnClick"
+                   Target="@Target" />
+    }
+
+    @code {
+    [Parameter]
+    public bool Loading { get; set; } = false;
+
+    private bool _disabled => Loading || Disabled;
+
+    [Parameter]
+    public string? Icon { get; set; } = null;
+    [Parameter]
+    public bool Disabled { get; set; } = false;
+    [Parameter]
+    public Variant Variant { get; set; } = Variant.Text;
+    [Parameter]
+    public Color Color { get; set; } = Color.Default;
+    [Parameter]
+    public Size Size { get; set; } = Size.Medium;
+    [Parameter]
+    public string? Class { get; set; } = null;
+    [Parameter]
+    public ButtonType ButtonType { get; set; } = ButtonType.Button;
+    [Parameter]
+    public Dictionary<string, object> UserAttributes { get; set; } = new();
+    [Parameter]
+    public object? Tag { get; set; } = default;
+    [Parameter]
+    public string? Href { get; set; } = null;
+    [Parameter]
+    public string? Target { get; set; } = null;
+    [Parameter]
+    public string? Style { get; set; } = null;
+    [Parameter]
+    public string? Rel { get; set; } = null;
+    [Parameter]
+    public bool Ripple { get; set; } = true;
+    [Parameter]
+    public string HtmlTag { get; set; } = "button";
+    [Parameter]
+    public bool DropShadow { get; set; } = true;
+    [Parameter]
+    public bool ClickPropagation { get; set; } = false;
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; } = default;
+    [Parameter]
+    public Edge Edge { get; set; } = Edge.False;
+}

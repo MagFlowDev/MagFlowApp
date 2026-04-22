@@ -11,6 +11,8 @@ namespace MagFlow.Web.Pages.Modules.Users
         MudDataGrid<UserDTO> _usersDataGrid;
         string? _searchString = null;
 
+        bool _isBusy = false;
+
         private async Task<GridData<UserDTO>> ServerReloadUsers(GridState<UserDTO> state, CancellationToken token)
         {
             var sortDefinition = state.SortDefinitions.FirstOrDefault();
@@ -51,16 +53,52 @@ namespace MagFlow.Web.Pages.Modules.Users
         }
 
 
+        private Dictionary<Guid, bool> _loadingBlock = [];
+        private bool LoadingBlock(Guid id) => _loadingBlock.TryGetValue(id, out var value) && value;
         private async Task BlockUser(UserDTO user)
         {
             if (!HasModulePermission("Users", PermissionFlags.Edit))
                 return;
+
+            if (_isBusy || (_loadingBlock.TryGetValue(user.Id, out var loading) && loading))
+                return;
+
+            try
+            {
+                _isBusy = true;
+                _loadingBlock[user.Id] = true;
+
+                await Task.Delay(2000);
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingBlock[user.Id] = false;
+            }
         }
 
+        private Dictionary<Guid, bool> _loadingDelete = [];
+        private bool LoadingDelete(Guid id) => _loadingDelete.TryGetValue(id, out var value) && value;
         private async Task DeleteUser(UserDTO user)
         {
             if (!HasModulePermission("Users", PermissionFlags.Delete))
                 return;
+
+            if (_isBusy || (_loadingDelete.TryGetValue(user.Id, out var loading) && loading))
+                return;
+
+            try
+            {
+                _isBusy = true;
+                _loadingDelete[user.Id] = true;
+
+                await Task.Delay(2000);
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingDelete[user.Id] = false;
+            }
         }
     }
 }

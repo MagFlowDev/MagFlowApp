@@ -168,6 +168,8 @@ namespace MagFlow.Web.Pages.Modules.Users
                 var result = await RoleService.UpdateRolesClaims(_rolesClaims);
                 if (result == Enums.Result.Success)
                 {
+                    var allRoles = Enumeration<Guid>.GetAll<AppRole>().ToList();
+                    _rolesClaims = await RoleService.GetRolesClaims(allRoles.Select(x => x.Id).ToList());
                     Snackbar.Add(Localizer[Langs.SettingsSaved], Severity.Success);
                 }
                 else

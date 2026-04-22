@@ -1,5 +1,6 @@
 ﻿@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
 @using MagFlow.BLL.Helpers.Localization.Display
 @using Microsoft.AspNetCore.Authorization
@@ -57,12 +58,12 @@
                 </AuthorizeView>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_EDIT">
                     <Authorized context="authorized_context1">
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Block" OnClick="() => BlockUser(context.Item)" />
+                        <LoadingIconButton Loading="LoadingBlock(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.Block" OnClick="() => BlockUser(context.Item)" />
                     </Authorized>
                 </AuthorizeView>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_DELETE">
                     <Authorized context="authorized_context1">
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteUser(context.Item)" />
+                        <LoadingIconButton Loading="LoadingDelete(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteUser(context.Item)" />
                     </Authorized>
                 </AuthorizeView>
             </CellTemplate>

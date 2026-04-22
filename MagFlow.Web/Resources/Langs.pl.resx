@@ -1192,4 +1192,7 @@ i uprawnieniami użytkowników</value>
   <data name="AdminAccess" xml:space="preserve">
     <value>Szczególne uprawnienia</value>
   </data>
+  <data name="UserProfile" xml:space="preserve">
+    <value>Profil użytkownika</value>
+  </data>
 </root>
