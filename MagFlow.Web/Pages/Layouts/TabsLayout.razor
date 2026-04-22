@@ -1,0 +1,436 @@
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Extensions
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Auth
+@using MagFlow.Web.Components.Status
+@using MagFlow.Web.Helpers
+@using MagFlow.Web.Pages.Layouts.Partial
+@using MagFlow.Web.Pages.Shared
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject IUserService UserService
+@inject ILocalCacheService LocalCacheService
+@inject ICompanyService CompanyService
+@inject NavigationManager NavigationManager
+@implements IDisposable
+@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="Themes.MAIN" />
+<MudPopoverProvider />
+
+<MudDialogProvider />
+
+<MudSnackbarProvider />
+
+<AuthorizeView>
+    <Authorized>
+        <div class="page d-flex flex-column w-100 h-100">
+            <ErrorBoundary>
+                <ChildContent>
+                    <MudLayout Class="h-100 flex-grow-1 d-flex flex-column">
+                        <NavMenu />
+                        <MudMainContent Class="pt-16 px-4 h-100 w-100 d-flex flex-column" Style="background: var(--bs-gray-100, #F8F9FA)">
+                            <div class="resolution-warning h-100 w-100 flex-grow-1 ">
+                                <ResolutionWarning />
+                            </div>
+                            <div class="app-content w-100 h-100 flex-column flex-grow-1 pt-1 justify-content-center" style="max-width: 1920px !important; margin: 0 auto">
+                                <div class="d-flex flex-column w-100 flex-grow-1 pt-2" style="min-height: 0">
+                                    <div class="d-flex w-100 flex-grow-1" style="max-width: 100%;">
+                                        <MudTabs @ref="_tabsRef" @key="_tabsVersion" @bind-ActivePanelIndex="ActiveIndex" KeepPanelsAlive="false" EnableDragAndDrop="true" OnItemDropped="MoveTab" Centered="false" Elevation="0" Class="bg-transparent modules-tabs" Style="max-width: 100%; flex: 1 1 0; min-height: 0" TabHeaderClass="bg-transparent flex-0-0-auto" ActiveTabClass="bg-white" TabPanelsClass="flex-1-1-0 overflow-visible">
+                                            <ChildContent>
+                                                @foreach(var tab in ActiveModules)
+                                                {
+                                                    <MudTabPanel @key="tab.Id" Tag="@tab.Id" Icon="@tab.ModuleComponent!.Icon" PanelClass="h-100">
+                                                        <ChildContent>
+                                                            <div class="flex-grow-1 d-flex flex-column align-items-start h-100 overflow-visible" style="min-height: 0; overflow-x: hidden;">
+                                                                @if(_firstRendered && !_loadingTab)
+                                                                {
+                                                                    <CascadingValue Value="@tab.ModuleComponent!.GetType()" TValue="Type" Name="ComponentType">
+                                                                        @Body
+                                                                   </CascadingValue>
+                                                                }
+                                                            </div>
+                                                        </ChildContent>
+                                                        <TabContent>
+                                                            <div class="d-flex">
+                                                                <MudIcon Icon="@tab.ModuleComponent!.Icon" Class="lh-1" />
+                                                                <MudText Class="px-2">@Localizer[tab.Name]</MudText>
+                                                            </div>
+                                                        </TabContent>
+                                                    </MudTabPanel>
+                                                }
+                                            </ChildContent>
+                                            <Header Context="headerContext">
+                                                <MudTooltip Text="@Localizer[Langs.OpenModule]" Class="align-self-center">
+                                                    <MudMenu MaxHeight="250" @ref="_tabsMenu" Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Class="align-self-center" PopoverClass="my-2" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+                                                        @{
+                                                            var snapshot = NotActiveModules.ToArray();
+                                                        }
+                                                        @for (int i = 0; i < snapshot.Length; i+=2)
+                                                        {
+                                                            <div class="d-flex align-center" style="gap: 8px; padding: 8px 0; width: 306px">
+                                                                @{
+                                                                    var moduleName = snapshot[i].Name;
+                                                                    var moduleId = snapshot[i].Id;
+                                                                    var icon = snapshot[i].ModuleComponent!.Icon;
+                                                                }
+                                                                <div class="w-50 d-flex flex-column align-items-center" style="padding: 8px 0; gap: 4px; cursor: pointer" @onclick="async () => await AddTab(moduleId)">
+                                
+                                                                    <MudIcon Size="Size.Small" Class="lh-1" Icon="@icon" Color="Color.Primary"/>
+                                                                    <MudText Class="text-center" Style="font: 500; color: var(--mud-palette-text-primary)">@Localizer[moduleName]</MudText>
+                                                                </div>
+                                                                @if (i < snapshot.Length-1)
+                                                                {
+                                                                    var moduleName2 = snapshot[i + 1].Name;
+                                                                    var moduleId2 = snapshot[i + 1].Id;
+                                                                    var icon2 = snapshot[i + 1].ModuleComponent!.Icon;
+                                                                    <div class="w-50 d-flex flex-column align-items-center" style="padding: 8px 0; gap: 4px; cursor: pointer" @onclick="async () => await AddTab(moduleId2)">
+                                                                        <MudIcon Size="Size.Small" Class="lh-1" Icon="@icon2" Color="Color.Primary" />
+                                                                        <MudText Class="text-center" Style="font: 500; color: var(--mud-palette-text-primary)">@Localizer[moduleName2]</MudText>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </MudMenu>
+                                                </MudTooltip>
+                                            </Header>
+                                            <TabPanelHeader Context="panelHeaderContext">
+                                                @if (ActiveModules.Count > 1)
+                                                {
+                                                    var isActive = ActiveModules.ElementAt(ActiveIndex).Id.Equals(panelHeaderContext.Tag);
+                                                    <MudIconButton Class="ml-2 pa-1" Color="@(isActive ? Color.Primary : Color.Dark)"  Icon="@Icons.Material.Filled.Close" OnClick="async (_) => await RemoveTab(panelHeaderContext)"/>
+                                                }
+                                            </TabPanelHeader>
+                                        </MudTabs>
+                                    </div>
+                                </div>
+                            </div>
+                        </MudMainContent>
+                    </MudLayout>
+                </ChildContent>
+                <ErrorContent Context="exception">
+                    <ErrorPage Exception="exception" />
+                </ErrorContent>
+            </ErrorBoundary>
+        </div>
+        <footer>
+            <Footer />
+            <div class="d-flex w-100 justify-content-center align-items-center">
+                <Notification />
+            </div>
+        </footer>
+    </Authorized>
+    <NotAuthorized Context="authState">
+        @if (authState.User.Identity?.IsAuthenticated == true)
+        {
+            <RedirectToDenied />
+        }
+        else
+        {
+            <RedirectToLP />
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    UserSessionDTO? UserSession = null;
+    private bool _initialized = false;
+    private bool _firstRendered;
+    private bool _loadingTab = false;
+
+    private MudTabs? _tabsRef;
+    private MudMenu? _tabsMenu;
+
+
+    private int ActiveIndex
+    {
+        get; set
+        {
+            if (_firstRendered)
+                UpdateCurrentModule();
+            field = value;
+        }
+    } = 0;
+    private int? _nextIndex = null;
+    private int _tabsVersion = 0;
+
+    List<ModuleDTO> _companyModules { get; set; } = new List<ModuleDTO>();
+    List<ModuleDTO> _activeModules { get; set; } = new List<ModuleDTO>();
+    List<ModuleDTO> ActiveModules
+    {
+        get
+        {
+            return _activeModules;
+        }
+        set
+        {
+            _activeModules = value;
+            ModuleRoutes = new Dictionary<Guid, string>();
+            foreach (var module in _activeModules)
+            {
+                ModuleRoutes.TryAdd(module.Id, "/");
+            }
+        }
+    }
+    List<ModuleDTO> NotActiveModules => _companyModules
+            .Where(c => !_activeModules.Any(a => a.Id == c.Id))
+            .OrderBy(x => x.Name)
+            .ToList();
+    Dictionary<Guid, string> ModuleRoutes { get; set; } = [];
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        var relativePath = NavigationManager.ToBaseRelativePath(e.Location);
+        var moduleName = relativePath?.Split("/")[0];
+        if(!string.IsNullOrEmpty(moduleName))
+        {
+            var module = _activeModules.FirstOrDefault(x => x.Name.Contains(moduleName, StringComparison.OrdinalIgnoreCase));
+            if(module != null)
+            {
+                ModuleRoutes[module.Id] = $"/{relativePath}";
+            }
+        }
+    }
+
+    private async Task UpdateSession()
+    {
+        UserSession.Modules = ActiveModules;
+        await UserService.UpdateLastSession(UserSession);
+    }
+
+    private async Task UpdateLocalCache()
+    {
+        if (_tabsRef == null)
+            return;
+
+        var orderedIds = _tabsRef.Panels
+           .Select(p => p.Tag)
+           .OfType<Guid>()
+           .ToList();
+
+        await LocalCacheService.SetSessionOrder(UserSession.Id, orderedIds);
+    }
+
+    private async Task UpdateCurrentModule()
+    {
+        try
+        {
+            _loadingTab = true;
+            var currentTabTag = _tabsRef?.ActivePanel?.Tag;
+            if (currentTabTag is not null && currentTabTag is Guid currentModuleId)
+            {
+                await LocalCacheService.SetCurrentModule(UserSession.Id, currentModuleId);
+                if (ModuleRoutes.ContainsKey(currentModuleId))
+                {
+                    var targetUri = ModuleRoutes[currentModuleId];
+                    var currentUri = $"/{NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}";
+                    if (!targetUri.Equals(currentUri, StringComparison.OrdinalIgnoreCase))
+                        NavigationManager.NavigateTo(ModuleRoutes[currentModuleId]);
+                }
+            }
+        }
+        finally
+        {
+            _loadingTab = false;
+            StateHasChanged();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_nextIndex.HasValue)
+        {
+            ActiveIndex = _nextIndex.Value;
+            _nextIndex = null;
+            StateHasChanged();
+        }
+
+        if (!firstRender || _initialized)
+            return;
+
+        _initialized = true;
+
+        try
+        {
+            UserSession = (await UserService.GetLastSessions())?.FirstOrDefault();
+
+            if (UserSession == null || UserSession.ExpiresAt <= DateTime.UtcNow)
+            {
+                NavigationManager.NavigateTo("/lobby");
+                return;
+            }
+            else
+            {
+                var updated = await UserService.UpdateLastSession(UserSession);
+                if (updated != Enums.Result.Success)
+                {
+                    NavigationManager.NavigateTo("/lobby");
+                    return;
+                }
+            }
+
+            var authenticationState = await AuthenticationStateTask;
+            var user = authenticationState.User;
+            var companyId = user.FindFirst(Claims.CompanyClaim)?.Value.ToGuid() ?? Guid.Empty;
+
+            var modules = await CompanyService.GetCompanyModules(companyId);
+            modules?.ForEach(x => x.ModuleComponent = IModuleMapper.GetIModule(x.Type));
+            _companyModules = modules?.Where(x => x.ModuleComponent != null).ToList() ?? new List<ModuleDTO>();
+
+            var sessionModulesIds = UserSession.Modules.Select(x => x.Id).ToList();
+            ActiveModules = _companyModules.Where(x => sessionModulesIds.Contains(x.Id)).ToList();
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            NavigationManager.NavigateTo("/lobby");
+        }
+
+        if (firstRender)
+        {
+            try
+            {
+                var sessionCache = await LocalCacheService.GetSessionOrder(UserSession.Id);
+                var sessionCurrentModule = await LocalCacheService.GetCurrentModule(UserSession.Id);
+                if (sessionCache != null)
+                {
+                    var validIds = sessionCache.Where(id => _activeModules.Any(m => m.Id == id)).ToList();
+                    _activeModules = validIds
+                        .Select(id => _activeModules.First(x => x.Id == id))
+                        .ToList();
+
+                    if (sessionCurrentModule.HasValue)
+                    {
+                        var currentModuleIndex = validIds.IndexOf(sessionCurrentModule.Value);
+                        if (currentModuleIndex >= 0)
+                            ActiveIndex = currentModuleIndex;
+
+                        var tempCurrentModule = _activeModules.FirstOrDefault(x => x.Id == sessionCurrentModule.Value);
+                        if(tempCurrentModule != null)
+                        {
+                            var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+                            var moduleName = relativePath?.Split("/")[0];
+                            if (!string.IsNullOrEmpty(moduleName))
+                            {
+                                if(!tempCurrentModule.Name.Contains(moduleName, StringComparison.OrdinalIgnoreCase) && ModuleRoutes.ContainsKey(tempCurrentModule.Id))
+                                {
+                                    NavigationManager.NavigateTo(ModuleRoutes[tempCurrentModule.Id]);
+                                };
+                            }
+                        }
+                    }
+
+                    _tabsVersion++;
+                    StateHasChanged();
+                }
+                else if (sessionCurrentModule != null)
+                {
+                    var orderedIds = _tabsRef?.Panels
+                       .Select(p => p.Tag)
+                       .OfType<Guid>()
+                       .ToList();
+                    if (sessionCurrentModule.HasValue && orderedIds != null)
+                    {
+                        var currentModuleIndex = orderedIds.IndexOf(sessionCurrentModule.Value);
+                        if (currentModuleIndex >= 0)
+                            ActiveIndex = currentModuleIndex;
+                    }
+                    StateHasChanged();
+                }
+            }
+            finally
+            {
+                _firstRendered = true;
+            }
+        }
+    }
+
+    private async Task RemoveTab(MudTabPanel tabPanel)
+    {
+        var tag = tabPanel.Tag?.ToString()?.ToGuid();
+        if (!tag.HasValue)
+            return;
+        var activeModule = _activeModules.FirstOrDefault(x => x.Id == tag);
+        if (activeModule != null)
+        {
+            _activeModules.Remove(activeModule);
+            if (ModuleRoutes.ContainsKey(activeModule.Id))
+                ModuleRoutes.Remove(activeModule.Id);
+        }
+
+        await UpdateSession();
+        _tabsVersion++;
+        StateHasChanged();
+        UpdateLocalCache();
+    }
+
+    private async Task AddTab(Guid companyModuleId)
+    {
+        if (_tabsMenu == null)
+            return;
+
+        if (_activeModules.Any(x => x.Id == companyModuleId))
+            return;
+
+        var companyModule = _companyModules.Where(x => x.Id == companyModuleId).ToList();
+        if (companyModule.Count != 1)
+            return;
+
+        _activeModules.AddRange(companyModule);
+        _nextIndex = ActiveModules.Count - 1;
+        ModuleRoutes.TryAdd(companyModuleId, "/");
+        await UpdateSession();
+        await _tabsMenu.CloseMenuAsync();
+        _tabsVersion++;
+        StateHasChanged();
+        UpdateLocalCache();
+    }
+
+    private async Task MoveTab(MudItemDropInfo<MudTabPanel> dropInfo)
+    {
+        if (_tabsRef == null)
+            return;
+
+        var tag = dropInfo.Item?.Tag?.ToString()?.ToGuid();
+        if (!tag.HasValue)
+            return;
+
+        var oldIndex = _activeModules.FindIndex(x => x.Id == tag);
+        if (oldIndex < 0 || oldIndex == dropInfo.IndexInZone)
+            return;
+
+        if (oldIndex == dropInfo.IndexInZone)
+            return;
+
+        var orderedIds = _tabsRef.Panels
+           .Select(p => p.Tag)
+           .OfType<Guid>()
+           .ToList();
+
+        _activeModules = orderedIds
+            .Select(id => _activeModules.First(x => x.Id == id))
+            .ToList();
+
+        ActiveIndex = dropInfo.IndexInZone;
+        _tabsVersion++;
+        StateHasChanged();
+        UpdateLocalCache();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}
