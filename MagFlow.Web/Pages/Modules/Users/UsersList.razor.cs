@@ -270,7 +270,7 @@ namespace MagFlow.Web.Pages.Modules.Users
         }
         private async Task DeleteUsers()
         {
-            if (!HasModulePermission("Users", PermissionFlags.Edit))
+            if (!HasModulePermission("Users", PermissionFlags.Delete))
                 return;
 
             if (_isBusy || _loadingDeleteMany)
