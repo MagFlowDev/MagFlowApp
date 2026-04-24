@@ -314,7 +314,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             {
                 using (var context = _coreContextFactory.CreateDbContext())
                 {
-                    var entities = Find(predicate);
+                    var entities = Find(predicate, context);
                     if (entities == null)
                         return Enums.Result.Error;
                     
@@ -348,7 +348,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             {
                 using (var context = _coreContextFactory.CreateDbContext())
                 {
-                    var entities = Find(predicate);
+                    var entities = Find(predicate, context);
                     if (entities == null)
                         return Enums.Result.Error;
 

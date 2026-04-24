@@ -3,10 +3,14 @@
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
 @inject IUserService UserService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 @layout TabsLayout
 @inherits AuthComponentBase
 @attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.Claims.USERS_EDIT)]
@@ -19,7 +23,14 @@
             <div class="d-flex align-self-stretch align-items-center justify-content-between w-100" style="margin-left: 64px;">
                 <MudText Typo="Typo.h6" Style="font-weight: 500">@string.Concat(_user?.FirstName, " ", _user?.LastName)</MudText>
                 <div class="d-flex align-items-center align-self-stretch justify-content-end" style="gap: 16px;">
-                    <LoadingButton Loading="_loadingBlock" Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Block" OnClick="BlockUser">@Localizer[Langs.Block]</LoadingButton>
+                    @if (_user?.IsActive == false)
+                    {
+                        <LoadingButton Loading="_loadingBlock" Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Outlined.LockOpen" OnClick="UnblockUser">@Localizer[Langs.Unblock]</LoadingButton>
+                    }
+                    else
+                    {
+                        <LoadingButton Loading="_loadingBlock" Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Lock" OnClick="BlockUser">@Localizer[Langs.Block]</LoadingButton>
+                    }
                     <LoadingButton Loading="_loadingDelete" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" OnClick="DeleteUser">@Localizer[Langs.Delete]</LoadingButton>
                 </div>
             </div>
@@ -31,10 +42,10 @@
                 <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" Breakpoint="Breakpoint.None">
                     <MudNavMenu>
                         <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
-                        <MudTooltip Text="@Localizer[Langs.UserProfile]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
+                        <MudTooltip Text="@Localizer[Langs.UserProfile]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
                             <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.AccountBox" OnClick="@(() => OnSectionChanged(SectionsEnums.UserDetailsSection.Profile))" IconColor="@GetIconColor(SectionsEnums.UserDetailsSection.Profile)" Class="@GetNavClass(SectionsEnums.UserDetailsSection.Profile)">@Localizer[Langs.UserProfile]</MudNavLink>
                         </MudTooltip>
-                        <MudTooltip Text="@Localizer[Langs.EventLog]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
+                        <MudTooltip Text="@Localizer[Langs.EventLog]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
                             <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Summarize" OnClick="@(() => OnSectionChanged(SectionsEnums.UserDetailsSection.Journal))" IconColor="@GetIconColor(SectionsEnums.UserDetailsSection.Journal)" Class="@GetNavClass(SectionsEnums.UserDetailsSection.Journal)">@Localizer[Langs.EventLog]</MudNavLink>
                         </MudTooltip>
                     </MudNavMenu>

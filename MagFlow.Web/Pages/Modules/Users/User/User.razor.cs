@@ -2,6 +2,8 @@
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
+using MagFlow.Web.Components.Dialogs;
+using MagFlow.Web.Resources;
 using MudBlazor;
 
 namespace MagFlow.Web.Pages.Modules.Users.User
@@ -42,7 +44,61 @@ namespace MagFlow.Web.Pages.Modules.Users.User
                 _isBusy = true;
                 _loadingBlock = true;
 
-                await Task.Delay(2000);
+                var parameters = new DialogParameters<ConfirmBlockDialog> { { x => x.ContentText, string.Format(Localizer[Langs.BlockUserConfirmation], _user.Email) } };
+                var dialog = await DialogService.ShowAsync<ConfirmBlockDialog>(Localizer[Langs.DeleteUser], parameters);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    var result = await UserService.BlockUser(_user);
+                    if (result == Enums.Result.Success)
+                    {
+                        Snackbar.Add(Localizer[Langs.BlockedSuccessfully], Severity.Success);
+                        _user.IsActive = false;
+                        StateHasChanged();
+                    }
+                    else
+                    {
+                        Snackbar.Add(Localizer[Langs.BlockingFailed], Severity.Error);
+                    }
+                }
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingBlock = false;
+            }
+        }
+
+        private async Task UnblockUser()
+        {
+            if (!HasModulePermission("Users", PermissionFlags.Edit))
+                return;
+
+            if (_user == null || _loadingBlock || _isBusy)
+                return;
+
+            try
+            {
+                _isBusy = true;
+                _loadingBlock = true;
+
+                var parameters = new DialogParameters<ConfirmBlockDialog> { { x => x.ContentText, string.Format(Localizer[Langs.UnblockUserConfirmation], _user.Email) }, { x => x.Unblock, true } };
+                var dialog = await DialogService.ShowAsync<ConfirmBlockDialog>(Localizer[Langs.DeleteUser], parameters);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    var result = await UserService.BlockUser(_user, unblock: true);
+                    if (result == Enums.Result.Success)
+                    {
+                        Snackbar.Add(Localizer[Langs.UnblockedSuccessfully], Severity.Success);
+                        _user.IsActive = true;
+                        StateHasChanged();
+                    }
+                    else
+                    {
+                        Snackbar.Add(Localizer[Langs.UnblockingFailed], Severity.Error);
+                    }
+                }
             }
             finally
             {
@@ -64,7 +120,22 @@ namespace MagFlow.Web.Pages.Modules.Users.User
                 _isBusy = true;
                 _loadingDelete = true;
 
-                await Task.Delay(2000);
+                var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, string.Format(Localizer[Langs.DeleteUserConfirmation], _user.Email) } };
+                var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteUser], parameters);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    var result = await UserService.DeleteUser(_user);
+                    if (result == Enums.Result.Success)
+                    {
+                        NavigationManager.NavigateTo("/");
+                        Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                    }
+                    else
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteFailed], Severity.Error);
+                    }
+                }
             }
             finally
             {

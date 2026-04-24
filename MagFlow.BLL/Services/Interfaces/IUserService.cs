@@ -27,6 +27,9 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> UpdateLastSession(UserSessionDTO sessionDTO);
         Task<Enums.Result> StartNewSession(List<ModuleDTO> modules);
 
+        Task<Enums.Result> BlockUser(UserDTO userDTO, bool unblock = false);
+        Task<Enums.Result> BlockUsers(List<UserDTO> usersDTOs, bool unblock = false);
         Task<Enums.Result> DeleteUser(UserDTO userDTO);
+        Task<Enums.Result> DeleteUsers(List<UserDTO> usersDTOs);
     }
 }

@@ -500,7 +500,67 @@ namespace MagFlow.BLL.Services
 
 
         // Delete section
-        [MinimumRole(nameof(AppRole.CompanyAdmin))]
+        public async Task<Enums.Result> BlockUser(UserDTO userDTO, bool unblock = false)
+        {
+            if (userDTO == null || userDTO.Id == Guid.Empty)
+                return Enums.Result.Error;
+            var user = await _userManager.FindByIdAsync(userDTO.Id.ToString());
+            if (user == null)
+                return Enums.Result.Error;
+
+            user.IsActive = unblock;
+            var result = await _userRepository.UpdateAsync(user);
+            if (result == Enums.Result.Success && unblock == false)
+            {
+                try
+                {
+                    await _userManager.UpdateSecurityStampAsync(user);
+                    _userRevocationService.RevokeUser(user.Id.ToString());
+                    await _serverNotificationService.ForceUserLogoutAsync(user.Id.ToString());
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to logout user");
+                }
+            }
+            return result;
+        }
+        public async Task<Enums.Result> BlockUsers(List<UserDTO> usersDTOs, bool unblock = false)
+        {
+            if (!usersDTOs?.Any() == true)
+                return Enums.Result.Error;
+
+            var usersIds = usersDTOs
+                .Where(x => x != null && x.Id != Guid.Empty)
+                .Select(x => x.Id)
+                .ToList();
+            var users = await _userRepository.GetAllAsync(x => usersIds.Contains(x.Id));
+            if (users == null)
+                return Enums.Result.Error;
+
+            foreach (var user in users)
+            {
+                user.IsActive = unblock;
+            }
+            var result = await _userRepository.UpdateRangeAsync(users);
+            if (result == Enums.Result.Success && unblock == false)
+            {
+                try
+                {
+                    foreach (var user in users)
+                    {
+                        await _userManager.UpdateSecurityStampAsync(user);
+                        _userRevocationService.RevokeUser(user.Id.ToString());
+                        await _serverNotificationService.ForceUserLogoutAsync(user.Id.ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to logout user");
+                }
+            }
+            return result;
+        }
         public async Task<Enums.Result> DeleteUser(UserDTO userDTO)
         {
             if (userDTO == null || userDTO.Id == Guid.Empty)
@@ -510,6 +570,7 @@ namespace MagFlow.BLL.Services
                 return Enums.Result.Error;
 
             var result = await _userRepository.DeleteAsync(user);
+            result = await _userRepository.DeleteCompanyUserAsync(user.Id);
             if (result == Enums.Result.Success)
             {
                 try
@@ -517,6 +578,41 @@ namespace MagFlow.BLL.Services
                     await _userManager.UpdateSecurityStampAsync(user);
                     _userRevocationService.RevokeUser(user.Id.ToString());
                     await _serverNotificationService.ForceUserLogoutAsync(user.Id.ToString());
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to logout user");
+                }
+            }
+            return result;
+        }
+        public async Task<Enums.Result> DeleteUsers(List<UserDTO> usersDTOs)
+        {
+            if (!usersDTOs?.Any() == true)
+                return Enums.Result.Error;
+
+            var usersIds = usersDTOs
+                .Where(x => x != null && x.Id != Guid.Empty)
+                .Select(x => x.Id)
+                .ToList();
+
+            var result = await _userRepository.DeleteManyAsync(x => usersIds.Contains(x.Id));
+            if (result != Enums.Result.Success)
+                return result;
+            result = await _userRepository.DeleteCompanyUsersAsync(usersIds);
+            if (result == Enums.Result.Success)
+            {
+                try
+                {
+                    foreach (var userId in usersIds)
+                    {
+                        var user = await _userManager.FindByIdAsync(userId.ToString());
+                        if(user == null)
+                            continue;
+                        await _userManager.UpdateSecurityStampAsync(user);
+                        _userRevocationService.RevokeUser(user.Id.ToString());
+                        await _serverNotificationService.ForceUserLogoutAsync(user.Id.ToString());
+                    }
                 }
                 catch (Exception ex)
                 {

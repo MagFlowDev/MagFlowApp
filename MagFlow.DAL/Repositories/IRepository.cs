@@ -11,9 +11,9 @@ namespace MagFlow.DAL.Repositories
 {
     public interface IRepository<TEntity, TContext> where TEntity : class where TContext : DbContext
     {
-        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
+        IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool tracking = true);
         Task<QueryResponse<TEntity>?> GetAsync(QueryOptions<TEntity> options, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
-        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
+        Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool tracking = true);
 
         IQueryable<TEntity>? Find(Expression<Func<TEntity, bool>> predicate);
 

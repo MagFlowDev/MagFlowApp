@@ -1195,4 +1195,34 @@ i uprawnieniami użytkowników</value>
   <data name="UserProfile" xml:space="preserve">
     <value>Profil użytkownika</value>
   </data>
+  <data name="BlockedSuccessfully" xml:space="preserve">
+    <value>Zablokowano pomyślnie</value>
+  </data>
+  <data name="BlockingFailed" xml:space="preserve">
+    <value>Zablokowanie nie powiodło się</value>
+  </data>
+  <data name="UnblockedSuccessfully" xml:space="preserve">
+    <value>Odblokowano pomyślnie</value>
+  </data>
+  <data name="UnblockingFailed" xml:space="preserve">
+    <value>Odblokowanie nie powiodło się</value>
+  </data>
+  <data name="Unblock" xml:space="preserve">
+    <value>Odblokuj</value>
+  </data>
+  <data name="BlockUserConfirmation" xml:space="preserve">
+    <value>Czy na pewno chcesz zablokować użytkownika {0}?</value>
+  </data>
+  <data name="UnblockUserConfirmation" xml:space="preserve">
+    <value>Czy na pewno chcesz odblokować użytkownika {0}?</value>
+  </data>
+  <data name="DeleteUsersConfirmation" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} użytkowników?</value>
+  </data>
+  <data name="BlockUsersConfirmation" xml:space="preserve">
+    <value>Czy na pewno chcesz zablokować {0} użytkowników?</value>
+  </data>
+  <data name="UnblockUsersConfirmation" xml:space="preserve">
+    <value>Czy na pewno chcesz odblokować {0} użytkowników?</value>
+  </data>
 </root>

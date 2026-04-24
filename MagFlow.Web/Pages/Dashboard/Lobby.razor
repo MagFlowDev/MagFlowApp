@@ -53,7 +53,7 @@
                                 <div class="d-flex align-items-start align-self-stretch flex-wrap" style="max-width: 236px; gap: 12px;">
                                     @foreach(var module in userSession.Modules)
                                     {
-                                        <MudTooltip Text="@Localizer[module.Name]" Delay="300">
+                                        <MudTooltip Text="@Localizer[module.Name]" Delay="@Constants.Tooltip.DELAY">
                                             <MudIcon Icon="@module.ModuleComponent.Icon" Size="Size.Small" Class="my-1"/>
                                         </MudTooltip>
                                     }

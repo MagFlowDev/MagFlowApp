@@ -5,10 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MagFlow.Shared.Models.Interfaces;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class User
+    public class User : ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,5 +20,7 @@ namespace MagFlow.Domain.CompanyScope
         public string LastName { get; set; }
         [Required]
         public string Email { get; set; }
+
+        public DateTime? RemovedAt { get; set; }
     }
 }

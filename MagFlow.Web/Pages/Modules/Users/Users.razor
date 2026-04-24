@@ -1,6 +1,7 @@
 ﻿@using MagFlow.Shared.Models
 @using MagFlow.Shared.Models.Interfaces
 @using MagFlow.Web.Components.Status
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
@@ -18,10 +19,10 @@
                         <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" Breakpoint="Breakpoint.None">
                             <MudNavMenu>
                                 <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
-                                <MudTooltip Text="@Localizer[Langs.Users]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
+                                <MudTooltip Text="@Localizer[Langs.Users]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
                                     <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Groups" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.UsersList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.UsersList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.UsersList)">@Localizer[Langs.Users]</MudNavLink>
                                 </MudTooltip>
-                                <MudTooltip Text="@Localizer[Langs.RolesList]" Disabled="@_isMenuOpened" Delay="300" RootClass="w-100">
+                                <MudTooltip Text="@Localizer[Langs.RolesList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
                                     <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Shield" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.RolesList))" IconColor="@GetIconColor(SectionsEnums.UserModuleSection.RolesList)" Class="@GetNavClass(SectionsEnums.UserModuleSection.RolesList)">@Localizer[Langs.RolesList]</MudNavLink>
                                 </MudTooltip>
                             </MudNavMenu>
