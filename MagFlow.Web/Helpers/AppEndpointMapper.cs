@@ -117,7 +117,7 @@ namespace MagFlow.Web.Helpers
                 logger.LogInformation($"User {req.Email} is attempting to login from IPv4 address: {ip}");
 
                 var user = await userManager.FindByEmailAsync(req.Email);
-                if (user is null || user.RemovedAt.HasValue)
+                if (user is null || user.RemovedAt.HasValue || !user.IsActive)
                 {
                     logger.LogWarning($"Invalid login ({req.Email}) attempt from IPv4 address: {ip}");
                     return Results.Redirect("/Login?error=1");

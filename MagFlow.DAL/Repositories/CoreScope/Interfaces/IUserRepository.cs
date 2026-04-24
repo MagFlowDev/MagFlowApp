@@ -16,9 +16,11 @@ namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
         Task<ApplicationUser?> GetByEmailAsync(string email);
         Task<List<UserSession>?> GetLastSessionsAsync(Guid userId, Guid companyId, int historyLength = 1);
         Task<QueryResponse<ApplicationUser>?> GetCompanyUsersAsync(QueryOptions<User> queryOptions);
-
-        
         
         Task<Enums.Result> UpdateSettingsAsync(ApplicationUserSettings settings);
+
+        Task<Enums.Result> DeleteCompanyUserAsync(Guid userId, Guid companyId);
+        Task<Enums.Result> DeleteCompanyUserAsync(Guid userId);
+        Task<Enums.Result> DeleteCompanyUsersAsync(List<Guid> usersIds);
     }
 }

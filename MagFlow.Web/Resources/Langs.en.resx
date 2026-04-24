@@ -1194,4 +1194,34 @@
   <data name="UserProfile" xml:space="preserve">
     <value>User profile</value>
   </data>
+  <data name="BlockedSuccessfully" xml:space="preserve">
+    <value>Blocked successfully</value>
+  </data>
+  <data name="BlockingFailed" xml:space="preserve">
+    <value>Blocking failed</value>
+  </data>
+  <data name="UnblockedSuccessfully" xml:space="preserve">
+    <value>Unblocked successfully</value>
+  </data>
+  <data name="UnblockingFailed" xml:space="preserve">
+    <value>Unblocking failed</value>
+  </data>
+  <data name="Unblock" xml:space="preserve">
+    <value>Unblock</value>
+  </data>
+  <data name="BlockUserConfirmation" xml:space="preserve">
+    <value>Are you sure you want to block user {0}?</value>
+  </data>
+  <data name="UnblockUserConfirmation" xml:space="preserve">
+    <value>Are you sure you want to unblock user {0}?</value>
+  </data>
+  <data name="DeleteUsersConfirmation" xml:space="preserve">
+    <value>Are you sure you want to delete {0} users?</value>
+  </data>
+  <data name="BlockUsersConfirmation" xml:space="preserve">
+    <value>Are you sure you want to block {0} users?</value>
+  </data>
+  <data name="UnblockUsersConfirmation" xml:space="preserve">
+    <value>Are you sure you want to unblock {0} users?</value>
+  </data>
 </root>

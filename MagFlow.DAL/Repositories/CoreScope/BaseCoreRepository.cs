@@ -314,7 +314,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 {
                     using (context = _coreContextFactory.CreateDbContext())
                     {
-                        var entities = Find(predicate);
+                        var entities = Find(predicate, context);
                         if (entities == null)
                             return Enums.Result.Error;
                         if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
@@ -337,7 +337,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 }
                 else
                 {
-                    var entities = Find(predicate);
+                    var entities = Find(predicate, context);
                     if (entities == null)
                         return Enums.Result.Error;
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
@@ -374,7 +374,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 {
                     using (context = _coreContextFactory.CreateDbContext())
                     {
-                        var entities = Find(predicate);
+                        var entities = Find(predicate, context);
                         if (entities == null)
                             return Enums.Result.Error;
                         if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
@@ -397,7 +397,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 }
                 else
                 {
-                    var entities = Find(predicate);
+                    var entities = Find(predicate, context);
                     if (entities == null)
                         return Enums.Result.Error;
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
@@ -469,7 +469,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
+        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool tracking = true)
         {
             try
             {
@@ -482,6 +482,8 @@ namespace MagFlow.DAL.Repositories.CoreScope
                         query = include(query);
                     if (predicate != null)
                         query = query.Where(predicate).AsQueryable();
+                    if (!tracking)
+                        return query.AsNoTracking().ToList();
                     return query.ToList();
                 }
             }
@@ -492,7 +494,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool tracking = true)
         {
             try
             {
@@ -505,6 +507,8 @@ namespace MagFlow.DAL.Repositories.CoreScope
                         query = include(query);
                     if (predicate != null)
                         query = query.Where(predicate).AsQueryable();
+                    if (!tracking)
+                        return await query.AsNoTracking().ToListAsync();
                     return await query.ToListAsync();
                 }
             }
@@ -772,6 +776,30 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 using (var context = _coreContextFactory.CreateDbContext())
                 {
                     return context.Set<TEntity>().Where(predicate);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public virtual IQueryable<TEntity>? Find(Expression<Func<TEntity, bool>> predicate, CoreDbContext? coreContext = null)
+        {
+            try
+            {
+                if (coreContext != null)
+                {
+                    return coreContext.Set<TEntity>().Where(predicate);
+                }
+
+                else
+                {
+                    using (var context = _coreContextFactory.CreateDbContext())
+                    {
+                        return context.Set<TEntity>().Where(predicate);
+                    }
                 }
             }
             catch (Exception ex)

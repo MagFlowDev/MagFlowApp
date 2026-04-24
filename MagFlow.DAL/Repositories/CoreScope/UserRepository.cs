@@ -7,9 +7,11 @@ using MagFlow.Shared.Constants.Identificators;
 using MagFlow.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Math.EC.Rfc7748;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Text;
 
 namespace MagFlow.DAL.Repositories.CoreScope
@@ -232,6 +234,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                     using (var companyContext = _companyContextFactory.CreateDbContext())
                     {
                         var companyUsersQuery = companyContext.Users
+                            .Where(x => x.RemovedAt == null)
                             .ApplyMultiColumnSearch(queryOptions.Search, queryOptions.SearchColumns)
                             .SortBy(queryOptions.SortBy, queryOptions.Descending);
                         var companyUsers = await companyUsersQuery.Paginate(queryOptions.PageNumber, queryOptions.PageSize).ToListAsync();
@@ -253,6 +256,146 @@ namespace MagFlow.DAL.Repositories.CoreScope
             {
                 _logger.LogError(ex, ex.Message);
                 return null;
+            }
+        }
+
+
+
+        public async Task<Enums.Result> DeleteCompanyUserAsync(Guid userId, Guid companyId)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    var connectionString = await context.Companies
+                        .Where(x => x.Id == companyId)
+                        .Select(x => x.ConnectionString)
+                        .FirstOrDefaultAsync();
+                    if (!string.IsNullOrEmpty(connectionString))
+                    {
+                        using (var companyContext = _companyContextFactory.CreateDbContext())
+                        {
+                            var companyUser = await companyContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+                            if (companyUser == null)
+                                return Enums.Result.Error;
+
+                            companyUser.RemovedAt = DateTime.UtcNow;
+                            companyContext.Users.Update(companyUser);
+                            await companyContext.SaveChangesAsync();
+                        }
+                    }
+                    else
+                    {
+                        return Enums.Result.Error;
+                    }
+                    return Enums.Result.Success;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<Enums.Result> DeleteCompanyUserAsync(Guid userId)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    var userCompanies = await context.CompanyUsers
+                        .Where(x => x.UserId == userId)
+                        .Select(x => x.CompanyId)
+                        .ToListAsync();
+
+                    var connectionStrings = (await context.Companies
+                        .Where(x => userCompanies.Contains(x.Id))
+                        .ToListAsync())
+                        .Select(x => x.ConnectionString);
+
+                    var now = DateTime.UtcNow;
+                    foreach (var connectionString in connectionStrings)
+                    {
+                        if (!string.IsNullOrEmpty(connectionString))
+                        {
+                            using (var companyContext = _companyContextFactory.CreateDbContext())
+                            {
+                                var companyUser = await companyContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+                                if (companyUser == null)
+                                    return Enums.Result.Error;
+
+                                companyUser.RemovedAt = now;
+                                companyContext.Users.Update(companyUser);
+                                await companyContext.SaveChangesAsync();
+                            }
+                        }
+                        else
+                        {
+                            return Enums.Result.Error;
+                        }
+                    }
+                    
+                    return Enums.Result.Success;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+        public async Task<Enums.Result> DeleteCompanyUsersAsync(List<Guid> usersIds)
+        {
+            try
+            {
+                using (var context = _coreContextFactory.CreateDbContext())
+                {
+                    var userCompanies = await context.CompanyUsers
+                        .Where(x => usersIds.Contains(x.UserId))
+                        .Select(x => x.CompanyId)
+                        .ToListAsync();
+
+                    var connectionStrings = (await context.Companies
+                            .Where(x => userCompanies.Contains(x.Id))
+                            .ToListAsync())
+                        .Select(x => x.ConnectionString);
+
+                    var now = DateTime.UtcNow;
+                    foreach (var connectionString in connectionStrings)
+                    {
+                        if (!string.IsNullOrEmpty(connectionString))
+                        {
+                            using (var companyContext = _companyContextFactory.CreateDbContext())
+                            {
+                                var companyUsers = await companyContext.Users
+                                    .Where(x => usersIds.Contains(x.Id))
+                                    .ToListAsync();
+                                if (companyUsers == null)
+                                    return Enums.Result.Error;
+
+                                foreach (var companyUser in companyUsers)
+                                {
+                                    companyUser.RemovedAt = now;
+                                }
+
+                                companyContext.Users.UpdateRange(companyUsers);
+                                await companyContext.SaveChangesAsync();
+                            }
+                        }
+                        else
+                        {
+                            return Enums.Result.Error;
+                        }
+                    }
+
+                    return Enums.Result.Success;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
             }
         }
     }
