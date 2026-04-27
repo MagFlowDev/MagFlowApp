@@ -1225,4 +1225,10 @@ i uprawnieniami użytkowników</value>
   <data name="UnblockUsersConfirmation" xml:space="preserve">
     <value>Czy na pewno chcesz odblokować {0} użytkowników?</value>
   </data>
+  <data name="BlockUser" xml:space="preserve">
+    <value>Zablokuj użytkownika</value>
+  </data>
+  <data name="UnblockUser" xml:space="preserve">
+    <value>Odblokuj użytkownika</value>
+  </data>
 </root>

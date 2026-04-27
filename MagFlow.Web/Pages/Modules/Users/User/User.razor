@@ -25,11 +25,11 @@
                 <div class="d-flex align-items-center align-self-stretch justify-content-end" style="gap: 16px;">
                     @if (_user?.IsActive == false)
                     {
-                        <LoadingButton Loading="_loadingBlock" Variant="Variant.Outlined" Color="Color.Success" StartIcon="@Icons.Material.Outlined.LockOpen" OnClick="UnblockUser">@Localizer[Langs.Unblock]</LoadingButton>
+                        <LoadingButton Loading="_loadingBlock" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Outlined.LockReset" OnClick="UnblockUser">@Localizer[Langs.Unblock]</LoadingButton>
                     }
                     else
                     {
-                        <LoadingButton Loading="_loadingBlock" Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Lock" OnClick="BlockUser">@Localizer[Langs.Block]</LoadingButton>
+                        <LoadingButton Loading="_loadingBlock" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Outlined.Block" OnClick="BlockUser">@Localizer[Langs.Block]</LoadingButton>
                     }
                     <LoadingButton Loading="_loadingDelete" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" OnClick="DeleteUser">@Localizer[Langs.Delete]</LoadingButton>
                 </div>

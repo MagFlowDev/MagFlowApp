@@ -73,7 +73,7 @@ namespace MagFlow.Web.Pages.Modules.Users
                 _loadingBlock[user.Id] = true;
 
                 var parameters = new DialogParameters<ConfirmBlockDialog> { { x => x.ContentText, string.Format(Localizer[Langs.BlockUserConfirmation], user.Email) } };
-                var dialog = await DialogService.ShowAsync<ConfirmBlockDialog>(Localizer[Langs.DeleteUser], parameters);
+                var dialog = await DialogService.ShowAsync<ConfirmBlockDialog>(Localizer[Langs.BlockUser], parameters);
                 var confirmation = await dialog.Result;
                 if (confirmation != null && !confirmation.Canceled)
                 {
@@ -109,7 +109,7 @@ namespace MagFlow.Web.Pages.Modules.Users
                 _loadingBlock[user.Id] = true;
 
                 var parameters = new DialogParameters<ConfirmBlockDialog> { { x => x.ContentText, string.Format(Localizer[Langs.UnblockUserConfirmation], user.Email) }, { x => x.Unblock, true } };
-                var dialog = await DialogService.ShowAsync<ConfirmBlockDialog>(Localizer[Langs.DeleteUser], parameters);
+                var dialog = await DialogService.ShowAsync<ConfirmBlockDialog>(Localizer[Langs.UnblockUser], parameters);
                 var confirmation = await dialog.Result;
                 if (confirmation != null && !confirmation.Canceled)
                 {
@@ -156,7 +156,7 @@ namespace MagFlow.Web.Pages.Modules.Users
                 _loadingBlockMany = true;
 
                 var parameters = new DialogParameters<ConfirmBlockDialog> { { x => x.ContentText, string.Format(Localizer[Langs.BlockUsersConfirmation], users.Count) } };
-                var dialog = await DialogService.ShowAsync<ConfirmBlockDialog>(Localizer[Langs.DeleteUser], parameters);
+                var dialog = await DialogService.ShowAsync<ConfirmBlockDialog>(Localizer[Langs.BlockUser], parameters);
                 var confirmation = await dialog.Result;
                 if (confirmation != null && !confirmation.Canceled)
                 {
@@ -204,7 +204,7 @@ namespace MagFlow.Web.Pages.Modules.Users
                 _loadingUnblockMany = true;
 
                 var parameters = new DialogParameters<ConfirmBlockDialog> { { x => x.ContentText, string.Format(Localizer[Langs.UnblockUsersConfirmation], users.Count) }, { x => x.Unblock, true } };
-                var dialog = await DialogService.ShowAsync<ConfirmBlockDialog>(Localizer[Langs.DeleteUser], parameters);
+                var dialog = await DialogService.ShowAsync<ConfirmBlockDialog>(Localizer[Langs.UnblockUser], parameters);
                 var confirmation = await dialog.Result;
                 if (confirmation != null && !confirmation.Canceled)
                 {
