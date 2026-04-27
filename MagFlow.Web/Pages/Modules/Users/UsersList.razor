@@ -20,11 +20,19 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer[Langs.UsersList]</MudText>
         <MudSpacer />
+        <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_EDIT">
+            <Authorized>
+                <LoadingButton Loading="_loadingBlockMany" Color="Color.Secondary" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Block" Class="mr-2" OnClick="BlockUsers">@Localizer[Langs.Block]</LoadingButton>
+                <LoadingButton Loading="_loadingUnblockMany" Color="Color.Secondary" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.LockReset" Class="mr-2" OnClick="UnblockUsers">@Localizer[Langs.Unblock]</LoadingButton>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_DELETE">
+            <Authorized>
+                <LoadingButton Loading="_loadingDeleteMany" Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Delete" Class="mr-2" OnClick="DeleteUsers">@Localizer[Langs.Delete]</LoadingButton>
+            </Authorized>
+        </AuthorizeView>
         <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_ADD">
             <Authorized>
-                <LoadingButton Loading="_loadingBlockMany" Color="Color.Error" Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Lock" Class="mr-2" OnClick="BlockUsers">@Localizer[Langs.Block]</LoadingButton>
-                <LoadingButton Loading="_loadingUnblockMany" Color="Color.Success" Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.LockOpen" Class="mr-2" OnClick="UnblockUsers">@Localizer[Langs.Unblock]</LoadingButton>
-                <LoadingButton Loading="_loadingDeleteMany" Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Delete" Class="mr-2" OnClick="DeleteUsers">@Localizer[Langs.Delete]</LoadingButton>
                 <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="mr-2" OnClick="OpenAddUserModal">@Localizer[Langs.AddUser]</MudButton>
             </Authorized>
         </AuthorizeView>
@@ -68,13 +76,13 @@
                         @if (context.Item.IsActive)
                         {
                             <MudTooltip Text="@Localizer[Langs.Block]" Delay="@Constants.Tooltip.DELAY">
-                                <LoadingIconButton Loading="LoadingBlock(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.Lock" OnClick="() => BlockUser(context.Item)"/>
+                                <LoadingIconButton Loading="LoadingBlock(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.Block" OnClick="() => BlockUser(context.Item)"/>
                             </MudTooltip>
                         }
                         else
                         {
                             <MudTooltip Text="@Localizer[Langs.Unblock]" Delay="@Constants.Tooltip.DELAY">
-                                <LoadingIconButton Loading="LoadingBlock(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.LockOpen" OnClick="() => UnblockUser(context.Item)"/>
+                                <LoadingIconButton Loading="LoadingBlock(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.LockReset" OnClick="() => UnblockUser(context.Item)"/>
                             </MudTooltip>
                         }
                     </Authorized>

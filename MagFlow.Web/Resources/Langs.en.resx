@@ -1224,4 +1224,10 @@
   <data name="UnblockUsersConfirmation" xml:space="preserve">
     <value>Are you sure you want to unblock {0} users?</value>
   </data>
+  <data name="BlockUser" xml:space="preserve">
+    <value>Block user</value>
+  </data>
+  <data name="UnblockUser" xml:space="preserve">
+    <value>Unblock user</value>
+  </data>
 </root>

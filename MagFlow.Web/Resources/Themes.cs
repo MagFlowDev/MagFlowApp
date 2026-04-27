@@ -9,12 +9,15 @@ namespace MagFlow.Web.Resources
             PaletteLight = new PaletteLight
             {
                 Primary = "#0D6EFD",
-                Secondary = "#6C757D",
+                Secondary = "#E0E0E0",
+                SecondaryContrastText = "#2E2E2E",
+                TextSecondary = "#2E2E2E",
                 Background = "#FFFFFF",
                 AppbarBackground = "#FFFFFF",
                 TextPrimary = "#272C34",
-                TextSecondary = "#495057",
-                ActionDefault = "#BDBDBD",
+                //TextSecondary = "#495057",
+                //ActionDefault = "#BDBDBD",
+                ActionDefault = "#757575",
             },
             Typography = new Typography
             {
