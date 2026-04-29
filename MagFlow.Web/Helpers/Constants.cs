@@ -5,6 +5,7 @@
         public static class Tooltip
         {
             public const int DELAY = 300;
+            public const int LONG_DELAY = 600;
         }
     }
 }
