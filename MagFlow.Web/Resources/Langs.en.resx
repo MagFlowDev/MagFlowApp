@@ -1230,4 +1230,7 @@
   <data name="UnblockUser" xml:space="preserve">
     <value>Unblock user</value>
   </data>
+  <data name="AssignedCompanies" xml:space="preserve">
+    <value>Assigned companies</value>
+  </data>
 </root>

@@ -23,7 +23,7 @@
             </div>
             <MudTextField Label="@Localizer[Langs.Email]" Placeholder="@Localizer[Langs.JohnSmithCompanyCom]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.Email" For="@(() => _model.GeneralInformation.Email)" Class="w-100 my-0"></MudTextField>
             <MudTextField Label="@Localizer[Langs.Phone]" Placeholder="@Localizer[Langs.ExamplePhoneNumber]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.PhoneNumber" For="@(() => _model.GeneralInformation.PhoneNumber)" Class="w-100 my-0"></MudTextField>
-            <MudSelect @bind-Value="_selectedRole" MultiSelection="false" T="AppRole" OuterClass="w-100" Variant="Variant.Outlined">
+            <MudSelect @bind-Value="_selectedRole" MultiSelection="false" T="AppRole" OuterClass="w-100" Variant="Variant.Outlined" Label="@Localizer[Langs.RoleSingle]">
                 @foreach (var appRole in Enumeration<Guid>.GetAll<AppRole>())
                 {
                     <MudSelectItem Value="appRole">@appRole.DisplayRole(Localizer)</MudSelectItem>

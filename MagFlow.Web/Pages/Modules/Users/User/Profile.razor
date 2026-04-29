@@ -1,5 +1,120 @@
-﻿<h3>Profile</h3>
+﻿@using FluentValidation
+@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Helpers.Localization.Display
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Validators.Company
+@using MagFlow.Shared.Validators.Resources
+@using MagFlow.Web.Components.Buttons
+@using MudBlazor
+
+@inject IUserService UserService
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<Validations> Validations
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 40px; padding-right: 40px; margin-top: 24px;">
+    <MudText Typo="Typo.h5">@Localizer[Langs.UserProfile]</MudText>
+    @if (_user != null)
+    {
+        <EditForm EditContext="@_context" class="align-self-stretch d-flex flex-column align-items-start" style="gap: 24px;">
+            <div class="d-flex justify-content-between align-items-center align-self-stretch" style="gap: 8px">
+                <MudTextField Label="@Localizer[Langs.FirstName]" Variant="Variant.Outlined" T="string" @bind-Value="_user.FirstName" Class="w-100 my-0"></MudTextField>
+                <MudTextField Label="@Localizer[Langs.LastName]" Variant="Variant.Outlined" T="string" @bind-Value="_user.LastName" Class="w-100 my-0"></MudTextField>
+            </div>
+            <MudTextField Label="@Localizer[Langs.Email]" Variant="Variant.Outlined" T="string" Text="@_user.Email" Class="w-100 my-0" Disabled></MudTextField>
+            <MudTextField Label="@Localizer[Langs.Phone]" Variant="Variant.Outlined" T="string" @bind-Value="@_user.PhoneNumber" Class="w-100 my-0"></MudTextField>
+            
+            <MudSelect @bind-Value="_selectedRole" MultiSelection="false" T="AppRole?" OuterClass="w-100" Variant="Variant.Outlined" Label="@Localizer[Langs.RoleSingle]">
+                @foreach (var appRole in Enumeration<Guid>.GetAll<AppRole>())
+                {
+                    <MudSelectItem Value="appRole">@appRole.DisplayRole(Localizer)</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="CompanyDTO" @bind-SelectedValues="_companies" OuterClass="w-100" Variant="Variant.Outlined" MultiSelectionTextFunc="@(new Func<IReadOnlyList<string>, string>(GetCompanySelectionText))" Label="@Localizer[Langs.AssignedCompanies]">
+                @foreach (var company in _companies)
+                {
+                    <MudSelectItem Value="company">@company.Name</MudSelectItem>
+                }
+            </MudSelect>
+            
+            <LoadingButton Loading="_loading" Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@Localizer[Langs.Save]</LoadingButton>
+        </EditForm>
+    }
+</div>
 
 @code {
+    [CascadingParameter(Name = "User")]
+    UserDTO? _user { get; set; }
+
+    private IValidator _validator;
+    private UserFormModel _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
+
+    private AppRole? _selectedRole;
+    private IReadOnlyCollection<CompanyDTO> _companies = new List<CompanyDTO>();
+
+    private bool _isBusy;
+    private bool _loading;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _model = new UserFormModel();
+        _context = new EditContext(_model);
+        _validator = new UserCreateFormValidator(Validations);
+        _messageStore = new ValidationMessageStore(_context);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (_user != null && _selectedRole == null)
+            _selectedRole = _user.Roles.FirstOrDefault();
+        if (_user != null && _user.Companies?.Any() == true && !_companies.Any())
+            _companies = _user.Companies;
+    }
+
+    private string GetCompanySelectionText(IReadOnlyList<string> selectedValues)
+    {
+        return $"{string.Join(", ", selectedValues.Select(x => x))}";
+
+    }
+
+    private async Task Submit()
+    {
+        if (_isBusy)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loading = true;
+
+            var isValid = await _messageStore.IsFormValid(_validator, _model);
+            _context.NotifyValidationStateChanged();
+
+            if (!isValid)
+                return;
+
+            //var result = await UserService.Update(_model, _selectedRole);
+            // if (result == MagFlow.Shared.Models.Enums.Result.Success)
+            // {
+            //     Snackbar.Add(Localizer[Langs.ActionSucceed], MudBlazor.Severity.Success);
+            // }
+            // else
+            // {
+            //     Snackbar.Add(Localizer[Langs.ErrorOccured], MudBlazor.Severity.Error);
+            // }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loading = false;
+        }
+    }
 
 }

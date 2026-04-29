@@ -1231,4 +1231,7 @@ i uprawnieniami użytkowników</value>
   <data name="UnblockUser" xml:space="preserve">
     <value>Odblokuj użytkownika</value>
   </data>
+  <data name="AssignedCompanies" xml:space="preserve">
+    <value>Przypisane firmy</value>
+  </data>
 </root>

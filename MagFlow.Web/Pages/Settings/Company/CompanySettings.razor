@@ -1,6 +1,7 @@
 ﻿@page "/company/settings"
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Extensions.Enum
 @using MagFlow.Shared.Models
 @using MagFlow.Shared.Models.Enumerators
 @using Microsoft.AspNetCore.Authorization
@@ -20,11 +21,11 @@
         <div class="d-flex flex-column justify-content-start align-items-start" style="min-width: 300px; flex: 0 0 auto; gap: 24px; min-height: 0; overflow-x: hidden">
             <MudText Typo="Typo.h5" Style="font-weight: 700;">@Localizer[Langs.SettingsCompany]</MudText>
             <MudList T="SectionsEnums.CompanySettingsSection" SelectionMode="SelectionMode.SingleSelection" SelectedValue="@_currentSection" SelectedValueChanged="OnSectionChanged">
-                <MudListItem Value="SectionsEnums.CompanySettingsSection.Information" Text="@Localizer[Langs.GeneralInformation]" Icon="@Icons.Material.Outlined.Apartment" IconColor="@GetIconColor(SectionsEnums.CompanySettingsSection.Information)" Class="@GetNavClass(SectionsEnums.CompanySettingsSection.Information)" />
-                <MudListItem Value="SectionsEnums.CompanySettingsSection.Logo" Text="@Localizer[Langs.Logo]" Icon="@Icons.Material.Outlined.PhotoSizeSelectActual" IconColor="@GetIconColor(SectionsEnums.CompanySettingsSection.Logo)" Class="@GetNavClass(SectionsEnums.CompanySettingsSection.Logo)" />
-                <MudListItem Value="SectionsEnums.CompanySettingsSection.Contact" Text="@Localizer[Langs.ContactDetails]" Icon="@Icons.Material.Outlined.Call" IconColor="@GetIconColor(SectionsEnums.CompanySettingsSection.Contact)" Class="@GetNavClass(SectionsEnums.CompanySettingsSection.Contact)" />
-                <MudListItem Value="SectionsEnums.CompanySettingsSection.Modules" Text="@Localizer[Langs.Modules]" Icon="@Icons.Material.Outlined.GridView" IconColor="@GetIconColor(SectionsEnums.CompanySettingsSection.Modules)" Class="@GetNavClass(SectionsEnums.CompanySettingsSection.Modules)" />
-                <MudListItem Value="SectionsEnums.CompanySettingsSection.WorkTime" Text="@Localizer[Langs.WorkingHours]" Icon="@Icons.Material.Outlined.Timer" IconColor="@GetIconColor(SectionsEnums.CompanySettingsSection.WorkTime)" Class="@GetNavClass(SectionsEnums.CompanySettingsSection.WorkTime)" />
+                <MudListItem Value="SectionsEnums.CompanySettingsSection.Information" Text="@Localizer[Langs.GeneralInformation]" Icon="@Icons.Material.Outlined.Apartment" IconColor="@_currentSection.GetIconColor(SectionsEnums.CompanySettingsSection.Information)" Class="@_currentSection.GetNavClass(SectionsEnums.CompanySettingsSection.Information)" />
+                <MudListItem Value="SectionsEnums.CompanySettingsSection.Logo" Text="@Localizer[Langs.Logo]" Icon="@Icons.Material.Outlined.PhotoSizeSelectActual" IconColor="@_currentSection.GetIconColor(SectionsEnums.CompanySettingsSection.Logo)" Class="@_currentSection.GetNavClass(SectionsEnums.CompanySettingsSection.Logo)" />
+                <MudListItem Value="SectionsEnums.CompanySettingsSection.Contact" Text="@Localizer[Langs.ContactDetails]" Icon="@Icons.Material.Outlined.Call" IconColor="@_currentSection.GetIconColor(SectionsEnums.CompanySettingsSection.Contact)" Class="@_currentSection.GetNavClass(SectionsEnums.CompanySettingsSection.Contact)" />
+                <MudListItem Value="SectionsEnums.CompanySettingsSection.Modules" Text="@Localizer[Langs.Modules]" Icon="@Icons.Material.Outlined.GridView" IconColor="@_currentSection.GetIconColor(SectionsEnums.CompanySettingsSection.Modules)" Class="@_currentSection.GetNavClass(SectionsEnums.CompanySettingsSection.Modules)" />
+                <MudListItem Value="SectionsEnums.CompanySettingsSection.WorkTime" Text="@Localizer[Langs.WorkingHours]" Icon="@Icons.Material.Outlined.Timer" IconColor="@_currentSection.GetIconColor(SectionsEnums.CompanySettingsSection.WorkTime)" Class="@_currentSection.GetNavClass(SectionsEnums.CompanySettingsSection.WorkTime)" />
             </MudList>
         </div>
         <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden; gap: 40px;">
@@ -72,20 +73,5 @@
         _company = await CompanyService.GetCurrentCompany();
         if (_company == null)
             throw new Exception("Company not found!");
-    }
-
-
-    private string GetNavClass(SectionsEnums.CompanySettingsSection section)
-    {
-        return _currentSection == section
-            ? "mud-primary-text mud-nav-link-active"
-            : "";
-    }
-
-    private Color GetIconColor(SectionsEnums.CompanySettingsSection section)
-    {
-        return _currentSection == section
-            ? Color.Primary
-            : Color.Dark;
     }
 }
