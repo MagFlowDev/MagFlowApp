@@ -1,6 +1,8 @@
 ﻿@page "/user/{UserId}"
 
 @using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Extensions.Enum
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Helpers
@@ -20,7 +22,7 @@
         <ReturnFab/>
         @* Header *@
         <div class="d-flex align-self-stretch align-items-center mud-height-full w-100" style="min-height: 64px; height: 64px; border-radius: 4px; background: var(--mud-palette-primary-text); ">
-            <div class="d-flex align-self-stretch align-items-center justify-content-between w-100" style="margin-left: 64px;">
+            <div class="d-flex align-self-stretch align-items-center justify-content-between w-100 px-4" style="margin-left: 48px;">
                 <MudText Typo="Typo.h6" Style="font-weight: 500">@string.Concat(_user?.FirstName, " ", _user?.LastName)</MudText>
                 <div class="d-flex align-items-center align-self-stretch justify-content-end" style="gap: 16px;">
                     @if (_user?.IsActive == false)
@@ -43,28 +45,30 @@
                     <MudNavMenu>
                         <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
                         <MudTooltip Text="@Localizer[Langs.UserProfile]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
-                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.AccountBox" OnClick="@(() => OnSectionChanged(SectionsEnums.UserDetailsSection.Profile))" IconColor="@GetIconColor(SectionsEnums.UserDetailsSection.Profile)" Class="@GetNavClass(SectionsEnums.UserDetailsSection.Profile)">@Localizer[Langs.UserProfile]</MudNavLink>
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.AccountBox" OnClick="@(() => OnSectionChanged(SectionsEnums.UserDetailsSection.Profile))" IconColor="@_currentSection.GetIconColor(SectionsEnums.UserDetailsSection.Profile)" Class="@_currentSection.GetNavClass(SectionsEnums.UserDetailsSection.Profile)">@Localizer[Langs.UserProfile]</MudNavLink>
                         </MudTooltip>
                         <MudTooltip Text="@Localizer[Langs.EventLog]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
-                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Summarize" OnClick="@(() => OnSectionChanged(SectionsEnums.UserDetailsSection.Journal))" IconColor="@GetIconColor(SectionsEnums.UserDetailsSection.Journal)" Class="@GetNavClass(SectionsEnums.UserDetailsSection.Journal)">@Localizer[Langs.EventLog]</MudNavLink>
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Summarize" OnClick="@(() => OnSectionChanged(SectionsEnums.UserDetailsSection.Journal))" IconColor="@_currentSection.GetIconColor(SectionsEnums.UserDetailsSection.Journal)" Class="@_currentSection.GetNavClass(SectionsEnums.UserDetailsSection.Journal)">@Localizer[Langs.EventLog]</MudNavLink>
                         </MudTooltip>
                     </MudNavMenu>
                 </MudDrawer>
-                <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
-                    @switch (_currentSection)
-                    {
-                        case SectionsEnums.UserDetailsSection.Profile:
-                            <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
-                                <Profile />
-                            </div>
-                            break;
-                        case SectionsEnums.UserDetailsSection.Journal:
-                            <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
-                                <Journal />
-                            </div>
-                            break;
-                        default: break;
-                    }
+                <div class="d-flex flex-grow-1 justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
+                    <CascadingValue Value="@_user" TValue="UserDTO" Name="User">
+                        @switch (_currentSection)
+                        {
+                            case SectionsEnums.UserDetailsSection.Profile:
+                                <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
+                                    <Profile/>
+                                </div>
+                                break;
+                            case SectionsEnums.UserDetailsSection.Journal:
+                                <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
+                                    <Journal/>
+                                </div>
+                                break;
+                            default: break;
+                        }
+                    </CascadingValue>
                 </div>
             </MudDrawerContainer>
         </MudPaper>

@@ -174,19 +174,6 @@ namespace MagFlow.Web.Pages.Modules.Users.User
             StateHasChanged();
         }
 
-        private string GetNavClass(SectionsEnums.UserDetailsSection section)
-        {
-            return _currentSection == section
-                ? "mud-primary-text mud-nav-link-active"
-                : "";
-        }
-
-        private Color GetIconColor(SectionsEnums.UserDetailsSection section)
-        {
-            return _currentSection == section
-                ? Color.Primary
-                : Color.Dark;
-        }
 
     }
 }
