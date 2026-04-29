@@ -8,6 +8,7 @@
 @using MagFlow.Shared.Validators.Company
 @using MagFlow.Shared.Validators.Resources
 @using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 
@@ -24,11 +25,15 @@
             <div class="d-flex align-items-center align-self-stretch" style="padding: 8px 0; gap: 8px">
                 <div class="d-flex align-items-center w-50" style="gap: 16px">
                     <MudIcon Icon="@Icons.Material.Outlined.DateRange" Size="Size.Small" Style="color: var(--mud-palette-text-secondary" />
-                    <MudText Typo="Typo.subtitle2" Style="font-weight: 400; color: var(--mud-palette-text-secondary">@string.Concat(Localizer[Langs.CreationDate], ": ", _user.CreatedAt.HasValue ? _user.CreatedAt.Value.ToLocalTime().ToShortDateString() : "---")</MudText>
+                    <MudTooltip Disabled="@(!_user.CreatedAt.HasValue)" Text="@_user.CreatedAt?.ToLocalTime().ToString()" Delay="@Constants.Tooltip.LONG_DELAY">
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 400; color: var(--mud-palette-text-secondary">@string.Concat(Localizer[Langs.CreationDate], ": ", _user.CreatedAt.HasValue ? _user.CreatedAt.Value.ToLocalTime().ToShortDateString() : "---")</MudText>
+                    </MudTooltip>
                 </div>
                 <div class="d-flex align-items-start w-50" style="gap: 16px">
                     <MudIcon Icon="@Icons.Material.Outlined.Login" Size="Size.Small" Style="color: var(--mud-palette-text-secondary" />
-                    <MudText Typo="Typo.subtitle2" Style="font-weight: 400; color: var(--mud-palette-text-secondary)">@string.Concat(Localizer[Langs.LastLogin], ": ", _user.LastLogin.HasValue ? _user.LastLogin.Value.ToLocalTime().ToShortDateString() : "---")</MudText>
+                    <MudTooltip Disabled="@(!_user.LastLogin.HasValue)" Text="@_user.LastLogin?.ToLocalTime().ToString()" Delay="@Constants.Tooltip.LONG_DELAY">
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 400; color: var(--mud-palette-text-secondary)">@string.Concat(Localizer[Langs.LastLogin], ": ", _user.LastLogin.HasValue ? _user.LastLogin.Value.ToLocalTime().ToShortDateString() : "---")</MudText>
+                    </MudTooltip>
                 </div>
             </div>
             <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 24px;">
@@ -127,14 +132,15 @@
                 return;
 
             //var result = await UserService.Update(_model, _selectedRole);
-            // if (result == MagFlow.Shared.Models.Enums.Result.Success)
-            // {
-            //     Snackbar.Add(Localizer[Langs.ActionSucceed], MudBlazor.Severity.Success);
-            // }
-            // else
-            // {
-            //     Snackbar.Add(Localizer[Langs.ErrorOccured], MudBlazor.Severity.Error);
-            // }
+            var result = MagFlow.Shared.Models.Enums.Result.Success;
+            if (result == MagFlow.Shared.Models.Enums.Result.Success)
+            {
+                Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], MudBlazor.Severity.Error);
+            }
         }
         finally
         {

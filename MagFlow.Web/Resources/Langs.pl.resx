@@ -1234,4 +1234,7 @@ i uprawnieniami użytkowników</value>
   <data name="AssignedCompanies" xml:space="preserve">
     <value>Przypisane firmy</value>
   </data>
+  <data name="ChangesSaved" xml:space="preserve">
+    <value>Zmiany zostały zapisane.</value>
+  </data>
 </root>

@@ -1233,4 +1233,7 @@
   <data name="AssignedCompanies" xml:space="preserve">
     <value>Assigned companies</value>
   </data>
+  <data name="ChangesSaved" xml:space="preserve">
+    <value>The changes have been saved.</value>
+  </data>
 </root>
