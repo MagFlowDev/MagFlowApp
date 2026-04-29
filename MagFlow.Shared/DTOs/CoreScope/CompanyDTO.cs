@@ -20,5 +20,8 @@ namespace MagFlow.Shared.DTOs.CoreScope
         public string? LogoContentType { get; set; }
         public CompanySettingsDTO? CompanySettings { get; set; }
         public List<CompanyModuleDTO>? CompanyModules { get; set; }
+
+
+        public override string ToString() => Name;
     }
 }

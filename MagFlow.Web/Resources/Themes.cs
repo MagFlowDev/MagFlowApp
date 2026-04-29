@@ -11,7 +11,7 @@ namespace MagFlow.Web.Resources
                 Primary = "#0D6EFD",
                 Secondary = "#E0E0E0",
                 SecondaryContrastText = "#2E2E2E",
-                TextSecondary = "#2E2E2E",
+                //TextSecondary = "#2E2E2E",
                 Background = "#FFFFFF",
                 AppbarBackground = "#FFFFFF",
                 TextPrimary = "#272C34",

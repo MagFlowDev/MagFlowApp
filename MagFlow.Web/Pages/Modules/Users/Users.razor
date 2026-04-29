@@ -23,9 +23,13 @@
                                 <MudTooltip Text="@Localizer[Langs.Users]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
                                     <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Groups" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.UsersList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.UserModuleSection.UsersList)" Class="@_currentSection.GetNavClass(SectionsEnums.UserModuleSection.UsersList)">@Localizer[Langs.Users]</MudNavLink>
                                 </MudTooltip>
-                                <MudTooltip Text="@Localizer[Langs.RolesList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
-                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Shield" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.RolesList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.UserModuleSection.RolesList)" Class="@_currentSection.GetNavClass(SectionsEnums.UserModuleSection.RolesList)">@Localizer[Langs.RolesList]</MudNavLink>
-                                </MudTooltip>
+                                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_ADMIN" Context="adminAuthorized">
+                                    <Authorized>
+                                        <MudTooltip Text="@Localizer[Langs.RolesList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Shield" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.RolesList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.UserModuleSection.RolesList)" Class="@_currentSection.GetNavClass(SectionsEnums.UserModuleSection.RolesList)">@Localizer[Langs.RolesList]</MudNavLink>
+                                        </MudTooltip>
+                                    </Authorized>
+                                </AuthorizeView>
                             </MudNavMenu>
                         </MudDrawer>
                         <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
@@ -38,7 +42,11 @@
                                     break;
                                 case SectionsEnums.UserModuleSection.RolesList:
                                     <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
-                                        <RoleManagement/>
+                                        <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_ADMIN" Context="adminAuthorized">
+                                            <Authorized>
+                                                <RoleManagement />
+                                            </Authorized>
+                                        </AuthorizeView>
                                     </div>
                                     break;
                                 default: break;
