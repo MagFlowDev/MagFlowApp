@@ -48,6 +48,20 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
             };
         }
 
+        public static ApplicationUser ToEntity(this UserDTO userDTO, ApplicationUser actualUser, bool updateUserSettings = false)
+        {
+            actualUser.FirstName = userDTO.FirstName;
+            actualUser.LastName = userDTO.LastName;
+            actualUser.PhoneNumber = userDTO.PhoneNumber;
+            if (updateUserSettings)
+            {
+                if (actualUser.UserSettings == null)
+                    actualUser.UserSettings = userDTO.Settings.ToEntity(actualUser.Id);
+                actualUser.UserSettings = userDTO.Settings.ToEntity(actualUser.UserSettings);
+            }
+            return actualUser;
+        }
+
         public static ApplicationUser ToEntity(this CompanyFormModel model, Guid companyId, ApplicationRole? role = null, UserDTO? actualUser = null)
         {
             var uid = Guid.NewGuid();

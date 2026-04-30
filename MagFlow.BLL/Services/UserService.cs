@@ -31,6 +31,7 @@ namespace MagFlow.BLL.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly ISessionRepository _sessionRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly IEmailService _emailService;
@@ -42,6 +43,7 @@ namespace MagFlow.BLL.Services
         private readonly ILogger<UserService> _logger;
 
         public UserService(IUserRepository userRepository,
+            IRoleRepository roleRepository,
             IEmailService emailService,
             ISessionRepository sessionRepository,
             ICompanyRepository companyRepository,
@@ -52,6 +54,7 @@ namespace MagFlow.BLL.Services
             ILogger<UserService> logger)
         {
             _userRepository = userRepository;
+            _roleRepository = roleRepository;
             _sessionRepository = sessionRepository;
             _companyRepository = companyRepository;
             _logger = logger;
@@ -223,6 +226,48 @@ namespace MagFlow.BLL.Services
             catch(Exception ex)
             {
                 _logger.LogError(ex, "Error while updating user settings");
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<Enums.Result> UpdateUser(UserDTO userDTO)
+        {
+            try
+            {
+                var user = await _userRepository.GetByIdAsync(userDTO.Id, x => x.Include(u => u.Roles).ThenInclude(r => r.Role));
+                if (user == null)
+                    return Enums.Result.Error;
+
+                var currentRoleIds = user.Roles.Select(x => x.RoleId).ToList();
+                var newRoleIds = userDTO.Roles.Select(x => x.Id).ToList();
+                var rolesIdsToAdd = newRoleIds.Except(currentRoleIds).ToList();
+                var rolesIdsToRemove = currentRoleIds.Except(newRoleIds).ToList();
+
+                var applicationRoles = await _roleRepository.GetAllAsync();
+                var rolesToAdd = applicationRoles.Where(r => rolesIdsToAdd.Contains(r.Id)).ToList();
+                var rolesToRemove = applicationRoles.Where(r => rolesIdsToRemove.Contains(r.Id)).ToList();
+
+                var userToUpdate = userDTO.ToEntity(user);
+                var result = await _userRepository.UpdateAsync(userToUpdate);
+                if (result != Enums.Result.Success)
+                    return result;
+                foreach ( var role in rolesToAdd )
+                {
+                    result = await _roleRepository.AddUserRole(user, role);
+                    if (result != Enums.Result.Success)
+                        return result;
+                }
+                foreach ( var role in rolesToRemove )
+                {
+                    result = await _roleRepository.RemoveUserRole(user, role);
+                    if (result != Enums.Result.Success)
+                        return result;
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error while updating user");
                 return Enums.Result.Error;
             }
         }

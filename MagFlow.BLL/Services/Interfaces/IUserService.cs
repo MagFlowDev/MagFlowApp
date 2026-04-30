@@ -17,6 +17,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> CreateUser(SignUpModel model);
         Task<Enums.Result> CreateUser(SignSomeoneUpModel model);
 
+        Task<Enums.Result> UpdateUser(UserDTO userDTO);
         Task<Enums.Result> UpdateUserSettings(UserSettingsDTO userSettingsDTO);
 
         Task ResetPasswordRequest(ForgotPasswordModel model);

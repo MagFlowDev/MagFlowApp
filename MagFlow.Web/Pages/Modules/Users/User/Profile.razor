@@ -72,6 +72,9 @@
     [CascadingParameter(Name = "User")]
     UserDTO? _user { get; set; }
 
+    [Parameter]
+    public EventCallback OnUserUpdated { get; set; }
+
     private IValidator _validator;
     private UserFormModel _model;
     private EditContext _context;
@@ -113,7 +116,7 @@
 
     private async Task Submit()
     {
-        if (_isBusy)
+        if (_isBusy || _user == null)
             return;
 
         if (!HasModulePermission("Users", PermissionFlags.Edit))
@@ -131,11 +134,17 @@
             if (!isValid)
                 return;
 
-            //var result = await UserService.Update(_model, _selectedRole);
-            var result = MagFlow.Shared.Models.Enums.Result.Success;
+            if (_selectedRole != null && !_user.Roles.Contains(_selectedRole))
+            {
+                _user.Roles.Clear();
+                _user.Roles.Add(_selectedRole);
+            }
+
+            var result = await UserService.UpdateUser(_user);
             if (result == MagFlow.Shared.Models.Enums.Result.Success)
             {
                 Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
+                await OnUserUpdated.InvokeAsync();
             }
             else
             {
