@@ -12,6 +12,9 @@ namespace MagFlow.DAL.Repositories.CoreScope.Interfaces
     {
         Task<List<Claim>> GetAllClaims();
 
+        Task<Enums.Result> AddUserRole(ApplicationUser user, ApplicationRole role);
+        Task<Enums.Result> RemoveUserRole(ApplicationUser user, ApplicationRole role);
+
         Task<Dictionary<Guid, List<Claim>>> GetRolesClaims(List<Guid> rolesIds);
         Task<Dictionary<Guid, List<Claim>>> GetRolesClaims(List<string> rolesNames);
 

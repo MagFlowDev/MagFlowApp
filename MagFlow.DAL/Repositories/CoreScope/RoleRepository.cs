@@ -43,7 +43,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             {
                 if (!rolesIds.Any())
                     return rolesClaims;
-                using(var context = _companyContextFactory.CreateDbContext())
+                using (var context = _companyContextFactory.CreateDbContext())
                 {
                     var rolesClaimsEntities = await context.RoleClaims
                         .Include(x => x.Claim)
@@ -53,7 +53,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                     rolesClaims = rolesClaimsEntities.ToDictionary(x => x.Key, x => x.Where(y => y.Claim != null).Select(y => y.Claim!).ToList());
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
             }
@@ -66,7 +66,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
             try
             {
                 List<Guid> rolesIds = new List<Guid>();
-                using(var context = _coreContextFactory.CreateDbContext())
+                using (var context = _coreContextFactory.CreateDbContext())
                 {
                     var roles = context.ApplicationRoles.Where(x => !string.IsNullOrEmpty(x.Name) && rolesNames.Contains(x.Name));
                     rolesIds = roles.Select(x => x.Id).ToList();
@@ -87,7 +87,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 if (!claims.Any())
                     return Enums.Result.Success;
 
-                using(var context = _companyContextFactory.CreateDbContext())
+                using (var context = _companyContextFactory.CreateDbContext())
                 {
                     await context.RoleClaims.AddRangeAsync(claims);
                     await context.SaveChangesAsync();
@@ -146,5 +146,51 @@ namespace MagFlow.DAL.Repositories.CoreScope
             }
         }
 
+
+        public async Task<Enums.Result> AddUserRole(ApplicationUser user, ApplicationRole role)
+        {
+            try
+            {
+                ApplicationUserRole userRole = new ApplicationUserRole
+                {
+                    UserId = user.Id,
+                    RoleId = role.Id
+                };
+
+                using(var context = _coreContextFactory.CreateDbContext())
+                {
+                    await context.UserRoles.AddAsync(userRole);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<Enums.Result> RemoveUserRole(ApplicationUser user, ApplicationRole role)
+        {
+            try
+            {
+                using(var context = _coreContextFactory.CreateDbContext())
+                {
+                    var userRole = await context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == user.Id && ur.RoleId == role.Id);
+                    if (userRole != null)
+                    {
+                        context.UserRoles.Remove(userRole);
+                        await context.SaveChangesAsync();
+                    }
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
     }
 }
