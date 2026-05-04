@@ -17,6 +17,8 @@ namespace MagFlow.Domain.CoreScope
         public string Name { get; set; }
         public string? Description { get; set; }
         [Required]
+        public string ClaimCode { get; set; }
+        [Required]
         public bool IsActive { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }

@@ -41,6 +41,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                         Id = module.Id,
                         Name = module.Name,
                         Description = ModuleType.GetModuleTypeDescription(ModuleType.GetModuleType(module.Name)),
+                        ClaimCode = ModuleType.GetModuleClaimCode(ModuleType.GetModuleType(module.Name)) ?? module.Name.Replace("Module","").Replace("module",""),
                         CreatedAt = now,
                         Code = CodeGenerator.Module_GenerateCode(module.Name),
                         IsActive = true

@@ -128,10 +128,29 @@ namespace MagFlow.BLL.Services
             var modules = await _companyRepository.GetCompanyModules(companyId);
             if(modules == null)
                 return null;
-            return modules
+
+            var userPrincipals = _networkService.GetUserPrincipal();
+            if (userPrincipals == null)
+                return null;
+
+            var modulesCodes = modules
                 .Where(x => x.Module != null)
-                .Select(x => x.Module!)
-                .ToDTO();
+                .Select(x => x.Module!.ClaimCode)
+                .ToList();
+
+            List<ModuleDTO> availableModuleDTOs = new List<ModuleDTO>();
+            foreach (var moduleCode in modulesCodes)
+            {
+                if (userPrincipals.IsInRole(AppRole.SuperAdmin.Name) ||
+                    userPrincipals.IsInRole(AppRole.SysAdmin.Name) ||
+                    userPrincipals.HasModulePermission(moduleCode, PermissionFlags.Read))
+                {
+                    var module = modules.FirstOrDefault(x => x.Module?.ClaimCode == moduleCode)?.Module?.ToDTO();
+                    if(module != null)
+                        availableModuleDTOs.Add(module);
+                }
+            }
+            return availableModuleDTOs;
         }
 
         public async Task<List<ModuleDTO>?> GetAllModules()

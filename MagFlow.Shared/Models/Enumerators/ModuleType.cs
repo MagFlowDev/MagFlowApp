@@ -34,6 +34,15 @@ namespace MagFlow.Shared.Models.Enumerators
                 return null;
             return ModuleDescriptionMap[moduleType];
         }
+
+        public static string? GetModuleClaimCode(ModuleType? moduleType)
+        {
+            if (moduleType == null)
+                return null;
+            if (!ModuleClaimCodeMap.ContainsKey(moduleType))
+                return null;
+            return ModuleClaimCodeMap[moduleType];
+        }
         
         public static ModuleType? GetModuleType(string moduleName)
         {
@@ -60,7 +69,23 @@ namespace MagFlow.Shared.Models.Enumerators
             { ModuleType.ProductionPlanModule, "ProductionPlanModuleDescription" },
             { ModuleType.LogisticsModule, "LogisticsModuleDescription" },
         };
-        
+
+        private static Dictionary<ModuleType, string> ModuleClaimCodeMap = new Dictionary<ModuleType, string>()
+        {
+            { ModuleType.ContractorsModule, "Contractors" },
+            { ModuleType.UsersModule, "Users" },
+            { ModuleType.WaresModule, "Wares" },
+            { ModuleType.OrdersModule, "Orders" },
+            { ModuleType.DocumentsModule, "Documents" },
+            { ModuleType.WarehousesModule, "Warehouses" },
+            { ModuleType.MachinesModule, "Machines" },
+            { ModuleType.ProcessesModule, "Processes" },
+            { ModuleType.ReportsModule, "Reports" },
+            { ModuleType.WorkTimeModule, "WorkTime" },
+            { ModuleType.ProductionPlanModule, "ProductionPlan" },
+            { ModuleType.LogisticsModule, "Logistics" },
+        };
+
         private static Dictionary<string, ModuleType> ModuleTypeMap = new Dictionary<string, ModuleType>()
         {
             { "contractorsmodule", ModuleType.ContractorsModule },
