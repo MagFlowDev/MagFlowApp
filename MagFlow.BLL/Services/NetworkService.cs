@@ -28,6 +28,11 @@ namespace MagFlow.BLL.Services
             return _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToGuid();
         }
 
+        public ClaimsPrincipal? GetUserPrincipal()
+        {
+            return _httpContextAccessor.HttpContext?.User;
+        }
+
         public string? GetUserIp()
         {
             if (_httpContextAccessor == null)

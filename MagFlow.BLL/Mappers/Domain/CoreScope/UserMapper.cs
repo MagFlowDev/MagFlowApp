@@ -1,11 +1,14 @@
 ﻿using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.DTOs.CoreScope;
+using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Shared.Models.FormModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using MagFlow.Shared.Extensions;
 
 namespace MagFlow.BLL.Mappers.Domain.CoreScope
 {
@@ -204,21 +207,44 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
 
 
 
-        public static UserSessionDTO ToDTO(this UserSession userSession)
+        public static UserSessionDTO ToDTO(this UserSession userSession, ClaimsPrincipal? claimsPrincipal = null)
         {
+            var modules = userSession.SessionModules?.Where(x => x.Module != null)?.Select(m => m.Module!);
+            var modulesDTOs = new List<ModuleDTO>();
+            if (claimsPrincipal == null && modules != null)
+                modulesDTOs = modules.ToDTO();
+            else if (claimsPrincipal != null && modules != null)
+            {
+                var modulesCodes = modules
+                    .Select(x => x.ClaimCode)
+                    .ToList();
+                List<ModuleDTO> availableModuleDTOs = new List<ModuleDTO>();
+                foreach (var moduleCode in modulesCodes)
+                {
+                    if (claimsPrincipal.IsInRole(AppRole.SuperAdmin.Name) ||
+                        claimsPrincipal.IsInRole(AppRole.SysAdmin.Name) ||
+                        claimsPrincipal.HasModulePermission(moduleCode, PermissionFlags.Read))
+                    {
+                        var module = modules.FirstOrDefault(x => x.ClaimCode == moduleCode)?.ToDTO();
+                        if (module != null)
+                            availableModuleDTOs.Add(module);
+                    }
+                }
+                modulesDTOs = availableModuleDTOs;
+            }
             return new UserSessionDTO()
             {
                 Id = userSession.Id,
                 ExpiresAt = userSession.ExpiresAt,
                 CreatedAt = userSession.CreatedDate,
                 LastTimeRecord = userSession.LastTimeRecord,
-                Modules = userSession.SessionModules?.Where(x => x.Module != null)?.Select(m => m.Module!).ToDTO() ?? new List<ModuleDTO>()
+                Modules = modulesDTOs
             };
         }
 
-        public static List<UserSessionDTO> ToDTO(this IEnumerable<UserSession> userSessions)
+        public static List<UserSessionDTO> ToDTO(this IEnumerable<UserSession> userSessions, ClaimsPrincipal? claimsPrincipal = null)
         {
-            return userSessions.Select(x => x.ToDTO()).ToList();
+            return userSessions.Select(x => x.ToDTO(claimsPrincipal)).ToList();
         }
     }
 }

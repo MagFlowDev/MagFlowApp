@@ -417,10 +417,11 @@ namespace MagFlow.BLL.Services
             {
                 var userId = _networkService.GetUserId() ?? Guid.Empty;
                 var user = await _userRepository.GetByIdAsync(userId);
-                if (user == null)
+                var claimsPrincipal = _networkService.GetUserPrincipal();
+                if (user == null || claimsPrincipal == null)
                     return null;
                 var userSessions = await _userRepository.GetLastSessionsAsync(userId, user.DefaultCompanyId ?? Guid.Empty, historyLength);
-                return userSessions?.ToDTO();
+                return userSessions?.ToDTO(claimsPrincipal);
             }
             catch (Exception ex)
             {
