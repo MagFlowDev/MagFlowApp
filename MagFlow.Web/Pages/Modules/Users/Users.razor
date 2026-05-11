@@ -21,12 +21,12 @@
                             <MudNavMenu>
                                 <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
                                 <MudTooltip Text="@Localizer[Langs.Users]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
-                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Groups" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.UsersList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.UserModuleSection.UsersList)" Class="@_currentSection.GetNavClass(SectionsEnums.UserModuleSection.UsersList)">@Localizer[Langs.Users]</MudNavLink>
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Groups" OnClick="@(() => OnSectionChanged(SectionsEnums.UsersModuleSection.UsersList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.UsersModuleSection.UsersList)" Class="@_currentSection.GetNavClass(SectionsEnums.UsersModuleSection.UsersList)">@Localizer[Langs.Users]</MudNavLink>
                                 </MudTooltip>
                                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_ADMIN" Context="adminAuthorized">
                                     <Authorized>
                                         <MudTooltip Text="@Localizer[Langs.RolesList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
-                                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Shield" OnClick="@(() => OnSectionChanged(SectionsEnums.UserModuleSection.RolesList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.UserModuleSection.RolesList)" Class="@_currentSection.GetNavClass(SectionsEnums.UserModuleSection.RolesList)">@Localizer[Langs.RolesList]</MudNavLink>
+                                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Shield" OnClick="@(() => OnSectionChanged(SectionsEnums.UsersModuleSection.RolesList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.UsersModuleSection.RolesList)" Class="@_currentSection.GetNavClass(SectionsEnums.UsersModuleSection.RolesList)">@Localizer[Langs.RolesList]</MudNavLink>
                                         </MudTooltip>
                                     </Authorized>
                                 </AuthorizeView>
@@ -35,12 +35,12 @@
                         <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
                             @switch(_currentSection)
                             {
-                                case SectionsEnums.UserModuleSection.UsersList:
+                                case SectionsEnums.UsersModuleSection.UsersList:
                                     <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
                                         <UsersList />
                                     </div>
                                     break;
-                                case SectionsEnums.UserModuleSection.RolesList:
+                                case SectionsEnums.UsersModuleSection.RolesList:
                                     <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
                                         <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_ADMIN" Context="adminAuthorized">
                                             <Authorized>

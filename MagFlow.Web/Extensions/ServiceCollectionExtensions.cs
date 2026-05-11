@@ -198,10 +198,14 @@ namespace MagFlow.Web.Extensions
 
         private static void RegisterServices(this IServiceCollection services)
         {
+            // Core scope
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IRoleService, RoleService>();
+
+            // Company scope
+            services.AddScoped<IItemService, ItemService>();
 
             services.RegisterCommonServices();
         }
@@ -210,15 +214,19 @@ namespace MagFlow.Web.Extensions
         {
             services.AddScoped<SecurityInterceptor>();
 
+            // Core scope
             services.AddScoped<UserService>();
             services.AddScoped<EventService>();
             services.AddScoped<CompanyService>();
             services.AddScoped<RoleService>();
-
             services.AddScoped<IUserService>(sp => sp.GetRequiredService<UserService>().WithProxy<IUserService>(sp));
             services.AddScoped<IEventService>(sp => sp.GetRequiredService<EventService>().WithProxy<IEventService>(sp));
             services.AddScoped<ICompanyService>(sp => sp.GetRequiredService<CompanyService>().WithProxy<ICompanyService>(sp));
             services.AddScoped<IRoleService>(sp => sp.GetRequiredService<RoleService>().WithProxy<IRoleService>(sp));
+
+            // Company scope
+            services.AddScoped<ItemService>();
+            services.AddScoped<IItemService>(sp => sp.GetRequiredService<ItemService>().WithProxy<IItemService>(sp));
 
             services.RegisterCommonServices();
         }

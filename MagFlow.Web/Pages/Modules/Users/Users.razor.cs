@@ -8,14 +8,14 @@ namespace MagFlow.Web.Pages.Modules.Users
     public partial class Users : BaseModuleComponent
     {
         private bool _isMenuOpened = false;
-        private SectionsEnums.UserModuleSection _currentSection = SectionsEnums.UserModuleSection.UsersList;
+        private SectionsEnums.UsersModuleSection _currentSection = SectionsEnums.UsersModuleSection.UsersList;
 
         protected override async Task OnInitializedAsync()
         {
 
         }
 
-        private void OnSectionChanged(SectionsEnums.UserModuleSection section)
+        private void OnSectionChanged(SectionsEnums.UsersModuleSection section)
         {
             if (_currentSection == section)
                 return;

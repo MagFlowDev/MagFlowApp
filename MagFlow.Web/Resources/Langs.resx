@@ -1237,4 +1237,19 @@ i uprawnieniami użytkowników</value>
   <data name="ChangesSaved" xml:space="preserve">
     <value>Zmiany zostały zapisane.</value>
   </data>
+  <data name="WaresList" xml:space="preserve">
+    <value>Lista towarów</value>
+  </data>
+  <data name="ProductsList" xml:space="preserve">
+    <value>Lista produktów</value>
+  </data>
+  <data name="Definitions" xml:space="preserve">
+    <value>Definicje</value>
+  </data>
+  <data name="Archive" xml:space="preserve">
+    <value>Archiwum</value>
+  </data>
+  <data name="AddWare" xml:space="preserve">
+    <value>Dodaj towar</value>
+  </data>
 </root>
