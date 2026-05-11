@@ -1,11 +1,76 @@
-﻿@using MagFlow.Shared.Models.Interfaces
+﻿@using MagFlow.Shared.Extensions.Enum
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Interfaces
+@using MagFlow.Web.Components.Status
+@using MagFlow.Web.Helpers
+@using MagFlow.Web.Pages.Modules.Wares.Definition
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject NavigationManager NavigationManager
 @implements IModule
 @inherits BaseModuleComponent
 
-<h3>Wares</h3>
+<AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_READ">
+    <Authorized>
+        <div class="d-flex flex-column w-100 flex-grow-1" style="min-height: 0">
+            <div class="d-flex w-100" style="flex: 1 1 0; min-height: 0">
+                <MudPaper Height="100%" Style="overflow:hidden; position:relative; background-color: transparent" Class="w-100" Elevation="0">
+                    <MudDrawerContainer Class="mud-height-full">
+                        <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" Breakpoint="Breakpoint.None">
+                            <MudNavMenu>
+                                <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
+                                <MudTooltip Text="@Localizer[Langs.WaresList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.LocalOffer" OnClick="@(() => OnSectionChanged(SectionsEnums.WaresModuleSection.WaresList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WaresModuleSection.WaresList)" Class="@_currentSection.GetNavClass(SectionsEnums.WaresModuleSection.WaresList)">@Localizer[Langs.WaresList]</MudNavLink>
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer[Langs.ProductsList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.ListAlt" OnClick="@(() => OnSectionChanged(SectionsEnums.WaresModuleSection.ProductsList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WaresModuleSection.ProductsList)" Class="@_currentSection.GetNavClass(SectionsEnums.WaresModuleSection.ProductsList)">@Localizer[Langs.ProductsList]</MudNavLink>
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer[Langs.Definitions]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Book" OnClick="@(() => OnSectionChanged(SectionsEnums.WaresModuleSection.Definitions))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WaresModuleSection.Definitions)" Class="@_currentSection.GetNavClass(SectionsEnums.WaresModuleSection.Definitions)">@Localizer[Langs.Definitions]</MudNavLink>
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer[Langs.Archive]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Archive" OnClick="@(() => OnSectionChanged(SectionsEnums.WaresModuleSection.Archive))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WaresModuleSection.Archive)" Class="@_currentSection.GetNavClass(SectionsEnums.WaresModuleSection.Archive)">@Localizer[Langs.Archive]</MudNavLink>
+                                </MudTooltip>
+                            </MudNavMenu>
+                        </MudDrawer>
+                        <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
+                            @switch(_currentSection)
+                            {
+                                case SectionsEnums.WaresModuleSection.WaresList:
+                                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
+                                        <WaresList/>
+                                    </div>
+                                    break;
+                                case SectionsEnums.WaresModuleSection.ProductsList:
+                                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                        <ProductsList/>
+                                    </div>
+                                    break;
+                                case SectionsEnums.WaresModuleSection.Definitions:
+                                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                        <Definitions/>
+                                    </div>
+                                    break;
+                                case SectionsEnums.WaresModuleSection.Archive:
+                                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                        <Archive/>
+                                    </div>
+                                    break;
+                                default: break;
+                            }
+                        </div>
+                    </MudDrawerContainer>
+                </MudPaper>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <Denied/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     public string TabTitle => "Wares";
     public string Icon => "bi bi-box-seam";
-
 }
