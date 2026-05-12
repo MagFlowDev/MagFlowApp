@@ -1,0 +1,19 @@
+﻿using MagFlow.Shared.DTOs.CompanyScope;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using MagFlow.Domain.CompanyScope;
+
+namespace MagFlow.BLL.Mappers.Domain.CompanyScope
+{
+    public static class ParameterMapper
+    {
+        public static ParameterDTO ToDTO(this ProductParameter parameter)
+        {
+            return new ParameterDTO()
+            {
+                Id = parameter.Id
+            };
+        }
+    }
+}
