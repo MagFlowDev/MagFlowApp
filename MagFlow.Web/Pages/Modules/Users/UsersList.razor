@@ -65,14 +65,14 @@
         <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_READ">
-                    <Authorized context="authorizedContext">
+                    <Authorized Context="authorizedContext">
                         <MudTooltip Text="@Localizer[Langs.Open]" Delay="@Constants.Tooltip.DELAY">
                             <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" OnClick="() => OpenUserDetails(context.Item)"/>
                         </MudTooltip>
                     </Authorized>
                 </AuthorizeView>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_EDIT">
-                    <Authorized context="authorizedContext">
+                    <Authorized Context="authorizedContext">
                         @if (context.Item.IsActive)
                         {
                             <MudTooltip Text="@Localizer[Langs.Block]" Delay="@Constants.Tooltip.DELAY">
@@ -88,7 +88,7 @@
                     </Authorized>
                 </AuthorizeView>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_DELETE">
-                    <Authorized context="authorizedContext">
+                    <Authorized Context="authorizedContext">
                         <MudTooltip Text="@Localizer[Langs.Delete]" Delay="@Constants.Tooltip.DELAY">
                             <LoadingIconButton Loading="LoadingDelete(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteUser(context.Item)"/>
                         </MudTooltip>

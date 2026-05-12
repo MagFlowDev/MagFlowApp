@@ -42,6 +42,7 @@ namespace MagFlow.EF
         public DbSet<ProductComponent> ProductComponents { get; set; }
         public DbSet<ProductParameter> ProductParameters { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
+        public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<ProductUnitConversion> ProductUnitConversions { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<UnitConversion> UnitConversions { get; set; }
@@ -132,6 +133,7 @@ namespace MagFlow.EF
             builder.Entity<ProductComponent>().HasOne(x => x.Product).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<ProductComponent>().HasOne(x => x.Component).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Product>().HasOne(x => x.Type).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<ProductCategory>().HasOne(x => x.Type).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.Product).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.Warehouse).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.Storage).WithMany().OnDelete(DeleteBehavior.NoAction);
