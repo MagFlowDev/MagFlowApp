@@ -376,6 +376,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kategorie.
+        /// </summary>
+        public static string Categories {
+            get {
+                return ResourceManager.GetString("Categories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kategoria.
         /// </summary>
         public static string Category {
@@ -2158,6 +2167,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parametry.
+        /// </summary>
+        public static string Parameters {
+            get {
+                return ResourceManager.GetString("Parameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hasło.
         /// </summary>
         public static string Password {
@@ -2307,6 +2325,15 @@ namespace MagFlow.Web.Resources {
         public static string ProductsList {
             get {
                 return ResourceManager.GetString("ProductsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Typy produktów.
+        /// </summary>
+        public static string ProductTypes {
+            get {
+                return ResourceManager.GetString("ProductTypes", resourceCulture);
             }
         }
         
@@ -3099,6 +3126,15 @@ namespace MagFlow.Web.Resources {
         public static string UnderConstruction {
             get {
                 return ResourceManager.GetString("UnderConstruction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jednostki miar.
+        /// </summary>
+        public static string UnitsOfMeasurement {
+            get {
+                return ResourceManager.GetString("UnitsOfMeasurement", resourceCulture);
             }
         }
         

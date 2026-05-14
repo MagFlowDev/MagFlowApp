@@ -11,34 +11,31 @@ namespace MagFlow.Shared.Extensions.Enum
         // NavClass
         public static string GetNavClass(this SectionsEnums.UserSettingsSection currentSection, SectionsEnums.UserSettingsSection section)
             => NavClass(currentSection, section);
-
         public static string GetNavClass(this SectionsEnums.CompanySettingsSection currentSection, SectionsEnums.CompanySettingsSection section)
             => NavClass(currentSection, section);
-
         public static string GetNavClass(this SectionsEnums.UsersModuleSection currentSection, SectionsEnums.UsersModuleSection section)
             => NavClass(currentSection, section);
-
         public static string GetNavClass(this SectionsEnums.UserDetailsSection currentSection, SectionsEnums.UserDetailsSection section)
             => NavClass(currentSection, section);
-
         public static string GetNavClass(this SectionsEnums.WaresModuleSection currentSection, SectionsEnums.WaresModuleSection section)
             => NavClass(currentSection, section);
+        public static string GetNavClass(this SectionsEnums.WaresDefinitionSection currentSection, SectionsEnums.WaresDefinitionSection section)
+            => NavClass(currentSection, section);
+
 
 
         // IconColor
         public static Color GetIconColor(this SectionsEnums.UserSettingsSection currentSection, SectionsEnums.UserSettingsSection section)
             => IconColor(currentSection, section);
-
         public static Color GetIconColor(this SectionsEnums.CompanySettingsSection currentSection, SectionsEnums.CompanySettingsSection section)
             => IconColor(currentSection, section);
-
         public static Color GetIconColor(this SectionsEnums.UsersModuleSection currentSection, SectionsEnums.UsersModuleSection section)
             => IconColor(currentSection, section);
-
         public static Color GetIconColor(this SectionsEnums.UserDetailsSection currentSection, SectionsEnums.UserDetailsSection section)
             => IconColor(currentSection, section);
-
         public static Color GetIconColor(this SectionsEnums.WaresModuleSection currentSection, SectionsEnums.WaresModuleSection section)
+            => IconColor(currentSection, section);
+        public static Color GetIconColor(this SectionsEnums.WaresDefinitionSection currentSection, SectionsEnums.WaresDefinitionSection section)
             => IconColor(currentSection, section);
 
 

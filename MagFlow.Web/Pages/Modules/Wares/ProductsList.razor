@@ -16,7 +16,7 @@
 
 <MagFlowDataGrid @ref="_productsDataGrid" T="ProductDTO" ServerData="ServerReloadProducts" Filterable="false" OnRowClicked="OpenProductDetails" MultiSelection="true">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@Localizer[Langs.WaresList]</MudText>
+        <MudText Typo="Typo.h6">@Localizer[Langs.ProductsList]</MudText>
         <MudSpacer />
         <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_EDIT">
             <Authorized>
@@ -38,6 +38,6 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="ProductDTO" />
-        <PropertyColumn T="ProductDTO" TProperty="string" Title="Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="product => product.Name" />
+        <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="product => product.Name" />
     </Columns>
 </MagFlowDataGrid>

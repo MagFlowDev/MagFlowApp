@@ -1251,4 +1251,16 @@
   <data name="AddWare" xml:space="preserve">
     <value>Add ware</value>
   </data>
+  <data name="ProductTypes" xml:space="preserve">
+    <value>Product types</value>
+  </data>
+  <data name="UnitsOfMeasurement" xml:space="preserve">
+    <value>Units of measurement</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="Parameters" xml:space="preserve">
+    <value>Parameters</value>
+  </data>
 </root>

@@ -133,7 +133,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual bool Any(Expression<Func<TEntity, bool>> predicate)
+        public virtual bool Any(Expression<Func<TEntity, bool>> predicate, bool archive = false)
         {
             try
             {
@@ -141,7 +141,12 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     var query = context.Set<TEntity>().AsQueryable();
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
-                        query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    {
+                        if (archive)
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt != null);
+                        else
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    }
                     return query.Any(predicate);
                 }
             }
@@ -152,7 +157,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, bool archive = false)
         {
             try
             {
@@ -160,7 +165,12 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     var query = context.Set<TEntity>().AsQueryable();
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
-                        query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    {
+                        if (archive)
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt != null);
+                        else
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    }
                     return await query.AnyAsync(predicate);
                 }
             }
@@ -171,7 +181,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual int Count(Expression<Func<TEntity, bool>> predicate)
+        public virtual int Count(Expression<Func<TEntity, bool>> predicate, bool archive = false)
         {
             try
             {
@@ -179,7 +189,12 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     var query = context.Set<TEntity>().AsQueryable();
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
-                        query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    {
+                        if (archive)
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt != null);
+                        else
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    }
                     return query.Count(predicate);
                 }
             }
@@ -190,7 +205,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, bool archive = false)
         {
             try
             {
@@ -198,7 +213,12 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     var query = context.Set<TEntity>().AsQueryable();
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
-                        query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    {
+                        if (archive)
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt != null);
+                        else
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    }
                     return await query.CountAsync(predicate);
                 }
             }
@@ -425,7 +445,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual TEntity? Get(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
+        public virtual TEntity? Get(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool archive = false)
         {
             try
             {
@@ -433,7 +453,12 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     var query = context.Set<TEntity>().AsQueryable();
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
-                        query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    {
+                        if (archive)
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt != null);
+                        else
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    }
                     if (include != null)
                         query = include(query);
                     return query.Where(predicate).FirstOrDefault();
@@ -447,7 +472,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
         }
 
 
-        public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
+        public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool archive = false)
         {
             try
             {
@@ -455,7 +480,12 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     var query = context.Set<TEntity>().AsQueryable();
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
-                        query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    {
+                        if (archive)
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt != null);
+                        else
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    }
                     if (include != null)
                         query = include(query);
                     return await query.Where(predicate).FirstOrDefaultAsync();
@@ -468,7 +498,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool tracking = true)
+        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool tracking = true, bool archive = false)
         {
             try
             {
@@ -476,7 +506,12 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     var query = context.Set<TEntity>().AsQueryable();
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
-                        query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    {
+                        if (archive)
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt != null);
+                        else
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    }
                     if (include != null)
                         query = include(query);
                     if (predicate != null)
@@ -493,7 +528,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool tracking = true)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool tracking = true, bool archive = false)
         {
             try
             {
@@ -501,7 +536,12 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     var query = context.Set<TEntity>().AsQueryable();
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
-                        query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    {
+                        if (archive)
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt != null);
+                        else
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    }
                     if (include != null)
                         query = include(query);
                     if (predicate != null)
@@ -518,7 +558,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public virtual async Task<QueryResponse<TEntity>?> GetAsync(QueryOptions<TEntity> options, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null)
+        public virtual async Task<QueryResponse<TEntity>?> GetAsync(QueryOptions<TEntity> options, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool archive = false)
         {
             try
             {
@@ -526,7 +566,12 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     var query = context.Set<TEntity>().AsQueryable();
                     if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
-                        query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    {
+                        if (archive)
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt != null);
+                        else
+                            query = query.Where(e => ((ISoftDeletable)e).RemovedAt == null);
+                    }
                     if (include != null)
                         query = include(query);
                     query = query.ApplyColumnFilters(options.Filters);

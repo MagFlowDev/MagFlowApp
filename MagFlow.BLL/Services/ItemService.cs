@@ -40,5 +40,26 @@ namespace MagFlow.BLL.Services
                 TotalCount = queryResponse?.TotalCount ?? 0
             };
         }
+
+        public async Task<QueryResponse<ItemDTO>> GetArchive(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        {
+            var queryResponse = await _itemRepository.GetAsync(new QueryOptions<Item>()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Search = search,
+                SortBy = sortBy,
+                Descending = descending
+            }, archive: true);
+            return new QueryResponse<ItemDTO>()
+            {
+                Elements = queryResponse?.Elements.Select(x =>
+                {
+                    var dto = x.ToDTO();
+                    return dto;
+                }).ToList() ?? new List<ItemDTO>(),
+                TotalCount = queryResponse?.TotalCount ?? 0
+            };
+        }
     }
 }
