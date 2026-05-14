@@ -1252,4 +1252,16 @@ i uprawnieniami użytkowników</value>
   <data name="AddWare" xml:space="preserve">
     <value>Dodaj towar</value>
   </data>
+  <data name="ProductTypes" xml:space="preserve">
+    <value>Typy produktów</value>
+  </data>
+  <data name="UnitsOfMeasurement" xml:space="preserve">
+    <value>Jednostki miar</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="Parameters" xml:space="preserve">
+    <value>Parametry</value>
+  </data>
 </root>
