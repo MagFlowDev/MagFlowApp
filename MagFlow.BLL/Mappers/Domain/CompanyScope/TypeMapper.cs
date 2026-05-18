@@ -8,9 +8,9 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 {
     public static class TypeMapper
     {
-        public static TypeDTO ToDTO(this ProductType type)
+        public static ProductTypeDTO ToDTO(this ProductType type)
         {
-            return new TypeDTO()
+            return new ProductTypeDTO()
             {
                 Id = type.Id
             };

@@ -232,6 +232,7 @@
 
     private async Task UpdateCurrentModule()
     {
+        var redirected = false;
         try
         {
             _loadingTab = true;
@@ -244,14 +245,18 @@
                     var targetUri = ModuleRoutes[currentModuleId];
                     var currentUri = $"/{NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}";
                     if (!targetUri.Equals(currentUri, StringComparison.OrdinalIgnoreCase))
+                    {
                         NavigationManager.NavigateTo(ModuleRoutes[currentModuleId]);
+                        redirected = true;
+                    }
                 }
             }
         }
         finally
         {
             _loadingTab = false;
-            StateHasChanged();
+            if(!redirected)
+                StateHasChanged();
         }
     }
 

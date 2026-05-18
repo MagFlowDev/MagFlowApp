@@ -178,6 +178,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dodaj kategorię.
+        /// </summary>
+        public static string AddCategory {
+            get {
+                return ResourceManager.GetString("AddCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dodaj firmę.
         /// </summary>
         public static string AddCompany {
@@ -214,11 +223,38 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dodaj parametr.
+        /// </summary>
+        public static string AddParameter {
+            get {
+                return ResourceManager.GetString("AddParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adres.
         /// </summary>
         public static string Address {
             get {
                 return ResourceManager.GetString("Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dodaj typ.
+        /// </summary>
+        public static string AddType {
+            get {
+                return ResourceManager.GetString("AddType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dodaj jednostkę.
+        /// </summary>
+        public static string AddUnit {
+            get {
+                return ResourceManager.GetString("AddUnit", resourceCulture);
             }
         }
         
@@ -1699,6 +1735,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lista jednostek miar.
+        /// </summary>
+        public static string MeasurementUnitsList {
+            get {
+                return ResourceManager.GetString("MeasurementUnitsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wiadomość.
         /// </summary>
         public static string Message {
@@ -2293,6 +2338,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lista kategorii produktów.
+        /// </summary>
+        public static string ProductCategoriesList {
+            get {
+                return ResourceManager.GetString("ProductCategoriesList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Powiadomienia z produkcji.
         /// </summary>
         public static string ProductionNotifications {
@@ -2320,6 +2374,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lista parametrów produktów.
+        /// </summary>
+        public static string ProductParametersList {
+            get {
+                return ResourceManager.GetString("ProductParametersList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lista produktów.
         /// </summary>
         public static string ProductsList {
@@ -2334,6 +2397,15 @@ namespace MagFlow.Web.Resources {
         public static string ProductTypes {
             get {
                 return ResourceManager.GetString("ProductTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lista typów produktów.
+        /// </summary>
+        public static string ProductTypesList {
+            get {
+                return ResourceManager.GetString("ProductTypesList", resourceCulture);
             }
         }
         

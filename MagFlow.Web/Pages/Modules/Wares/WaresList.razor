@@ -39,7 +39,7 @@
         <MudIconButton Color="Color.Primary" OnClick="_itemsDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
     </ToolBarContent>
     <Columns>
-        <SelectColumn T="ItemDTO" />
+        <SelectColumn T="ItemDTO" HeaderStyle="width: 1%" />
         <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
                 <MudChip T="string" Class="m-0" Variant="Variant.Filled">@context.Item.Status.GetDisplayName(Localizer)</MudChip>

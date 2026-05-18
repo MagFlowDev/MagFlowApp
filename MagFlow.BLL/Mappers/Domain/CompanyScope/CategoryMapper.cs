@@ -8,9 +8,9 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 {
     public static class CategoryMapper
     {
-        public static CategoryDTO ToDTO(this ProductCategory category)
+        public static ProductCategoryDTO ToDTO(this ProductCategory category)
         {
-            return new CategoryDTO()
+            return new ProductCategoryDTO()
             {
                 Id = category.Id
             };
