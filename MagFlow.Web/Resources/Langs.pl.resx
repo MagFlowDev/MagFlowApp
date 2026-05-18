@@ -1264,4 +1264,28 @@ i uprawnieniami użytkowników</value>
   <data name="Parameters" xml:space="preserve">
     <value>Parametry</value>
   </data>
+  <data name="AddCategory" xml:space="preserve">
+    <value>Dodaj kategorię</value>
+  </data>
+  <data name="AddType" xml:space="preserve">
+    <value>Dodaj typ</value>
+  </data>
+  <data name="AddParameter" xml:space="preserve">
+    <value>Dodaj parametr</value>
+  </data>
+  <data name="AddUnit" xml:space="preserve">
+    <value>Dodaj jednostkę</value>
+  </data>
+  <data name="MeasurementUnitsList" xml:space="preserve">
+    <value>Lista jednostek miar</value>
+  </data>
+  <data name="ProductTypesList" xml:space="preserve">
+    <value>Lista typów produktów</value>
+  </data>
+  <data name="ProductCategoriesList" xml:space="preserve">
+    <value>Lista kategorii produktów</value>
+  </data>
+  <data name="ProductParametersList" xml:space="preserve">
+    <value>Lista parametrów produktów</value>
+  </data>
 </root>

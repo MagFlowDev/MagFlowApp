@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MagFlow.Shared.DTOs.CompanyScope
 {
-    public class ParameterDTO
+    public class ProductTypeDTO
     {
         public int Id { get; set; }
     }

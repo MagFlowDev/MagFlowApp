@@ -8,9 +8,9 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 {
     public static class ParameterMapper
     {
-        public static ParameterDTO ToDTO(this ProductParameter parameter)
+        public static ProductParameterDTO ToDTO(this ProductParameter parameter)
         {
-            return new ParameterDTO()
+            return new ProductParameterDTO()
             {
                 Id = parameter.Id
             };

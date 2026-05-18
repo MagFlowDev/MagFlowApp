@@ -1263,4 +1263,28 @@
   <data name="Parameters" xml:space="preserve">
     <value>Parameters</value>
   </data>
+  <data name="AddCategory" xml:space="preserve">
+    <value>Add category</value>
+  </data>
+  <data name="AddType" xml:space="preserve">
+    <value>Add type</value>
+  </data>
+  <data name="AddParameter" xml:space="preserve">
+    <value>Add parameter</value>
+  </data>
+  <data name="AddUnit" xml:space="preserve">
+    <value>Add unit</value>
+  </data>
+  <data name="MeasurementUnitsList" xml:space="preserve">
+    <value>List of measurement units</value>
+  </data>
+  <data name="ProductTypesList" xml:space="preserve">
+    <value>List of product types</value>
+  </data>
+  <data name="ProductCategoriesList" xml:space="preserve">
+    <value>List of product categories</value>
+  </data>
+  <data name="ProductParametersList" xml:space="preserve">
+    <value>List of product parameters</value>
+  </data>
 </root>
