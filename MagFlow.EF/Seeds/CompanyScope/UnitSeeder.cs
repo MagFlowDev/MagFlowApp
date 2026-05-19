@@ -12,16 +12,6 @@ namespace MagFlow.EF.Seeds.CompanyScope
     {
         public int Step => 1;
 
-        Dictionary<string, string> units = new Dictionary<string, string>()
-        {
-            { "kg", "kilogram" },
-            { "g", "gram" },
-            { "mg", "miligram" },
-            { "l", "litr" },
-            { "ml", "mililitr" },
-            { "szt", "sztuka" }
-        };
-
         public void Seed(CompanyDbContext context)
         {
             Task.Run(async () => await SeedAsync(context, CancellationToken.None));
@@ -31,26 +21,35 @@ namespace MagFlow.EF.Seeds.CompanyScope
         {
             bool seed = false;
 
-            var unitsSymbols = units.Keys;
+            var unitsSymbols = units.Select(x => x.Symbol);
             var existingsSymbols = await context.Units
                 .Where(x => unitsSymbols.Contains(x.Symbol))
                 .Select(x => x.Symbol)
                 .ToListAsync();
             var notExistingSymbols = unitsSymbols.Except(existingsSymbols);
-            var notExistingUnits = units.Where(x => notExistingSymbols.Contains(x.Key));
+            var notExistingUnits = units.Where(x => notExistingSymbols.Contains(x.Symbol));
             foreach(var unit in notExistingUnits)
             {
-                var dbUnit = new Unit()
-                {
-                    Symbol = unit.Key,
-                    Name = unit.Value
-                };
-                await context.Units.AddAsync(dbUnit);
+                await context.Units.AddAsync(unit);
                 seed = true;
             }
 
             if (seed)
                 await context.SaveChangesAsync();
         }
+
+        List<Unit> units = new List<Unit>()
+        {
+            new Unit { Symbol = "kg", Name = "kilogram", RelatedUnits = new List<Unit>()
+            {
+                new Unit { Symbol = "g", Name = "gram", ParentUnitConversionRate = 1000 },
+                new Unit { Symbol = "mg", Name = "miligram", ParentUnitConversionRate = 1000000 },
+            }},
+            new Unit { Symbol = "l", Name = "litr", RelatedUnits = new List<Unit>()
+            {
+                new Unit { Symbol = "ml", Name = "mililitr", ParentUnitConversionRate = 1000 },
+            }},
+            new Unit { Symbol = "szt", Name = "sztuka" }
+        };
     }
 }

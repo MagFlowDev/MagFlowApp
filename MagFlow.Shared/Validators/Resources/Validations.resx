@@ -150,4 +150,10 @@
   <data name="DbNameRequired" xml:space="preserve">
     <value>Nazwa bazy jest wymagana.</value>
   </data>
+  <data name="NameRequired" xml:space="preserve">
+    <value>Nazwa jest wymagana.</value>
+  </data>
+  <data name="SymbolRequired" xml:space="preserve">
+    <value>Symbol jest wymagany.</value>
+  </data>
 </root>

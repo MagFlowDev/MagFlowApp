@@ -12,8 +12,17 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ProductTypeDTO()
             {
-                Id = type.Id
+                Id = type.Id,
+                Name = type.Name,
+                Code = type.Code,
+                IsActive = type.IsActive,
+                IsBasic = type.IsBasic
             };
+        }
+
+        public static List<ProductTypeDTO> ToDTO(this IEnumerable<ProductType> types)
+        {
+            return types.Select(x => x.ToDTO()).ToList();
         }
     }
 }
