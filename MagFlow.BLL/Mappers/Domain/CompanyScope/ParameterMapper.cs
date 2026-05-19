@@ -12,8 +12,18 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ProductParameterDTO()
             {
-                Id = parameter.Id
+                Id = parameter.Id,
+                ParameterId = parameter.ParameterId,
+                Name = parameter.Parameter?.Name ?? string.Empty,
+                Code = parameter.Parameter?.Code ?? string.Empty,
+                ValueType = parameter.Parameter?.ValueType,
+                Unit = parameter.Parameter?.Unit?.ToDTO()
             };
+        }
+
+        public static List<ProductParameterDTO> ToDTO(this IEnumerable<ProductParameter> parameters)
+        {
+            return parameters.Select(x => x.ToDTO()).ToList();
         }
     }
 }

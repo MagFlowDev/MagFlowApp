@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MagFlow.BLL.Mappers.Domain.CompanyScope;
+using MagFlow.Shared.Models.FormModels;
 
 namespace MagFlow.BLL.Services
 {
@@ -134,6 +135,87 @@ namespace MagFlow.BLL.Services
                 }).ToList() ?? new List<UnitDTO>(),
                 TotalCount = queryResponse?.TotalCount ?? 0
             };
+        }
+
+
+
+        public async Task<Enums.Result> AddProduct(ProductFormModel model)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> AddType(ProductTypeFormModel model)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> AddCategory(ProductCategoryFormModel model)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> AddParameter(ProductParameterFormModel model)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> AddMeasurementUnit(MeasurementUnitFormModel model)
+        {
+            return Enums.Result.Error;
+        }
+
+
+
+        public async Task<Enums.Result> UpdateProduct(ProductDTO productDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> UpdateType(ProductTypeDTO typeDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> UpdateCategory(ProductCategoryDTO categoryDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> UpdateParameter(ProductParameterDTO parameterDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> UpdateMeasurementUnit(UnitDTO unitDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+
+
+        public async Task<Enums.Result> DeleteProduct(ProductDTO productDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> DeleteType(ProductTypeDTO typeDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> DeleteCategory(ProductCategoryDTO categoryDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> DeleteParameter(ProductParameterDTO parameterDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> DeleteMeasurementUnit(UnitDTO unitDTO)
+        {
+            return Enums.Result.Error;
         }
     }
 }

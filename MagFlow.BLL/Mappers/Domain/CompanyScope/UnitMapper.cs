@@ -12,8 +12,18 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new UnitDTO()
             {
-                Id = unit.Id
+                Id = unit.Id,
+                Name = unit.Name,
+                Symbol = unit.Symbol,
+                ParentUnit = unit.ParentUnit?.ToDTO(),
+                ParentUnitConversionRate = unit.ParentUnitConversionRate,
+                RelatedUnits = unit.RelatedUnits.ToDTO()
             };
+        }
+
+        public static List<UnitDTO> ToDTO(this IEnumerable<Unit> units)
+        {
+            return units.Select(x => x.ToDTO()).ToList();
         }
     }
 }

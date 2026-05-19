@@ -19,6 +19,8 @@ namespace MagFlow.EF.Seeds.CompanyScope
 
         public async Task SeedAsync(CompanyDbContext context, CancellationToken cancellationToken)
         {
+            // for now it is replaced with parent unit conversion rate
+            return;
             bool seed = false;
 
             var unitsSymbols = conversions.Select(c => c.ToUnitSymbol).Union(conversions.Select(c => c.FromUnitSymbol));
