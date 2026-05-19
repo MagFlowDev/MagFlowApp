@@ -1288,4 +1288,7 @@ i uprawnieniami użytkowników</value>
   <data name="ProductParametersList" xml:space="preserve">
     <value>Lista parametrów produktów</value>
   </data>
+  <data name="Symbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
 </root>

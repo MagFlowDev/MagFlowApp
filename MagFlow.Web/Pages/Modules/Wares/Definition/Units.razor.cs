@@ -1,5 +1,10 @@
-﻿using MagFlow.Shared.DTOs.CompanyScope;
+﻿using MagFlow.BLL.Services;
+using MagFlow.Shared.DTOs.CompanyScope;
+using MagFlow.Shared.DTOs.CoreScope;
+using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
+using MagFlow.Web.Components.Dialogs;
+using MagFlow.Web.Resources;
 using MudBlazor;
 
 namespace MagFlow.Web.Pages.Modules.Wares.Definition
@@ -45,10 +50,30 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             
         }
 
-        private Dictionary<Guid, bool> _loadingDelete = [];
+        private Dictionary<int, bool> _loadingDelete = [];
         private bool _loadingDeleteMany { get; set; }
-        private bool LoadingDelete(Guid id) => _loadingDelete.TryGetValue(id, out var value) && value;
+        private bool LoadingDelete(int id) => _loadingDelete.TryGetValue(id, out var value) && value;
+        private async Task DeleteUnit(UnitDTO unit)
+        {
+            if (!HasModulePermission("Wares", PermissionFlags.Delete))
+                return;
 
+            if (_isBusy || (_loadingDelete.TryGetValue(unit.Id, out var loading) && loading))
+                return;
+
+            try
+            {
+                _isBusy = true;
+                _loadingDelete[unit.Id] = true;
+
+                
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingDelete[unit.Id] = false;
+            }
+        }
         private async Task DeleteUnits()
         {
 

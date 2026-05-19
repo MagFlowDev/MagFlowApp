@@ -1287,4 +1287,7 @@
   <data name="ProductParametersList" xml:space="preserve">
     <value>List of product parameters</value>
   </data>
+  <data name="Symbol" xml:space="preserve">
+    <value>Symbol</value>
+  </data>
 </root>
