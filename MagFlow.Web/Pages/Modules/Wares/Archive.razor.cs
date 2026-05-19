@@ -32,34 +32,12 @@ namespace MagFlow.Web.Pages.Modules.Wares
             };
         }
 
-        private async Task OpenAddItemModal()
-        {
-            if (!HasModulePermission("Wares", PermissionFlags.Add))
-                return;
-
-        }
-
         private void OpenItemDetails(ItemDTO item)
         {
             if (!HasModulePermission("Wares", PermissionFlags.Read))
                 return;
 
             NavigationManager.NavigateTo($"/item/{item.Id}");
-        }
-
-        private Dictionary<Guid, bool> _loadingBlock = [];
-        private bool _loadingBlockMany { get; set; }
-        private bool _loadingUnblockMany { get; set; }
-        private bool LoadingBlock(Guid id) => _loadingBlock.TryGetValue(id, out var value) && value;
-
-        private async Task BlockItems()
-        {
-
-        }
-
-        private async Task UnblockItems()
-        {
-
         }
 
 

@@ -2,6 +2,7 @@
 @using MagFlow.Shared.DTOs.CompanyScope
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
@@ -32,5 +33,19 @@
     <Columns>
         <SelectColumn T="ProductCategoryDTO" HeaderStyle="width: 1%" />
         <PropertyColumn T="ProductCategoryDTO" TProperty="int" Title="Id" Sortable="true" CellClass="text-nowrap" Property="category => category.Id" />
+        <TemplateColumn T="ProductCategoryDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                <MudTooltip Text="@Localizer[Langs.Open]" Delay="@Constants.Tooltip.DELAY">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" OnClick="() => OpenCategoryDetails(context.Item)" />
+                </MudTooltip>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE">
+                    <Authorized Context="authorizedContext">
+                        <MudTooltip Text="@Localizer[Langs.Delete]" Delay="@Constants.Tooltip.DELAY">
+                            <LoadingIconButton Loading="LoadingDelete(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteCategory(context.Item)" />
+                        </MudTooltip>
+                    </Authorized>
+                </AuthorizeView>
+            </CellTemplate>
+        </TemplateColumn>
     </Columns>
 </MagFlowDataGrid>

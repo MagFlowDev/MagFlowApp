@@ -46,10 +46,30 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
         }
 
 
-        private Dictionary<Guid, bool> _loadingDelete = [];
+        private Dictionary<int, bool> _loadingDelete = [];
         private bool _loadingDeleteMany { get; set; }
-        private bool LoadingDelete(Guid id) => _loadingDelete.TryGetValue(id, out var value) && value;
+        private bool LoadingDelete(int id) => _loadingDelete.TryGetValue(id, out var value) && value;
+        private async Task DeleteParameter(ProductParameterDTO parameter)
+        {
+            if (!HasModulePermission("Wares", PermissionFlags.Delete))
+                return;
 
+            if (_isBusy || (_loadingDelete.TryGetValue(parameter.Id, out var loading) && loading))
+                return;
+
+            try
+            {
+                _isBusy = true;
+                _loadingDelete[parameter.Id] = true;
+
+
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingDelete[parameter.Id] = false;
+            }
+        }
         private async Task DeleteParameters()
         {
 
