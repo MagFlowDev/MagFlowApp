@@ -53,7 +53,11 @@ namespace MagFlow.DAL.Helpers
 
                 Expression comparison;
 
-                if (propertyType == typeof(string))
+                if (filter.Value == null)
+                {
+                    comparison = Expression.Equal(property, Expression.Constant(null, propertyType));
+                }
+                else if (propertyType == typeof(string))
                 {
                     var containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!;
                     var value = Expression.Constant(filter.Value?.ToString());

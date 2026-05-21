@@ -32,11 +32,13 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="ProductCategoryDTO" HeaderStyle="width: 1%" />
-        <PropertyColumn T="ProductCategoryDTO" TProperty="int" Title="Id" Sortable="true" CellClass="text-nowrap" Property="category => category.Id" />
+        <PropertyColumn T="ProductCategoryDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="category => category.Name" />
+        <PropertyColumn T="ProductCategoryDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="category => category.Code" />
+        <PropertyColumn T="ProductCategoryDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="true" CellClass="text-nowrap" Property="category => (category.Type != null ? category.Type.Name : string.Empty)" />
         <TemplateColumn T="ProductCategoryDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
-                <MudTooltip Text="@Localizer[Langs.Open]" Delay="@Constants.Tooltip.DELAY">
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" OnClick="() => OpenCategoryDetails(context.Item)" />
+                <MudTooltip Text="@Localizer[Langs.Edit]" Delay="@Constants.Tooltip.DELAY">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="() => OpenCategoryDetails(context.Item)" />
                 </MudTooltip>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE">
                     <Authorized Context="authorizedContext">

@@ -1290,4 +1290,37 @@
   <data name="Symbol" xml:space="preserve">
     <value>Symbol</value>
   </data>
+  <data name="Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="Basic" xml:space="preserve">
+    <value>Basic</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="ValueType" xml:space="preserve">
+    <value>Value type</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="Integer" xml:space="preserve">
+    <value>Integer number</value>
+  </data>
+  <data name="Decimal" xml:space="preserve">
+    <value>Decimal number</value>
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="ResourceCreated" xml:space="preserve">
+    <value>Resource created</value>
+  </data>
+  <data name="AddMeasurement" xml:space="preserve">
+    <value>Add measurement</value>
+  </data>
 </root>

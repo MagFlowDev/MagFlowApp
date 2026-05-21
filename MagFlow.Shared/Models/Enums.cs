@@ -61,7 +61,14 @@ namespace MagFlow.Shared.Models
 
         public enum ValueType
         {
-            Unknown
+            [Display(Name = "Integer")]
+            Integer,
+
+            [Display(Name = "Decimal")]
+            Decimal,
+
+            [Display(Name = "Text")]
+            Text
         }
 
         public enum ImpactType
