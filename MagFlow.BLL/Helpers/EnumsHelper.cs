@@ -13,8 +13,11 @@ namespace MagFlow.BLL.Helpers
 {
     public static class EnumsHelper
     {
-        public static string GetDisplayName(this Enum enumValue, IStringLocalizer localizer)
+        public static string GetDisplayName(this Enum? enumValue, IStringLocalizer localizer)
         {
+            if (enumValue == null)
+                return string.Empty;
+
             FieldInfo? fi = enumValue.GetType().GetField(enumValue.ToString());
 
             if (fi == null)

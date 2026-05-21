@@ -32,11 +32,28 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="ProductTypeDTO" HeaderStyle="width: 1%" />
-        <PropertyColumn T="ProductTypeDTO" TProperty="int" Title="Id" Sortable="true" CellClass="text-nowrap" Property="type => type.Id" />
+        <PropertyColumn T="ProductTypeDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="type => type.Name" />
+        <PropertyColumn T="ProductTypeDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="type => type.Code" />
+        <TemplateColumn T="ProductTypeDTO" Title="@Localizer[Langs.Basic]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                <div class="d-flex align-items-center" style="gap: 8px">
+                    @if (context.Item.IsBasic)
+                    {
+                        <MudIcon Icon="@Icons.Material.Outlined.CheckCircle" Color="Color.Success" Size="Size.Small"/>
+                        <MudText Typo="Typo.body2">@Localizer[Langs.Yes]</MudText>
+                    }
+                    else
+                    {
+                        <MudIcon Icon="@Icons.Material.Outlined.Cancel" Color="Color.Error" Size="Size.Small" />
+                        <MudText Typo="Typo.body2">@Localizer[Langs.No]</MudText>
+                    }
+                </div>
+            </CellTemplate>
+        </TemplateColumn>
         <TemplateColumn T="ProductTypeDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
-                <MudTooltip Text="@Localizer[Langs.Open]" Delay="@Constants.Tooltip.DELAY">
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" OnClick="() => OpenTypeDetails(context.Item)" />
+                <MudTooltip Text="@Localizer[Langs.Edit]" Delay="@Constants.Tooltip.DELAY">
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="() => OpenTypeDetails(context.Item)" />
                 </MudTooltip>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE">
                     <Authorized Context="authorizedContext">

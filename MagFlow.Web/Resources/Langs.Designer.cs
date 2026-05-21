@@ -223,6 +223,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dodaj miarę.
+        /// </summary>
+        public static string AddMeasurement {
+            get {
+                return ResourceManager.GetString("AddMeasurement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dodaj parametr.
         /// </summary>
         public static string AddParameter {
@@ -345,6 +354,15 @@ namespace MagFlow.Web.Resources {
         public static string BackToLogin {
             get {
                 return ResourceManager.GetString("BackToLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bazowy.
+        /// </summary>
+        public static string Basic {
+            get {
+                return ResourceManager.GetString("Basic", resourceCulture);
             }
         }
         
@@ -489,6 +507,15 @@ namespace MagFlow.Web.Resources {
         public static string Closed {
             get {
                 return ResourceManager.GetString("Closed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kod.
+        /// </summary>
+        public static string Code {
+            get {
+                return ResourceManager.GetString("Code", resourceCulture);
             }
         }
         
@@ -723,6 +750,15 @@ namespace MagFlow.Web.Resources {
         public static string DbName {
             get {
                 return ResourceManager.GetString("DbName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Liczba dziesiętna.
+        /// </summary>
+        public static string Decimal {
+            get {
+                return ResourceManager.GetString("Decimal", resourceCulture);
             }
         }
         
@@ -1308,6 +1344,15 @@ namespace MagFlow.Web.Resources {
         public static string Inactive {
             get {
                 return ResourceManager.GetString("Inactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Liczba całkowita.
+        /// </summary>
+        public static string Integer {
+            get {
+                return ResourceManager.GetString("Integer", resourceCulture);
             }
         }
         
@@ -2086,6 +2131,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nie.
+        /// </summary>
+        public static string No {
+            get {
+                return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nie wybrano żadnego modułu.
         /// </summary>
         public static string NoModuleSelected {
@@ -2554,6 +2608,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Utworzono zasób.
+        /// </summary>
+        public static string ResourceCreated {
+            get {
+                return ResourceManager.GetString("ResourceCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Przywróć.
         /// </summary>
         public static string Restore {
@@ -2959,6 +3022,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tekst.
+        /// </summary>
+        public static string Text {
+            get {
+                return ResourceManager.GetString("Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Motyw.
         /// </summary>
         public static string Theme {
@@ -3211,6 +3283,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Jednostka.
+        /// </summary>
+        public static string Unit {
+            get {
+                return ResourceManager.GetString("Unit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Jednostki miar.
         /// </summary>
         public static string UnitsOfMeasurement {
@@ -3428,6 +3509,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Typ wartości.
+        /// </summary>
+        public static string ValueType {
+            get {
+                return ResourceManager.GetString("ValueType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Magazyny.
         /// </summary>
         public static string WarehousesModule {
@@ -3550,6 +3640,15 @@ namespace MagFlow.Web.Resources {
         public static string Year {
             get {
                 return ResourceManager.GetString("Year", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tak.
+        /// </summary>
+        public static string Yes {
+            get {
+                return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
         

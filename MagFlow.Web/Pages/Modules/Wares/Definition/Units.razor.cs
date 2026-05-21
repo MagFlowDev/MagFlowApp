@@ -5,6 +5,7 @@ using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Web.Components.Dialogs;
 using MagFlow.Web.Resources;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using MudBlazor;
 
 namespace MagFlow.Web.Pages.Modules.Wares.Definition
@@ -12,11 +13,16 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
     public partial class Units
     {
         MudDataGrid<UnitDTO> _unitsDataGrid;
-        string? _searchString = null;
 
+        private HashSet<int> _selectedIds = new();
+        private HashSet<int> _visibleIds = new();
+        private List<UnitDTO> _loadedRoots = [];
+
+        string? _searchString = null;
         bool _isBusy = false;
 
-        private async Task<GridData<UnitDTO>> ServerReloadProducts(GridState<UnitDTO> state, CancellationToken token)
+
+        private async Task<GridData<UnitDTO>> ServerReloadUnits(GridState<UnitDTO> state, CancellationToken token)
         {
             var sortDefinition = state.SortDefinitions.FirstOrDefault();
             string? sortBy = sortDefinition?.SortBy;
@@ -28,6 +34,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             sortBy = sortBy ?? nameof(UnitDTO.Id);
             var response = await ProductService.GetUnits(state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
 
+            _loadedRoots = response?.Elements?.ToList() ?? new List<UnitDTO>();
             return new GridData<UnitDTO>
             {
                 Items = response.Elements,
@@ -40,14 +47,75 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             if (!HasModulePermission("Wares", PermissionFlags.Add))
                 return;
 
+            var dialog = await DialogService.ShowAsync<AddUnitModal>(Localizer[Langs.AddMeasurement]);
+            var confirmation = await dialog.Result;
+            if (confirmation?.Data is bool result && result == true)
+                await _unitsDataGrid.ReloadServerData();
         }
 
         private void OpenUnitDetails(UnitDTO unit)
         {
             if (!HasModulePermission("Wares", PermissionFlags.Read))
                 return;
+        }
 
-            
+        private bool IsSelected(UnitDTO unit)
+            => _selectedIds.Contains(unit.Id);
+
+        private void ToggleSelection(UnitDTO unit, bool selected)
+        {
+            if (selected)
+                _selectedIds.Add(unit.Id);
+            else
+                _selectedIds.Remove(unit.Id);
+        }
+
+        private IEnumerable<UnitDTO> VisibleUnits
+            => _loadedRoots.SelectMany(Flatten);
+
+        private IEnumerable<UnitDTO> Flatten(UnitDTO unit)
+        {
+            yield return unit;
+
+            foreach (var child in unit.RelatedUnits ?? Enumerable.Empty<UnitDTO>())
+            {
+                foreach (var x in Flatten(child))
+                    yield return x;
+            }
+        }
+
+        private bool? SelectAllStates()
+        {
+            var visible = VisibleUnits.ToList();
+
+            if (visible.Count == 0)
+                return false;
+
+            var selected = visible.Count(x => _selectedIds.Contains(x.Id));
+
+            if (selected == 0)
+                return false;
+
+            if (selected == visible.Count)
+                return true;
+
+            return null;
+        }
+
+        private void OnSelectAllChanged(bool? value)
+        {
+            var visible = VisibleUnits;
+
+            if (value == true)
+            {
+                foreach (var u in visible)
+                    _selectedIds.Add(u.Id);
+            }
+            else
+            {
+                foreach (var u in visible)
+                    _selectedIds.Remove(u.Id);
+            }
         }
 
         private Dictionary<int, bool> _loadingDelete = [];

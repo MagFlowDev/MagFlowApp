@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using MagFlow.BLL.Mappers.Domain.CompanyScope;
 using MagFlow.Shared.Models.FormModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace MagFlow.BLL.Services
 {
@@ -122,10 +123,14 @@ namespace MagFlow.BLL.Services
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
+                Filters = new Dictionary<string, object>()
+                {
+                    { nameof(Unit.ParentUnitId), null }
+                },
                 Search = search,
                 SortBy = sortBy,
                 Descending = descending
-            });
+            }, x => x.Include(y => y.RelatedUnits));
             return new QueryResponse<UnitDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>

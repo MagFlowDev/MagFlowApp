@@ -1291,4 +1291,37 @@ i uprawnieniami użytkowników</value>
   <data name="Symbol" xml:space="preserve">
     <value>Symbol</value>
   </data>
+  <data name="Code" xml:space="preserve">
+    <value>Kod</value>
+  </data>
+  <data name="Basic" xml:space="preserve">
+    <value>Bazowy</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Tak</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nie</value>
+  </data>
+  <data name="ValueType" xml:space="preserve">
+    <value>Typ wartości</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>Jednostka</value>
+  </data>
+  <data name="Integer" xml:space="preserve">
+    <value>Liczba całkowita</value>
+  </data>
+  <data name="Decimal" xml:space="preserve">
+    <value>Liczba dziesiętna</value>
+  </data>
+  <data name="Text" xml:space="preserve">
+    <value>Tekst</value>
+  </data>
+  <data name="ResourceCreated" xml:space="preserve">
+    <value>Utworzono zasób</value>
+  </data>
+  <data name="AddMeasurement" xml:space="preserve">
+    <value>Dodaj miarę</value>
+  </data>
 </root>
