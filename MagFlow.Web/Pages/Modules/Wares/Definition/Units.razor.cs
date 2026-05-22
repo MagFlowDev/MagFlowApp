@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.Services;
+﻿using MagFlow.BLL.Helpers.Localization;
+using MagFlow.BLL.Services;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
@@ -47,16 +48,22 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             if (!HasModulePermission("Wares", PermissionFlags.Add))
                 return;
 
-            var dialog = await DialogService.ShowAsync<AddUnitModal>(Localizer[Langs.AddMeasurement]);
+            var dialog = await DialogService.ShowAsync<UnitModal>(Localizer[Langs.AddMeasurement]);
             var confirmation = await dialog.Result;
             if (confirmation?.Data is bool result && result == true)
                 await _unitsDataGrid.ReloadServerData();
         }
 
-        private void OpenUnitDetails(UnitDTO unit)
+        private async Task OpenUnitDetails(UnitDTO unit)
         {
             if (!HasModulePermission("Wares", PermissionFlags.Read))
                 return;
+
+            var parameters = new DialogParameters<UnitModal> { { x => x.Unit, unit } };
+            var dialog = await DialogService.ShowAsync<UnitModal>(Localizer[Langs.MeasurementUnit], parameters);
+            var confirmation = await dialog.Result;
+            if (confirmation?.Data is bool result && result == true)
+                await _unitsDataGrid.ReloadServerData();
         }
 
         private bool IsSelected(UnitDTO unit)
@@ -134,7 +141,22 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                 _isBusy = true;
                 _loadingDelete[unit.Id] = true;
 
-                
+                var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, string.Format(Localizer.GetConfirmationMessage(nameof(Langs.DeleteUnitConfirmation), 1), unit.Name) } };
+                var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteUser], parameters);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    var result = await ProductService.DeleteMeasurementUnit(unit);
+                    if (result == Enums.Result.Success)
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                        await _unitsDataGrid.ReloadServerData();
+                    }
+                    else
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteFailed], Severity.Error);
+                    }
+                }
             }
             finally
             {
@@ -144,7 +166,52 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
         }
         private async Task DeleteUnits()
         {
+            if (!HasModulePermission("Wares", PermissionFlags.Delete))
+                return;
 
+            if (_isBusy || _loadingDeleteMany)
+                return;
+
+            var allUnits = VisibleUnits.ToList();
+            var selectedUnits = allUnits.Where(x => _selectedIds.Contains(x.Id)).ToList();
+            if (selectedUnits.Any() != true)
+                return;
+
+            if (selectedUnits.Count == 1)
+            {
+                var unit = selectedUnits.FirstOrDefault();
+                await DeleteUnit(unit);
+                return;
+            }
+
+            try
+            {
+                _isBusy = true;
+                _loadingDeleteMany = true;
+
+                var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, Localizer.GetConfirmationMessage(nameof(Langs.DeleteUnitConfirmation), selectedUnits.Count) } };
+                var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteUser], parameters);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    var result = await ProductService.DeleteMeasurementUnits(selectedUnits);
+                    if (result == Enums.Result.Success)
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                        _selectedIds.Clear();
+                        await _unitsDataGrid.ReloadServerData();
+                    }
+                    else
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteFailed], Severity.Error);
+                    }
+                }
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingDeleteMany = false;
+            }
         }
     }
 }

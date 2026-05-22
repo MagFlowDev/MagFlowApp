@@ -36,7 +36,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             if (!HasModulePermission("Wares", PermissionFlags.Add))
                 return;
 
-            var dialog = await DialogService.ShowAsync<AddParameterModal>(Localizer[Langs.AddParameter]);
+            var dialog = await DialogService.ShowAsync<ParameterModal>(Localizer[Langs.AddParameter]);
             var confirmation = await dialog.Result;
             if (confirmation?.Data is bool result && result == true)
                 await _parametersDataGrid.ReloadServerData();

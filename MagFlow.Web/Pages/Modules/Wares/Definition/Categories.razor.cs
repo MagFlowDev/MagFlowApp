@@ -36,7 +36,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             if (!HasModulePermission("Wares", PermissionFlags.Add))
                 return;
 
-            var dialog = await DialogService.ShowAsync<AddCategoryModal>(Localizer[Langs.AddCategory]);
+            var dialog = await DialogService.ShowAsync<CategoryModal>(Localizer[Langs.AddCategory]);
             var confirmation = await dialog.Result;
             if (confirmation?.Data is bool result && result == true)
                 await _categoriesDataGrid.ReloadServerData();
