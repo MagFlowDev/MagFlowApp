@@ -1323,4 +1323,34 @@
   <data name="AddMeasurement" xml:space="preserve">
     <value>Add measurement</value>
   </data>
+  <data name="BasicUnit" xml:space="preserve">
+    <value>Basic unit</value>
+  </data>
+  <data name="DerivedUnitOptional" xml:space="preserve">
+    <value>Derived unit (optional)</value>
+  </data>
+  <data name="KilogramExample" xml:space="preserve">
+    <value>E.g. Kilogram</value>
+  </data>
+  <data name="KgExample" xml:space="preserve">
+    <value>E.g. Kg</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="MeasurementUnit" xml:space="preserve">
+    <value>Measurement unit</value>
+  </data>
+  <data name="DeleteUnitConfirmation_One" xml:space="preserve">
+    <value>Are you sure you want to delete unit '{0}'?</value>
+  </data>
+  <data name="DeleteUnitConfirmation_Few" xml:space="preserve">
+    <value>Are you sure you want to delete {0} units?</value>
+  </data>
+  <data name="DeleteUnitConfirmation_Many" xml:space="preserve">
+    <value>Are you sure you want to delete {0} units?</value>
+  </data>
+  <data name="DeleteUnitConfirmation" xml:space="preserve">
+    <value>Confirm removal from the unit list</value>
+  </data>
 </root>

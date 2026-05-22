@@ -203,7 +203,17 @@ namespace MagFlow.BLL.Services
             return Enums.Result.Error;
         }
 
+        public async Task<Enums.Result> DeleteProducts(List<ProductDTO> productDTOs)
+        {
+            return Enums.Result.Error;
+        }
+
         public async Task<Enums.Result> DeleteType(ProductTypeDTO typeDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> DeleteTypes(List<ProductTypeDTO> typeDTOs)
         {
             return Enums.Result.Error;
         }
@@ -213,12 +223,27 @@ namespace MagFlow.BLL.Services
             return Enums.Result.Error;
         }
 
+        public async Task<Enums.Result> DeleteCategories(List<ProductCategoryDTO> categoryDTOs)
+        {
+            return Enums.Result.Error;
+        }
+
         public async Task<Enums.Result> DeleteParameter(ProductParameterDTO parameterDTO)
         {
             return Enums.Result.Error;
         }
 
+        public async Task<Enums.Result> DeleteParameters(List<ProductParameterDTO> parameterDTOs)
+        {
+            return Enums.Result.Error;
+        }
+
         public async Task<Enums.Result> DeleteMeasurementUnit(UnitDTO unitDTO)
+        {
+            return Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> DeleteMeasurementUnits(List<UnitDTO> unitDTOs)
         {
             return Enums.Result.Error;
         }

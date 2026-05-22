@@ -6,8 +6,12 @@ namespace MagFlow.Shared.Models.FormModels
 {
     public class MeasurementUnitFormModel
     {
+        public int? Id { get; set; }
+
         public string Name { get; set; }
         public string Symbol { get; set; }
+
+        public decimal? ParentUnitConversionRate { get; set; }
 
         public List<MeasurementUnitFormModel> RelatedUnits { get; set; }
 

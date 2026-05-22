@@ -1324,4 +1324,34 @@ i uprawnieniami użytkowników</value>
   <data name="AddMeasurement" xml:space="preserve">
     <value>Dodaj miarę</value>
   </data>
+  <data name="BasicUnit" xml:space="preserve">
+    <value>Jednostka bazowa</value>
+  </data>
+  <data name="DerivedUnitOptional" xml:space="preserve">
+    <value>Jednostka pochodna (opcjonalne)</value>
+  </data>
+  <data name="KilogramExample" xml:space="preserve">
+    <value>Np. Kilogram</value>
+  </data>
+  <data name="KgExample" xml:space="preserve">
+    <value>Np. Kg</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="MeasurementUnit" xml:space="preserve">
+    <value>Jednostka miary</value>
+  </data>
+  <data name="DeleteUnitConfirmation_One" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć jednostkę '{0}'?</value>
+  </data>
+  <data name="DeleteUnitConfirmation_Few" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} jednostki?</value>
+  </data>
+  <data name="DeleteUnitConfirmation_Many" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} jednostek?</value>
+  </data>
+  <data name="DeleteUnitConfirmation" xml:space="preserve">
+    <value>Potwierdź usunięcie z listy jednostek</value>
+  </data>
 </root>

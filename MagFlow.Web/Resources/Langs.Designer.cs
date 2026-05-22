@@ -178,6 +178,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dodaj.
+        /// </summary>
+        public static string Add {
+            get {
+                return ResourceManager.GetString("Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dodaj kategorię.
         /// </summary>
         public static string AddCategory {
@@ -363,6 +372,15 @@ namespace MagFlow.Web.Resources {
         public static string Basic {
             get {
                 return ResourceManager.GetString("Basic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jednostka bazowa.
+        /// </summary>
+        public static string BasicUnit {
+            get {
+                return ResourceManager.GetString("BasicUnit", resourceCulture);
             }
         }
         
@@ -817,6 +835,42 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Potwierdź usunięcie z listy jednostek.
+        /// </summary>
+        public static string DeleteUnitConfirmation {
+            get {
+                return ResourceManager.GetString("DeleteUnitConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć {0} jednostki?.
+        /// </summary>
+        public static string DeleteUnitConfirmation_Few {
+            get {
+                return ResourceManager.GetString("DeleteUnitConfirmation_Few", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć {0} jednostek?.
+        /// </summary>
+        public static string DeleteUnitConfirmation_Many {
+            get {
+                return ResourceManager.GetString("DeleteUnitConfirmation_Many", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć jednostkę &apos;{0}&apos;?.
+        /// </summary>
+        public static string DeleteUnitConfirmation_One {
+            get {
+                return ResourceManager.GetString("DeleteUnitConfirmation_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Usuń użytkownika.
         /// </summary>
         public static string DeleteUser {
@@ -849,6 +903,15 @@ namespace MagFlow.Web.Resources {
         public static string Deleting {
             get {
                 return ResourceManager.GetString("Deleting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jednostka pochodna (opcjonalne).
+        /// </summary>
+        public static string DerivedUnitOptional {
+            get {
+                return ResourceManager.GetString("DerivedUnitOptional", resourceCulture);
             }
         }
         
@@ -1411,6 +1474,24 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Np. Kg.
+        /// </summary>
+        public static string KgExample {
+            get {
+                return ResourceManager.GetString("KgExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Np. Kilogram.
+        /// </summary>
+        public static string KilogramExample {
+            get {
+                return ResourceManager.GetString("KilogramExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Język.
         /// </summary>
         public static string Language {
@@ -1776,6 +1857,15 @@ namespace MagFlow.Web.Resources {
         public static string ManufacturingExcellence {
             get {
                 return ResourceManager.GetString("ManufacturingExcellence", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jednostka miary.
+        /// </summary>
+        public static string MeasurementUnit {
+            get {
+                return ResourceManager.GetString("MeasurementUnit", resourceCulture);
             }
         }
         
