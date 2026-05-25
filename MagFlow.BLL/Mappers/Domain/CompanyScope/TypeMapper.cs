@@ -3,6 +3,7 @@ using MagFlow.Shared.DTOs.CompanyScope;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MagFlow.Shared.Models.FormModels;
 
 namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 {
@@ -23,6 +24,47 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         public static List<ProductTypeDTO> ToDTO(this IEnumerable<ProductType> types)
         {
             return types.Select(x => x.ToDTO()).ToList();
+        }
+
+        public static ProductTypeDTO ToDTO(this ProductTypeFormModel model)
+        {
+            return new ProductTypeDTO()
+            {
+                Code = model.Code
+            };
+        }
+
+        public static List<ProductTypeDTO> ToDTO(this IEnumerable<ProductTypeFormModel> models)
+        {
+            return models.Select(x => x.ToDTO()).ToList();
+        }
+
+
+
+        public static ProductType ToEntity(this ProductTypeDTO type)
+        {
+            return new ProductType()
+            {
+
+            };
+        }
+
+        public static List<ProductType> ToEntity(this IEnumerable<ProductTypeDTO> types)
+        { 
+            return types.Select(x => x.ToEntity()).ToList();
+        }
+
+        public static ProductType ToEntity(this ProductTypeFormModel model)
+        {
+            return new ProductType()
+            {
+
+            };
+        }
+
+        public static List<ProductType> ToEntity(this IEnumerable<ProductTypeFormModel> models)
+        {
+            return models.Select(x => x.ToEntity()).ToList();
         }
     }
 }

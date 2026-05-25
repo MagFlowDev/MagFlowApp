@@ -65,9 +65,9 @@
                 <td class="mud-table-cell mud-table-child-content" style="padding-right: 12px">
                     <MudCheckBox T="bool" Value="@IsSelected(child)" ValueChanged="@(v => ToggleSelection(child, v))" Class="align-items-end" ></MudCheckBox>
                 </td>
-                <td class="mud-table-cell mud-table-child-content pl-8">@child.Name</td>
-                <td class="mud-table-cell mud-table-child-content pl-8">@child.Symbol</td>
-                <td class="mud-table-cell mud-table-child-content pl-8">
+                <td class="mud-table-cell mud-table-child-content">@child.Name</td>
+                <td class="mud-table-cell mud-table-child-content">@child.Symbol</td>
+                <td class="mud-table-cell mud-table-child-content">
                     <div class="d-flex align-items-center" style="gap: 4px">
                         <MudTooltip Text="@Localizer[Langs.Edit]" Delay="@Constants.Tooltip.DELAY">
                             <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="async () => await OpenUnitDetails(child)" />

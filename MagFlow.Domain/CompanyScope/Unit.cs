@@ -1,10 +1,11 @@
+using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Unit
+    public class Unit : ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -20,7 +21,9 @@ namespace MagFlow.Domain.CompanyScope
 
         [ForeignKey(nameof(ParentUnitId))]
         public Unit? ParentUnit { get; set; }
-        
+
+        public DateTime? RemovedAt { get; set; }
+
         public ICollection<Unit> RelatedUnits { get; set; }
     }
 }

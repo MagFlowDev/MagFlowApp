@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.Models.FormModels;
+using MudBlazor;
 
 namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 {
@@ -25,5 +27,108 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return parameters.Select(x => x.ToDTO()).ToList();
         }
+
+        public static ProductParameterDTO ToDTO(this ProductParameterFormModel model)
+        {
+            return new ProductParameterDTO()
+            {
+                Name = model.Name
+            };
+        }
+
+        public static List<ProductParameterDTO> ToDTO(this IEnumerable<ProductParameterFormModel> models)
+        {
+            return models.Select(x => x.ToDTO()).ToList();
+        }
+
+
+
+        public static ProductParameter ToEntity(this ProductParameterDTO type)
+        {
+            return new ProductParameter()
+            {
+
+            };
+        }
+
+        public static List<ProductParameter> ToEntity(this IEnumerable<ProductParameterDTO> types)
+        {
+            return types.Select(x => x.ToEntity()).ToList();
+        }
+
+        public static ProductParameter ToEntity(this ProductParameterFormModel model)
+        {
+            return new ProductParameter()
+            {
+
+            };
+        }
+
+        public static List<ProductParameter> ToEntity(this IEnumerable<ProductParameterFormModel> models)
+        {
+            return models.Select(x => x.ToEntity()).ToList();
+        }
+
+
+
+
+        public static ParameterDTO ToDTO(this CustomParameter parameter)
+        {
+            return new ParameterDTO()
+            {
+                Id = parameter.Id,
+                Name = parameter.Name,
+                Code = parameter.Code,
+                ValueType = parameter.ValueType,
+                Unit = parameter.Unit?.ToDTO()
+            };
+        }
+
+        public static List<ParameterDTO> ToDTO(this IEnumerable<CustomParameter> parameters)
+        {
+            return parameters.Select(x => x.ToDTO()).ToList();
+        }
+
+        public static ParameterDTO ToDTO(this ParameterFormModel model)
+        {
+            return new ParameterDTO()
+            {
+                Name = model.Name
+            };
+        }
+
+        public static List<ParameterDTO> ToDTO(this IEnumerable<ParameterFormModel> models)
+        {
+            return models.Select(x => x.ToDTO()).ToList();
+        }
+
+
+
+        public static CustomParameter ToEntity(this ParameterDTO type)
+        {
+            return new CustomParameter()
+            {
+
+            };
+        }
+
+        public static List<CustomParameter> ToEntity(this IEnumerable<ParameterDTO> types)
+        {
+            return types.Select(x => x.ToEntity()).ToList();
+        }
+
+        public static CustomParameter ToEntity(this ParameterFormModel model)
+        {
+            return new CustomParameter()
+            {
+
+            };
+        }
+
+        public static List<CustomParameter> ToEntity(this IEnumerable<ParameterFormModel> models)
+        {
+            return models.Select(x => x.ToEntity()).ToList();
+        }
+
     }
 }

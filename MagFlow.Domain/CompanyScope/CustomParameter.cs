@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class CustomParameter
+    public class CustomParameter : ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -20,5 +21,7 @@ namespace MagFlow.Domain.CompanyScope
         
         [ForeignKey(nameof(UnitId))]
         public Unit? Unit { get; set; }
+
+        public DateTime? RemovedAt { get; set; }
     }
 }

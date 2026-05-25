@@ -1,9 +1,10 @@
+using MagFlow.Shared.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class ProductParameter
+    public class ProductParameter : ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,5 +20,7 @@ namespace MagFlow.Domain.CompanyScope
         public Product? Product { get; set; }
         [ForeignKey(nameof(ParameterId))]
         public CustomParameter? Parameter { get; set; }
+
+        public DateTime? RemovedAt { get; set; }
     }
 }

@@ -28,9 +28,12 @@
             <MudText Typo="Typo.subtitle1">@Localizer[Langs.DerivedUnitOptional]</MudText>
             @foreach (var child in _model.RelatedUnits)
             {
-                <div class="d-flex align-items-center w-100" style="gap: 16px">
-                    <MudTextField Label="@Localizer[Langs.Name]" Class="my-0" Placeholder="@Localizer[Langs.KilogramExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Name" For="@(() => child.Name)"></MudTextField>
-                    <MudTextField Label="@Localizer[Langs.Symbol]" Class="my-0" Placeholder="@Localizer[Langs.KgExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Symbol" For="@(() => child.Symbol)"></MudTextField>
+                <div class="d-flex align-items-center w-100" style="gap: 4px">
+                    <div class="d-flex align-items-center w-100" style="gap: 16px">
+                        <MudTextField Label="@Localizer[Langs.Name]" Class="my-0" Placeholder="@Localizer[Langs.KilogramExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Name" For="@(() => child.Name)"></MudTextField>
+                        <MudTextField Label="@Localizer[Langs.Symbol]" Class="my-0" Placeholder="@Localizer[Langs.KgExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Symbol" For="@(() => child.Symbol)"></MudTextField>
+                    </div>
+                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => RemoveChildUnit(child))" />
                 </div>
             }
             <MudButton Variant="Variant.Outlined" Color="Color.Dark" OnClick="AddRelatedUnit" StartIcon="@Icons.Material.Outlined.Add">@Localizer[Langs.Add]</MudButton>
@@ -49,6 +52,7 @@
     [Parameter]
     public UnitDTO? Unit { get; set; }
 
+    private List<int> _removedUnits { get; set; }
     private IValidator _validator;
     private MeasurementUnitFormModel _model;
     private EditContext _context;
@@ -60,6 +64,14 @@
     private void AddRelatedUnit()
     {
         _model.RelatedUnits.Add(new MeasurementUnitFormModel());
+        StateHasChanged();
+    }
+
+    private void RemoveChildUnit(MeasurementUnitFormModel child)
+    {
+        _model.RelatedUnits.Remove(child);
+        if(child.Id.HasValue && child.Id.Value > 0)
+            _removedUnits.Add(child.Id.Value);
         StateHasChanged();
     }
 
@@ -82,7 +94,7 @@
             var result = Enums.Result.Error;
             if (_model.Id != null && _model.Id != 0)
             {
-                result = await ProductService.UpdateMeasurementUnit(_model.ToDTO());
+                result = await ProductService.UpdateMeasurementUnit(_model.ToDTO(), _removedUnits);
             }
             else
             {
@@ -112,6 +124,7 @@
     {
         base.OnInitialized();
 
+        _removedUnits = new List<int>();
         _model = new MeasurementUnitFormModel();
         _context = new EditContext(_model);
         _validator = new MeasurementUnitValidator(Validations);
@@ -144,5 +157,4 @@
             }
         }
     }
-
 }

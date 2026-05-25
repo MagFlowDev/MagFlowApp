@@ -1,4 +1,5 @@
-﻿using MagFlow.Shared.Models;
+﻿using MagFlow.EF;
+using MagFlow.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,9 @@ namespace MagFlow.DAL.Repositories
         Task<Enums.Result> DeleteAsync(TEntity entity, TContext? context = null);
 
         Enums.Result DeleteMany(Expression<Func<TEntity, bool>> predicate, TContext? context = null);
+        Enums.Result DeleteMany(IEnumerable<TEntity> entities, CompanyDbContext? context = default);
         Task<Enums.Result> DeleteManyAsync(Expression<Func<TEntity, bool>> predicate, TContext? context = null);
+        Task<Enums.Result> DeleteManyAsync(IEnumerable<TEntity> entities, CompanyDbContext? context = default);
 
         bool Any(Expression<Func<TEntity, bool>> predicate, bool archive = false);
         Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, bool archive = false);

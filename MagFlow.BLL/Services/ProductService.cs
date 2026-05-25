@@ -1,14 +1,14 @@
-﻿using MagFlow.BLL.Services.Interfaces;
+﻿using MagFlow.BLL.Mappers.Domain.CompanyScope;
+using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
 using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.FormModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using MagFlow.BLL.Mappers.Domain.CompanyScope;
-using MagFlow.Shared.Models.FormModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace MagFlow.BLL.Services
 {
@@ -17,19 +17,22 @@ namespace MagFlow.BLL.Services
         private readonly IProductRepository _productRepository;
         private readonly IProductCategoryRepository _categoryRepository;
         private readonly IProductTypeRepository _typeRepository;
-        private readonly IProductParameterRepository _parameterRepository;
+        private readonly IParameterRepository _parameterRepository;
+        private readonly IProductParameterRepository _productParameterRepository;
         private readonly IUnitRepository _unitRepository;
 
         public ProductService(IProductRepository productRepository,
             IProductCategoryRepository productCategoryRepository,
             IProductTypeRepository productTypeRepository,
+            IParameterRepository parameterRepository,
             IProductParameterRepository productParameterRepository,
             IUnitRepository unitRepository)
         {
             _productRepository = productRepository;
             _categoryRepository = productCategoryRepository;
             _typeRepository = productTypeRepository;
-            _parameterRepository = productParameterRepository;
+            _parameterRepository = parameterRepository;
+            _productParameterRepository = productParameterRepository;
             _unitRepository = unitRepository;
         }
 
@@ -96,9 +99,9 @@ namespace MagFlow.BLL.Services
             };
         }
 
-        public async Task<QueryResponse<ProductParameterDTO>> GetParameters(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<ParameterDTO>> GetParameters(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
         {
-            var queryResponse = await _parameterRepository.GetAsync(new QueryOptions<ProductParameter>()
+            var queryResponse = await _parameterRepository.GetAsync(new QueryOptions<CustomParameter>()
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -106,13 +109,13 @@ namespace MagFlow.BLL.Services
                 SortBy = sortBy,
                 Descending = descending
             });
-            return new QueryResponse<ProductParameterDTO>()
+            return new QueryResponse<ParameterDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
                 {
                     var dto = x.ToDTO();
                     return dto;
-                }).ToList() ?? new List<ProductParameterDTO>(),
+                }).ToList() ?? new List<ParameterDTO>(),
                 TotalCount = queryResponse?.TotalCount ?? 0
             };
         }
@@ -146,106 +149,184 @@ namespace MagFlow.BLL.Services
 
         public async Task<Enums.Result> AddProduct(ProductFormModel model)
         {
-            return Enums.Result.Error;
+            var unit = model.ToEntity();
+            var result = await _productRepository.AddAsync(unit);
+            return result;
         }
 
         public async Task<Enums.Result> AddType(ProductTypeFormModel model)
         {
-            return Enums.Result.Error;
+            var unit = model.ToEntity();
+            var result = await _typeRepository.AddAsync(unit);
+            return result;
         }
 
         public async Task<Enums.Result> AddCategory(ProductCategoryFormModel model)
         {
-            return Enums.Result.Error;
+            var unit = model.ToEntity();
+            var result = await _categoryRepository.AddAsync(unit);
+            return result;
         }
 
-        public async Task<Enums.Result> AddParameter(ProductParameterFormModel model)
+        public async Task<Enums.Result> AddParameter(ParameterFormModel model)
         {
-            return Enums.Result.Error;
+            var unit = model.ToEntity();
+            var result = await _parameterRepository.AddAsync(unit);
+            return result;
         }
 
         public async Task<Enums.Result> AddMeasurementUnit(MeasurementUnitFormModel model)
         {
-            return Enums.Result.Error;
+            var unit = model.ToEntity();
+            var result = await _unitRepository.AddAsync(unit);
+            return result;
         }
 
 
 
         public async Task<Enums.Result> UpdateProduct(ProductDTO productDTO)
         {
-            return Enums.Result.Error;
+            var product = productDTO.ToEntity();
+            var result = await _productRepository.UpdateAsync(product);
+            return result;
         }
 
         public async Task<Enums.Result> UpdateType(ProductTypeDTO typeDTO)
         {
-            return Enums.Result.Error;
+            var type = typeDTO.ToEntity();
+            var result = await _typeRepository.UpdateAsync(type);
+            return result;
         }
 
         public async Task<Enums.Result> UpdateCategory(ProductCategoryDTO categoryDTO)
         {
-            return Enums.Result.Error;
+            var category = categoryDTO.ToEntity();
+            var result = await _categoryRepository.UpdateAsync(category);
+            return result;
         }
 
-        public async Task<Enums.Result> UpdateParameter(ProductParameterDTO parameterDTO)
+        public async Task<Enums.Result> UpdateParameter(ParameterDTO parameterDTO)
         {
-            return Enums.Result.Error;
+            var parameter = parameterDTO.ToEntity();
+            var result = await _parameterRepository.UpdateAsync(parameter);
+            return result;
         }
 
-        public async Task<Enums.Result> UpdateMeasurementUnit(UnitDTO unitDTO)
+        public async Task<Enums.Result> UpdateMeasurementUnit(UnitDTO unitDTO, List<int>? removedUnits = null)
         {
-            return Enums.Result.Error;
+            var unit = unitDTO.ToEntity();
+            var originalUnit = await _unitRepository.GetByIdAsync(unit.Id, unit => unit.Include(x => x.RelatedUnits));
+            if (removedUnits != null && removedUnits.Any())
+            {
+                foreach (var removedUnitId in removedUnits)
+                {
+                    var toRemove = originalUnit?.RelatedUnits.FirstOrDefault(x => x.Id == removedUnitId);
+                    if(toRemove == null)
+                        continue;
+                    var tempResult = await _unitRepository.DeleteAsync(toRemove);
+                    if (tempResult != Enums.Result.Success)
+                        return tempResult;
+                }
+            }
+
+            var result = await _unitRepository.UpdateAsync(unit);
+            return result;
         }
 
 
 
         public async Task<Enums.Result> DeleteProduct(ProductDTO productDTO)
         {
-            return Enums.Result.Error;
+            var originalProduct = await _productRepository.GetByIdAsync(productDTO.Id);
+            if (originalProduct == null)
+                return Enums.Result.Error;
+
+            var result = await _productRepository.DeleteAsync(originalProduct);
+            return result;
         }
 
         public async Task<Enums.Result> DeleteProducts(List<ProductDTO> productDTOs)
         {
-            return Enums.Result.Error;
+            var productsIds = productDTOs.Select(x => x.Id).ToList();
+            var result = await _productRepository.DeleteManyAsync(x => productsIds.Contains(x.Id));
+            return result;
         }
 
         public async Task<Enums.Result> DeleteType(ProductTypeDTO typeDTO)
         {
-            return Enums.Result.Error;
+            var originalType = await _typeRepository.GetByIdAsync(typeDTO.Id);
+            if (originalType == null)
+                return Enums.Result.Error;
+
+            var result = await _typeRepository.DeleteAsync(originalType);
+            return result;
         }
 
         public async Task<Enums.Result> DeleteTypes(List<ProductTypeDTO> typeDTOs)
         {
-            return Enums.Result.Error;
+            var typesIds = typeDTOs.Select(x => x.Id).ToList();
+            var result = await _typeRepository.DeleteManyAsync(x => typesIds.Contains(x.Id));
+            return result;
         }
 
         public async Task<Enums.Result> DeleteCategory(ProductCategoryDTO categoryDTO)
         {
-            return Enums.Result.Error;
+            var originalCategory = await _categoryRepository.GetByIdAsync(categoryDTO.Id);
+            if (originalCategory == null)
+                return Enums.Result.Error;
+
+            var result = await _categoryRepository.DeleteAsync(originalCategory);
+            return result;
         }
 
         public async Task<Enums.Result> DeleteCategories(List<ProductCategoryDTO> categoryDTOs)
         {
-            return Enums.Result.Error;
+            var categoriesIds = categoryDTOs.Select(x => x.Id).ToList();
+            var result = await _categoryRepository.DeleteManyAsync(x => categoriesIds.Contains(x.Id));
+            return result;
         }
 
-        public async Task<Enums.Result> DeleteParameter(ProductParameterDTO parameterDTO)
+        public async Task<Enums.Result> DeleteParameter(ParameterDTO parameterDTO)
         {
-            return Enums.Result.Error;
+            var originalParameter = await _parameterRepository.GetByIdAsync(parameterDTO.Id);
+            if (originalParameter == null)
+                return Enums.Result.Error;
+
+            var result = await _parameterRepository.DeleteAsync(originalParameter);
+            return result;
         }
 
-        public async Task<Enums.Result> DeleteParameters(List<ProductParameterDTO> parameterDTOs)
+        public async Task<Enums.Result> DeleteParameters(List<ParameterDTO> parameterDTOs)
         {
-            return Enums.Result.Error;
+            var parametersIds = parameterDTOs.Select(x => x.Id).ToList();
+            var result = await _parameterRepository.DeleteManyAsync(x => parametersIds.Contains(x.Id));
+            return result;
         }
 
         public async Task<Enums.Result> DeleteMeasurementUnit(UnitDTO unitDTO)
         {
-            return Enums.Result.Error;
+            var originalUnit = await _unitRepository.GetByIdAsync(unitDTO.Id);
+            if (originalUnit == null)
+                return Enums.Result.Error;
+
+            var result = await _unitRepository.DeleteAsync(originalUnit);
+            return result;
         }
 
         public async Task<Enums.Result> DeleteMeasurementUnits(List<UnitDTO> unitDTOs)
         {
-            return Enums.Result.Error;
+            var unitsIds = unitDTOs.Select(x => x.Id);
+            var originalUnits = (await _unitRepository.GetAllAsync(unit => unitsIds.Contains(unit.Id), unit => unit.Include(x => x.RelatedUnits))).ToList();
+
+            var now = DateTime.UtcNow;
+            originalUnits.ForEach(unit =>
+            {
+                foreach (var child in unit.RelatedUnits)
+                    child.RemovedAt = now;
+            });
+            
+            var result = await _unitRepository.DeleteManyAsync(originalUnits);
+            return result;
         }
     }
 }

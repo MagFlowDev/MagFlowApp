@@ -1,11 +1,12 @@
+using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MagFlow.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Item
+    public class Item : ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
