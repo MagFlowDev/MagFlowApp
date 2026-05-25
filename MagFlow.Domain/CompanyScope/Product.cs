@@ -1,11 +1,12 @@
+using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MagFlow.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Product
+    public class Product : ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -43,5 +44,7 @@ namespace MagFlow.Domain.CompanyScope
         public ICollection<ProductComponent> Components { get; set; }
         public ICollection<ProductParameter> Parameters { get; set; }
         public ICollection<ProductUnitConversion> Conversions { get; set; }
+
+        public DateTime? RemovedAt { get; set; }
     }
 }

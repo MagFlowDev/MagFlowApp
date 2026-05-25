@@ -7,12 +7,12 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
 {
     public partial class Parameters
     {
-        MudDataGrid<ProductParameterDTO> _parametersDataGrid;
+        MudDataGrid<ParameterDTO> _parametersDataGrid;
         string? _searchString = null;
 
         bool _isBusy = false;
 
-        private async Task<GridData<ProductParameterDTO>> ServerReloadProducts(GridState<ProductParameterDTO> state, CancellationToken token)
+        private async Task<GridData<ParameterDTO>> ServerReloadProducts(GridState<ParameterDTO> state, CancellationToken token)
         {
             var sortDefinition = state.SortDefinitions.FirstOrDefault();
             string? sortBy = sortDefinition?.SortBy;
@@ -21,10 +21,10 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                 var column = _parametersDataGrid.RenderedColumns.FirstOrDefault(c => c.PropertyName == sortBy);
                 sortBy = column?.Tag?.ToString();
             }
-            sortBy = sortBy ?? nameof(ProductParameterDTO.Id);
+            sortBy = sortBy ?? nameof(ParameterDTO.Id);
             var response = await ProductService.GetParameters(state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
 
-            return new GridData<ProductParameterDTO>
+            return new GridData<ParameterDTO>
             {
                 Items = response.Elements,
                 TotalItems = response.TotalCount,
@@ -42,7 +42,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                 await _parametersDataGrid.ReloadServerData();
         }
 
-        private void OpenParameterDetails(ProductParameterDTO parameter)
+        private void OpenParameterDetails(ParameterDTO parameter)
         {
             if (!HasModulePermission("Wares", PermissionFlags.Read))
                 return;
@@ -54,7 +54,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
         private Dictionary<int, bool> _loadingDelete = [];
         private bool _loadingDeleteMany { get; set; }
         private bool LoadingDelete(int id) => _loadingDelete.TryGetValue(id, out var value) && value;
-        private async Task DeleteParameter(ProductParameterDTO parameter)
+        private async Task DeleteParameter(ParameterDTO parameter)
         {
             if (!HasModulePermission("Wares", PermissionFlags.Delete))
                 return;

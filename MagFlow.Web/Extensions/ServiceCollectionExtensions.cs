@@ -267,6 +267,7 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
             services.AddScoped<IProductParameterRepository, ProductParameterRepository>();
+            services.AddScoped<IParameterRepository, ParameterRepository>();
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();
             services.AddScoped<IWorkingHourRepository, WorkingHourRepository>();
             services.AddScoped<IWorkDayRepository, WorkDayRepository>();

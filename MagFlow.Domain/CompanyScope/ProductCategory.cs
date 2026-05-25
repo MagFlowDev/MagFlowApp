@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagFlow.Shared.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class ProductCategory
+    public class ProductCategory : ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -22,5 +23,7 @@ namespace MagFlow.Domain.CompanyScope
 
         [ForeignKey(nameof(TypeId))]
         public ProductType? Type { get; set; }
+
+        public DateTime? RemovedAt { get; set; }
     }
 }

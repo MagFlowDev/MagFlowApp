@@ -385,6 +385,62 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
+        public virtual Enums.Result DeleteMany(IEnumerable<TEntity> entities, CompanyDbContext? context = default)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        foreach (var entity in entities)
+                        {
+                            if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
+                            {
+                                ((ISoftDeletable)entity).RemovedAt = DateTime.UtcNow;
+                                var isActiveProperty = entity.GetType()
+                                    .GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
+                                if (isActiveProperty != null)
+                                    isActiveProperty.SetValue(entity, false);
+                                context.Set<TEntity>().Update(entity);
+                            }
+                            else
+                            {
+                                context.Set<TEntity>().Remove(entity);
+                            }
+                        }
+                        context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    foreach (var entity in entities)
+                    {
+                        if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
+                        {
+                            ((ISoftDeletable)entity).RemovedAt = DateTime.UtcNow;
+                            var isActiveProperty = entity.GetType()
+                                .GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
+                            if (isActiveProperty != null)
+                                isActiveProperty.SetValue(entity, false);
+                            context.Set<TEntity>().Update(entity);
+                        }
+                        else
+                        {
+                            context.Set<TEntity>().Remove(entity);
+                        }
+                    }
+                    context.SaveChanges();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
         public virtual async Task<Enums.Result> DeleteManyAsync(Expression<Func<TEntity, bool>> predicate, CompanyDbContext? context = default)
         {
             try
@@ -433,6 +489,62 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                     else
                     {
                         context.Set<TEntity>().RemoveRange(entities);
+                    }
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
+        public virtual async Task<Enums.Result> DeleteManyAsync(IEnumerable<TEntity> entities, CompanyDbContext? context = default)
+        {
+            try
+            {
+                if (context == null)
+                {
+                    using (context = _companyContextFactory.CreateDbContext())
+                    {
+                        foreach (var entity in entities)
+                        {
+                            if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
+                            {
+                                ((ISoftDeletable)entity).RemovedAt = DateTime.UtcNow;
+                                var isActiveProperty = entity.GetType()
+                                    .GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
+                                if (isActiveProperty != null)
+                                    isActiveProperty.SetValue(entity, false);
+                                context.Set<TEntity>().Update(entity);
+                            }
+                            else
+                            {
+                                context.Set<TEntity>().Remove(entity);
+                            }
+                        }
+                        await context.SaveChangesAsync();
+                    }
+                }
+                else
+                {
+                    foreach (var entity in entities)
+                    {
+                        if (typeof(ISoftDeletable).IsAssignableFrom(typeof(TEntity)))
+                        {
+                            ((ISoftDeletable)entity).RemovedAt = DateTime.UtcNow;
+                            var isActiveProperty = entity.GetType()
+                                .GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
+                            if (isActiveProperty != null)
+                                isActiveProperty.SetValue(entity, false);
+                            context.Set<TEntity>().Update(entity);
+                        }
+                        else
+                        {
+                            context.Set<TEntity>().Remove(entity);
+                        }
                     }
                     await context.SaveChangesAsync();
                 }

@@ -15,7 +15,7 @@
 @inject NavigationManager NavigationManager
 @inherits AuthComponentBase
 
-<MagFlowDataGrid @ref="_parametersDataGrid" T="ProductParameterDTO" ServerData="ServerReloadProducts" Filterable="false" OnRowClicked="OpenParameterDetails" MultiSelection="true">
+<MagFlowDataGrid @ref="_parametersDataGrid" T="ParameterDTO" ServerData="ServerReloadProducts" Filterable="false" OnRowClicked="OpenParameterDetails" MultiSelection="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer[Langs.ProductParametersList]</MudText>
         <MudSpacer />
@@ -32,12 +32,12 @@
         <MudIconButton Color="Color.Primary" OnClick="_parametersDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
     </ToolBarContent>
     <Columns>
-        <SelectColumn T="ProductParameterDTO" HeaderStyle="width: 1%" />
-        <PropertyColumn T="ProductParameterDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="parameter => parameter.Name" />
-        <PropertyColumn T="ProductParameterDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="parameter => parameter.Code" />
-        <PropertyColumn T="ProductParameterDTO" TProperty="string" Title="@Localizer[Langs.ValueType]" Sortable="true" CellClass="text-nowrap" Property="parameter => parameter.ValueType.GetDisplayName(Localizer)" />
-        <PropertyColumn T="ProductParameterDTO" TProperty="string" Title="@Localizer[Langs.Unit]" Sortable="true" CellClass="text-nowrap" Property="parameter => (parameter.Unit != null ? parameter.Unit.Symbol : string.Empty)" />
-        <TemplateColumn T="ProductParameterDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+        <SelectColumn T="ParameterDTO" HeaderStyle="width: 1%" />
+        <PropertyColumn T="ParameterDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="parameter => parameter.Name" />
+        <PropertyColumn T="ParameterDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="parameter => parameter.Code" />
+        <PropertyColumn T="ParameterDTO" TProperty="string" Title="@Localizer[Langs.ValueType]" Sortable="true" CellClass="text-nowrap" Property="parameter => parameter.ValueType.GetDisplayName(Localizer)" />
+        <PropertyColumn T="ParameterDTO" TProperty="string" Title="@Localizer[Langs.Unit]" Sortable="true" CellClass="text-nowrap" Property="parameter => (parameter.Unit != null ? parameter.Unit.Symbol : string.Empty)" />
+        <TemplateColumn T="ParameterDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
                 <MudTooltip Text="@Localizer[Langs.Edit]" Delay="@Constants.Tooltip.DELAY">
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="() => OpenParameterDetails(context.Item)" />

@@ -24,5 +24,7 @@ namespace MagFlow.Domain.CompanyScope
         public Product? Product { get; set; }
         [ForeignKey(nameof(ComponentId))]
         public Product? Component { get; set; }
+
+        public DateTime? RemovedAt { get; set; }
     }
 }
