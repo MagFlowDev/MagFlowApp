@@ -142,7 +142,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                 _loadingDelete[unit.Id] = true;
 
                 var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, string.Format(Localizer.GetConfirmationMessage(nameof(Langs.DeleteUnitConfirmation), 1), unit.Name) } };
-                var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteUser], parameters);
+                var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteUnitConfirmation], parameters);
                 var confirmation = await dialog.Result;
                 if (confirmation != null && !confirmation.Canceled)
                 {
@@ -190,7 +190,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                 _loadingDeleteMany = true;
 
                 var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, Localizer.GetConfirmationMessage(nameof(Langs.DeleteUnitConfirmation), selectedUnits.Count) } };
-                var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteUser], parameters);
+                var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteUnitConfirmation], parameters);
                 var confirmation = await dialog.Result;
                 if (confirmation != null && !confirmation.Canceled)
                 {

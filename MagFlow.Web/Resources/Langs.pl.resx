@@ -1354,4 +1354,64 @@ i uprawnieniami użytkowników</value>
   <data name="DeleteUnitConfirmation" xml:space="preserve">
     <value>Potwierdź usunięcie z listy jednostek</value>
   </data>
+  <data name="CodeExample" xml:space="preserve">
+    <value>Np. XYZ</value>
+  </data>
+  <data name="TypeExample" xml:space="preserve">
+    <value>Np. Surowiec</value>
+  </data>
+  <data name="BaseType" xml:space="preserve">
+    <value>Bazowy typ</value>
+  </data>
+  <data name="ProductType" xml:space="preserve">
+    <value>Typ produktu</value>
+  </data>
+  <data name="DeleteParameterConfirmation" xml:space="preserve">
+    <value>Potwierdź usunięcie parametru</value>
+  </data>
+  <data name="DeleteCategoryConfirmation" xml:space="preserve">
+    <value>Potwierdź usunięcie kategorii</value>
+  </data>
+  <data name="DeleteProductConfirmation" xml:space="preserve">
+    <value>Potwierdź usunięcie produktu</value>
+  </data>
+  <data name="DeleteTypeConfirmation_Few" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} typy?</value>
+  </data>
+  <data name="DeleteTypeConfirmation_Many" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} typów?</value>
+  </data>
+  <data name="DeleteTypeConfirmation_One" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć typ '{0}'?</value>
+  </data>
+  <data name="DeleteTypeConfirmation" xml:space="preserve">
+    <value>Potwierdź usunięcie typu</value>
+  </data>
+  <data name="DeleteProductConfirmation_Few" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} produkty?</value>
+  </data>
+  <data name="DeleteProductConfirmation_Many" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} produktów?</value>
+  </data>
+  <data name="DeleteProductConfirmation_One" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć produkt '{0}'?</value>
+  </data>
+  <data name="DeleteParameterConfirmation_Few" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} parametry?</value>
+  </data>
+  <data name="DeleteParameterConfirmation_Many" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} parametrów?</value>
+  </data>
+  <data name="DeleteParameterConfirmation_One" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć parametr '{0}'?</value>
+  </data>
+  <data name="DeleteCategoryConfirmation_Few" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} kategorie?</value>
+  </data>
+  <data name="DeleteCategoryConfirmation_Many" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} kategorii?</value>
+  </data>
+  <data name="DeleteCategoryConfirmation_One" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć kategorię '{0}'?</value>
+  </data>
 </root>

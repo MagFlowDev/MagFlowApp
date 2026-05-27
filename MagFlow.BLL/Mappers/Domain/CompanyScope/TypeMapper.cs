@@ -26,11 +26,14 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return types.Select(x => x.ToDTO()).ToList();
         }
 
-        public static ProductTypeDTO ToDTO(this ProductTypeFormModel model)
+        public static ProductTypeDTO ToDTO(this ProductTypeFormModel model, int id = 0)
         {
             return new ProductTypeDTO()
             {
-                Code = model.Code
+                Id = id,
+                Code = model.Code,
+                Name = model.Name,
+                IsBasic = model.IsBasic
             };
         }
 
@@ -45,7 +48,11 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ProductType()
             {
-
+                Id = type.Id,
+                Name = type.Name,
+                Code = type.Code,
+                IsActive = type.IsActive,
+                IsBasic = type.IsBasic
             };
         }
 
@@ -58,7 +65,10 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ProductType()
             {
-
+                Name = model.Name,
+                Code = model.Code,
+                IsBasic = model.IsBasic,
+                IsActive = true
             };
         }
 

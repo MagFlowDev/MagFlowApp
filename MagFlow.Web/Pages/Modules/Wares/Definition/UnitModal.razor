@@ -33,7 +33,7 @@
                         <MudTextField Label="@Localizer[Langs.Name]" Class="my-0" Placeholder="@Localizer[Langs.KilogramExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Name" For="@(() => child.Name)"></MudTextField>
                         <MudTextField Label="@Localizer[Langs.Symbol]" Class="my-0" Placeholder="@Localizer[Langs.KgExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Symbol" For="@(() => child.Symbol)"></MudTextField>
                     </div>
-                    <MudIconButton Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => RemoveChildUnit(child))" />
+                    <MudIconButton Icon="@Icons.Material.Outlined.RemoveCircleOutline" OnClick="@(() => RemoveChildUnit(child))" />
                 </div>
             }
             <MudButton Variant="Variant.Outlined" Color="Color.Dark" OnClick="AddRelatedUnit" StartIcon="@Icons.Material.Outlined.Add">@Localizer[Langs.Add]</MudButton>

@@ -1353,4 +1353,64 @@
   <data name="DeleteUnitConfirmation" xml:space="preserve">
     <value>Confirm removal from the unit list</value>
   </data>
+  <data name="CodeExample" xml:space="preserve">
+    <value>E.g. XYZ</value>
+  </data>
+  <data name="TypeExample" xml:space="preserve">
+    <value>E.g. Raw material</value>
+  </data>
+  <data name="BaseType" xml:space="preserve">
+    <value>Base type</value>
+  </data>
+  <data name="ProductType" xml:space="preserve">
+    <value>Product type</value>
+  </data>
+  <data name="DeleteParameterConfirmation" xml:space="preserve">
+    <value>Confirm parameter deletion</value>
+  </data>
+  <data name="DeleteCategoryConfirmation" xml:space="preserve">
+    <value>Confirm category deletion</value>
+  </data>
+  <data name="DeleteProductConfirmation" xml:space="preserve">
+    <value>Confirm product deletion</value>
+  </data>
+  <data name="DeleteTypeConfirmation_Few" xml:space="preserve">
+    <value>Are you sure you want to delete {0} types?</value>
+  </data>
+  <data name="DeleteTypeConfirmation_Many" xml:space="preserve">
+    <value>Are you sure you want to delete {0} types?</value>
+  </data>
+  <data name="DeleteTypeConfirmation_One" xml:space="preserve">
+    <value>Are you sure you want to delete type '{0}'?</value>
+  </data>
+  <data name="DeleteTypeConfirmation" xml:space="preserve">
+    <value>Confirm type deletion</value>
+  </data>
+  <data name="DeleteProductConfirmation_Few" xml:space="preserve">
+    <value>Are you sure you want to delete {0} products?</value>
+  </data>
+  <data name="DeleteProductConfirmation_Many" xml:space="preserve">
+    <value>Are you sure you want to delete {0} products?</value>
+  </data>
+  <data name="DeleteProductConfirmation_One" xml:space="preserve">
+    <value>Are you sure you want to delete product '{0}'?</value>
+  </data>
+  <data name="DeleteParameterConfirmation_Few" xml:space="preserve">
+    <value>Are you sure you want to delete {0} parameters?</value>
+  </data>
+  <data name="DeleteParameterConfirmation_Many" xml:space="preserve">
+    <value>Are you sure you want to delete {0} parameters?</value>
+  </data>
+  <data name="DeleteParameterConfirmation_One" xml:space="preserve">
+    <value>Are you sure you want to delete parameter '{0}'?</value>
+  </data>
+  <data name="DeleteCategoryConfirmation_Few" xml:space="preserve">
+    <value>Are you sure you want to delete {0} categories?</value>
+  </data>
+  <data name="DeleteCategoryConfirmation_Many" xml:space="preserve">
+    <value>Are you sure you want to delete {0} categories?</value>
+  </data>
+  <data name="DeleteCategoryConfirmation_One" xml:space="preserve">
+    <value>Are you sure you want to delete category '{0}'?</value>
+  </data>
 </root>

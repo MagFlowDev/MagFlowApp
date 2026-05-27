@@ -18,6 +18,11 @@ namespace MagFlow.Shared.Models.FormModels
         public string Name { get; set; }
         public string Code { get; set; }
         public bool IsBasic { get; set; }
+
+        public ProductTypeFormModel()
+        {
+            IsBasic = true;
+        }
     }
 
     public class ProductCategoryFormModel

@@ -367,6 +367,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bazowy typ.
+        /// </summary>
+        public static string BaseType {
+            get {
+                return ResourceManager.GetString("BaseType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bazowy.
         /// </summary>
         public static string Basic {
@@ -534,6 +543,15 @@ namespace MagFlow.Web.Resources {
         public static string Code {
             get {
                 return ResourceManager.GetString("Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Np. XYZ.
+        /// </summary>
+        public static string CodeExample {
+            get {
+                return ResourceManager.GetString("CodeExample", resourceCulture);
             }
         }
         
@@ -808,6 +826,42 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Potwierdź usunięcie kategorii.
+        /// </summary>
+        public static string DeleteCategoryConfirmation {
+            get {
+                return ResourceManager.GetString("DeleteCategoryConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć {0} kategorie?.
+        /// </summary>
+        public static string DeleteCategoryConfirmation_Few {
+            get {
+                return ResourceManager.GetString("DeleteCategoryConfirmation_Few", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć {0} kategorii?.
+        /// </summary>
+        public static string DeleteCategoryConfirmation_Many {
+            get {
+                return ResourceManager.GetString("DeleteCategoryConfirmation_Many", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć kategorię &apos;{0}&apos;?.
+        /// </summary>
+        public static string DeleteCategoryConfirmation_One {
+            get {
+                return ResourceManager.GetString("DeleteCategoryConfirmation_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Czy na pewno chcesz usunąć firmę {0}?.
         /// </summary>
         public static string DeleteCompanyConfirmation {
@@ -826,11 +880,119 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Potwierdź usunięcie parametru.
+        /// </summary>
+        public static string DeleteParameterConfirmation {
+            get {
+                return ResourceManager.GetString("DeleteParameterConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć {0} parametry?.
+        /// </summary>
+        public static string DeleteParameterConfirmation_Few {
+            get {
+                return ResourceManager.GetString("DeleteParameterConfirmation_Few", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć {0} parametrów?.
+        /// </summary>
+        public static string DeleteParameterConfirmation_Many {
+            get {
+                return ResourceManager.GetString("DeleteParameterConfirmation_Many", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć parametr &apos;{0}&apos;?.
+        /// </summary>
+        public static string DeleteParameterConfirmation_One {
+            get {
+                return ResourceManager.GetString("DeleteParameterConfirmation_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Potwierdź usunięcie produktu.
+        /// </summary>
+        public static string DeleteProductConfirmation {
+            get {
+                return ResourceManager.GetString("DeleteProductConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć {0} produkty?.
+        /// </summary>
+        public static string DeleteProductConfirmation_Few {
+            get {
+                return ResourceManager.GetString("DeleteProductConfirmation_Few", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć {0} produktów?.
+        /// </summary>
+        public static string DeleteProductConfirmation_Many {
+            get {
+                return ResourceManager.GetString("DeleteProductConfirmation_Many", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć produkt &apos;{0}&apos;?.
+        /// </summary>
+        public static string DeleteProductConfirmation_One {
+            get {
+                return ResourceManager.GetString("DeleteProductConfirmation_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zasób został usunięty.
         /// </summary>
         public static string DeleteSuccess {
             get {
                 return ResourceManager.GetString("DeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Potwierdź usunięcie typu.
+        /// </summary>
+        public static string DeleteTypeConfirmation {
+            get {
+                return ResourceManager.GetString("DeleteTypeConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć {0} typy?.
+        /// </summary>
+        public static string DeleteTypeConfirmation_Few {
+            get {
+                return ResourceManager.GetString("DeleteTypeConfirmation_Few", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć {0} typów?.
+        /// </summary>
+        public static string DeleteTypeConfirmation_Many {
+            get {
+                return ResourceManager.GetString("DeleteTypeConfirmation_Many", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy na pewno chcesz usunąć typ &apos;{0}&apos;?.
+        /// </summary>
+        public static string DeleteTypeConfirmation_One {
+            get {
+                return ResourceManager.GetString("DeleteTypeConfirmation_One", resourceCulture);
             }
         }
         
@@ -2536,6 +2698,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Typ produktu.
+        /// </summary>
+        public static string ProductType {
+            get {
+                return ResourceManager.GetString("ProductType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Typy produktów.
         /// </summary>
         public static string ProductTypes {
@@ -3306,6 +3477,15 @@ namespace MagFlow.Web.Resources {
         public static string Type {
             get {
                 return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Np. Surowiec.
+        /// </summary>
+        public static string TypeExample {
+            get {
+                return ResourceManager.GetString("TypeExample", resourceCulture);
             }
         }
         
