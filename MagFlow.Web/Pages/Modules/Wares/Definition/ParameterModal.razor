@@ -6,12 +6,13 @@
 @using MagFlow.Shared.Validators.Company
 @using MagFlow.Shared.Validators.Resources
 @using MagFlow.BLL.Helpers.Localization.Display
+@using MagFlow.Shared.DTOs.CompanyScope
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
-@inject ICompanyService CompanyService
+@inject IProductService ProductService
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<Validations> Validations
 
@@ -30,6 +31,9 @@
 @code {
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public ProductParameterDTO? Parameter { get; set; }
 
     private IValidator _validator;
     private ProductParameterFormModel _model;

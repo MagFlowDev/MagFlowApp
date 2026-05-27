@@ -1,5 +1,8 @@
-﻿using MagFlow.Shared.DTOs.CompanyScope;
+﻿using MagFlow.BLL.Helpers.Localization;
+using MagFlow.Shared.DTOs.CompanyScope;
+using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
+using MagFlow.Web.Components.Dialogs;
 using MagFlow.Web.Resources;
 using MudBlazor;
 
@@ -42,12 +45,16 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                 await _typesDataGrid.ReloadServerData();
         }
 
-        private void OpenTypeDetails(ProductTypeDTO type)
+        private async Task OpenTypeDetails(ProductTypeDTO type)
         {
             if (!HasModulePermission("Wares", PermissionFlags.Read))
                 return;
 
-            
+            var parameters = new DialogParameters<TypeModal> { { x => x.Type, type } };
+            var dialog = await DialogService.ShowAsync<TypeModal>(Localizer[Langs.ProductType], parameters);
+            var confirmation = await dialog.Result;
+            if (confirmation?.Data is bool result && result == true)
+                await _typesDataGrid.ReloadServerData();
         }
 
 
@@ -67,7 +74,22 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                 _isBusy = true;
                 _loadingDelete[type.Id] = true;
 
-
+                var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, string.Format(Localizer.GetConfirmationMessage(nameof(Langs.DeleteTypeConfirmation), 1), type.Name) } };
+                var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteTypeConfirmation], parameters);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    var result = await ProductService.DeleteType(type);
+                    if (result == Enums.Result.Success)
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                        await _typesDataGrid.ReloadServerData();
+                    }
+                    else
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteFailed], Severity.Error);
+                    }
+                }
             }
             finally
             {
@@ -77,7 +99,50 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
         }
         private async Task DeleteTypes()
         {
+            if (!HasModulePermission("Wares", PermissionFlags.Delete))
+                return;
 
+            if (_isBusy || _loadingDeleteMany)
+                return;
+
+            var types = _typesDataGrid?.Selection?.ToList();
+            if (types == null || !types.Any())
+                return;
+
+            if (types.Count == 1)
+            {
+                var type = types.FirstOrDefault();
+                await DeleteType(type);
+                return;
+            }
+
+            try
+            {
+                _isBusy = true;
+                _loadingDeleteMany = true;
+
+                var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, Localizer.GetConfirmationMessage(nameof(Langs.DeleteTypeConfirmation), types.Count) } };
+                var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteTypeConfirmation], parameters);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    var result = await ProductService.DeleteTypes(types);
+                    if (result == Enums.Result.Success)
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                        await _typesDataGrid.ReloadServerData();
+                    }
+                    else
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteFailed], Severity.Error);
+                    }
+                }
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingDeleteMany = false;
+            }
         }
     }
 }
