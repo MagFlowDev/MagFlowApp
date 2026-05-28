@@ -16,10 +16,33 @@
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<Validations> Validations
 
-<MudDialog Style="max-width: 420px;">
+<MudDialog Style="max-width: 450px; width: 100%">
     <DialogContent>
         <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">
-
+            <div class="d-flex w-100 my-0 align-items-stretch">
+                <MudAutocomplete @bind-Value="_model.ProductType"
+                                 For="@(() => _model.ProductType)"
+                                 T="ProductTypeDTO?"
+                                 Label="@Localizer[Langs.ProductType]"
+                                 Placeholder="@Localizer[Langs.ProductType]"
+                                 Variant="Variant.Outlined"
+                                 AnchorOrigin="Origin.BottomLeft"
+                                 TransformOrigin="Origin.TopLeft"
+                                 DebounceInterval="300"
+                                 MaxItems="_pageSize"
+                                 ToStringFunc="@(t => t?.Name)"
+                                 SearchFunc="@SearchForProductType">
+                    <ProgressIndicatorInPopoverTemplate>
+                        <MudList T="string" ReadOnly>
+                            <MudListItem>
+                                @Localizer[Langs.Loading]
+                            </MudListItem>
+                        </MudList>
+                    </ProgressIndicatorInPopoverTemplate>
+                </MudAutocomplete>
+            </div>
+            <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Code" For="@(() => _model.Code)"></MudTextField>
+            <MudTextField Label="@Localizer[Langs.Name]" Class="my-0 w-100" Placeholder="@Localizer[Langs.TypeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Name" For="@(() => _model.Name)"></MudTextField>
         </EditForm>
     </DialogContent>
     <DialogActions>
@@ -35,6 +58,10 @@
     [Parameter]
     public ProductCategoryDTO? Category { get; set; }
 
+    private List<ProductTypeDTO> _productTypes = new List<ProductTypeDTO>();
+    private string _searchString = "";
+    private int _pageSize = 25;
+
     private IValidator _validator;
     private ProductCategoryFormModel _model;
     private EditContext _context;
@@ -42,6 +69,7 @@
 
     private bool _isBusy;
     private bool _loading;
+
 
     private async Task Submit()
     {
@@ -52,6 +80,9 @@
         {
             _isBusy = true;
             _loading = true;
+
+            if (string.IsNullOrEmpty(_model.Code))
+                _model.Code = CodesGenerator.GeneratePrefix(_model.Name);
 
             var isValid = await _messageStore.IsFormValid(_validator, _model);
             _context.NotifyValidationStateChanged();
@@ -94,6 +125,14 @@
             CloseButton = true,
             Position = DialogPosition.Center
         });
+    }
+
+    private async Task<IEnumerable<ProductTypeDTO>> SearchForProductType(string value, CancellationToken token)
+    {
+        _searchString = value;
+        var response = await ProductService.GetTypes(0, _pageSize, _searchString);
+        _productTypes = response.Elements;
+        return _productTypes;
     }
 
 }

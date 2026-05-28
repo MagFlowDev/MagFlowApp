@@ -169,6 +169,15 @@ namespace MagFlow.Shared.Validators.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Typ jest wymagany..
+        /// </summary>
+        public static string TypeRequired {
+            get {
+                return ResourceManager.GetString("TypeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kod pocztowy jest wymagany..
         /// </summary>
         public static string ZipCodeRequired {

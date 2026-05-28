@@ -20,7 +20,7 @@ namespace MagFlow.BLL.Services
             _itemRepository = itemRepository;
         }
 
-        public async Task<QueryResponse<ItemDTO>> GetItems(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<ItemDTO>> GetItems(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
         {
             var queryResponse = await _itemRepository.GetAsync(new QueryOptions<Item>()
             {
@@ -41,7 +41,7 @@ namespace MagFlow.BLL.Services
             };
         }
 
-        public async Task<QueryResponse<ItemDTO>> GetArchive(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<ItemDTO>> GetArchive(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
         {
             var queryResponse = await _itemRepository.GetAsync(new QueryOptions<Item>()
             {

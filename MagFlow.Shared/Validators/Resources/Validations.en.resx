@@ -156,4 +156,7 @@
   <data name="SymbolRequired" xml:space="preserve">
     <value>Symbol is required.</value>
   </data>
+  <data name="TypeRequired" xml:space="preserve">
+    <value>Type is required.</value>
+  </data>
 </root>

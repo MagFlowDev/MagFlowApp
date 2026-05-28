@@ -12,7 +12,7 @@ namespace MagFlow.BLL.Services.Interfaces
     {
         Task<UserDTO> GetUser(Guid id, bool includeCompanies = false);
         Task<UserDTO?> GetCurrentUser();
-        Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
+        Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
 
         Task<Enums.Result> CreateUser(SignUpModel model);
         Task<Enums.Result> CreateUser(SignSomeoneUpModel model);

@@ -44,7 +44,7 @@ namespace MagFlow.BLL.Services
             await _eventLogRepository.AddAsync(eventLog);
         }
 
-        public async Task<QueryResponse<EventLogDTO>> GetUserEvents(Guid userId, int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<EventLogDTO>> GetUserEvents(Guid userId, int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
         {
             var queryResponse = await _eventLogRepository.GetAsync(new QueryOptions<EventLog>()
             {

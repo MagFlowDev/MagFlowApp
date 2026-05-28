@@ -165,7 +165,7 @@ namespace MagFlow.BLL.Services
             return result?.ToDTO();
         }
 
-        public async Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<UserDTO>> GetUsers(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
         {
             var queryResponse = await _userRepository.GetCompanyUsersAsync(new QueryOptions<User>()
             {
@@ -195,7 +195,7 @@ namespace MagFlow.BLL.Services
         }
 
         [MinimumRole(nameof(AppRole.SysAdmin))]
-        public async Task<QueryResponse<CompanyDTO>> GetCompanies(int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<CompanyDTO>> GetCompanies(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
         {
             var queryResponse = await _companyRepository.GetAsync(new QueryOptions<Company>()
             {
