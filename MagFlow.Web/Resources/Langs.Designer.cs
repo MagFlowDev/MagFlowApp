@@ -1744,6 +1744,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ładowanie....
+        /// </summary>
+        public static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nie udało się zalogować do systemu. Spróbuj ponownie..
         /// </summary>
         public static string LoginError {

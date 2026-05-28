@@ -11,6 +11,6 @@ namespace MagFlow.BLL.Services.Interfaces
     public interface IEventService
     {
         Task AddEventAsync(Guid userId, Enums.EventLogCategory category, Enums.EventLogLevel level, string message, string details, string ip, string agent);
-        Task<QueryResponse<EventLogDTO>> GetUserEvents(Guid userId, int pageNumber = 1, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
+        Task<QueryResponse<EventLogDTO>> GetUserEvents(Guid userId, int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
     }
 }

@@ -1414,4 +1414,7 @@ i uprawnieniami użytkowników</value>
   <data name="DeleteCategoryConfirmation_One" xml:space="preserve">
     <value>Czy na pewno chcesz usunąć kategorię '{0}'?</value>
   </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Ładowanie...</value>
+  </data>
 </root>

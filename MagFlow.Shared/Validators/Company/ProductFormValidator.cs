@@ -29,6 +29,7 @@ namespace MagFlow.Shared.Validators.Company
         public ProductCategoryValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
+            RuleFor(x => x.ProductType).NotEmpty().WithMessage(localizer[Validations.TypeRequired]);
         }
     }
 
