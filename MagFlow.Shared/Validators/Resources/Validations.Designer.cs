@@ -70,6 +70,15 @@ namespace MagFlow.Shared.Validators.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kod jest wymagany..
+        /// </summary>
+        public static string CodeRequired {
+            get {
+                return ResourceManager.GetString("CodeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nazwa firmy jest wymagana..
         /// </summary>
         public static string CompanyNameRequired {

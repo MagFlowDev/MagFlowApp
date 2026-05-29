@@ -54,7 +54,14 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             var dialog = await DialogService.ShowAsync<TypeModal>(Localizer[Langs.ProductType], parameters);
             var confirmation = await dialog.Result;
             if (confirmation?.Data is bool result && result == true)
+            {
+                try
+                {
+                    _typesDataGrid.Selection.Remove(type);
+                }
+                catch { }
                 await _typesDataGrid.ReloadServerData();
+            }
         }
 
 
@@ -83,6 +90,11 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                     if (result == Enums.Result.Success)
                     {
                         Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                        try
+                        {
+                            _typesDataGrid.Selection.Remove(type);
+                        }
+                        catch { }
                         await _typesDataGrid.ReloadServerData();
                     }
                     else
@@ -130,6 +142,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                     if (result == Enums.Result.Success)
                     {
                         Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                        _typesDataGrid.Selection.Clear();
                         await _typesDataGrid.ReloadServerData();
                     }
                     else

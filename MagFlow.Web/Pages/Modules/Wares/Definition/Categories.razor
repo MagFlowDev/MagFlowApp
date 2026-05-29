@@ -38,7 +38,7 @@
         <TemplateColumn T="ProductCategoryDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
                 <MudTooltip Text="@Localizer[Langs.Edit]" Delay="@Constants.Tooltip.DELAY">
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="() => OpenCategoryDetails(context.Item)" />
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="async () => await OpenCategoryDetails(context.Item)" />
                 </MudTooltip>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE">
                     <Authorized Context="authorizedContext">

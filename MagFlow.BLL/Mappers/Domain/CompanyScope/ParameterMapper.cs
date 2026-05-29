@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
 using MudBlazor;
 
@@ -47,7 +48,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ProductParameter()
             {
-
+                Id = type.Id,
+                ParameterId = type.ParameterId,
             };
         }
 
@@ -60,7 +62,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ProductParameter()
             {
-
             };
         }
 
@@ -93,7 +94,10 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ParameterDTO()
             {
-                Name = model.Name
+                Name = model.Name,
+                Code = model.Code,
+                ValueType = model.ValueType,
+                Unit = model.Unit
             };
         }
 
@@ -108,7 +112,11 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new CustomParameter()
             {
-
+                Id = type.Id,
+                Name = type.Name,
+                Code = type.Code,
+                UnitId = type.Unit?.Id ?? 0,
+                ValueType = type.ValueType ?? Enums.ValueType.Decimal
             };
         }
 
@@ -121,7 +129,10 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new CustomParameter()
             {
-
+                Name = model.Name,
+                Code = model.Code,
+                UnitId = model.Unit?.Id ?? 0,
+                ValueType = model.ValueType ?? Enums.ValueType.Decimal
             };
         }
 

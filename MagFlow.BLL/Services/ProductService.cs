@@ -92,7 +92,7 @@ namespace MagFlow.BLL.Services
                 Search = search,
                 SortBy = sortBy,
                 Descending = descending
-            });
+            }, category => category.Include(x => x.Type));
             return new QueryResponse<ProductCategoryDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -113,7 +113,7 @@ namespace MagFlow.BLL.Services
                 Search = search,
                 SortBy = sortBy,
                 Descending = descending
-            });
+            }, parameters => parameters.Include(x => x.Unit));
             return new QueryResponse<ParameterDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -136,6 +136,10 @@ namespace MagFlow.BLL.Services
                     { nameof(Unit.ParentUnitId), null }
                 },
                 Search = search,
+                SearchColumns = new Expression<Func<Unit, string?>>[]
+                {
+                    x => x.Name
+                },
                 SortBy = sortBy,
                 Descending = descending
             }, x => x.Include(y => y.RelatedUnits));

@@ -102,7 +102,10 @@
             }
             if (result == MagFlow.Shared.Models.Enums.Result.Success)
             {
-                Snackbar.Add(Localizer[Langs.ResourceCreated], MudBlazor.Severity.Success);
+                if (_model.Id != null && _model.Id != 0)
+                    Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
+                else
+                    Snackbar.Add(Localizer[Langs.ResourceCreated], MudBlazor.Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));
             }
             else

@@ -63,7 +63,14 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             var dialog = await DialogService.ShowAsync<UnitModal>(Localizer[Langs.MeasurementUnit], parameters);
             var confirmation = await dialog.Result;
             if (confirmation?.Data is bool result && result == true)
+            {
+                try
+                {
+                    _selectedIds.Remove(unit.Id);
+                }
+                catch { }
                 await _unitsDataGrid.ReloadServerData();
+            }
         }
 
         private bool IsSelected(UnitDTO unit)
@@ -150,6 +157,11 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                     if (result == Enums.Result.Success)
                     {
                         Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                        try
+                        {
+                            _selectedIds.Remove(unit.Id);
+                        }
+                        catch { }
                         await _unitsDataGrid.ReloadServerData();
                     }
                     else
