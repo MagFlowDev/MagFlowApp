@@ -1417,4 +1417,25 @@ i uprawnieniami użytkowników</value>
   <data name="Loading" xml:space="preserve">
     <value>Ładowanie...</value>
   </data>
+  <data name="ProductCategory" xml:space="preserve">
+    <value>Kategoria produktu</value>
+  </data>
+  <data name="ProductParameter" xml:space="preserve">
+    <value>Parametr produktu</value>
+  </data>
+  <data name="CategoryExample" xml:space="preserve">
+    <value>Np. Papier offsetowy</value>
+  </data>
+  <data name="ParameterExample" xml:space="preserve">
+    <value>Np. Waga</value>
+  </data>
+  <data name="ValueTypeExample" xml:space="preserve">
+    <value>Np. Liczba dziesiętna</value>
+  </data>
+  <data name="MeasurementUnitExample" xml:space="preserve">
+    <value>Np. g/m2</value>
+  </data>
+  <data name="UnitOptional" xml:space="preserve">
+    <value>Jednostka (opcjonalne)</value>
+  </data>
 </root>

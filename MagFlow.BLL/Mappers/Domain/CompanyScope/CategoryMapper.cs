@@ -30,7 +30,9 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ProductCategoryDTO()
             {
-
+                Name = model.Name,
+                Code = model.Code,
+                Type = model.ProductType
             };
         }
 
@@ -46,7 +48,11 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ProductCategory()
             {
-
+                Id = type.Id,
+                Name = type.Name,
+                Code = type.Code,
+                IsActive = type.IsActive,
+                TypeId = type.Type?.Id ?? 0,
             };
         }
 
@@ -59,7 +65,10 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ProductCategory()
             {
-
+                Name = model.Name,
+                Code = model.Code,
+                IsActive = true,
+                TypeId = model.ProductType?.Id ?? 0,
             };
         }
 

@@ -6,6 +6,7 @@
 @using MagFlow.Shared.Validators.Company
 @using MagFlow.Shared.Validators.Resources
 @using MagFlow.BLL.Helpers.Localization.Display
+@using MagFlow.BLL.Mappers.Domain.CompanyScope
 @using MagFlow.Shared.DTOs.CompanyScope
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
@@ -19,7 +20,37 @@
 <MudDialog Style="max-width: 450px; width: 100%">
     <DialogContent>
         <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">
-
+            <MudTextField Label="@Localizer[Langs.Name]" Class="my-0 w-100" Placeholder="@Localizer[Langs.ParameterExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Name" For="@(() => _model.Name)"></MudTextField>
+            <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Code" For="@(() => _model.Code)"
+                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.AutoAwesome" OnAdornmentClick="GenerateCode"></MudTextField>
+            <MudSelect T="Enums.ValueType?" Label="@Localizer[Langs.ValueType]" FullWidth="true" Variant="Variant.Outlined" Placeholder="@Localizer[Langs.ValueTypeExample]" @bind-Value="@_model.ValueType" For="@(() => _model.ValueType)">
+                @foreach (var valueType in Enum.GetValues<Enums.ValueType>())
+                {
+                    <MudSelectItem T="Enums.ValueType?" Value="@valueType">@valueType.GetDisplayName(Localizer)</MudSelectItem>
+                }
+            </MudSelect>
+            <div class="d-flex w-100 my-0 align-items-stretch">
+                <MudAutocomplete @bind-Value="_model.Unit"
+                                 For="@(() => _model.Unit)"
+                                 T="UnitDTO?"
+                                 Label="@Localizer[Langs.UnitOptional]"
+                                 Placeholder="@Localizer[Langs.MeasurementUnitExample]"
+                                 Variant="Variant.Outlined"
+                                 AnchorOrigin="Origin.BottomLeft"
+                                 TransformOrigin="Origin.TopLeft"
+                                 DebounceInterval="300"
+                                 MaxItems="_pageSize"
+                                 ToStringFunc="@(t => t?.Name)"
+                                 SearchFunc="@SearchForUnit">
+                    <ProgressIndicatorInPopoverTemplate>
+                        <MudList T="string" ReadOnly>
+                            <MudListItem>
+                                @Localizer[Langs.Loading]
+                            </MudListItem>
+                        </MudList>
+                    </ProgressIndicatorInPopoverTemplate>
+                </MudAutocomplete>
+            </div>
         </EditForm>
     </DialogContent>
     <DialogActions>
@@ -33,10 +64,14 @@
     private IMudDialogInstance MudDialog { get; set; }
 
     [Parameter]
-    public ProductParameterDTO? Parameter { get; set; }
+    public ParameterDTO? Parameter { get; set; }
+
+    private List<UnitDTO> _units = new List<UnitDTO>();
+    private string _searchString = "";
+    private int _pageSize = 25;
 
     private IValidator _validator;
-    private ProductParameterFormModel _model;
+    private ParameterFormModel _model;
     private EditContext _context;
     private ValidationMessageStore _messageStore;
 
@@ -60,9 +95,22 @@
                 return;
 
             var result = Enums.Result.Error;
+            if (Parameter != null && Parameter.Id != 0)
+            {
+                var dto = _model.ToDTO();
+                dto.Id = Parameter.Id;
+                result = await ProductService.UpdateParameter(dto);
+            }
+            else
+            {
+                result = await ProductService.AddParameter(_model);
+            }
             if (result == MagFlow.Shared.Models.Enums.Result.Success)
             {
-                Snackbar.Add(Localizer[Langs.ResourceCreated], MudBlazor.Severity.Success);
+                if (Parameter != null && Parameter.Id != 0)
+                    Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
+                else
+                    Snackbar.Add(Localizer[Langs.ResourceCreated], MudBlazor.Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));
             }
             else
@@ -78,15 +126,21 @@
         }
     }
 
+    private void GenerateCode()
+    {
+        if (!string.IsNullOrEmpty(_model.Name))
+            _model.Code = CodesGenerator.GeneratePrefix(_model.Name);
+    }
+
     private void Cancel() => MudDialog.Cancel();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        _model = new ProductParameterFormModel();
+        _model = new ParameterFormModel();
         _context = new EditContext(_model);
-        _validator = new ProductParameterValidator(Validations);
+        _validator = new CustomParameterValidator(Validations);
         _messageStore = new ValidationMessageStore(_context);
 
         this.MudDialog.SetOptionsAsync(new DialogOptions()
@@ -96,4 +150,22 @@
         });
     }
 
+    protected override void OnParametersSet()
+    {
+        if (Parameter != null && Parameter.Id != 0)
+        {
+            _model.Name = Parameter.Name;
+            _model.Code = Parameter.Code;
+            _model.ValueType = Parameter.ValueType;
+            _model.Unit = Parameter.Unit;
+        }
+    }
+
+    private async Task<IEnumerable<UnitDTO>> SearchForUnit(string value, CancellationToken token)
+    {
+        _searchString = value;
+        var response = await ProductService.GetUnits(0, _pageSize, _searchString);
+        _units = response.Elements;
+        return _units;
+    }
 }

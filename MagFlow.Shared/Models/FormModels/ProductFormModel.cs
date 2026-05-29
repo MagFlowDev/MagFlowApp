@@ -41,6 +41,9 @@ namespace MagFlow.Shared.Models.FormModels
     public class ParameterFormModel
     {
         public string Name { get; set; }
+        public string Code { get; set; }
+        public Enums.ValueType? ValueType { get; set; }
+        public UnitDTO? Unit { get; set; }
     }
 
 }

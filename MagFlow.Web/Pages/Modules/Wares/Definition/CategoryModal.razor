@@ -6,6 +6,7 @@
 @using MagFlow.Shared.Validators.Company
 @using MagFlow.Shared.Validators.Resources
 @using MagFlow.BLL.Helpers.Localization.Display
+@using MagFlow.BLL.Mappers.Domain.CompanyScope
 @using MagFlow.Shared.DTOs.CompanyScope
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
@@ -41,8 +42,9 @@
                     </ProgressIndicatorInPopoverTemplate>
                 </MudAutocomplete>
             </div>
-            <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Code" For="@(() => _model.Code)"></MudTextField>
-            <MudTextField Label="@Localizer[Langs.Name]" Class="my-0 w-100" Placeholder="@Localizer[Langs.TypeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Name" For="@(() => _model.Name)"></MudTextField>
+            <MudTextField Label="@Localizer[Langs.Name]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CategoryExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Name" For="@(() => _model.Name)"></MudTextField>
+            <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Code" For="@(() => _model.Code)"
+                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.AutoAwesome" OnAdornmentClick="GenerateCode"></MudTextField>
         </EditForm>
     </DialogContent>
     <DialogActions>
@@ -81,9 +83,6 @@
             _isBusy = true;
             _loading = true;
 
-            if (string.IsNullOrEmpty(_model.Code))
-                _model.Code = CodesGenerator.GeneratePrefix(_model.Name);
-
             var isValid = await _messageStore.IsFormValid(_validator, _model);
             _context.NotifyValidationStateChanged();
 
@@ -91,9 +90,23 @@
                 return;
 
             var result = Enums.Result.Error;
+            if (Category != null && Category.Id != 0)
+            {
+                var dto = _model.ToDTO();
+                dto.IsActive = Category.IsActive;
+                dto.Id = Category.Id;
+                result = await ProductService.UpdateCategory(dto);
+            }
+            else
+            {
+                result = await ProductService.AddCategory(_model);
+            }
             if (result == MagFlow.Shared.Models.Enums.Result.Success)
             {
-                Snackbar.Add(Localizer[Langs.ResourceCreated], MudBlazor.Severity.Success);
+                if(Category != null && Category.Id != 0)
+                    Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
+                else
+                    Snackbar.Add(Localizer[Langs.ResourceCreated], MudBlazor.Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));
             }
             else
@@ -107,6 +120,12 @@
             _isBusy = false;
             _loading = false;
         }
+    }
+
+    private void GenerateCode()
+    {
+        if (!string.IsNullOrEmpty(_model.Name))
+            _model.Code = CodesGenerator.GeneratePrefix(_model.Name);
     }
 
     private void Cancel() => MudDialog.Cancel();
@@ -125,6 +144,16 @@
             CloseButton = true,
             Position = DialogPosition.Center
         });
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Category != null && Category.Id != 0)
+        {
+            _model.Name = Category.Name;
+            _model.Code = Category.Code;
+            _model.ProductType = Category.Type;
+        }
     }
 
     private async Task<IEnumerable<ProductTypeDTO>> SearchForProductType(string value, CancellationToken token)

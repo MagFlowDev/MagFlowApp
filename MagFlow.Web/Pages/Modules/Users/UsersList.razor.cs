@@ -254,6 +254,11 @@ namespace MagFlow.Web.Pages.Modules.Users
                     if (result == Enums.Result.Success)
                     {
                         Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                        try
+                        {
+                            _usersDataGrid.Selection.Remove(user);
+                        }
+                        catch {}
                         await _usersDataGrid.ReloadServerData();
                     }
                     else
