@@ -16,6 +16,7 @@ namespace MagFlow.Web.Pages.Modules
         protected virtual Enum _currentSection { get; set; } = BaseSectionEnum.DefaultSection.None;
 
         protected CancellationToken CancellationToken => _cts.Token;
+        protected bool Initialized { get; set; }
 
 
         [Inject]
@@ -25,9 +26,17 @@ namespace MagFlow.Web.Pages.Modules
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
-            NavigationManager.LocationChanged += OnLocationChanged;
-            await ReadSection();
+            Initialized = false;
+            try
+            {
+                await base.OnInitializedAsync();
+                NavigationManager.LocationChanged += OnLocationChanged;
+                await ReadSection();
+            }
+            finally
+            {
+                Initialized = true;
+            }
         }
 
         public virtual void Dispose()

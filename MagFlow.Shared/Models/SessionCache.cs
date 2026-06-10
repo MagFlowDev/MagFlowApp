@@ -25,7 +25,8 @@ namespace MagFlow.Shared.Models
     {
         public Guid SessionId { get; set; }
         public Guid ModuleId { get; set; }
-        public Enum Section { get; set; }
+        public string Section { get; set; }
+        public string SectionType { get; set; }
         public DateTime LastUpdateDate { get; set; }
     }
 }

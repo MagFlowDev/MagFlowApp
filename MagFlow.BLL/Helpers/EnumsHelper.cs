@@ -50,5 +50,17 @@ namespace MagFlow.BLL.Helpers
             };
         }
 
+        public static object? ParseEnum(string enumTypeName, string value)
+        {
+            var enumType = Type.GetType(enumTypeName);
+
+            if (enumType == null || !enumType.IsEnum)
+                return null;
+
+            if (!Enum.TryParse(enumType, value, out var result))
+                return null;
+
+            return result;
+        }
     }
 }

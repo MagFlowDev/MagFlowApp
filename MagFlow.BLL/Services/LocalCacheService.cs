@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata;
+using MagFlow.BLL.Helpers;
 
 namespace MagFlow.BLL.Services
 {
@@ -247,7 +248,8 @@ namespace MagFlow.BLL.Services
                 {
                     SessionId = sessionId,
                     ModuleId = moduleId,
-                    Section = section,
+                    Section = section.ToString(),
+                    SectionType = section.GetType().AssemblyQualifiedName,
                     LastUpdateDate = DateTime.UtcNow,
                 };
                 if (cache.Any(x => x.SessionId == sessionId && x.ModuleId == moduleId))
@@ -259,7 +261,7 @@ namespace MagFlow.BLL.Services
 
                 if (cache.Count > 20)
                 {
-                    var oldSessionCache = cache.OrderByDescending(x => x.LastUpdateDate).Skip(5).ToList();
+                    var oldSessionCache = cache.OrderByDescending(x => x.LastUpdateDate).Skip(20).ToList();
                     foreach (var toRemove in oldSessionCache)
                         cache.Remove(toRemove);
                 }
@@ -293,7 +295,11 @@ namespace MagFlow.BLL.Services
                     await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_MODULE_SECTION, cache);
                 }
 
-                return sessionCache?.Section;
+                if (sessionCache == null)
+                    return null;
+
+                var section = EnumsHelper.ParseEnum(sessionCache.SectionType, sessionCache.Section);
+                return section != null ? (Enum)section : null;
             }
             catch (Exception ex)
             {

@@ -34,29 +34,32 @@
                             </MudNavMenu>
                         </MudDrawer>
                         <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
-                            @switch (_currentSection)
+                            @if(Initialized)
                             {
-                                case SectionsEnums.WaresModuleSection.WaresList:
-                                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
-                                        <WaresList/>
-                                    </div>
-                                    break;
-                                case SectionsEnums.WaresModuleSection.ProductsList:
-                                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
-                                        <ProductsList/>
-                                    </div>
-                                    break;
-                                case SectionsEnums.WaresModuleSection.Definitions:
-                                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
-                                        <Definitions/>
-                                    </div>
-                                    break;
-                                case SectionsEnums.WaresModuleSection.Archive:
-                                    <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
-                                        <Archive/>
-                                    </div>
-                                    break;
-                                default: break;
+                                @switch (_currentSection)
+                                {
+                                    case SectionsEnums.WaresModuleSection.WaresList:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
+                                            <WaresList/>
+                                        </div>
+                                        break;
+                                    case SectionsEnums.WaresModuleSection.ProductsList:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                            <ProductsList/>
+                                        </div>
+                                        break;
+                                    case SectionsEnums.WaresModuleSection.Definitions:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                            <Definitions/>
+                                        </div>
+                                        break;
+                                    case SectionsEnums.WaresModuleSection.Archive:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                            <Archive/>
+                                        </div>
+                                        break;
+                                    default: break;
+                                }
                             }
                         </div>
                     </MudDrawerContainer>
