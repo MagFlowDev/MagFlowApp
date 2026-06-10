@@ -1438,4 +1438,7 @@ i uprawnieniami użytkowników</value>
   <data name="UnitOptional" xml:space="preserve">
     <value>Jednostka (opcjonalne)</value>
   </data>
+  <data name="DerivedUnit" xml:space="preserve">
+    <value>Jednostka pochodna</value>
+  </data>
 </root>

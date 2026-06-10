@@ -1437,4 +1437,7 @@
   <data name="UnitOptional" xml:space="preserve">
     <value>Unit (optional)</value>
   </data>
+  <data name="DerivedUnit" xml:space="preserve">
+    <value>Derived unit</value>
+  </data>
 </root>

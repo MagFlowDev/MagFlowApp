@@ -16,6 +16,9 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> SetCurrentModule(Guid sessionId, Guid moduleId);
         Task<Guid?> GetCurrentModule(Guid sessionId);
 
+        Task<Enums.Result> SetCurrentModuleSection(Guid sessionId, Guid moduleId, Enum section);
+        Task<Enum?> GetCurrentModuleSection(Guid sessionId, Guid moduleId);
+
         Task<Enums.Result> SetCurrentUser(UserDTO userDTO);
         Task<UserDTO?> GetCurrentUser();
     }

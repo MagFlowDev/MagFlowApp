@@ -7,7 +7,6 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 
-@inject NavigationManager NavigationManager
 @implements IModule
 @inherits BaseModuleComponent
 
@@ -35,7 +34,7 @@
                             </MudNavMenu>
                         </MudDrawer>
                         <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
-                            @switch(_currentSection)
+                            @switch (_currentSection)
                             {
                                 case SectionsEnums.WaresModuleSection.WaresList:
                                     <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
