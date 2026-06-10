@@ -45,11 +45,15 @@
                                                     <MudTabPanel @key="tab.Id" Tag="@tab.Id" Icon="@tab.ModuleComponent!.Icon" PanelClass="h-100">
                                                         <ChildContent>
                                                             <div class="flex-grow-1 d-flex flex-column align-items-start h-100 overflow-visible" style="min-height: 0; overflow-x: hidden;">
-                                                                @if(_firstRendered && !_loadingTab)
+                                                                @if(_firstRendered && !_loadingTab && UserSession != null)
                                                                 {
                                                                     <CascadingValue Value="@tab.ModuleComponent!.GetType()" TValue="Type" Name="ComponentType">
-                                                                        @Body
-                                                                   </CascadingValue>
+                                                                        <CascadingValue Value="UserSession.Id" TValue="Guid" Name="SessionId">
+                                                                            <CascadingValue Value="tab.Id" TValue="Guid" Name="ModuleId">
+                                                                                @Body
+                                                                            </CascadingValue>
+                                                                        </CascadingValue>
+                                                                    </CascadingValue>
                                                                 }
                                                             </div>
                                                         </ChildContent>

@@ -1078,6 +1078,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Jednostka pochodna.
+        /// </summary>
+        public static string DerivedUnit {
+            get {
+                return ResourceManager.GetString("DerivedUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Jednostka pochodna (opcjonalne).
         /// </summary>
         public static string DerivedUnitOptional {

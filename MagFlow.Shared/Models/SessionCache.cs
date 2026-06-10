@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Asn1;
 
 namespace MagFlow.Shared.Models
 {
@@ -17,6 +18,15 @@ namespace MagFlow.Shared.Models
     {
         public Guid SessionId { get; set; }
         public Guid ModuleId { get; set; }
+        public DateTime LastUpdateDate { get; set; }
+    }
+
+    public class SessionModuleSection
+    {
+        public Guid SessionId { get; set; }
+        public Guid ModuleId { get; set; }
+        public string Section { get; set; }
+        public string SectionType { get; set; }
         public DateTime LastUpdateDate { get; set; }
     }
 }

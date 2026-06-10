@@ -20,23 +20,34 @@
 <MudDialog Style="max-width: 450px; width: 100%">
     <DialogContent>
         <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">
-            <MudText Typo="Typo.subtitle1">@Localizer[Langs.BasicUnit]</MudText>
+            @if (Unit == null || Unit.ParentUnit == null)
+            {
+                <MudText Typo="Typo.subtitle1">@Localizer[Langs.BasicUnit]</MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.subtitle1">@Localizer[Langs.DerivedUnit]</MudText>
+            }
             <div class="d-flex align-items-center w-100" style="gap: 16px">
                 <MudTextField Label="@Localizer[Langs.Name]" Class="my-0 w-100" Placeholder="@Localizer[Langs.KilogramExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Name" For="@(() => _model.Name)"></MudTextField>
                 <MudTextField Label="@Localizer[Langs.Symbol]" Class="my-0 w-100" Placeholder="@Localizer[Langs.KgExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Symbol" For="@(() => _model.Symbol)"></MudTextField>
             </div>
-            <MudText Typo="Typo.subtitle1">@Localizer[Langs.DerivedUnitOptional]</MudText>
-            @foreach (var child in _model.RelatedUnits)
+            @if (Unit == null || Unit.ParentUnit == null)
             {
-                <div class="d-flex align-items-center w-100" style="gap: 4px">
-                    <div class="d-flex align-items-center w-100" style="gap: 16px">
-                        <MudTextField Label="@Localizer[Langs.Name]" Class="my-0" Placeholder="@Localizer[Langs.KilogramExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Name" For="@(() => child.Name)"></MudTextField>
-                        <MudTextField Label="@Localizer[Langs.Symbol]" Class="my-0" Placeholder="@Localizer[Langs.KgExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Symbol" For="@(() => child.Symbol)"></MudTextField>
+                <MudText Typo="Typo.subtitle1">@Localizer[Langs.DerivedUnitOptional]</MudText>
+                @foreach (var child in _model.RelatedUnits)
+                {
+                    <div class="d-flex align-items-center w-100" style="gap: 4px">
+                        <div class="d-flex align-items-center w-100" style="gap: 16px">
+                            <MudTextField Label="@Localizer[Langs.Name]" Class="my-0" Placeholder="@Localizer[Langs.KilogramExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Name" For="@(() => child.Name)"></MudTextField>
+                            <MudTextField Label="@Localizer[Langs.Symbol]" Class="my-0" Placeholder="@Localizer[Langs.KgExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Symbol" For="@(() => child.Symbol)"></MudTextField>
+                        </div>
+                        <MudIconButton Icon="@Icons.Material.Outlined.RemoveCircleOutline" OnClick="@(() => RemoveChildUnit(child))"/>
                     </div>
-                    <MudIconButton Icon="@Icons.Material.Outlined.RemoveCircleOutline" OnClick="@(() => RemoveChildUnit(child))" />
-                </div>
+                }
+
+                <MudButton Variant="Variant.Outlined" Color="Color.Dark" OnClick="AddRelatedUnit" StartIcon="@Icons.Material.Outlined.Add">@Localizer[Langs.Add]</MudButton>
             }
-            <MudButton Variant="Variant.Outlined" Color="Color.Dark" OnClick="AddRelatedUnit" StartIcon="@Icons.Material.Outlined.Add">@Localizer[Langs.Add]</MudButton>
         </EditForm>
     </DialogContent>
     <DialogActions>

@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata;
+using MagFlow.BLL.Helpers;
 
 namespace MagFlow.BLL.Services
 {
@@ -172,7 +174,7 @@ namespace MagFlow.BLL.Services
                 {
                     SessionId = sessionId,
                     ModuleId = moduleId,
-                    LastUpdateDate = DateTime.UtcNow
+                    LastUpdateDate = DateTime.UtcNow,
                 };
                 if (cache.Any(x => x.SessionId == sessionId))
                 {
@@ -226,10 +228,85 @@ namespace MagFlow.BLL.Services
             }
         }
 
+        public async Task<Enums.Result> SetCurrentModuleSection(Guid sessionId, Guid moduleId, Enum section)
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return Enums.Result.Error;
+                var cache = await GetCache<List<SessionModuleSection>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_MODULE_SECTION);
+                if (cache == null)
+                {
+                    await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_MODULE_SECTION, new List<SessionModuleSection>());
+                    cache = await GetCache<List<SessionModuleSection>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_MODULE_SECTION);
+                    if (cache == null)
+                        return Enums.Result.Error;
+                }
 
+                var sessionCache = new SessionModuleSection()
+                {
+                    SessionId = sessionId,
+                    ModuleId = moduleId,
+                    Section = section.ToString(),
+                    SectionType = section.GetType().AssemblyQualifiedName,
+                    LastUpdateDate = DateTime.UtcNow,
+                };
+                if (cache.Any(x => x.SessionId == sessionId && x.ModuleId == moduleId))
+                {
+                    var oldSessionCache = cache.FirstOrDefault(x => x.SessionId == sessionId && x.ModuleId == moduleId)!;
+                    cache.Remove(oldSessionCache);
+                }
+                cache.Add(sessionCache);
 
+                if (cache.Count > 20)
+                {
+                    var oldSessionCache = cache.OrderByDescending(x => x.LastUpdateDate).Skip(20).ToList();
+                    foreach (var toRemove in oldSessionCache)
+                        cache.Remove(toRemove);
+                }
+                await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_MODULE_SECTION, cache);
 
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while saving session module section in local storage");
+                return Enums.Result.Error;
+            }
+        }
 
+        public async Task<Enum?> GetCurrentModuleSection(Guid sessionId, Guid moduleId)
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return null;
+
+                var cache = await GetCache<List<SessionModuleSection>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_MODULE_SECTION);
+                if (cache == null)
+                    return null;
+
+                var sessionCache = cache.FirstOrDefault(x => x.SessionId == sessionId && x.ModuleId == moduleId);
+                if (sessionCache != null)
+                {
+                    sessionCache.LastUpdateDate = DateTime.UtcNow;
+                    await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_MODULE_SECTION, cache);
+                }
+
+                if (sessionCache == null)
+                    return null;
+
+                var section = EnumsHelper.ParseEnum(sessionCache.SectionType, sessionCache.Section);
+                return section != null ? (Enum)section : null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while getting session module section from local storage");
+                return null;
+            }
+        }
 
         private async Task<T?> GetCache<T>(Guid userId, string key)
         {

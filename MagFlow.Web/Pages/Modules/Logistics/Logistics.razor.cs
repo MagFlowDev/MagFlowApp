@@ -4,7 +4,7 @@
     {
         protected override async Task OnInitializedAsync()
         {
-
+            await base.OnInitializedAsync();
         }
 
         public override void Dispose()

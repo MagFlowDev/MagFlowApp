@@ -1,23 +1,17 @@
 ﻿using MagFlow.Shared.Models;
+using Microsoft.AspNetCore.Components;
 
 namespace MagFlow.Web.Pages.Modules.Wares
 {
     public partial class Wares : BaseModuleComponent
     {
+        protected override Enum _currentSection { get; set; } = SectionsEnums.WaresModuleSection.WaresList;
+
         private bool _isMenuOpened = false;
-        private SectionsEnums.WaresModuleSection _currentSection = SectionsEnums.WaresModuleSection.WaresList;
 
         protected override async Task OnInitializedAsync()
         {
-
-        }
-
-        private void OnSectionChanged(SectionsEnums.WaresModuleSection section)
-        {
-            if (_currentSection == section)
-                return;
-            _currentSection = section;
-            StateHasChanged();
+            await base.OnInitializedAsync();
         }
 
         public override void Dispose()

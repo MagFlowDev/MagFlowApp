@@ -7,22 +7,14 @@ namespace MagFlow.Web.Pages.Modules.Users
 {
     public partial class Users : BaseModuleComponent
     {
+        protected override Enum _currentSection { get; set; } = SectionsEnums.UsersModuleSection.UsersList;
+
         private bool _isMenuOpened = false;
-        private SectionsEnums.UsersModuleSection _currentSection = SectionsEnums.UsersModuleSection.UsersList;
 
         protected override async Task OnInitializedAsync()
         {
-
+            await base.OnInitializedAsync();
         }
-
-        private void OnSectionChanged(SectionsEnums.UsersModuleSection section)
-        {
-            if (_currentSection == section)
-                return;
-            _currentSection = section;
-            StateHasChanged();
-        }
-
 
         public override void Dispose()
         {
