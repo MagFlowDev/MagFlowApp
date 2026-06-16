@@ -7,9 +7,35 @@ namespace MagFlow.Shared.Models.FormModels
 {
     public class ProductFormModel
     {
+        public ProductFormGeneralInformation GeneralInformation { get; set; }
+        public ProductFormParameters Parameters { get; set; }
+        public ProductFormPrices Prices { get; set; }
+
+        public ProductFormModel()
+        {
+            GeneralInformation = new ProductFormGeneralInformation();
+            Parameters = new ProductFormParameters();
+            Prices = new ProductFormPrices();
+        }
+    }
+
+    public class ProductFormGeneralInformation
+    {
         public string Name { get; set; }
         public string Code { get; set; }
-       
+
+        public ProductTypeDTO? ProductType { get; set; }
+        public ProductCategoryDTO? ProductCategory { get; set; }
+        public UnitDTO? Unit { get; set; }
+    }
+
+    public class ProductFormParameters
+    {
+
+    }
+
+    public class ProductFormPrices
+    {
 
     }
 

@@ -11,7 +11,7 @@ namespace MagFlow.BLL.Services.Interfaces
     {
         Task<QueryResponse<ProductDTO>> GetProducts(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
         Task<QueryResponse<ProductTypeDTO>> GetTypes(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
-        Task<QueryResponse<ProductCategoryDTO>> GetCategories(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
+        Task<QueryResponse<ProductCategoryDTO>> GetCategories(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false, ProductTypeDTO? productType = null);
         Task<QueryResponse<ParameterDTO>> GetParameters(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
         Task<QueryResponse<UnitDTO>> GetUnits(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
 

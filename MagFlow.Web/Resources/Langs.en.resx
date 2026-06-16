@@ -1440,4 +1440,19 @@
   <data name="DerivedUnit" xml:space="preserve">
     <value>Derived unit</value>
   </data>
+  <data name="AddProduct" xml:space="preserve">
+    <value>Add product</value>
+  </data>
+  <data name="AdminAccount" xml:space="preserve">
+    <value>Admin account</value>
+  </data>
+  <data name="Prices" xml:space="preserve">
+    <value>Prices</value>
+  </data>
+  <data name="ParameterValues" xml:space="preserve">
+    <value>Parameter values</value>
+  </data>
+  <data name="ProductName" xml:space="preserve">
+    <value>Product name</value>
+  </data>
 </root>

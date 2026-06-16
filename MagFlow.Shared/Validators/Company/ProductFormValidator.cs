@@ -16,6 +16,18 @@ namespace MagFlow.Shared.Validators.Company
         }
     }
 
+    public class ProductGeneralInformationValidator : AbstractValidator<ProductFormGeneralInformation>
+    {
+        public ProductGeneralInformationValidator(IStringLocalizer<Validations> localizer)
+        {
+            RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
+            RuleFor(x => x.Code).NotEmpty().WithMessage(localizer[Validations.CodeRequired]);
+            RuleFor(x => x.ProductType).NotEmpty().WithMessage(localizer[Validations.TypeRequired]);
+            RuleFor(x => x.ProductCategory).NotEmpty().WithMessage(localizer[Validations.CategoryRequired]);
+            RuleFor(x => x.Unit).NotEmpty().WithMessage(localizer[Validations.UnitRequired]);
+        }
+    }
+
     public class ProductTypeValidator : AbstractValidator<ProductTypeFormModel>
     {
         public ProductTypeValidator(IStringLocalizer<Validations> localizer)

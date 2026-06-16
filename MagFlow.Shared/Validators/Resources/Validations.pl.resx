@@ -162,4 +162,10 @@
   <data name="CodeRequired" xml:space="preserve">
     <value>Kod jest wymagany.</value>
   </data>
+  <data name="CategoryRequired" xml:space="preserve">
+    <value>Kategoria jest wymagana.</value>
+  </data>
+  <data name="UnitRequired" xml:space="preserve">
+    <value>Jednostka jest wymagana.</value>
+  </data>
 </root>

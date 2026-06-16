@@ -1441,4 +1441,19 @@ i uprawnieniami użytkowników</value>
   <data name="DerivedUnit" xml:space="preserve">
     <value>Jednostka pochodna</value>
   </data>
+  <data name="AddProduct" xml:space="preserve">
+    <value>Dodaj produkt</value>
+  </data>
+  <data name="AdminAccount" xml:space="preserve">
+    <value>Konto administratora</value>
+  </data>
+  <data name="Prices" xml:space="preserve">
+    <value>Ceny</value>
+  </data>
+  <data name="ParameterValues" xml:space="preserve">
+    <value>Wartości parametrów</value>
+  </data>
+  <data name="ProductName" xml:space="preserve">
+    <value>Nazwa produktu</value>
+  </data>
 </root>
