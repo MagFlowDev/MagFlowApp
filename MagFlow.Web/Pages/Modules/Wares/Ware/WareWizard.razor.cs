@@ -1,6 +1,7 @@
 ﻿using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
+using MagFlow.Web.Components.Wizards;
 using MagFlow.Web.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -8,7 +9,7 @@ using MudBlazor;
 
 namespace MagFlow.Web.Pages.Modules.Wares.Ware
 {
-    public partial class WareWizard
+    public partial class WareWizard : StepperWizardBase<ItemFormModel>
     {
         [Inject] public ILocalCacheService LocalCacheService { get; set; } = default!;
         [Inject] public IServiceProvider Services { get; set; } = default!;
