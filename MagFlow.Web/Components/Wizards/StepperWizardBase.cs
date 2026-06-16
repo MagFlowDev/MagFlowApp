@@ -12,7 +12,7 @@ using MudBlazor;
 
 namespace MagFlow.Web.Components.Wizards
 {
-    public partial class StepperWizardBase<T> : ComponentBase
+    public abstract class StepperWizardBase<T> : ComponentBase
     {
         protected ILocalCacheService LocalCacheService { get; private set; } = default!;
         protected IServiceProvider Services { get; private set; } = default!;

@@ -16,7 +16,7 @@ using MudBlazor;
 
 namespace MagFlow.Web.Pages.Modules.Wares.Ware
 {
-    public partial class ProductWizard
+    public partial class ProductWizard : StepperWizardBase<ProductFormModel>
     {
         [Inject] public ILocalCacheService LocalCacheService { get; set; } = default!;
         [Inject] public IServiceProvider Services { get; set; } = default!;
@@ -27,11 +27,13 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private string _typeSearchString = "";
         private string _categorySearchString = "";
         private string _unitSearchString = "";
+        private string _parameterSearchString = "";
         private int _pageSize = 25;
 
         private List<ProductTypeDTO> _productTypes = new List<ProductTypeDTO>();
         private List<ProductCategoryDTO> _productCategories = new List<ProductCategoryDTO>();
         private List<UnitDTO> _units = new List<UnitDTO>();
+        private List<ParameterDTO> _parameters = new List<ParameterDTO>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -107,6 +109,14 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             var response = await ProductService.GetUnits(0, _pageSize, _unitSearchString);
             _units = response.Elements;
             return _units;
+        }
+
+        private async Task<IEnumerable<ParameterDTO>> SearchForProductParameter(string value, CancellationToken token)
+        {
+            _parameterSearchString = value;
+            var response = await ProductService.GetParameters(0, _pageSize, _parameterSearchString);
+            _parameters = response.Elements;
+            return _parameters;
         }
     }
 }
