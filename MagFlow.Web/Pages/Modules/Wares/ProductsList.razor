@@ -31,7 +31,7 @@
         </AuthorizeView>
         <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_ADD">
             <Authorized>
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="mr-2" OnClick="OpenAddProductModal">@Localizer[Langs.AddWare]</MudButton>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="mr-2" OnClick="OpenAddProductModal">@Localizer[Langs.AddProduct]</MudButton>
             </Authorized>
         </AuthorizeView>
         <MudIconButton Color="Color.Primary" OnClick="_productsDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />

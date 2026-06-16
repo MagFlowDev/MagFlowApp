@@ -37,7 +37,7 @@
                 <EditForm EditContext="@_context" class="flex-grow-1 d-flex flex-column h-100" style="min-height: 0;">
                     <MudStepper @ref="_stepper" NonLinear ActiveIndex="_step" ActiveIndexChanged="StepChanged" Class="flex-grow-1 d-flex flex-column h-100" Style="min-height: 0;" StepClass="d-flex flex-column flex-grow-1" NavClass="minh-72px" OnPreviewInteraction="OnPreviewInteraction">
                         <ChildContent>
-                            <MudStep Title="Informacje ogólne" Style="min-height: 0; height: 100%">
+                            <MudStep Title="@Localizer[Langs.GeneralInformation]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
                                         <MudTextField Label="@Localizer[Langs.CompanyName]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.Name" For="@(() => _model.GeneralInformation.Name)" Class="w-100 my-0"></MudTextField>
@@ -54,7 +54,7 @@
                                     </div>
                                 </div>
                             </MudStep>
-                            <MudStep Title="Dane kontaktowe" Style="min-height: 0; height: 100%">
+                            <MudStep Title="@Localizer[Langs.ContactDetails]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
                                         <MudTextField Label="@Localizer[Langs.MainPhone]" Placeholder="@Localizer[Langs.ExamplePhoneNumber]" AdornmentIcon="@Icons.Material.Outlined.Call" Adornment="Adornment.Start" Mask="@BLL.Helpers.Masks.PHONE_NUMBER" Variant="Variant.Outlined" T="string" @bind-Value="@_model.ContactData.PhoneNumber" For="@(() => _model.ContactData.PhoneNumber)" Class="w-100 my-0"></MudTextField>
@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
                             </MudStep>
-                            <MudStep Title="Moduły" Style="min-height: 0; height: 100%">
+                            <MudStep Title="@Localizer[Langs.Modules]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 16px; max-width: 550px;">
                                         <div class="d-flex flex-column justify-content-center align-items-center align-self-stretch" style="padding-top: 16px; gap: 16px;">
@@ -89,7 +89,7 @@
                                     </div>
                                 </div>
                             </MudStep>
-                            <MudStep Title="Konto administratora" Style="min-height: 0; height: 100%">
+                            <MudStep Title="@Localizer[Langs.AdminAccount]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
                                         <MudTextField Label="@Localizer[Langs.FirstName]" Placeholder="@Localizer[Langs.John]" AdornmentIcon="@Icons.Material.Outlined.Person" Adornment="Adornment.Start" Variant="Variant.Outlined" T="string" @bind-Value="@_model.AdminAccount.FirstName" For="@(() => _model.AdminAccount.FirstName)" Class="w-100 my-0"></MudTextField>

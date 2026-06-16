@@ -37,6 +37,7 @@ namespace MagFlow.Web.Pages.Modules.Wares
             if (!HasModulePermission("Wares", PermissionFlags.Add))
                 return;
 
+            NavigationManager.NavigateTo($"/product/add");
         }
 
         private void OpenProductDetails(ProductDTO product)

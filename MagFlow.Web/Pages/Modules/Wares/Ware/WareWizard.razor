@@ -1,0 +1,66 @@
+﻿@page "/item/add"
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Web.Components.Buttons
+@using Microsoft.AspNetCore.Authorization
+@using MagFlow.Web.Components.Wizards
+@using MagFlow.Shared.Models.FormModels
+@using MudBlazor
+
+@layout MainLayout
+@inherits StepperWizardBase<ItemFormModel>
+@inject IProductService ProductService
+
+@attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.Claims.WARES_ADD)]
+
+<div class="d-flex flex-column w-100 flex-grow-1 px-4 pt-2" style="min-height: 0; gap: 16px;">
+    <div class="d-flex flex-grow-1 flex-column align-items-center pt-8">
+        <div class="d-flex flex-column flex-grow-1 w-100" style="gap: 8px; min-height: 0; flex: 1 1 0; max-width: 804px;">
+            <div class="d-flex justify-content-between align-items-start">
+                <MudText Typo="Typo.h5" Style="font-weight: 700">@Localizer[Langs.AddWare]</MudText>
+                <MudIconButton Size="Size.Small" Icon="@Icons.Material.Outlined.Close" OnClick="@(async () => await JS.InvokeVoidAsync("history.back"))" />
+            </div>
+            @if (_model != null)
+            {
+                <EditForm EditContext="@_context" class="flex-grow-1 d-flex flex-column h-100" style="min-height: 0;">
+                    <MudStepper @ref="_stepper" NonLinear ActiveIndex="_step" ActiveIndexChanged="StepChanged" Class="flex-grow-1 d-flex flex-column h-100" Style="min-height: 0;" StepClass="d-flex flex-column flex-grow-1" NavClass="minh-72px" OnPreviewInteraction="OnPreviewInteraction">
+                        <ChildContent>
+                            <MudStep Title="@Localizer[Langs.GeneralInformation]" Style="min-height: 0; height: 100%">
+                                <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
+                                    <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
+                                    </div>
+                                </div>
+                            </MudStep>
+                            <MudStep Title="@Localizer[Langs.ParameterValues]" Style="min-height: 0; height: 100%">
+                                <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
+                                    <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
+                                    </div>
+                                </div>
+                            </MudStep>
+                        </ChildContent>
+                        <ActionContent Context="stepper">
+                            @if (_step == 0)
+                            {
+                                <MudButton OnClick="@(async () => await Cancel(stepper))" Variant="Variant.Text" Color="Color.Default">@Localizer[Langs.Cancel]</MudButton>
+                            }
+                            else
+                            {
+                                <MudButton OnClick="@(async () => await ResetForm(stepper))" StartIcon="@Icons.Material.Outlined.FirstPage" Color="Color.Default">@Localizer[Langs.Reset]</MudButton>
+                                <MudButton OnClick="@(() => stepper.PreviousStepAsync())" StartIcon="@Icons.Material.Outlined.NavigateBefore" Color="Color.Default">@Localizer[Langs.LastStep]</MudButton>
+                            }
+                            <MudSpacer />
+                            @if (_step == (stepper.Steps.Count - 1))
+                            {
+                                <LoadingButton Loading="_loading" Variant="Variant.Filled" OnClick="@(async () => await Save())" Color="Color.Primary">@Localizer[Langs.Save]</LoadingButton>
+                            }
+                            else
+                            {
+                                <MudButton Variant="Variant.Text" OnClick="@(() => stepper.NextStepAsync())" StartIcon="@Icons.Material.Outlined.NavigateNext" Color="Color.Primary">@Localizer[Langs.NextStep]</MudButton>
+                            }
+                        </ActionContent>
+                    </MudStepper>
+                </EditForm>
+            }
+        </div>
+    </div>
+</div>
