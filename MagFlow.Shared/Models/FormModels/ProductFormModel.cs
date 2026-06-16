@@ -31,7 +31,12 @@ namespace MagFlow.Shared.Models.FormModels
 
     public class ProductFormParameters
     {
+        public List<ParameterDTO> Parameters { get; set; }
 
+        public ProductFormParameters()
+        {
+            Parameters = new List<ParameterDTO>();
+        }
     }
 
     public class ProductFormPrices

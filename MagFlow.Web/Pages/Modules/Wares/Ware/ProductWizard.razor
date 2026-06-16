@@ -103,9 +103,23 @@
                             </MudStep>
                             <MudStep Title="@Localizer[Langs.Parameters]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
-                                    <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
-                                        <MudDropContainer T="ParameterDTO">
-
+                                    <div class="d-flex flex-column align-items-start w-100" style="max-width: 550px;">
+                                        <MudDropContainer T="ParameterDTO" Items="@_parameters" ItemsSelector="@((item,dropzone) => item.DropZoneSelector == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1" Context="dzContext">
+                                            <ChildContent>
+                                                @for (int i = 1; i < 3; i++)
+                                                {
+                                                    var dropzone = i.ToString();
+                                                    <MudPaper Class="ma-4 flex-grow-1">
+                                                        <MudList T="string" Class="d-flex flex-column mud-height-full">
+                                                            <MudListSubheader>Drop Zone @dropzone</MudListSubheader>
+                                                            <MudDropZone T="ParameterDTO" Identifier="@dropzone" Class="flex-grow-1" AllowReorder="true" />
+                                                        </MudList>
+                                                    </MudPaper>
+                                                }
+                                            </ChildContent>
+                                            <ItemRenderer>
+                                                <MudListItem T="string" Text="@($"{dzContext.Name}")" />
+                                            </ItemRenderer>
                                         </MudDropContainer>
                                     </div>
                                 </div>

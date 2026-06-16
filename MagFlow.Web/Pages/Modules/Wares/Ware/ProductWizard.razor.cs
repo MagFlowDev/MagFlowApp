@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using MudBlazor;
+using MudBlazor.Utilities;
 
 namespace MagFlow.Web.Pages.Modules.Wares.Ware
 {
@@ -52,6 +53,20 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         {
             if (!string.IsNullOrEmpty(_model.GeneralInformation.Name))
                 _model.GeneralInformation.Code = CodesGenerator.GeneratePrefix(_model.GeneralInformation.Name);
+        }
+
+        protected override async Task OnPreviewInteraction(StepperInteractionEventArgs arg)
+        {
+            await base.OnPreviewInteraction(arg);
+            if (arg.StepIndex == 1 && arg.Action != StepAction.Complete)
+                await SearchForProductParameter("", CancellationToken.None);
+        }
+
+        protected override async Task ControlStepCompletion(StepperInteractionEventArgs arg)
+        {
+            await base.ControlStepCompletion(arg);
+            if(arg.StepIndex == 0)
+                await SearchForProductParameter("", CancellationToken.None);
         }
 
         protected override async Task Save()
@@ -109,6 +124,22 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             var response = await ProductService.GetUnits(0, _pageSize, _unitSearchString);
             _units = response.Elements;
             return _units;
+        }
+
+        private void ItemUpdated(MudItemDropInfo<ParameterDTO> dropItem)
+        {
+            if(dropItem.Item == null)
+                return;
+        
+            dropItem.Item.DropZoneSelector = dropItem.DropzoneIdentifier;
+
+            var indexOffset = dropItem.DropzoneIdentifier switch
+            {
+                "2" => _model.Parameters.Parameters.Count(x => x.DropZoneSelector == "1"),
+                _ => 0
+            };
+
+            _model.Parameters.Parameters.UpdateOrder(dropItem, item => item.DropZoneOrder, indexOffset);
         }
 
         private async Task<IEnumerable<ParameterDTO>> SearchForProductParameter(string value, CancellationToken token)
