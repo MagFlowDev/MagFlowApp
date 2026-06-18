@@ -1455,4 +1455,16 @@
   <data name="ProductName" xml:space="preserve">
     <value>Product name</value>
   </data>
+  <data name="ParameterList" xml:space="preserve">
+    <value>Parameter list</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SelectedParameters" xml:space="preserve">
+    <value>Selected parameters</value>
+  </data>
+  <data name="AddOrDragParameter" xml:space="preserve">
+    <value>Add or drag and drop parameter here</value>
+  </data>
 </root>

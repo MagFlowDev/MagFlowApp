@@ -241,6 +241,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dodaj lub przeciągnij i upuść tutaj parametr.
+        /// </summary>
+        public static string AddOrDragParameter {
+            get {
+                return ResourceManager.GetString("AddOrDragParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dodaj parametr.
         /// </summary>
         public static string AddParameter {
@@ -2581,6 +2590,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Lista parametrów.
+        /// </summary>
+        public static string ParameterList {
+            get {
+                return ResourceManager.GetString("ParameterList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Parametry.
         /// </summary>
         public static string Parameters {
@@ -3130,6 +3148,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Szukaj.
+        /// </summary>
+        public static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Bezpieczeństwo.
         /// </summary>
         public static string Security {
@@ -3153,6 +3180,15 @@ namespace MagFlow.Web.Resources {
         public static string SelectAll {
             get {
                 return ResourceManager.GetString("SelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wybrane parametry.
+        /// </summary>
+        public static string SelectedParameters {
+            get {
+                return ResourceManager.GetString("SelectedParameters", resourceCulture);
             }
         }
         
