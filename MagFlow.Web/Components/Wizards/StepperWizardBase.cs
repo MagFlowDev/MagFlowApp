@@ -4,6 +4,7 @@ using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
+using MagFlow.Web.Pages.Modules;
 using MagFlow.Web.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -12,7 +13,7 @@ using MudBlazor;
 
 namespace MagFlow.Web.Components.Wizards
 {
-    public abstract class StepperWizardBase<T> : ComponentBase
+    public abstract class StepperWizardBase<T> : AuthComponentBase
     {
         protected ILocalCacheService LocalCacheService { get; private set; } = default!;
         protected IServiceProvider Services { get; private set; } = default!;
@@ -47,8 +48,11 @@ namespace MagFlow.Web.Components.Wizards
         protected bool _isBusy;
         protected bool _loading;
 
+
         protected override async Task OnInitializedAsync()
         {
+            base.OnInitialized();
+
             _model = CreateModel();
             _context = new EditContext(_model);
             _messageStore = new ValidationMessageStore(_context);

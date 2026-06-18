@@ -7,10 +7,12 @@
 @using MagFlow.Shared.Models.FormModels
 @using MagFlow.Shared.DTOs.CompanyScope
 @using MudBlazor
+@using MudExtensions
 
 @layout MainLayout
 @inherits StepperWizardBase<ProductFormModel>
 @inject IProductService ProductService
+@inject IDialogService DialogService
 
 @attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.Claims.WARES_ADD)]
 
@@ -103,22 +105,65 @@
                             </MudStep>
                             <MudStep Title="@Localizer[Langs.Parameters]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
-                                    <div class="d-flex flex-column align-items-start w-100" style="max-width: 550px;">
-                                        <MudDropContainer T="ParameterDTO" Items="@_parameters" ItemsSelector="@((item,dropzone) => item.DropZoneSelector == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1" Context="dzContext">
+                                    <div class="d-flex flex-column align-items-center w-100 mud-height-full" style="max-width: 800px;">
+                                        <MudDropContainer T="ParameterDTO" @ref="_container" Items="@_parameters" ItemsSelector="@((item,dropzone) => item.DropZoneSelector == dropzone)" ItemDropped="ItemUpdated" CanDropClass="mud-border-success" Class="d-flex flex-wrap flex-grow-1 align-self-stretch" Context="dzContext">
                                             <ChildContent>
-                                                @for (int i = 1; i < 3; i++)
-                                                {
-                                                    var dropzone = i.ToString();
-                                                    <MudPaper Class="ma-4 flex-grow-1">
-                                                        <MudList T="string" Class="d-flex flex-column mud-height-full">
-                                                            <MudListSubheader>Drop Zone @dropzone</MudListSubheader>
-                                                            <MudDropZone T="ParameterDTO" Identifier="@dropzone" Class="flex-grow-1" AllowReorder="true" />
-                                                        </MudList>
-                                                    </MudPaper>
-                                                }
+                                                <div class="d-flex flex-grow-1 align-items-center mud-height-full align-self-stretch" Style="gap: 0">
+                                                    <div class="d-flex flex-column align-items-start w-50 mud-height-full" style="gap: 16px; padding-top: 16px;">
+                                                        <div class="d-flex align-items-center align-self-stretch" style="gap: 12px">
+                                                            <MudText Typo="Typo.subtitle1" Class="text-nowrap" Style="font-weight: 500">@Localizer[Langs.ParameterList]</MudText>
+                                                            <MudTextField T="string" Value="_parameterSearchString" ValueChanged="@OnParameterSearchChanged" DebounceInterval="300" Variant="Variant.Text" Placeholder="@Localizer[Langs.Search]" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.Search" />
+                                                            <LoadingButton Loading="_loadingAddParameter" onclick="@(async () => await AddParameter())" StartIcon="@Icons.Material.Outlined.Add" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Style="padding: 4px 10px; min-width: 80px;">@Localizer[Langs.Add]</LoadingButton>
+                                                        </div>
+                                                        <div class="d-flex align-items-start align-self-stretch mud-height-full" style="gap: 16px; padding: 0 0 16px 0">
+                                                            <MudDropZone T="ParameterDTO" Identifier="@MagFlow.Shared.Constants.Identificators.DropZoneID.AVAILABLE_SELECTOR" Class="rounded-lg border-1 border-solid mud-border-lines-default flex-grow-1 align-self-stretch mud-height-full w-100">
+
+                                                            </MudDropZone>
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex flex-grow-1 align-self-stretch mud-height-full align-items-center justify-content-center" style="max-width: 24px; min-width: 24px; width: 24px; padding: 16px 0">
+                                                        <div style="@($"width: 1px; background: {Colors.Gray.Lighten2}")" class="h-100"></div>
+                                                    </div>
+                                                    <div class="d-flex flex-column align-items-start w-50 mud-height-full" style="gap: 16px; padding-top: 16px;">
+                                                        <div class="d-flex flex-column align-items-center justify-content-center align-self-stretch mud-height-full" style="gap: 8px; padding: 8px 8px 16px 8px;">
+                                                            <div class="d-flex justify-content-between align-items-center align-self-stretch" style="gap: 10px">
+                                                                <MudText Typo="Typo.subtitle1" Class="text-nowrap" Style="font-weight: 500">@Localizer[Langs.SelectedParameters]</MudText>
+                                                                <MudTextField T="string" Value="_selectedParameterSearchString" ValueChanged="@OnSelectedParameterSearchChanged" DebounceInterval="300" Variant="Variant.Text" Placeholder="@Localizer[Langs.Search]" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.Search" />
+                                                            </div>
+                                                            <div class="d-flex align-items-start align-self-stretch mud-height-full" style="gap: 16px">
+                                                                <MudDropZone T="ParameterDTO" Identifier="@MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR" Class="rounded-lg border-2 border-dashed mud-border-lines-default flex-grow-1 align-self-stretch mud-height-full w-100">
+                                                                    @if(!_parameters.Any(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR))
+                                                                    {
+                                                                        <div class="d-flex flex-column align-self-stretch mud-height-full">
+                                                                            <div class="d-flex flex-column align-self-stretch mud-height-full align-items-center justify-content-center flex-shrink-0" style="gap: 24px; padding: 24px 0">
+                                                                                <div class="d-flex flex-column align-items-center align-self-stretch" style="gap: 24px">
+                                                                                    <MudIcon Style="width: 80px; height: 80px;" Color="Color.Default" Icon="@Icons.Material.Outlined.MoveToInbox"/>
+                                                                                    <MudText Typo="Typo.subtitle1" Style="font-weight: 500" Class="text-center">@Localizer[Langs.AddOrDragParameter]</MudText>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    }
+                                                                </MudDropZone>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </ChildContent>
                                             <ItemRenderer>
-                                                <MudListItem T="string" Text="@($"{dzContext.Name}")" />
+                                                @if (!dzContext.DropZoneHidden)
+                                                {
+                                                    <div class="d-flex justify-content-between align-items-center align-self-stretch mx-3" style="@($"border-bottom: 1px solid {Colors.Gray.Lighten2}")">
+                                                        <MudText Typo="Typo.body1" Style="font-weight: 400">@dzContext.Name</MudText>
+                                                        @if (dzContext.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.AVAILABLE_SELECTOR)
+                                                        {
+                                                            <MudIconButton Icon="@Icons.Material.Outlined.AddCircleOutline" OnClick="@(() => ChangeParemeterZone(dzContext, MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR))" />
+                                                        }
+                                                        else if (dzContext.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR)
+                                                        {
+                                                            <MudIconButton Icon="@Icons.Material.Outlined.RemoveCircleOutline" Color="Color.Error" OnClick="@(() => ChangeParemeterZone(dzContext, MagFlow.Shared.Constants.Identificators.DropZoneID.AVAILABLE_SELECTOR))"/>
+                                                        }
+                                                    </div>
+                                                }
                                             </ItemRenderer>
                                         </MudDropContainer>
                                     </div>

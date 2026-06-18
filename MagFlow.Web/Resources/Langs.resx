@@ -1456,4 +1456,16 @@ i uprawnieniami użytkowników</value>
   <data name="ProductName" xml:space="preserve">
     <value>Nazwa produktu</value>
   </data>
+  <data name="ParameterList" xml:space="preserve">
+    <value>Lista parametrów</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Szukaj</value>
+  </data>
+  <data name="SelectedParameters" xml:space="preserve">
+    <value>Wybrane parametry</value>
+  </data>
+  <data name="AddOrDragParameter" xml:space="preserve">
+    <value>Dodaj lub przeciągnij i upuść tutaj parametr</value>
+  </data>
 </root>

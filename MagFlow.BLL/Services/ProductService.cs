@@ -90,6 +90,10 @@ namespace MagFlow.BLL.Services
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 Search = search,
+                SearchColumns = new Expression<Func<ProductCategory, string?>>[]
+                {
+                    u => u.Name
+                },
                 SortBy = sortBy,
                 Descending = descending
             };
@@ -119,6 +123,10 @@ namespace MagFlow.BLL.Services
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 Search = search,
+                SearchColumns = new Expression<Func<CustomParameter, string?>>[]
+                {
+                    u => u.Name
+                },
                 SortBy = sortBy,
                 Descending = descending
             }, parameters => parameters.Include(x => x.Unit));
