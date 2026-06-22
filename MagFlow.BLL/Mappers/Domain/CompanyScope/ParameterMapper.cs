@@ -44,18 +44,18 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
 
 
-        public static ProductParameter ToEntity(this ProductParameterDTO type)
+        public static ProductParameter ToEntity(this ProductParameterDTO parameter)
         {
             return new ProductParameter()
             {
-                Id = type.Id,
-                ParameterId = type.ParameterId,
+                Id = parameter.Id,
+                ParameterId = parameter.ParameterId,
             };
         }
 
-        public static List<ProductParameter> ToEntity(this IEnumerable<ProductParameterDTO> types)
+        public static List<ProductParameter> ToEntity(this IEnumerable<ProductParameterDTO> parameters)
         {
-            return types.Select(x => x.ToEntity()).ToList();
+            return parameters.Select(x => x.ToEntity()).ToList();
         }
 
         public static ProductParameter ToEntity(this ProductParameterFormModel model)
@@ -108,21 +108,21 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
 
 
-        public static CustomParameter ToEntity(this ParameterDTO type)
+        public static CustomParameter ToEntity(this ParameterDTO parameter)
         {
             return new CustomParameter()
             {
-                Id = type.Id,
-                Name = type.Name,
-                Code = type.Code,
-                UnitId = type.Unit?.Id ?? 0,
-                ValueType = type.ValueType ?? Enums.ValueType.Decimal
+                Id = parameter.Id,
+                Name = parameter.Name,
+                Code = parameter.Code,
+                UnitId = parameter.Unit?.Id,
+                ValueType = parameter.ValueType ?? Enums.ValueType.Decimal
             };
         }
 
-        public static List<CustomParameter> ToEntity(this IEnumerable<ParameterDTO> types)
+        public static List<CustomParameter> ToEntity(this IEnumerable<ParameterDTO> parameters)
         {
-            return types.Select(x => x.ToEntity()).ToList();
+            return parameters.Select(x => x.ToEntity()).ToList();
         }
 
         public static CustomParameter ToEntity(this ParameterFormModel model)
@@ -131,7 +131,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             {
                 Name = model.Name,
                 Code = model.Code,
-                UnitId = model.Unit?.Id ?? 0,
+                UnitId = model.Unit?.Id,
                 ValueType = model.ValueType ?? Enums.ValueType.Decimal
             };
         }

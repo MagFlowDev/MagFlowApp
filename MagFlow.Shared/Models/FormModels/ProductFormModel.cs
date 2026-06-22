@@ -41,7 +41,10 @@ namespace MagFlow.Shared.Models.FormModels
 
     public class ProductFormPrices
     {
-
+        public decimal? PurchasePrice { get; set; }
+        public decimal? SellingPrice { get; set; }
+        public Enums.TaxRate? TaxRate { get; set; }
+        public Enums.Currency? Currency { get; set; }
     }
 
     public class ProductTypeFormModel

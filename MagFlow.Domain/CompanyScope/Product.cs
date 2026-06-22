@@ -17,6 +17,7 @@ namespace MagFlow.Domain.CompanyScope
         public string Code { get; set; }
         [Required]
         public int TypeId { get; set; }
+        public int? CategoryId { get; set; }
         [Required]
         public int UnitId { get; set; }
         public string? Description { get; set; }
@@ -36,6 +37,8 @@ namespace MagFlow.Domain.CompanyScope
         
         [ForeignKey(nameof(TypeId))]
         public ProductType? Type { get; set; }
+        [ForeignKey(nameof(CategoryId))]
+        public ProductCategory? Category { get; set; }
         [ForeignKey(nameof(UnitId))]
         public Unit? Unit { get; set; }
         [ForeignKey(nameof(CreatedById))]

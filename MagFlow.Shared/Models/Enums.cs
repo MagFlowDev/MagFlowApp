@@ -8,6 +8,14 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum TaxRate
+        {
+            _0 = 0,
+            _5 = 5,
+            _8 = 8,
+            _23 = 23
+        }
+
         public enum DayOfWeek
         {
             [Display(Name = "Monday")]

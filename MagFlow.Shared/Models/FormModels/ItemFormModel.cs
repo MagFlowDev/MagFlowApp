@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagFlow.Shared.DTOs.CompanyScope;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,11 +19,21 @@ namespace MagFlow.Shared.Models.FormModels
 
     public class ItemFormGeneralInformation
     {
-        public string Name { get; set; }
+        public ProductDTO? Product { get; set; }
+        public ProductTypeDTO? ProductType { get; set; }
+        public ProductCategoryDTO? ProductCategory { get; set; }
+        public string? Location { get; set; }
+        public decimal? Quantity { get; set; }
+        public UnitDTO? Unit { get; set; }
     }
 
     public class ItemFormParameterValues
     {
+        public Dictionary<ParameterDTO, object> Parameters { get; set; }
 
+        public ItemFormParameterValues()
+        {
+            Parameters = new Dictionary<ParameterDTO, object>();
+        }
     }
 }

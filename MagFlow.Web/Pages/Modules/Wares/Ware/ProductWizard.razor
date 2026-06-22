@@ -6,7 +6,9 @@
 @using MagFlow.Web.Components.Wizards
 @using MagFlow.Shared.Models.FormModels
 @using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
 @using MudBlazor
+@using MagFlow.BLL.Helpers
 @using MudExtensions
 
 @layout MainLayout
@@ -60,7 +62,8 @@
                                             <MudAutocomplete @bind-Value="_model.GeneralInformation.ProductCategory"
                                                              For="@(() => _model.GeneralInformation.ProductCategory)"
                                                              T="ProductCategoryDTO"
-                                                             Label="@Localizer[Langs.Category]"
+                                                             ResetValueOnEmptyText="true"
+                                                             Label="@Localizer[Langs.CategoryOptional]"
                                                              Placeholder="@Localizer[Langs.CategoryExample]"
                                                              Variant="Variant.Outlined"
                                                              AnchorOrigin="Origin.BottomLeft"
@@ -172,6 +175,20 @@
                             <MudStep Title="@Localizer[Langs.Prices]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
+                                        <MudTextField Label="@Localizer[Langs.PurchasePriceNet]" Variant="Variant.Outlined" T="decimal?" @bind-Value="@_model.Prices.PurchasePrice" For="@(() => _model.Prices.PurchasePrice)" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.SellingPriceNet]" Variant="Variant.Outlined" T="decimal?" @bind-Value="@_model.Prices.SellingPrice" For="@(() => _model.Prices.SellingPrice)" Class="w-100 my-0"></MudTextField>
+                                        <MudSelect T="Enums.TaxRate?" Label="@Localizer[Langs.TaxRate]" FullWidth="true" Variant="Variant.Outlined" Placeholder="@Localizer[Langs.TaxRateExample]" @bind-Value="_model.Prices.TaxRate" For="@(() => _model.Prices.TaxRate)">
+                                            @foreach (var valueType in Enum.GetValues<Enums.TaxRate>())
+                                            {
+                                                <MudSelectItem T="Enums.TaxRate?" Value="@valueType">@string.Concat((int)valueType, "%")</MudSelectItem>
+                                            }
+                                        </MudSelect>
+                                        <MudSelect T="Enums.Currency?" Label="@Localizer[Langs.Currency]" FullWidth="true" Variant="Variant.Outlined" Placeholder="@Localizer[Langs.CurrencyExample]" @bind-Value="_model.Prices.Currency" For="@(() => _model.Prices.Currency)">
+                                            @foreach (var valueType in Enum.GetValues<Enums.Currency>())
+                                            {
+                                                <MudSelectItem T="Enums.Currency?" Value="@valueType">@valueType.GetDisplayName(Localizer)</MudSelectItem>
+                                            }
+                                        </MudSelect>
                                     </div>
                                 </div>
                             </MudStep>

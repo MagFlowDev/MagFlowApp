@@ -1467,4 +1467,31 @@
   <data name="AddOrDragParameter" xml:space="preserve">
     <value>Add or drag and drop parameter here</value>
   </data>
+  <data name="PurchasePriceNet" xml:space="preserve">
+    <value>Purchase price (net)</value>
+  </data>
+  <data name="SellingPriceNet" xml:space="preserve">
+    <value>Selling price (net)</value>
+  </data>
+  <data name="TaxRate" xml:space="preserve">
+    <value>Tax rate</value>
+  </data>
+  <data name="TaxRateExample" xml:space="preserve">
+    <value>E.g. 23%</value>
+  </data>
+  <data name="CategoryOptional" xml:space="preserve">
+    <value>Category (optional)</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="CurrencyExample" xml:space="preserve">
+    <value>E.g. EUR</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Product</value>
+  </data>
+  <data name="ProductExample" xml:space="preserve">
+    <value>E.g. Product 1</value>
+  </data>
 </root>
