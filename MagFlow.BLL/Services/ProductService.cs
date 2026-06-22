@@ -22,12 +22,15 @@ namespace MagFlow.BLL.Services
         private readonly IProductParameterRepository _productParameterRepository;
         private readonly IUnitRepository _unitRepository;
 
+        private readonly INetworkService _networkService;
+
         public ProductService(IProductRepository productRepository,
             IProductCategoryRepository productCategoryRepository,
             IProductTypeRepository productTypeRepository,
             IParameterRepository parameterRepository,
             IProductParameterRepository productParameterRepository,
-            IUnitRepository unitRepository)
+            IUnitRepository unitRepository,
+            INetworkService networkService)
         {
             _productRepository = productRepository;
             _categoryRepository = productCategoryRepository;
@@ -35,6 +38,7 @@ namespace MagFlow.BLL.Services
             _parameterRepository = parameterRepository;
             _productParameterRepository = productParameterRepository;
             _unitRepository = unitRepository;
+            _networkService = networkService;
         }
 
         public async Task<QueryResponse<ProductDTO>> GetProducts(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
@@ -44,9 +48,13 @@ namespace MagFlow.BLL.Services
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 Search = search,
+                SearchColumns = new Expression<Func<Product, string?>>[]
+                {
+                    u => u.Name
+                },
                 SortBy = sortBy,
                 Descending = descending
-            });
+            }, products => products.Include(x => x.Type).Include(x => x.Category).ThenInclude(y => y.Type));
             return new QueryResponse<ProductDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -174,7 +182,10 @@ namespace MagFlow.BLL.Services
 
         public async Task<Enums.Result> AddProduct(ProductFormModel model)
         {
-            var unit = model.ToEntity();
+            var userId = _networkService.GetUserId();
+            if (!userId.HasValue)
+                return Enums.Result.Error;
+            var unit = model.ToEntity(userId.Value);
             var result = await _productRepository.AddAsync(unit);
             return result;
         }

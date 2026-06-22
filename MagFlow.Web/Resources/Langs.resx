@@ -1468,4 +1468,31 @@ i uprawnieniami użytkowników</value>
   <data name="AddOrDragParameter" xml:space="preserve">
     <value>Dodaj lub przeciągnij i upuść tutaj parametr</value>
   </data>
+  <data name="PurchasePriceNet" xml:space="preserve">
+    <value>Cena zakupu (netto)</value>
+  </data>
+  <data name="SellingPriceNet" xml:space="preserve">
+    <value>Cena sprzedaży (netto)</value>
+  </data>
+  <data name="TaxRate" xml:space="preserve">
+    <value>Stawka VAT</value>
+  </data>
+  <data name="TaxRateExample" xml:space="preserve">
+    <value>Np. 23%</value>
+  </data>
+  <data name="CategoryOptional" xml:space="preserve">
+    <value>Kategoria (opcjonalne)</value>
+  </data>
+  <data name="Currency" xml:space="preserve">
+    <value>Waluta</value>
+  </data>
+  <data name="CurrencyExample" xml:space="preserve">
+    <value>Np. PLN</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Produkt</value>
+  </data>
+  <data name="ProductExample" xml:space="preserve">
+    <value>Np. Produkt 1</value>
+  </data>
 </root>

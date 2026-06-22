@@ -62,5 +62,17 @@ namespace MagFlow.BLL.Helpers
 
             return result;
         }
+
+        public static decimal ToDecimal(this Enums.TaxRate taxRate)
+        {
+            return taxRate switch
+            {
+                Enums.TaxRate._0 => 0,
+                Enums.TaxRate._5 => 5,
+                Enums.TaxRate._8 => 8,
+                Enums.TaxRate._23 => 23,
+                _ => 0
+            };
+        }
     }
 }

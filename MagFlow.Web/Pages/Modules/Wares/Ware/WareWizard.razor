@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using MagFlow.Web.Components.Wizards
 @using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.DTOs.CompanyScope
 @using MudBlazor
 
 @layout MainLayout
@@ -28,6 +29,28 @@
                             <MudStep Title="@Localizer[Langs.GeneralInformation]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
+                                        <div class="d-flex w-100 my-0 align-items-stretch">
+                                            <MudAutocomplete @bind-Value="_model.GeneralInformation.Product"
+                                                             For="@(() => _model.GeneralInformation.Product)"
+                                                             T="ProductDTO"
+                                                             Label="@Localizer[Langs.Product]"
+                                                             Placeholder="@Localizer[Langs.ProductExample]"
+                                                             Variant="Variant.Outlined"
+                                                             AnchorOrigin="Origin.BottomLeft"
+                                                             TransformOrigin="Origin.TopLeft"
+                                                             DebounceInterval="300"
+                                                             MaxItems="_pageSize"
+                                                             ToStringFunc="@(t => t?.Name)"
+                                                             SearchFunc="@SearchForProduct">
+                                                <ProgressIndicatorInPopoverTemplate>
+                                                    <MudList T="string" ReadOnly>
+                                                        <MudListItem>
+                                                            @Localizer[Langs.Loading]
+                                                        </MudListItem>
+                                                    </MudList>
+                                                </ProgressIndicatorInPopoverTemplate>
+                                            </MudAutocomplete>
+                                        </div>
                                     </div>
                                 </div>
                             </MudStep>

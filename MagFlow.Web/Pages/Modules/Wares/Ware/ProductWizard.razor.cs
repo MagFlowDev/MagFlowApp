@@ -77,6 +77,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
 
         protected override async Task Save()
         {
+            _model.Parameters.Parameters = _parameters.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
             await base.Save();
 
             try

@@ -1,4 +1,6 @@
 ﻿using MagFlow.BLL.Services.Interfaces;
+using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
 using MagFlow.Web.Components.Wizards;
@@ -16,6 +18,11 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public ISnackbar Snackbar { get; set; } = default!;
         [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
+        private string _productSearchString = "";
+        private int _pageSize = 25;
+
+        private List<ProductDTO> _products = new List<ProductDTO>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -55,6 +62,14 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 _isBusy = false;
                 _loading = false;
             }
+        }
+
+        private async Task<IEnumerable<ProductDTO>> SearchForProduct(string value, CancellationToken token)
+        {
+            _productSearchString = value;
+            var response = await ProductService.GetProducts(0, _pageSize, _productSearchString);
+            _products = response.Elements;
+            return _products;
         }
     }
 }

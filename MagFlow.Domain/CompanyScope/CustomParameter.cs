@@ -16,8 +16,7 @@ namespace MagFlow.Domain.CompanyScope
         public string Code { get; set; }
         [Required]
         public Enums.ValueType ValueType { get; set; }
-        [Required]
-        public int UnitId { get; set; }
+        public int? UnitId { get; set; }
         
         [ForeignKey(nameof(UnitId))]
         public Unit? Unit { get; set; }
