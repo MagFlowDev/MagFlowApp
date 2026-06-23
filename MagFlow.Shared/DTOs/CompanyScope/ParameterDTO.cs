@@ -12,6 +12,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public string Code { get; set; }
         public Enums.ValueType? ValueType { get; set; }
         public UnitDTO? Unit { get; set; }
+        public bool IsRequired { get; set; }
 
         public string DropZoneSelector { get; set; } = "available";
         public bool DropZoneHidden { get; set; }

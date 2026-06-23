@@ -1356,11 +1356,11 @@
   <data name="CodeExample" xml:space="preserve">
     <value>E.g. XYZ</value>
   </data>
-  <data name="TypeExample" xml:space="preserve">
+  <data name="CategoryExample" xml:space="preserve">
     <value>E.g. Raw material</value>
   </data>
-  <data name="BaseType" xml:space="preserve">
-    <value>Base type</value>
+  <data name="BaseCategory" xml:space="preserve">
+    <value>Base category</value>
   </data>
   <data name="ProductType" xml:space="preserve">
     <value>Product type</value>
@@ -1422,7 +1422,7 @@
   <data name="ProductParameter" xml:space="preserve">
     <value>Product parameter</value>
   </data>
-  <data name="CategoryExample" xml:space="preserve">
+  <data name="TypeExample" xml:space="preserve">
     <value>E.g. Offset paper</value>
   </data>
   <data name="ParameterExample" xml:space="preserve">
@@ -1493,5 +1493,29 @@
   </data>
   <data name="ProductExample" xml:space="preserve">
     <value>E.g. Product 1</value>
+  </data>
+  <data name="UnitShort" xml:space="preserve">
+    <value>Unit</value>
+  </data>
+  <data name="PurchasePrice" xml:space="preserve">
+    <value>Purchase price</value>
+  </data>
+  <data name="SellingPrice" xml:space="preserve">
+    <value>Selling price</value>
+  </data>
+  <data name="CreateCopy" xml:space="preserve">
+    <value>Create copy</value>
+  </data>
+  <data name="TypeOptional" xml:space="preserve">
+    <value>Type (optional)</value>
+  </data>
+  <data name="CurrencyPLN" xml:space="preserve">
+    <value>PLN</value>
+  </data>
+  <data name="CurrencyEuro" xml:space="preserve">
+    <value>€</value>
+  </data>
+  <data name="CurrencyUSD" xml:space="preserve">
+    <value>$</value>
   </data>
 </root>

@@ -66,12 +66,90 @@ namespace MagFlow.EF.Seeds.CoreScope
                 {
                     CompanyUser companyUser = new CompanyUser() { CompanyId = demoCompany.Id, UserId = adminUser.Id, AssignedAt = now };
                     await context.CompanyUsers.AddAsync(companyUser);
+
+                    try
+                    {
+                        using (var companyContext = new CompanyDbContext(demoCompany.ConnectionString))
+                        {
+                            var existingUser = await companyContext.Users.FirstOrDefaultAsync(u => u.Id == adminUser.Id);
+                            if (existingUser == null)
+                            {
+                                existingUser = new Domain.CompanyScope.User()
+                                {
+                                    Id = adminUser.Id,
+                                    FirstName = adminUser.FirstName,
+                                    LastName = adminUser.LastName,
+                                    Email = adminUser.Email,
+                                    RemovedAt = DateTime.UtcNow
+                                };
+                                await companyContext.Users.AddAsync(existingUser);
+                                await companyContext.SaveChangesAsync();
+                            }
+                        }
+                    }
+                    catch { }
                 }
                 seed = true;
             }
-            if(seedTestUsers)
+            else
+            {
+                try
+                {
+                    var demoCompany = await context.Companies.FirstOrDefaultAsync(u => u.NormalizedName == "DEMO");
+                    if (demoCompany != null)
+                    {
+                        CompanyUser companyUser = new CompanyUser() { CompanyId = demoCompany.Id, UserId = adminUser.Id, AssignedAt = now };
+                        await context.CompanyUsers.AddAsync(companyUser);
+
+                        using (var companyContext = new CompanyDbContext(demoCompany.ConnectionString))
+                        {
+                            var existingUser = await companyContext.Users.FirstOrDefaultAsync(u => u.Id == adminUser.Id);
+                            if (existingUser == null)
+                            {
+                                existingUser = new Domain.CompanyScope.User()
+                                {
+                                    Id = adminUser.Id,
+                                    FirstName = adminUser.FirstName,
+                                    LastName = adminUser.LastName,
+                                    Email = adminUser.Email ?? "",
+                                    RemovedAt = DateTime.UtcNow
+                                };
+                                await companyContext.Users.AddAsync(existingUser);
+                                await companyContext.SaveChangesAsync();
+                            }
+                        }
+                    }
+                }
+                catch { }
+            }
+            if (seedTestUsers)
             {
                 await SeedTestUsers(context, cancellationToken, "TEST", 100);
+                try
+                {
+                    var testCompany = await context.Companies.FirstOrDefaultAsync(u => u.NormalizedName == "TEST");
+                    if (testCompany != null)
+                    {
+                        using (var companyContext = new CompanyDbContext(testCompany.ConnectionString))
+                        {
+                            var existingUser = await companyContext.Users.FirstOrDefaultAsync(u => u.Id == adminUser.Id);
+                            if (existingUser == null)
+                            {
+                                existingUser = new Domain.CompanyScope.User()
+                                {
+                                    Id = adminUser.Id,
+                                    FirstName = adminUser.FirstName,
+                                    LastName = adminUser.LastName,
+                                    Email = adminUser.Email ?? "",
+                                    RemovedAt = DateTime.UtcNow
+                                };
+                                await companyContext.Users.AddAsync(existingUser);
+                                await companyContext.SaveChangesAsync();
+                            }
+                        }
+                    }
+                }
+                catch { }
                 seed = true;
             }
 

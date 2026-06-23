@@ -41,6 +41,7 @@ namespace MagFlow.Shared.Validators.Company
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
             RuleFor(x => x.Code).NotEmpty().WithMessage(localizer[Validations.CodeRequired]);
+            RuleFor(x => x.ProductCategory).NotEmpty().WithMessage(localizer[Validations.CategoryRequired]);
         }
     }
 
@@ -50,7 +51,6 @@ namespace MagFlow.Shared.Validators.Company
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
             RuleFor(x => x.Code).NotEmpty().WithMessage(localizer[Validations.CodeRequired]);
-            RuleFor(x => x.ProductType).NotEmpty().WithMessage(localizer[Validations.TypeRequired]);
         }
     }
 

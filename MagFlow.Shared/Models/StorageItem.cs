@@ -10,5 +10,7 @@ namespace MagFlow.Shared.Models
     {
         public required string Key { get; set; }
         public required T Data { get; set; }
+        public string? Type { get; set;  }
+        public DateTime? Expire { get; set; }
     }
 }

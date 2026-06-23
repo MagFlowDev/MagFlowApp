@@ -4,7 +4,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
 {
     public partial class Definitions
     {
-        private SectionsEnums.WaresDefinitionSection _currentSection = SectionsEnums.WaresDefinitionSection.Types;
+        private SectionsEnums.WaresDefinitionSection _currentSection = SectionsEnums.WaresDefinitionSection.Categories;
 
         private void OnSectionChanged(SectionsEnums.WaresDefinitionSection section)
         {

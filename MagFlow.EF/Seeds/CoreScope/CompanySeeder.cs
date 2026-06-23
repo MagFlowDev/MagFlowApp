@@ -29,6 +29,7 @@ namespace MagFlow.EF.Seeds.CoreScope
             bool seed = false;
 
             var now = DateTime.UtcNow;
+            var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
             var testCompany = await context.Companies.FirstOrDefaultAsync(c => c.NormalizedName.Equals("TEST"));
             if (testCompany == null)
             {
@@ -52,7 +53,6 @@ namespace MagFlow.EF.Seeds.CoreScope
                     }
                 };
                 await context.Companies.AddAsync(testCompany);
-                var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
                 if (adminUser != null)
                 {
                     CompanyUser companyUser = new CompanyUser() { CompanyId = testCompany.Id, UserId = adminUser.Id, AssignedAt = now };
@@ -63,7 +63,6 @@ namespace MagFlow.EF.Seeds.CoreScope
             }
             else
             {
-                var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
                 if (adminUser != null)
                 {
                     if (!await context.CompanyUsers.AnyAsync(x => x.UserId == adminUser.Id && x.CompanyId == testCompany.Id))
@@ -97,7 +96,6 @@ namespace MagFlow.EF.Seeds.CoreScope
                     }
                 };
                 await context.Companies.AddAsync(demoCompany);
-                var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
                 if (adminUser != null)
                 {
                     CompanyUser companyUser = new CompanyUser() { CompanyId = demoCompany.Id, UserId = adminUser.Id, AssignedAt = now };
@@ -113,7 +111,6 @@ namespace MagFlow.EF.Seeds.CoreScope
             }
             else
             {
-                var adminUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == "ADMIN@MAGFLOW.COM");
                 if (adminUser != null)
                 {
                     if (!await context.CompanyUsers.AnyAsync(x => x.UserId == adminUser.Id && x.CompanyId == demoCompany.Id))
@@ -150,6 +147,23 @@ namespace MagFlow.EF.Seeds.CoreScope
                         using (var companyDbContext = new CompanyDbContext(connectionString))
                         {
                             await companyDbContext.Database.MigrateAsync();
+                            if (adminUser != null)
+                            {
+                                var companyAdmin = await companyDbContext.Users.FirstOrDefaultAsync(x => x.Id == adminUser.Id);
+                                if(companyAdmin == null)
+                                {
+                                    companyAdmin = new Domain.CompanyScope.User()
+                                    {
+                                        Id = adminUser.Id,
+                                        FirstName = adminUser.FirstName,
+                                        LastName = adminUser.LastName,
+                                        Email = adminUser.Email ?? "",
+                                        RemovedAt = DateTime.UtcNow
+                                    };
+                                    await companyDbContext.Users.AddAsync(companyAdmin);
+                                    await companyDbContext.SaveChangesAsync();
+                                }
+                            }
                             await CompanyDbSeeder.SeedAsync(companyDbContext, CancellationToken.None);
                         }
                     }

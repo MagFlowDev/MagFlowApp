@@ -65,10 +65,11 @@ namespace MagFlow.Web.Components.Wizards
 
         protected virtual async Task ResetForm(MudStepper stepper)
         {
+            await stepper.ResetAsync();
             _model = CreateModel();
             _context = new EditContext(_model);
             _messageStore = new ValidationMessageStore(_context);
-            await stepper.ResetAsync();
+            await InvokeAsync(StateHasChanged);
         }
 
         protected virtual void StepChanged(int value)

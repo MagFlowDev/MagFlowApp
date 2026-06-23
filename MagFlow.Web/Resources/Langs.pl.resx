@@ -1357,11 +1357,11 @@ i uprawnieniami użytkowników</value>
   <data name="CodeExample" xml:space="preserve">
     <value>Np. XYZ</value>
   </data>
-  <data name="TypeExample" xml:space="preserve">
+  <data name="CategoryExample" xml:space="preserve">
     <value>Np. Surowiec</value>
   </data>
-  <data name="BaseType" xml:space="preserve">
-    <value>Bazowy typ</value>
+  <data name="BaseCategory" xml:space="preserve">
+    <value>Bazowa kategoria</value>
   </data>
   <data name="ProductType" xml:space="preserve">
     <value>Typ produktu</value>
@@ -1423,7 +1423,7 @@ i uprawnieniami użytkowników</value>
   <data name="ProductParameter" xml:space="preserve">
     <value>Parametr produktu</value>
   </data>
-  <data name="CategoryExample" xml:space="preserve">
+  <data name="TypeExample" xml:space="preserve">
     <value>Np. Papier offsetowy</value>
   </data>
   <data name="ParameterExample" xml:space="preserve">
@@ -1494,5 +1494,29 @@ i uprawnieniami użytkowników</value>
   </data>
   <data name="ProductExample" xml:space="preserve">
     <value>Np. Produkt 1</value>
+  </data>
+  <data name="UnitShort" xml:space="preserve">
+    <value>J.m.</value>
+  </data>
+  <data name="PurchasePrice" xml:space="preserve">
+    <value>Cena zakupu</value>
+  </data>
+  <data name="SellingPrice" xml:space="preserve">
+    <value>Cena sprzedaży</value>
+  </data>
+  <data name="CreateCopy" xml:space="preserve">
+    <value>Utwórz kopię</value>
+  </data>
+  <data name="TypeOptional" xml:space="preserve">
+    <value>Typ (opcjonalne)</value>
+  </data>
+  <data name="CurrencyPLN" xml:space="preserve">
+    <value>zł</value>
+  </data>
+  <data name="CurrencyEuro" xml:space="preserve">
+    <value>€</value>
+  </data>
+  <data name="CurrencyUSD" xml:space="preserve">
+    <value>$</value>
   </data>
 </root>
