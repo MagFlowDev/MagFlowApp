@@ -34,7 +34,22 @@
         <SelectColumn T="ProductCategoryDTO" HeaderStyle="width: 1%" />
         <PropertyColumn T="ProductCategoryDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="category => category.Name" />
         <PropertyColumn T="ProductCategoryDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="category => category.Code" />
-        <PropertyColumn T="ProductCategoryDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="true" CellClass="text-nowrap" Property="category => (category.Type != null ? category.Type.Name : string.Empty)" />
+        <TemplateColumn T="ProductCategoryDTO" Title="@Localizer[Langs.Basic]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                <div class="d-flex align-items-center" style="gap: 8px">
+                    @if (context.Item.IsBasic)
+                    {
+                        <MudIcon Icon="@Icons.Material.Outlined.CheckCircle" Color="Color.Success" Size="Size.Small" />
+                        <MudText Typo="Typo.body2">@Localizer[Langs.Yes]</MudText>
+                    }
+                    else
+                    {
+                        <MudIcon Icon="@Icons.Material.Outlined.Cancel" Color="Color.Error" Size="Size.Small" />
+                        <MudText Typo="Typo.body2">@Localizer[Langs.No]</MudText>
+                    }
+                </div>
+            </CellTemplate>
+        </TemplateColumn>
         <TemplateColumn T="ProductCategoryDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
                 <MudTooltip Text="@Localizer[Langs.Edit]" Delay="@Constants.Tooltip.DELAY">

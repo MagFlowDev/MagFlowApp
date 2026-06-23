@@ -20,10 +20,31 @@
 <MudDialog Style="max-width: 450px; width: 100%">
     <DialogContent>
         <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">
+            <div class="d-flex w-100 my-0 align-items-stretch">
+                <MudAutocomplete @bind-Value="_model.ProductCategory"
+                                 For="@(() => _model.ProductCategory)"
+                                 T="ProductCategoryDTO?"
+                                 Label="@Localizer[Langs.ProductCategory]"
+                                 Placeholder="@Localizer[Langs.ProductCategory]"
+                                 Variant="Variant.Outlined"
+                                 AnchorOrigin="Origin.BottomLeft"
+                                 TransformOrigin="Origin.TopLeft"
+                                 DebounceInterval="300"
+                                 MaxItems="_pageSize"
+                                 ToStringFunc="@(t => t?.Name)"
+                                 SearchFunc="@SearchForProductCategory">
+                    <ProgressIndicatorInPopoverTemplate>
+                        <MudList T="string" ReadOnly>
+                            <MudListItem>
+                                @Localizer[Langs.Loading]
+                            </MudListItem>
+                        </MudList>
+                    </ProgressIndicatorInPopoverTemplate>
+                </MudAutocomplete>
+            </div>
             <MudTextField Label="@Localizer[Langs.Name]" Class="my-0 w-100" Placeholder="@Localizer[Langs.TypeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Name" For="@(() => _model.Name)"></MudTextField>
             <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Code" For="@(() => _model.Code)"
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.AutoAwesome" OnAdornmentClick="GenerateCode"></MudTextField>
-            <MudSwitch Label="@Localizer[Langs.BaseType]" Class="my-0" @bind-Value="@_model.IsBasic" For="@(() => _model.IsBasic)" Color="Color.Primary" />
         </EditForm>
     </DialogContent>
     <DialogActions>
@@ -38,6 +59,10 @@
 
     [Parameter]
     public ProductTypeDTO? Type { get; set; }
+
+    private List<ProductCategoryDTO> _productCategories = new List<ProductCategoryDTO>();
+    private string _searchString = "";
+    private int _pageSize = 25;
 
     private IValidator _validator;
     private ProductTypeFormModel _model;
@@ -126,7 +151,15 @@
         {
             _model.Name = Type.Name;
             _model.Code = Type.Code;
-            _model.IsBasic = Type.IsBasic;
+            _model.ProductCategory = Type.Category;
         }
+    }
+
+    private async Task<IEnumerable<ProductCategoryDTO>> SearchForProductCategory(string value, CancellationToken token)
+    {
+        _searchString = value;
+        var response = await ProductService.GetCategories(0, _pageSize, _searchString);
+        _productCategories = response.Elements;
+        return _productCategories;
     }
 }

@@ -3,6 +3,7 @@
 @using MagFlow.Shared.DTOs.CompanyScope
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
@@ -11,6 +12,7 @@
 @inject IDialogService DialogService
 @inject IAuthorizationService AuthorizationService
 @inject ISnackbar Snackbar
+@inject ILocalCacheService LocalCacheService
 @inject NavigationManager NavigationManager
 @inherits AuthComponentBase
 
@@ -18,12 +20,6 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer[Langs.ProductsList]</MudText>
         <MudSpacer />
-        <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_EDIT">
-            <Authorized>
-                <LoadingButton Loading="_loadingBlockMany" Color="Color.Secondary" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Block" Class="mr-2" OnClick="BlockProducts">@Localizer[Langs.Block]</LoadingButton>
-                <LoadingButton Loading="_loadingUnblockMany" Color="Color.Secondary" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.LockReset" Class="mr-2" OnClick="UnblockProducts">@Localizer[Langs.Unblock]</LoadingButton>
-            </Authorized>
-        </AuthorizeView>
         <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE">
             <Authorized>
                 <LoadingButton Loading="_loadingDeleteMany" Color="Color.Error" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.Delete" Class="mr-2" OnClick="DeleteProducts">@Localizer[Langs.Delete]</LoadingButton>
@@ -39,5 +35,49 @@
     <Columns>
         <SelectColumn T="ProductDTO" HeaderStyle="width: 1%" />
         <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="product => product.Name" />
+        <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="product => product.Code" />
+        <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.Category]" Sortable="false" CellClass="text-nowrap" Property="@(product => (product.Category != null ? product.Category.Name : string.Empty))" />
+        <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="false" CellClass="text-nowrap" Property="@(product => (product.Type != null ? product.Type.Name : string.Empty))" />
+        <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.UnitShort]" Sortable="false" CellClass="text-nowrap" Property="@(product => (product.Unit != null ? product.Unit.Name : string.Empty))" />
+        <TemplateColumn T="ProductDTO" Title="@Localizer[Langs.PurchasePrice]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                @($"{context.Item.PurchasePrice:N2} {context.Item.Currency.GetDisplayName(Localizer)}")
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn T="ProductDTO" Title="@Localizer[Langs.SellingPrice]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                @($"{context.Item.SellingPrice:N2} {context.Item.Currency.GetDisplayName(Localizer)}")
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn T="ProductDTO" Title="@Localizer[Langs.TaxRate]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                @($"{context.Item.TaxRate?.ToDecimal():0.##}%")
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn T="ProductDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_READ">
+                    <Authorized Context="authorizedContext">
+                        <MudTooltip Text="@Localizer[Langs.Open]" Delay="@Constants.Tooltip.DELAY">
+                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" OnClick="() => OpenProductDetails(context.Item)" />
+                        </MudTooltip>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_ADD">
+                    <Authorized Context="authorizedContext">
+                        <MudTooltip Text="@Localizer[Langs.CreateCopy]" Delay="@Constants.Tooltip.DELAY">
+                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.ContentCopy" OnClick="() => OpenAddProductModal(context.Item)" />
+                        </MudTooltip>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE">
+                    <Authorized Context="authorizedContext">
+                        <MudTooltip Text="@Localizer[Langs.Delete]" Delay="@Constants.Tooltip.DELAY">
+                            <LoadingIconButton Loading="LoadingDelete(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteProduct(context.Item)" />
+                        </MudTooltip>
+                    </Authorized>
+                </AuthorizeView>
+            </CellTemplate>
+        </TemplateColumn>
     </Columns>
 </MagFlowDataGrid>

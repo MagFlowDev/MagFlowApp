@@ -308,6 +308,89 @@ namespace MagFlow.BLL.Services
             }
         }
 
+        public async Task<Enums.Result> Copy(object obj)
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return Enums.Result.Error;
+                await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.CLIPBOARD, obj);
+
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while copying object to local storage");
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<object> Paste()
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return null;
+
+                var cache = await GetCache<object>(userId.Value, Shared.Constants.LocalStorageKeys.CLIPBOARD);
+                if (cache == null)
+                    return null;
+
+                return cache;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while getting copied object from local storage");
+                return null;
+            }
+        }
+
+        public async Task<Enums.Result> CopyItem(object obj, string type)
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return Enums.Result.Error;
+                var expire = DateTime.UtcNow.AddSeconds(30);    
+                await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.ITEM_TEMP_CLIPBOARD, obj, type, expire);
+
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while copying item to local storage");
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<(object, string)> PasteItem()
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return (null, null);
+
+                var cache = await GetCacheWithType<object>(userId.Value, Shared.Constants.LocalStorageKeys.ITEM_TEMP_CLIPBOARD);
+                var data = cache.Item1;
+                var type = cache.Item2;
+                if (data == null)
+                    return (null, null);
+
+                return (data,type);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while getting copied item from local storage");
+                return (null, null);
+            }
+        }
+
+
+
         private async Task<T?> GetCache<T>(Guid userId, string key)
         {
             var storageKey = string.Concat(userId.ToString(), "_", key);
@@ -316,6 +399,23 @@ namespace MagFlow.BLL.Services
                 return cache.Data;
             else
                 return default(T);
+        }
+
+        private async Task<(T?, string)> GetCacheWithType<T>(Guid userId, string key)
+        {
+            var storageKey = string.Concat(userId.ToString(), "_", key);
+            var cache = await _localStorage.GetItemAsync<StorageItem<T>>(storageKey);
+            if (cache != null)
+            {
+                if(cache.Expire.HasValue && cache.Expire.Value < DateTime.UtcNow)
+                {
+                    await RemoveCache(userId, key);
+                    return (default(T), null);
+                }
+                return (cache.Data, cache.Type);
+            }
+            else
+                return (default(T), null);
         }
 
         private async Task<T?> GetCache<T>(string key)
@@ -327,16 +427,32 @@ namespace MagFlow.BLL.Services
                 return default(T);
         }
 
-        private async Task AddOrUpdateCache<T>(Guid userId, string key, T data)
+        private async Task<(T?, string)> GetCacheWithType<T>(string key)
+        {
+            var cache = await _localStorage.GetItemAsync<StorageItem<T>>(key);
+            if (cache != null)
+            {
+                if (cache.Expire.HasValue && cache.Expire.Value < DateTime.UtcNow)
+                {
+                    await RemoveCache(key);
+                    return (default(T), null);
+                }
+                return (cache.Data, cache.Type);
+            }
+            else
+                return (default(T), null);
+        }
+
+        private async Task AddOrUpdateCache<T>(Guid userId, string key, T data, string? type = null, DateTime? expiration = null)
         {
             var storageKey = string.Concat(userId.ToString(), "_", key);
-            StorageItem<T> item = new StorageItem<T>() { Key = storageKey, Data = data };
+            StorageItem<T> item = new StorageItem<T>() { Key = storageKey, Data = data, Type = type, Expire = expiration };
             await _localStorage.SetItemAsync(item.Key, item);
         }
 
-        private async Task AddOrUpdateCache<T>(string key, T data)
+        private async Task AddOrUpdateCache<T>(string key, T data, string? type = null, DateTime? expiration = null)
         {
-            StorageItem<T> item = new StorageItem<T>() { Key = key, Data = data };
+            StorageItem<T> item = new StorageItem<T>() { Key = key, Data = data, Type = type, Expire = expiration };
             await _localStorage.SetItemAsync(item.Key, item);
         }
 

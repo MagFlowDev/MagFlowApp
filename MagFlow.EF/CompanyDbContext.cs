@@ -133,7 +133,7 @@ namespace MagFlow.EF
             builder.Entity<ProductComponent>().HasOne(x => x.Product).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<ProductComponent>().HasOne(x => x.Component).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Product>().HasOne(x => x.Type).WithMany().OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<ProductCategory>().HasOne(x => x.Type).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<ProductType>().HasOne(x => x.Category).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.Product).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.Warehouse).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.Storage).WithMany().OnDelete(DeleteBehavior.NoAction);

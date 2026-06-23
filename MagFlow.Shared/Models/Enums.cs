@@ -111,6 +111,12 @@ namespace MagFlow.Shared.Models
             Unknown
         }
 
+        public enum ProductStatus
+        {
+            Active,
+            Inactive,
+        }
+
         public enum OverallState
         {
             Unknown = 0,
@@ -140,8 +146,13 @@ namespace MagFlow.Shared.Models
 
         public enum Currency
         {
+            [Display(Name = "CurrencyPLN")]
             PLN = 0,
+
+            [Display(Name = "CurrencyEURO")]
             EURO = 1,
+
+            [Display(Name = "CurrencyUSD")]
             USD = 2
         }
 
@@ -237,8 +248,8 @@ namespace MagFlow.Shared.Models
     {
         public enum WaresDefinitionSection
         {
-            Types,
             Categories,
+            Types,
             Parameters,
             Units
         }

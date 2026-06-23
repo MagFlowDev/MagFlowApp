@@ -14,9 +14,12 @@ namespace MagFlow.Domain.CompanyScope
         [Required]
         public string Name { get; set; }
         [Required]
-        public bool IsBasic { get; set; }
-        [Required]
         public bool IsActive { get; set; }
+        [Required]
+        public int CategoryId { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
+        public ProductCategory? Category { get; set; }
 
         public DateTime? RemovedAt { get; set; }
     }

@@ -8,8 +8,8 @@
         <div class="d-flex flex-column justify-content-start align-items-start" style="min-width: 200px; flex: 0 0 auto; gap: 24px; min-height: 0; overflow-x: hidden">
             <MudText Typo="Typo.h6" Style="font-weight: 500;">@Localizer[Langs.Definitions]</MudText>
             <MudList T="SectionsEnums.WaresDefinitionSection" SelectionMode="SelectionMode.SingleSelection" SelectedValue="@_currentSection" SelectedValueChanged="OnSectionChanged">
-                <MudListItem Value="SectionsEnums.WaresDefinitionSection.Types" Text="@Localizer[Langs.ProductTypes]" Icon="@Icons.Material.Outlined.Inventory2" IconColor="@_currentSection.GetIconColor(SectionsEnums.WaresDefinitionSection.Types)" Class="@_currentSection.GetNavClass(SectionsEnums.WaresDefinitionSection.Types)" Style="background-color: #FFF !important" />
                 <MudListItem Value="SectionsEnums.WaresDefinitionSection.Categories" Text="@Localizer[Langs.Categories]" Icon="@Icons.Material.Outlined.Category" IconColor="@_currentSection.GetIconColor(SectionsEnums.WaresDefinitionSection.Categories)" Class="@_currentSection.GetNavClass(SectionsEnums.WaresDefinitionSection.Categories)" Style="background-color: #FFF !important" />
+                <MudListItem Value="SectionsEnums.WaresDefinitionSection.Types" Text="@Localizer[Langs.ProductTypes]" Icon="@Icons.Material.Outlined.Inventory2" IconColor="@_currentSection.GetIconColor(SectionsEnums.WaresDefinitionSection.Types)" Class="@_currentSection.GetNavClass(SectionsEnums.WaresDefinitionSection.Types)" Style="background-color: #FFF !important" />
                 <MudListItem Value="SectionsEnums.WaresDefinitionSection.Parameters" Text="@Localizer[Langs.Parameters]" Icon="@Icons.Material.Outlined.ShapeLine" IconColor="@_currentSection.GetIconColor(SectionsEnums.WaresDefinitionSection.Parameters)" Class="@_currentSection.GetNavClass(SectionsEnums.WaresDefinitionSection.Parameters)" Style="background-color: #FFF !important" />
                 <MudListItem Value="SectionsEnums.WaresDefinitionSection.Units" Text="@Localizer[Langs.UnitsOfMeasurement]" Icon="@Icons.Material.Outlined.Straighten" IconColor="@_currentSection.GetIconColor(SectionsEnums.WaresDefinitionSection.Units)" Class="@_currentSection.GetNavClass(SectionsEnums.WaresDefinitionSection.Units)" Style="background-color: #FFF !important"/>
             </MudList>
@@ -17,11 +17,11 @@
         <div class="flex-grow-1 d-flex flex-column align-items-start" style="min-height: 0; overflow-x: hidden; gap: 40px;">
             @switch(_currentSection)
             {
+                case SectionsEnums.WaresDefinitionSection.Categories:
+                    <Categories />
+                    break;
                 case SectionsEnums.WaresDefinitionSection.Types:
                     <Types/>
-                    break;
-                case SectionsEnums.WaresDefinitionSection.Categories:
-                    <Categories/>
                     break;
                 case SectionsEnums.WaresDefinitionSection.Parameters:
                     <Parameters/>

@@ -253,6 +253,40 @@ namespace MagFlow.BLL.Services
             if (result != Enums.Result.Success)
                 return result;
 
+            if (currentUser != null && (currentUser.Roles.Contains(AppRole.SuperAdmin) || currentUser.Roles.Contains(AppRole.SysAdmin)))
+            {
+                companyUser = new User()
+                {
+                    Id = currentUser.Id,
+                    FirstName = currentUser.FirstName,
+                    LastName = currentUser.LastName,
+                    Email = currentUser.Email,
+                    RemovedAt = DateTime.UtcNow
+                };
+                await _companyRepository.AddCompanyUser(company, companyUser);
+            }
+
+            try
+            {
+                var sysAdmins = await _userRepository.GetAllAsync(x => x.Roles.Any(y => y.Role != null && y.Role.Name == AppRole.SysAdmin.Name), x => x.Include(y => y.Roles).ThenInclude(z => z.Role));
+                if (sysAdmins != null && sysAdmins.Any())
+                {
+                    foreach (var sysAdmin in sysAdmins)
+                    {
+                        var sysAdminUser = new User()
+                        {
+                            Id = sysAdmin.Id,
+                            FirstName = sysAdmin.FirstName,
+                            LastName = sysAdmin.LastName,
+                            Email = sysAdmin.Email ?? "",
+                            RemovedAt = DateTime.UtcNow
+                        };
+                        await _companyRepository.AddCompanyUser(company, sysAdminUser);
+                    }
+                }
+            }
+            catch { }
+
             try
             {
                 if (AppSettings.AppUri == null || string.IsNullOrEmpty(AppSettings.AppUri.AbsoluteUri))

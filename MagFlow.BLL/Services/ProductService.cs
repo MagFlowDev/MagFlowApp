@@ -54,7 +54,10 @@ namespace MagFlow.BLL.Services
                 },
                 SortBy = sortBy,
                 Descending = descending
-            }, products => products.Include(x => x.Type).Include(x => x.Category).ThenInclude(y => y.Type));
+            }, products => products
+                .Include(x => x.Category)
+                .Include(x => x.Type).ThenInclude(y => y.Category)
+                .Include(x => x.Unit));
             return new QueryResponse<ProductDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -66,9 +69,9 @@ namespace MagFlow.BLL.Services
             };
         }
 
-        public async Task<QueryResponse<ProductTypeDTO>> GetTypes(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<ProductTypeDTO>> GetTypes(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false, ProductCategoryDTO? productCategory = null)
         {
-            var queryResponse = await _typeRepository.GetAsync(new QueryOptions<ProductType>()
+            var queryOptions = new QueryOptions<ProductType>()
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -79,7 +82,15 @@ namespace MagFlow.BLL.Services
                 },
                 SortBy = sortBy,
                 Descending = descending
-            });
+            };
+            if (productCategory != null)
+            {
+                queryOptions.Filters = new Dictionary<string, object>()
+                {
+                    { nameof(ProductType.CategoryId), productCategory.Id }
+                };
+            }
+            var queryResponse = await _typeRepository.GetAsync(queryOptions, type => type.Include(x => x.Category));
             return new QueryResponse<ProductTypeDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -91,9 +102,9 @@ namespace MagFlow.BLL.Services
             };
         }
 
-        public async Task<QueryResponse<ProductCategoryDTO>> GetCategories(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false, ProductTypeDTO? productType = null)
+        public async Task<QueryResponse<ProductCategoryDTO>> GetCategories(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
         {
-            var queryOptions = new QueryOptions<ProductCategory>()
+            var queryResponse = await _categoryRepository.GetAsync(new QueryOptions<ProductCategory>()
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -104,15 +115,7 @@ namespace MagFlow.BLL.Services
                 },
                 SortBy = sortBy,
                 Descending = descending
-            };
-            if(productType != null)
-            {
-                queryOptions.Filters = new Dictionary<string, object>()
-                {
-                    { nameof(ProductCategory.TypeId), productType.Id }
-                };
-            }
-            var queryResponse = await _categoryRepository.GetAsync(queryOptions, category => category.Include(x => x.Type));
+            });
             return new QueryResponse<ProductCategoryDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>

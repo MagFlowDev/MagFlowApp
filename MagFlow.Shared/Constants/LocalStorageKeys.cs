@@ -12,5 +12,8 @@ namespace MagFlow.Shared.Constants
         public const string SESSION_CURRENT_MODULE = "SESSION_CURRENT_MODULE";
         public const string SESSION_MODULE_SECTION = "SESSION_MODULE_SECTION";
         public const string CURRENT_USER = "CURRENT_USER";
+
+        public const string CLIPBOARD = "CLIPBOARD";
+        public const string ITEM_TEMP_CLIPBOARD = "ITEM_TEMP_CLIPBOARD";
     }
 }

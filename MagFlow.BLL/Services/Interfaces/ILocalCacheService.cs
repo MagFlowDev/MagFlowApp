@@ -21,5 +21,10 @@ namespace MagFlow.BLL.Services.Interfaces
 
         Task<Enums.Result> SetCurrentUser(UserDTO userDTO);
         Task<UserDTO?> GetCurrentUser();
+
+        Task<Enums.Result> Copy(object obj);
+        Task<object> Paste();
+        Task<Enums.Result> CopyItem(object obj, string type);
+        Task<(object, string)> PasteItem();
     }
 }

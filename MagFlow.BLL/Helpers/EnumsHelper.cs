@@ -74,5 +74,20 @@ namespace MagFlow.BLL.Helpers
                 _ => 0
             };
         }
+
+        public static Enums.TaxRate? ToTaxRate(decimal? taxRate)
+        {
+            if(!taxRate.HasValue)
+                return null;
+
+            return taxRate.Value switch
+            {
+                0 => Enums.TaxRate._0,
+                5 => Enums.TaxRate._5,
+                8 => Enums.TaxRate._8,
+                23 => Enums.TaxRate._23,
+                _ => Enums.TaxRate._0
+            };
+        }
     }
 }

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using MudBlazor;
 using MudBlazor.Utilities;
+using System.Text.Json;
 
 namespace MagFlow.Web.Pages.Modules.Wares.Ware
 {
@@ -53,6 +54,40 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 [1] = () => _model.Parameters,
                 [2] = () => _model.Prices,
             };
+
+            try
+            {
+                var copiedItem = await LocalCacheService.PasteItem();
+                var data = copiedItem.Item1;
+                var dataType = copiedItem.Item2;
+                var test = data.GetType();
+                if(data != null && dataType == typeof(ProductDTO).Name && data is JsonElement element)
+                {
+                    var product = element.Deserialize<ProductDTO>();
+                    if(product != null)
+                        CreateCopy(product);
+                }
+            }
+            catch { }
+        }
+
+        private void CreateCopy(ProductDTO dto)
+        {
+            _model.GeneralInformation.Name = dto.Name;
+            _model.GeneralInformation.Code = dto.Code;
+            _model.GeneralInformation.ProductCategory = dto.Category;
+            _model.GeneralInformation.ProductType = dto.Type;
+            _model.GeneralInformation.Unit = dto.Unit;
+
+            dto.Parameters?.ForEach(parameter =>
+            {
+                _model.Parameters.Parameters.Add(parameter);
+            });
+
+            _model.Prices.PurchasePrice = dto.PurchasePrice;
+            _model.Prices.SellingPrice = dto.SellingPrice;
+            _model.Prices.TaxRate = dto.TaxRate;
+            _model.Prices.Currency = dto.Currency;
         }
 
         private void GenerateCode()
@@ -77,7 +112,6 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
 
         protected override async Task Save()
         {
-            _model.Parameters.Parameters = _parameters.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
             await base.Save();
 
             try
@@ -107,7 +141,12 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private async Task<IEnumerable<ProductTypeDTO>> SearchForProductType(string value, CancellationToken token)
         {
             _typeSearchString = value;
-            var response = await ProductService.GetTypes(0, _pageSize, _typeSearchString);
+            if (_model.GeneralInformation.ProductCategory == null)
+            {
+                _productTypes = new List<ProductTypeDTO>();
+                return _productTypes;
+            }
+            var response = await ProductService.GetTypes(0, _pageSize, _typeSearchString, productCategory: _model.GeneralInformation.ProductCategory);
             _productTypes = response.Elements;
             return _productTypes;
         }
@@ -115,12 +154,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private async Task<IEnumerable<ProductCategoryDTO>> SearchForProductCategory(string value, CancellationToken token)
         {
             _categorySearchString = value;
-            if(_model.GeneralInformation.ProductType == null)
-            {
-                _productCategories = new List<ProductCategoryDTO>();
-                return _productCategories;
-            }
-            var response = await ProductService.GetCategories(0, _pageSize, _categorySearchString, productType: _model.GeneralInformation.ProductType);
+            var response = await ProductService.GetCategories(0, _pageSize, _categorySearchString);
             _productCategories = response.Elements;
             return _productCategories;
         }

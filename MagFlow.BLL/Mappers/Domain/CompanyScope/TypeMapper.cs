@@ -17,7 +17,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Name = type.Name,
                 Code = type.Code,
                 IsActive = type.IsActive,
-                IsBasic = type.IsBasic
+                Category = type.Category?.ToDTO(),
             };
         }
 
@@ -33,7 +33,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Id = id,
                 Code = model.Code,
                 Name = model.Name,
-                IsBasic = model.IsBasic
+                Category = model.ProductCategory,
             };
         }
 
@@ -52,7 +52,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Name = type.Name,
                 Code = type.Code,
                 IsActive = type.IsActive,
-                IsBasic = type.IsBasic
+                CategoryId = type.Category?.Id ?? 0,
             };
         }
 
@@ -67,7 +67,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             {
                 Name = model.Name,
                 Code = model.Code,
-                IsBasic = model.IsBasic,
+                CategoryId = model.ProductCategory?.Id ?? 0,
                 IsActive = true
             };
         }
