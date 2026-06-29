@@ -376,6 +376,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dostępny.
+        /// </summary>
+        public static string Available {
+            get {
+                return ResourceManager.GetString("Available", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wstecz.
         /// </summary>
         public static string Back {
@@ -426,6 +435,24 @@ namespace MagFlow.Web.Resources {
         public static string Block {
             get {
                 return ResourceManager.GetString("Block", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Potwierdź zablokowanie.
+        /// </summary>
+        public static string BlockConfirmation {
+            get {
+                return ResourceManager.GetString("BlockConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Zablokowany.
+        /// </summary>
+        public static string Blocked {
+            get {
+                return ResourceManager.GetString("Blocked", resourceCulture);
             }
         }
         
@@ -1159,6 +1186,42 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Potwierdź usunięcie towaru.
+        /// </summary>
+        public static string DeleteWareConfirmation {
+            get {
+                return ResourceManager.GetString("DeleteWareConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Czy na pewno chcesz usunąć {0} towary?.
+        /// </summary>
+        public static string DeleteWareConfirmation_Few {
+            get {
+                return ResourceManager.GetString("DeleteWareConfirmation_Few", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Czy na pewno chcesz usunąć {0} towarów?.
+        /// </summary>
+        public static string DeleteWareConfirmation_Many {
+            get {
+                return ResourceManager.GetString("DeleteWareConfirmation_Many", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Czy na pewno chcesz usunąć towar &apos;{0}&apos;?.
+        /// </summary>
+        public static string DeleteWareConfirmation_One {
+            get {
+                return ResourceManager.GetString("DeleteWareConfirmation_One", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Usuwanie.
         /// </summary>
         public static string Deleting {
@@ -1857,6 +1920,24 @@ namespace MagFlow.Web.Resources {
         public static string Loading {
             get {
                 return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Lokalizacja.
+        /// </summary>
+        public static string Location {
+            get {
+                return ResourceManager.GetString("Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Lokalizacja (opcjonalnie).
+        /// </summary>
+        public static string LocationOptional {
+            get {
+                return ResourceManager.GetString("LocationOptional", resourceCulture);
             }
         }
         
@@ -3292,6 +3373,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wybierz produkt żeby zaciągnąć typ i kategorię.
+        /// </summary>
+        public static string SelectProductToGetTypeAndCategory {
+            get {
+                return ResourceManager.GetString("SelectProductToGetTypeAndCategory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Cena sprzedaży.
         /// </summary>
         public static string SellingPrice {
@@ -3450,6 +3540,15 @@ namespace MagFlow.Web.Resources {
         public static string Status {
             get {
                 return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Stan magazynowy.
+        /// </summary>
+        public static string StockQuantity {
+            get {
+                return ResourceManager.GetString("StockQuantity", resourceCulture);
             }
         }
         
@@ -3787,6 +3886,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Potwierdź odblokowanie.
+        /// </summary>
+        public static string UnblockConfirmation {
+            get {
+                return ResourceManager.GetString("UnblockConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Odblokowano pomyślnie.
         /// </summary>
         public static string UnblockedSuccessfully {
@@ -3873,6 +3981,15 @@ namespace MagFlow.Web.Resources {
         public static string UnitsOfMeasurement {
             get {
                 return ResourceManager.GetString("UnitsOfMeasurement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Nieznany.
+        /// </summary>
+        public static string UnknownStatus {
+            get {
+                return ResourceManager.GetString("UnknownStatus", resourceCulture);
             }
         }
         
@@ -4081,6 +4198,24 @@ namespace MagFlow.Web.Resources {
         public static string ValidUntil {
             get {
                 return ResourceManager.GetString("ValidUntil", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Wartość.
+        /// </summary>
+        public static string Value {
+            get {
+                return ResourceManager.GetString("Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Np. 500.
+        /// </summary>
+        public static string ValueExample {
+            get {
+                return ResourceManager.GetString("ValueExample", resourceCulture);
             }
         }
         

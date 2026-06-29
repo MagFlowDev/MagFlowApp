@@ -60,7 +60,6 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 var copiedItem = await LocalCacheService.PasteItem();
                 var data = copiedItem.Item1;
                 var dataType = copiedItem.Item2;
-                var test = data.GetType();
                 if(data != null && dataType == typeof(ProductDTO).Name && data is JsonElement element)
                 {
                     var product = element.Deserialize<ProductDTO>();
@@ -82,6 +81,8 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             dto.Parameters?.ForEach(parameter =>
             {
                 _model.Parameters.Parameters.Add(parameter);
+                parameter.DropZoneSelector = MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR;
+                _parameters.Add(parameter);
             });
 
             _model.Prices.PurchasePrice = dto.PurchasePrice;
@@ -112,7 +113,14 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
 
         protected override async Task Save()
         {
-            await base.Save();
+            _model.Parameters.Parameters = _parameters.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
+            if (_isBusy)
+                return;
+
+            var step = _stepper.Steps[_step];
+            if (step == null || !await ValidateStep(_step))
+                return;
+            await step.SetCompletedAsync(true);
 
             try
             {

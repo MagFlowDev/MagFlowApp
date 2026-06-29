@@ -1,23 +1,30 @@
-﻿using MagFlow.BLL.Services.Interfaces;
+﻿using MagFlow.BLL.Mappers.Domain.CompanyScope;
+using MagFlow.BLL.Services.Interfaces;
+using MagFlow.DAL.Repositories.CompanyScope;
+using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
+using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.DTOs.CompanyScope;
+using MagFlow.Shared.DTOs.CoreScope;
+using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.FormModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-using MagFlow.Domain.CompanyScope;
-using MagFlow.Shared.Models;
-using MagFlow.Shared.DTOs.CompanyScope;
-using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
-using MagFlow.BLL.Mappers.Domain.CompanyScope;
 
 namespace MagFlow.BLL.Services
 {
     public class ItemService : IItemService
     {
         private readonly IItemRepository _itemRepository;
+        private readonly INetworkService _networkService;
 
-        public ItemService(IItemRepository itemRepository)
+        public ItemService(IItemRepository itemRepository, 
+            INetworkService networkService)
         {
             _itemRepository = itemRepository;
+            _networkService = networkService;
         }
 
         public async Task<QueryResponse<ItemDTO>> GetItems(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
@@ -29,7 +36,13 @@ namespace MagFlow.BLL.Services
                 Search = search,
                 SortBy = sortBy,
                 Descending = descending
-            });
+            }, items => items
+                .Include(x => x.Product).ThenInclude(y => y.Type).ThenInclude(z => z.Category)
+                .Include(x => x.Product).ThenInclude(y => y.Category)
+                .Include(x => x.Product).ThenInclude(y => y.Unit)
+                .Include(x => x.DefaultUnit)
+                .Include(x => x.CreatedBy)
+                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit));
             return new QueryResponse<ItemDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -50,7 +63,13 @@ namespace MagFlow.BLL.Services
                 Search = search,
                 SortBy = sortBy,
                 Descending = descending
-            }, archive: true);
+            }, include: items => items
+                .Include(x => x.Product).ThenInclude(y => y.Type).ThenInclude(z => z.Category)
+                .Include(x => x.Product).ThenInclude(y => y.Category)
+                .Include(x => x.Product).ThenInclude(y => y.Unit)
+                .Include(x => x.DefaultUnit)
+                .Include(x => x.CreatedBy)
+                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit),  archive: true);
             return new QueryResponse<ItemDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -60,6 +79,74 @@ namespace MagFlow.BLL.Services
                 }).ToList() ?? new List<ItemDTO>(),
                 TotalCount = queryResponse?.TotalCount ?? 0
             };
+        }
+
+
+
+        public async Task<Enums.Result> AddItem(ItemFormModel model)
+        {
+            var userId = _networkService.GetUserId();
+            if (!userId.HasValue)
+                return Enums.Result.Error;
+            var unit = model.ToEntity(userId.Value);
+            var result = await _itemRepository.AddAsync(unit);
+            return result;
+        }
+
+
+
+
+        public async Task<Enums.Result> BlockItem(ItemDTO itemDTO, bool unblock = false)
+        {
+            if (itemDTO == null || itemDTO.Id == 0)
+                return Enums.Result.Error;
+            var item = await _itemRepository.GetByIdAsync(itemDTO.Id);
+            if (item == null)
+                return Enums.Result.Error;
+
+            item.Status = unblock ? (item.Status == Enums.ItemStatus.Blocked ? Enums.ItemStatus.Available : item.Status) : Enums.ItemStatus.Blocked;
+            item.IsBlocked = unblock;
+            var result = await _itemRepository.UpdateAsync(item);
+            return result;
+        }
+
+        public async Task<Enums.Result> BlockItems(List<ItemDTO> itemsDTO, bool unblock = false)
+        {
+            if (!itemsDTO?.Any() == true)
+                return Enums.Result.Error;
+
+            var itemsIds = itemsDTO
+                .Where(x => x != null && x.Id != 0)
+                .Select(x => x.Id)
+                .ToList();
+            var items = await _itemRepository.GetAllAsync(x => itemsIds.Contains(x.Id));
+            if (items == null)
+                return Enums.Result.Error;
+
+            foreach (var item in items)
+            {
+                item.Status = unblock ? (item.Status == Enums.ItemStatus.Blocked ? Enums.ItemStatus.Available : item.Status) : Enums.ItemStatus.Blocked;
+                item.IsBlocked = unblock;
+            }
+            var result = await _itemRepository.UpdateRangeAsync(items);
+            return result;
+        }
+
+        public async Task<Enums.Result> DeleteItem(ItemDTO itemDTO)
+        {
+            var originalItem = await _itemRepository.GetByIdAsync(itemDTO.Id);
+            if (originalItem == null)
+                return Enums.Result.Error;
+
+            var result = await _itemRepository.DeleteAsync(originalItem);
+            return result;
+        }
+
+        public async Task<Enums.Result> DeleteItems(List<ItemDTO> itemsDTOs)
+        {
+            var itemsIds = itemsDTOs.Select(x => x.Id).ToList();
+            var result = await _itemRepository.DeleteManyAsync(x => itemsIds.Contains(x.Id));
+            return result;
         }
     }
 }

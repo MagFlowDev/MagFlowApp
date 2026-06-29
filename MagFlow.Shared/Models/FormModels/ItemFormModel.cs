@@ -29,11 +29,23 @@ namespace MagFlow.Shared.Models.FormModels
 
     public class ItemFormParameterValues
     {
-        public Dictionary<ParameterDTO, object> Parameters { get; set; }
+        public List<ItemFormParameterValue> Parameters { get; set; }
 
         public ItemFormParameterValues()
         {
-            Parameters = new Dictionary<ParameterDTO, object>();
+            Parameters = new List<ItemFormParameterValue>();
+        }
+    }
+
+    public class ItemFormParameterValue
+    {
+        public ParameterDTO Parameter { get; set; }
+        public string Value { get; set; }
+
+        public ItemFormParameterValue(ParameterDTO parameter, string value)
+        {
+            Parameter = parameter;
+            Value = value;
         }
     }
 }

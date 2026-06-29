@@ -14,8 +14,7 @@ namespace MagFlow.Domain.CompanyScope
         public string? ExternalId { get; set; }
         [Required]
         public int ProductId { get; set; }
-        [Required]
-        public int WarehouseId { get; set; }
+        public int? WarehouseId { get; set; }
         public int? StorageId { get; set; }
         public string? Location { get; set; }
         [Required]
@@ -43,7 +42,9 @@ namespace MagFlow.Domain.CompanyScope
         [Precision(18, 4)]
         public decimal? SellPrice { get; set; }
         [Precision(18, 4)]
-        public decimal? VatRate { get; set; }
+        public decimal? TaxRate { get; set; }
+        [Required]
+        public int DefaultUnitId { get; set; }
         public Enums.Currency? Currency { get; set; }
         
         [ForeignKey(nameof(ProductId))]
@@ -56,6 +57,8 @@ namespace MagFlow.Domain.CompanyScope
         public User? CreatedBy { get; set; }
         [ForeignKey(nameof(RemovedById))]
         public User? RemovedBy { get; set; }
+        [ForeignKey(nameof(DefaultUnitId))]
+        public Unit? DefaultUnit { get; set; }
 
         public ICollection<ItemParameter> Parameters { get; set; }
     }

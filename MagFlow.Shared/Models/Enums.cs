@@ -108,7 +108,14 @@ namespace MagFlow.Shared.Models
 
         public enum ItemStatus
         {
-            Unknown
+            [Display(Name = "UnknownStatus")]
+            Unknown,
+
+            [Display(Name = "Available")]
+            Available,
+
+            [Display(Name = "Blocked")]
+            Blocked
         }
 
         public enum ProductStatus

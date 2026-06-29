@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.Services;
+﻿using MagFlow.BLL.Helpers.Localization;
+using MagFlow.BLL.Services;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
@@ -36,7 +37,7 @@ namespace MagFlow.Web.Pages.Modules.Wares
             };
         }
 
-        private async Task OpenAddProductModal()
+        private async Task OpenAddProductWizard()
         {
             if (!HasModulePermission("Wares", PermissionFlags.Add))
                 return;
@@ -44,7 +45,7 @@ namespace MagFlow.Web.Pages.Modules.Wares
             NavigationManager.NavigateTo($"/product/add");
         }
 
-        private async Task OpenAddProductModal(ProductDTO product)
+        private async Task OpenAddProductWizard(ProductDTO product)
         {
             if (!HasModulePermission("Wares", PermissionFlags.Add))
                 return;
@@ -85,7 +86,7 @@ namespace MagFlow.Web.Pages.Modules.Wares
                 _isBusy = true;
                 _loadingDelete[product.Id] = true;
 
-                var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, string.Format(Localizer[Langs.DeleteProductConfirmation], product.Name) } };
+                var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, string.Format(Localizer.GetConfirmationMessage(nameof(Langs.DeleteProductConfirmation), 1), product.Name) } };
                 var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteProductConfirmation], parameters);
                 var confirmation = await dialog.Result;
                 if (confirmation != null && !confirmation.Canceled)
@@ -116,7 +117,51 @@ namespace MagFlow.Web.Pages.Modules.Wares
 
         private async Task DeleteProducts()
         {
+            if (!HasModulePermission("Wares", PermissionFlags.Delete))
+                return;
 
+            if (_isBusy || _loadingDeleteMany)
+                return;
+
+            var products = _productsDataGrid?.Selection?.ToList();
+            if (products == null || !products.Any())
+                return;
+
+            if (products.Count == 1)
+            {
+                var product = products.FirstOrDefault();
+                await DeleteProduct(product);
+                return;
+            }
+
+            try
+            {
+                _isBusy = true;
+                _loadingDeleteMany = true;
+
+                var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, Localizer.GetConfirmationMessage(nameof(Langs.DeleteProductConfirmation), products.Count) } };
+                var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteProductConfirmation], parameters);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    var result = await ProductService.DeleteProducts(products);
+                    if (result == Enums.Result.Success)
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteSuccess], Severity.Success);
+                        _productsDataGrid.Selection.Clear();
+                        await _productsDataGrid.ReloadServerData();
+                    }
+                    else
+                    {
+                        Snackbar.Add(Localizer[Langs.DeleteFailed], Severity.Error);
+                    }
+                }
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingDeleteMany = false;
+            }
         }
 
 

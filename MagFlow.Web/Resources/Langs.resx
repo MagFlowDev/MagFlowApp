@@ -1519,4 +1519,49 @@ i uprawnieniami użytkowników</value>
   <data name="CurrencyUSD" xml:space="preserve">
     <value>$</value>
   </data>
+  <data name="SelectProductToGetTypeAndCategory" xml:space="preserve">
+    <value>Wybierz produkt żeby zaciągnąć typ i kategorię</value>
+  </data>
+  <data name="LocationOptional" xml:space="preserve">
+    <value>Lokalizacja (opcjonalnie)</value>
+  </data>
+  <data name="StockQuantity" xml:space="preserve">
+    <value>Stan magazynowy</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Wartość</value>
+  </data>
+  <data name="ValueExample" xml:space="preserve">
+    <value>Np. 500</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Lokalizacja</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Nieznany</value>
+  </data>
+  <data name="Blocked" xml:space="preserve">
+    <value>Zablokowany</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Dostępny</value>
+  </data>
+  <data name="DeleteWareConfirmation" xml:space="preserve">
+    <value>Potwierdź usunięcie towaru</value>
+  </data>
+  <data name="DeleteWareConfirmation_Few" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} towary?</value>
+  </data>
+  <data name="DeleteWareConfirmation_Many" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} towarów?</value>
+  </data>
+  <data name="DeleteWareConfirmation_One" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć towar '{0}'?</value>
+  </data>
+  <data name="BlockConfirmation" xml:space="preserve">
+    <value>Potwierdź zablokowanie</value>
+  </data>
+  <data name="UnblockConfirmation" xml:space="preserve">
+    <value>Potwierdź odblokowanie</value>
+  </data>
 </root>

@@ -11,6 +11,7 @@
 @layout MainLayout
 @inherits StepperWizardBase<ItemFormModel>
 @inject IProductService ProductService
+@inject IItemService ItemService
 
 @attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.Claims.WARES_ADD)]
 
@@ -30,9 +31,11 @@
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
                                         <div class="d-flex w-100 my-0 align-items-stretch">
-                                            <MudAutocomplete @bind-Value="_model.GeneralInformation.Product"
+                                            <MudAutocomplete Value="_model.GeneralInformation.Product"
+                                                             ValueChanged="ProductSelected"
                                                              For="@(() => _model.GeneralInformation.Product)"
                                                              T="ProductDTO"
+                                                             HelperText="@Localizer[Langs.SelectProductToGetTypeAndCategory]"
                                                              Label="@Localizer[Langs.Product]"
                                                              Placeholder="@Localizer[Langs.ProductExample]"
                                                              Variant="Variant.Outlined"
@@ -51,12 +54,50 @@
                                                 </ProgressIndicatorInPopoverTemplate>
                                             </MudAutocomplete>
                                         </div>
+                                        <div class="d-flex w-100 my-0 align-items-start align-self-stretch" style="gap: 16px">
+                                            <MudTextField Label="@Localizer[Langs.StockQuantity]" Class="w-50 mud-border-primary" T="decimal?" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.Quantity" For="@(() => _model.GeneralInformation.Quantity)"></MudTextField>
+                                            <div class="d-flex w-50">
+                                                <MudSelect @bind-Value="_model.GeneralInformation.Unit"
+                                                            For="@(() => _model.GeneralInformation.Unit)"
+                                                            T="UnitDTO"
+                                                            Label="@Localizer[Langs.Unit]"
+                                                            Placeholder="@Localizer[Langs.MeasurementUnitExample]"
+                                                            Variant="Variant.Outlined"
+                                                            AnchorOrigin="Origin.BottomLeft"
+                                                            TransformOrigin="Origin.TopLeft"
+                                                            ToStringFunc="@(t => t?.Name)">
+                                                @if(_model.GeneralInformation.Product?.Unit != null)
+                                                {
+                                                    <MudSelectItem Value="_model.GeneralInformation.Product.Unit">@_model.GeneralInformation.Product.Unit.Name</MudSelectItem>
+                                                    @foreach(var unit in _model.GeneralInformation.Product?.Unit?.RelatedUnits ?? new List<UnitDTO>())
+                                                    {
+                                                        <MudSelectItem Value="@unit">@unit.Name</MudSelectItem>
+                                                    }
+                                                }
+                                                </MudSelect>
+                                            </div>
+                                        </div>
+                                        <MudTextField Disabled Label="@Localizer[Langs.Type]" Placeholder="@Localizer[Langs.TypeExample]" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.ProductType?.Name" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Disabled Label="@Localizer[Langs.Category]" Placeholder="@Localizer[Langs.CategoryExample]" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.ProductCategory?.Name" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.LocationOptional]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.Location" For="@(() => _model.GeneralInformation.Location)" Class="w-100 my-0"></MudTextField>
                                     </div>
                                 </div>
                             </MudStep>
                             <MudStep Title="@Localizer[Langs.ParameterValues]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
+                                        <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+                                            @foreach(var parameter in _model.ParameterValues.Parameters)
+                                            {
+                                                @if (parameter.Parameter.ValueType.HasValue)
+                                                {
+                                                    <div class="d-flex justify-content-between align-items-center align-self-stretch" style="@($"border-bottom: 1px solid {Colors.Gray.Lighten2}")">
+                                                        <MudText Typo="Typo.body1" Style="font-weight: 400">@parameter.Parameter.Name</MudText>
+                                                        <MudTextField Style="width: 177px" Class="flex-grow-0 my-2" Variant="Variant.Outlined" Label="@Localizer[Langs.Value]" Placeholder="@Localizer[Langs.ValueExample]" T="string" Value="@(parameter.Value?.ToString())" For="@(() => parameter.Value)" ValueChanged="@(value => OnParameterValueChanged(parameter.Parameter, value))" Adornment="Adornment.End" AdornmentText="@(parameter.Parameter.Unit?.Symbol != null ? parameter.Parameter.Unit.Symbol : string.Empty)" />
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </MudStep>

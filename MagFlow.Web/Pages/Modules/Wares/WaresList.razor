@@ -5,6 +5,7 @@
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
@@ -13,6 +14,7 @@
 @inject IDialogService DialogService
 @inject IAuthorizationService AuthorizationService
 @inject ISnackbar Snackbar
+@inject ILocalCacheService LocalCacheService
 @inject NavigationManager NavigationManager
 @inherits AuthComponentBase
 
@@ -33,16 +35,52 @@
         </AuthorizeView>
         <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_ADD">
             <Authorized>
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="mr-2" OnClick="OpenAddItemModal">@Localizer[Langs.AddWare]</MudButton>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="mr-2" OnClick="OpenAddItemWizard">@Localizer[Langs.AddWare]</MudButton>
             </Authorized>
         </AuthorizeView>
         <MudIconButton Color="Color.Primary" OnClick="_itemsDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
     </ToolBarContent>
     <Columns>
         <SelectColumn T="ItemDTO" HeaderStyle="width: 1%" />
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" />
+        <PropertyColumn T="ItemDTO" TProperty="int" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="item => item.Id" />
         <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
-                <MudChip T="string" Class="m-0" Variant="Variant.Filled">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
+                <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
+            </CellTemplate>
+        </TemplateColumn>
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Type != null ? item.Product.Type.Name : string.Empty)" />
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Category]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Category != null ? item.Product.Category.Name : string.Empty)" />
+        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.StockQuantity]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                @($"{context.Item.Quantity:0.##} {context.Item.Unit?.Symbol}")
+            </CellTemplate>
+        </TemplateColumn>
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Location]" Sortable="false" CellClass="text-nowrap" Property="item => item.Location" />
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.CreationDate]" Sortable="false" CellClass="text-nowrap" Property="item => (item.CreatedAt.HasValue ? item.CreatedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" />
+        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_READ">
+                    <Authorized Context="authorizedContext">
+                        <MudTooltip Text="@Localizer[Langs.Open]" Delay="@Constants.Tooltip.DELAY">
+                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.OpenInNew" OnClick="() => OpenItemDetails(context.Item)" />
+                        </MudTooltip>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_ADD">
+                    <Authorized Context="authorizedContext">
+                        <MudTooltip Text="@Localizer[Langs.CreateCopy]" Delay="@Constants.Tooltip.DELAY">
+                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.ContentCopy" OnClick="() => OpenAddItemWizard(context.Item)" />
+                        </MudTooltip>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE">
+                    <Authorized Context="authorizedContext">
+                        <MudTooltip Text="@Localizer[Langs.Delete]" Delay="@Constants.Tooltip.DELAY">
+                            <LoadingIconButton Loading="LoadingDelete(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="() => DeleteItem(context.Item)" />
+                        </MudTooltip>
+                    </Authorized>
+                </AuthorizeView>
             </CellTemplate>
         </TemplateColumn>
     </Columns>
