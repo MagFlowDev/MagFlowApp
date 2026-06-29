@@ -380,6 +380,7 @@ namespace MagFlow.BLL.Services
                 if (data == null)
                     return (null, null);
 
+                await RemoveCache(userId.Value, Shared.Constants.LocalStorageKeys.ITEM_TEMP_CLIPBOARD);
                 return (data,type);
             }
             catch (Exception ex)

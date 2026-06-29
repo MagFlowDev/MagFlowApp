@@ -287,3 +287,7 @@ h1:focus {
     width: auto !important;
     flex: 0 1 auto !important;
 }
+
+.mud-border-primary .mud-input-outlined-border {
+    border-color: var(--mud-palette-primary) !important;
+}

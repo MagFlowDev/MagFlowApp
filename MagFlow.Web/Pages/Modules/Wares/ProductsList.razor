@@ -27,7 +27,7 @@
         </AuthorizeView>
         <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_ADD">
             <Authorized>
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="mr-2" OnClick="OpenAddProductModal">@Localizer[Langs.AddProduct]</MudButton>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" Class="mr-2" OnClick="OpenAddProductWizard">@Localizer[Langs.AddProduct]</MudButton>
             </Authorized>
         </AuthorizeView>
         <MudIconButton Color="Color.Primary" OnClick="_productsDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
@@ -51,7 +51,7 @@
         </TemplateColumn>
         <TemplateColumn T="ProductDTO" Title="@Localizer[Langs.TaxRate]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
-                @($"{context.Item.TaxRate?.ToDecimal():0.##}%")
+                @(context.Item.TaxRate.HasValue ? $"{context.Item.TaxRate?.ToDecimal():0.##}%" : string.Empty)
             </CellTemplate>
         </TemplateColumn>
         <TemplateColumn T="ProductDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
@@ -66,7 +66,7 @@
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_ADD">
                     <Authorized Context="authorizedContext">
                         <MudTooltip Text="@Localizer[Langs.CreateCopy]" Delay="@Constants.Tooltip.DELAY">
-                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.ContentCopy" OnClick="() => OpenAddProductModal(context.Item)" />
+                            <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.ContentCopy" OnClick="() => OpenAddProductWizard(context.Item)" />
                         </MudTooltip>
                     </Authorized>
                 </AuthorizeView>

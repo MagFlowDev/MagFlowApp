@@ -22,10 +22,17 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="ItemDTO" HeaderStyle="width: 1%" />
-        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" />
+        <PropertyColumn T="ItemDTO" TProperty="int" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="item => item.Id" />
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Type != null ? item.Product.Type.Name : string.Empty)" />
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Category]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Category != null ? item.Product.Category.Name : string.Empty)" />
+        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.StockQuantity]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
-                <MudChip T="string" Class="m-0" Variant="Variant.Filled">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
+                @($"{context.Item.Quantity:0.##} {context.Item.Unit?.Symbol}")
             </CellTemplate>
         </TemplateColumn>
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Location]" Sortable="false" CellClass="text-nowrap" Property="item => item.Location" />
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.CreationDate]" Sortable="false" CellClass="text-nowrap" Property="item => (item.CreatedAt.HasValue ? item.CreatedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" />
+
     </Columns>
 </MagFlowDataGrid>

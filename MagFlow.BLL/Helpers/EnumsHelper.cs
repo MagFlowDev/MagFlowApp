@@ -1,5 +1,6 @@
 ﻿using MagFlow.Shared.Models;
 using Microsoft.Extensions.Localization;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -87,6 +88,17 @@ namespace MagFlow.BLL.Helpers
                 8 => Enums.TaxRate._8,
                 23 => Enums.TaxRate._23,
                 _ => Enums.TaxRate._0
+            };
+        }
+
+        public static Color ToColor(this Enums.ItemStatus status)
+        {
+            return status switch
+            {
+                Enums.ItemStatus.Available => Color.Success,
+                Enums.ItemStatus.Blocked => Color.Error,
+                Enums.ItemStatus.Unknown => Color.Default,
+                _ => Color.Default
             };
         }
     }

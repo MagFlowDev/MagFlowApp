@@ -8,6 +8,7 @@ using MagFlow.Web.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
+using System.Text.Json;
 
 namespace MagFlow.Web.Pages.Modules.Wares.Ware
 {
@@ -34,33 +35,92 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 [0] = () => _model.GeneralInformation,
                 [1] = () => _model.ParameterValues
             };
+
+            try
+            {
+                var copiedItem = await LocalCacheService.PasteItem();
+                var data = copiedItem.Item1;
+                var dataType = copiedItem.Item2;
+                if (data != null && dataType == typeof(ItemDTO).Name && data is JsonElement element)
+                {
+                    var product = element.Deserialize<ItemDTO>();
+                    if (product != null)
+                        CreateCopy(product);
+                }
+            }
+            catch { }
+        }
+
+        private void CreateCopy(ItemDTO dto)
+        {
+            _model.GeneralInformation.Product = dto.Product;
+            _model.GeneralInformation.ProductType = dto.Product?.Type;
+            _model.GeneralInformation.ProductCategory = dto.Product?.Category;
+            _model.GeneralInformation.Location = dto.Location;
+            _model.GeneralInformation.Quantity = dto.Quantity;
+            _model.GeneralInformation.Unit = dto.Unit;
+
+            _model.ParameterValues.Parameters = new List<ItemFormParameterValue>();
+            dto.Parameters?.ForEach(parameter =>
+            {
+                _model.ParameterValues.Parameters.Add(new ItemFormParameterValue(parameter.Parameter, parameter.Value));
+            });
         }
 
         protected override async Task Save()
         {
-            await base.Save();
+            if (_isBusy)
+                return;
+
+            var step = _stepper.Steps[_step];
+            if (step == null || !await ValidateStep(_step))
+                return;
+            await step.SetCompletedAsync(true);
 
             try
             {
                 _isBusy = true;
                 _loading = true;
 
-                //var result = await ProductService.AddProduct((ProductFormModel)_model);
-                //if (result == Enums.Result.Success)
-                //{
-                //    NavigationManager.NavigateTo("/");
-                //    Snackbar.Add(Localizer[Langs.ActionSucceed], Severity.Success);
-                //    return;
-                //}
-                //else
-                //{
-                //    Snackbar.Add(Localizer[Langs.ErrorOccured], Severity.Error);
-                //}
+                var result = await ItemService.AddItem((ItemFormModel)_model);
+                if (result == Enums.Result.Success)
+                {
+                    NavigationManager.NavigateTo("/");
+                    Snackbar.Add(Localizer[Langs.ActionSucceed], Severity.Success);
+                    return;
+                }
+                else
+                {
+                    Snackbar.Add(Localizer[Langs.ErrorOccured], Severity.Error);
+                }
             }
             finally
             {
                 _isBusy = false;
                 _loading = false;
+            }
+        }
+
+        private void ProductSelected(ProductDTO product)
+        {
+            _model.GeneralInformation.Product = product;
+            _model.GeneralInformation.ProductCategory = product.Category;
+            _model.GeneralInformation.ProductType = product.Type;
+            _model.GeneralInformation.Unit = product.Unit;
+
+            _model.ParameterValues.Parameters = new List<ItemFormParameterValue>();
+            foreach(var parameter in product.Parameters)
+            {
+                _model.ParameterValues.Parameters.Add(new ItemFormParameterValue(parameter, null));
+            }
+        }
+
+        private void OnParameterValueChanged(ParameterDTO parameter, object value)
+        {
+            var parameterValue = _model.ParameterValues.Parameters.FirstOrDefault(p => p.Parameter == parameter);
+            if (parameterValue != null)
+            {
+                parameterValue.Value = value?.ToString();
             }
         }
 

@@ -1,8 +1,4 @@
-﻿using SkiaSharp;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
+﻿using PhotoSauce.MagicScaler;
 
 namespace MagFlow.BLL.Helpers
 {
@@ -10,50 +6,36 @@ namespace MagFlow.BLL.Helpers
     {
         public static byte[] ResizeIfLarger(byte[] imageBytes, int maxSize = 384, int jpegQuality = 90)
         {
-            if (imageBytes == null || imageBytes.Length == 0)
-                throw new ArgumentException("imageBytes is null or empty", nameof(imageBytes));
-
-            using var input = new MemoryStream(imageBytes);
-            using var codes = SKCodec.Create(input);
-            if (codes == null)
-                return imageBytes;
-
-            var info = codes.Info;
-            if(info.Width <= maxSize && info.Height <= maxSize)
-                return imageBytes;
-
-            float scale = Math.Min((float)maxSize / info.Width, (float)maxSize / info.Height);
-            int newWidth = Math.Max(1, (int)Math.Round(info.Width * scale));
-            int newHeight = Math.Max(1, (int)Math.Round(info.Height * scale));
-
-            input.Position = 0;
-            using var original = SKBitmap.Decode(input);
-            if(original == null)
-                return imageBytes;
-
-            var sampling = SKSamplingOptions.Default;
-            using var resizedBitmap = original.Resize(new SKImageInfo(newWidth, newHeight), sampling);
-            if (resizedBitmap == null)
-                return imageBytes;
-
-            using var image = SKImage.FromBitmap(resizedBitmap);
-                    
-            var format = codes.EncodedFormat;
-            SKEncodedImageFormat encodedFormat = format switch
+            try
             {
-                SKEncodedImageFormat.Jpeg => SKEncodedImageFormat.Jpeg,
-                SKEncodedImageFormat.Png => SKEncodedImageFormat.Png,
-                SKEncodedImageFormat.Gif => SKEncodedImageFormat.Gif,
-                SKEncodedImageFormat.Webp => SKEncodedImageFormat.Webp,
-                SKEncodedImageFormat.Bmp => SKEncodedImageFormat.Bmp,
-                SKEncodedImageFormat.Ico => SKEncodedImageFormat.Ico,
-                _ => SKEncodedImageFormat.Jpeg
-            };
+                if (imageBytes == null || imageBytes.Length == 0)
+                    throw new ArgumentException("imageBytes is null or empty", nameof(imageBytes));
 
-            int quality = encodedFormat == SKEncodedImageFormat.Jpeg ? jpegQuality : 100;
+                using var input = new MemoryStream(imageBytes);
+                var fileInfo = ImageFileInfo.Load(input);
 
-            using var data = image.Encode(encodedFormat, quality);
-            return data?.ToArray() ?? imageBytes;
+                if (fileInfo.Frames[0].Width <= maxSize && fileInfo.Frames[0].Height <= maxSize)
+                    return imageBytes;
+
+                var settings = new ProcessImageSettings
+                {
+                    Width = maxSize,
+                    Height = maxSize,
+                    ResizeMode = CropScaleMode.Max,
+                    EncoderOptions = new JpegEncoderOptions(Quality: jpegQuality, Subsample: ChromaSubsampleMode.Default)
+                };
+                settings.TrySetEncoderFormat(ImageMimeTypes.Jpeg);
+
+                input.Position = 0;
+                using var output = new MemoryStream();
+                MagicImageProcessor.ProcessImage(input, output, settings);
+
+                return output.ToArray();
+            }
+            catch(Exception ex)
+            {
+                return imageBytes;
+            }
         }
     }
 }

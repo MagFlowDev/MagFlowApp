@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using static System.Collections.Specialized.BitVector32;
+using System.Collections;
 
 namespace MagFlow.BLL.Helpers
 {
@@ -58,12 +58,29 @@ namespace MagFlow.BLL.Helpers
 
             for (int i = 0; i < props.Length; i++)
             {
-                info = current.GetType().GetProperty(props[i]);
+                var prop = props[i];
+                int? index = null;
+
+                if (prop.Contains('['))
+                {
+                    var start = prop.IndexOf('[');
+                    var end = prop.IndexOf(']');
+
+                    index = int.Parse(prop.Substring(start + 1, end - start - 1));
+                    prop = prop.Substring(0, start);
+                }
+
+                info = current.GetType().GetProperty(prop);
                 if (info == null)
                     throw new InvalidOperationException($"Property '{props[i]}' not found on type {current.GetType().Name}");
 
                 if (i < props.Length - 1)
+                {
                     current = info.GetValue(current);
+
+                    if (index.HasValue)
+                        current = ((IList)current)[index.Value];
+                }
             }
 
             return new FieldIdentifier(current, info.Name);

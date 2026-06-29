@@ -151,11 +151,38 @@ namespace MagFlow.Shared.Validators.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Parametr jest wymagany..
+        /// </summary>
+        public static string ParameterRequired {
+            get {
+                return ResourceManager.GetString("ParameterRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Produkt jest wymagany..
+        /// </summary>
+        public static string ProductRequired {
+            get {
+                return ResourceManager.GetString("ProductRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Podaj datę wygaśnięcia modułów wybranych do aktywacji..
         /// </summary>
         public static string ProvideExpirationDate {
             get {
                 return ResourceManager.GetString("ProvideExpirationDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ilość jest wymagana..
+        /// </summary>
+        public static string QuantityRequired {
+            get {
+                return ResourceManager.GetString("QuantityRequired", resourceCulture);
             }
         }
         
@@ -201,6 +228,15 @@ namespace MagFlow.Shared.Validators.Resources {
         public static string UnitRequired {
             get {
                 return ResourceManager.GetString("UnitRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Niepoprawna wartość..
+        /// </summary>
+        public static string ValueInvalid {
+            get {
+                return ResourceManager.GetString("ValueInvalid", resourceCulture);
             }
         }
         

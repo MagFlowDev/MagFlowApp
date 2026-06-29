@@ -118,9 +118,9 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             };
         }
 
-        public static List<Product> ToEntity(this IEnumerable<ProductDTO> products)
+        public static List<Product> ToEntity(this IEnumerable<ProductDTO> products, Guid? userId = null)
         {
-            return products.Select(x => x.ToEntity()).ToList();
+            return products.Select(x => x.ToEntity(userId)).ToList();
         }
 
         public static Product ToEntity(this ProductFormModel model, Guid userId)

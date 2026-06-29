@@ -1518,4 +1518,49 @@
   <data name="CurrencyUSD" xml:space="preserve">
     <value>$</value>
   </data>
+  <data name="SelectProductToGetTypeAndCategory" xml:space="preserve">
+    <value>Select product to get type and category</value>
+  </data>
+  <data name="LocationOptional" xml:space="preserve">
+    <value>Location (optional)</value>
+  </data>
+  <data name="StockQuantity" xml:space="preserve">
+    <value>Stock quantity</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="ValueExample" xml:space="preserve">
+    <value>E.g. 500</value>
+  </data>
+  <data name="Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="UnknownStatus" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="Blocked" xml:space="preserve">
+    <value>Blocked</value>
+  </data>
+  <data name="Available" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="DeleteWareConfirmation" xml:space="preserve">
+    <value>Confirm ware deletion</value>
+  </data>
+  <data name="DeleteWareConfirmation_Few" xml:space="preserve">
+    <value>Are you sure you want to delete {0} wares?</value>
+  </data>
+  <data name="DeleteWareConfirmation_Many" xml:space="preserve">
+    <value>Are you sure you want to delete {0} wares?</value>
+  </data>
+  <data name="DeleteWareConfirmation_One" xml:space="preserve">
+    <value>Are you sure you want to delete ware '{0}'?</value>
+  </data>
+  <data name="BlockConfirmation" xml:space="preserve">
+    <value>Confirm block</value>
+  </data>
+  <data name="UnblockConfirmation" xml:space="preserve">
+    <value>Confirm unblock</value>
+  </data>
 </root>

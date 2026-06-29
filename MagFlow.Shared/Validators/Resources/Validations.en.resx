@@ -168,4 +168,16 @@
   <data name="UnitRequired" xml:space="preserve">
     <value>Unit is required.</value>
   </data>
+  <data name="ProductRequired" xml:space="preserve">
+    <value>Product is required.</value>
+  </data>
+  <data name="QuantityRequired" xml:space="preserve">
+    <value>Quantity is required.</value>
+  </data>
+  <data name="ParameterRequired" xml:space="preserve">
+    <value>Parameter is required.</value>
+  </data>
+  <data name="ValueInvalid" xml:space="preserve">
+    <value>Invalid value.</value>
+  </data>
 </root>
