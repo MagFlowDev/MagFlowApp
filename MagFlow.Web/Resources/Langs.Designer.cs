@@ -673,6 +673,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Komponenty.
+        /// </summary>
+        public static string Components {
+            get {
+                return ResourceManager.GetString("Components", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Potwierdź nowe hasło.
         /// </summary>
         public static string ConfirmNewPassword {
@@ -723,6 +732,15 @@ namespace MagFlow.Web.Resources {
         public static string ContractorsModuleDescription {
             get {
                 return ResourceManager.GetString("ContractorsModuleDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Przeliczniki.
+        /// </summary>
+        public static string Conversions {
+            get {
+                return ResourceManager.GetString("Conversions", resourceCulture);
             }
         }
         
@@ -1731,6 +1749,15 @@ namespace MagFlow.Web.Resources {
         public static string GoBack {
             get {
                 return ResourceManager.GetString("GoBack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Historia.
+        /// </summary>
+        public static string History {
+            get {
+                return ResourceManager.GetString("History", resourceCulture);
             }
         }
         

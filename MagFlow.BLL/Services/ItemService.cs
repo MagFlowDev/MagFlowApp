@@ -27,6 +27,17 @@ namespace MagFlow.BLL.Services
             _networkService = networkService;
         }
 
+        public async Task<ItemDTO?> GetItem(int id)
+        {
+            var product = await _itemRepository.GetByIdAsync(id, item => item
+                .Include(x => x.Product)
+                .Include(x => x.DefaultUnit)
+                .Include(x => x.CreatedBy)
+                .Include(x => x.Parameters));
+            var dto = product?.ToDTO();
+            return dto;
+        }
+
         public async Task<QueryResponse<ItemDTO>> GetItems(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
         {
             var queryResponse = await _itemRepository.GetAsync(new QueryOptions<Item>()

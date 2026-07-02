@@ -1563,4 +1563,13 @@
   <data name="UnblockConfirmation" xml:space="preserve">
     <value>Confirm unblock</value>
   </data>
+  <data name="Components" xml:space="preserve">
+    <value>Components</value>
+  </data>
+  <data name="Conversions" xml:space="preserve">
+    <value>Conversion</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>History</value>
+  </data>
 </root>

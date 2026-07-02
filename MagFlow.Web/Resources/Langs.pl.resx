@@ -1564,4 +1564,13 @@ i uprawnieniami użytkowników</value>
   <data name="UnblockConfirmation" xml:space="preserve">
     <value>Potwierdź odblokowanie</value>
   </data>
+  <data name="Components" xml:space="preserve">
+    <value>Komponenty</value>
+  </data>
+  <data name="Conversions" xml:space="preserve">
+    <value>Przeliczniki</value>
+  </data>
+  <data name="History" xml:space="preserve">
+    <value>Historia</value>
+  </data>
 </root>

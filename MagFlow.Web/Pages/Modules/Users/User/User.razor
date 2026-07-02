@@ -20,7 +20,7 @@
 
 <div class="d-flex flex-column w-100 flex-grow-1 overflow-visible" style="min-height: 0;" >
     <div class="d-flex align-items-center align-self-stretch justify-content-between w-100 overflow-visible" style="padding: 0; margin-bottom: 8px; position: relative;">
-        <ReturnFab/>
+        <ReturnFab OnClick="@(() => NavigationManager.NavigateTo("/"))" />
         @* Header *@
         <div class="d-flex align-self-stretch align-items-center mud-height-full w-100" style="min-height: 64px; height: 64px; border-radius: 4px; background: var(--mud-palette-primary-text); ">
             <div class="d-flex align-self-stretch align-items-center justify-content-between w-100 px-4" style="margin-left: 48px;">

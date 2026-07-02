@@ -2,7 +2,9 @@
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
 using MagFlow.Domain.CompanyScope;
+using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.DTOs.CompanyScope;
+using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +41,17 @@ namespace MagFlow.BLL.Services
             _productParameterRepository = productParameterRepository;
             _unitRepository = unitRepository;
             _networkService = networkService;
+        }
+
+        public async Task<ProductDTO?> GetProduct(int id)
+        {
+            var product = await _productRepository.GetByIdAsync(id, product => product
+                .Include(x => x.Category)
+                .Include(x => x.Type)
+                .Include(x => x.Unit)
+                .Include(x => x.Parameters));
+            var dto = product?.ToDTO();
+            return dto;
         }
 
         public async Task<QueryResponse<ProductDTO>> GetProducts(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
