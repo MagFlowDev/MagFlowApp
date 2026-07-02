@@ -9,6 +9,8 @@ namespace MagFlow.BLL.Services.Interfaces
 {
     public interface IProductService
     {
+        Task<ProductDTO?> GetProduct(int id);
+
         Task<QueryResponse<ProductDTO>> GetProducts(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
         Task<QueryResponse<ProductTypeDTO>> GetTypes(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false, ProductCategoryDTO? productCategory = null);
         Task<QueryResponse<ProductCategoryDTO>> GetCategories(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);

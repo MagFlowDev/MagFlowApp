@@ -9,6 +9,8 @@ namespace MagFlow.BLL.Services.Interfaces
 {
     public interface IItemService
     {
+        Task<ItemDTO?> GetItem(int id);
+
         Task<QueryResponse<ItemDTO>> GetItems(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
         Task<QueryResponse<ItemDTO>> GetArchive(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
 

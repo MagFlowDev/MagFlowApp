@@ -269,6 +269,22 @@ namespace MagFlow.Shared.Models
             Archive
         }
 
+        public enum WareDetailsSection
+        {
+            GeneralInformation,
+            Components,
+            History
+        }
+
+        public enum ProductDetailsSection
+        {
+            GeneralInformation,
+            Parameters,
+            Components,
+            Conversion,
+            History
+        }
+
         public enum UserDetailsSection
         {
             Profile,

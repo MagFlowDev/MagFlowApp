@@ -197,6 +197,7 @@
     {
         var relativePath = NavigationManager.ToBaseRelativePath(e.Location);
         var moduleName = relativePath?.Split("/")[0];
+        moduleName = LocationPathHelper.GetModule(moduleName);
         if(!string.IsNullOrEmpty(moduleName))
         {
             var module = _activeModules.FirstOrDefault(x => x.Name.Contains(moduleName, StringComparison.OrdinalIgnoreCase));
