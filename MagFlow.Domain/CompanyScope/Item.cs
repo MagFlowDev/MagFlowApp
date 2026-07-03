@@ -31,8 +31,6 @@ namespace MagFlow.Domain.CompanyScope
         public DateTime? ProductionDate { get; set; }
         public DateTime? ConsumptionDate { get; set; }
         [Required]
-        public bool IsBlocked { get; set; }
-        [Required]
         public Enums.Condition Condition { get; set; }
         [Required]
         public Enums.ItemStatus Status { get; set; }

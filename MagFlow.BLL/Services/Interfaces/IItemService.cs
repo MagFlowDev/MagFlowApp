@@ -20,5 +20,8 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> BlockItems(List<ItemDTO> itemsDTO, bool unblock = false);
         Task<Enums.Result> DeleteItem(ItemDTO itemDTO);
         Task<Enums.Result> DeleteItems(List<ItemDTO> itemsDTOs);
+
+        Task<Enums.Result> RestoreItem(ItemDTO itemDTO);
+        Task<Enums.Result> RestoreItems(List<ItemDTO> itemsDTOs);
     }
 }

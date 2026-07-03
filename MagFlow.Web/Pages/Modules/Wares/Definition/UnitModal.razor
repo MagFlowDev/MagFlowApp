@@ -1,15 +1,16 @@
 ﻿@using FluentValidation
 @using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Helpers.Localization.Display
+@using MagFlow.BLL.Mappers.Domain.CompanyScope
 @using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
 @using MagFlow.Shared.Models.Enumerators
 @using MagFlow.Shared.Models.FormModels
 @using MagFlow.Shared.Validators.Company
 @using MagFlow.Shared.Validators.Resources
-@using MagFlow.BLL.Helpers.Localization.Display
-@using MagFlow.BLL.Mappers.Domain.CompanyScope
-@using MagFlow.Shared.DTOs.CompanyScope
-@using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Authorization
 @using MudBlazor
 
@@ -17,7 +18,7 @@
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<Validations> Validations
 
-<MudDialog Style="max-width: 450px; width: 100%">
+<MudDialog Style="max-width: 500px; width: 100%">
     <DialogContent>
         <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">
             @if (Unit == null || Unit.ParentUnit == null)
@@ -38,9 +39,28 @@
                 @foreach (var child in _model.RelatedUnits)
                 {
                     <div class="d-flex align-items-center w-100" style="gap: 4px">
-                        <div class="d-flex align-items-center w-100" style="gap: 16px">
-                            <MudTextField Label="@Localizer[Langs.Name]" Class="my-0" Placeholder="@Localizer[Langs.KilogramExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Name" For="@(() => child.Name)"></MudTextField>
+                        <div class="d-flex align-items-top w-100" style="gap: 16px">
+                            <MudTextField Label="@Localizer[Langs.Name]" Class="my-0 flex-grow-1" Style="min-width: 150px" Placeholder="@Localizer[Langs.KilogramExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Name" For="@(() => child.Name)"></MudTextField>
                             <MudTextField Label="@Localizer[Langs.Symbol]" Class="my-0" Placeholder="@Localizer[Langs.KgExample]" Variant="Variant.Outlined" T="string" @bind-Value="@child.Symbol" For="@(() => child.Symbol)"></MudTextField>
+                            <div class="my-0 position-relative d-inline-block align-center">
+                                <MudNumericField Label="@Localizer[Langs.Conversion]" Format="0.##" HideSpinButtons="true" Class="my-0" Placeholder="@Localizer[Langs.ConversionExample]" Variant="Variant.Outlined" T="decimal?" @bind-Value="@child.ParentUnitConversionRate" For="@(() => child.ParentUnitConversionRate)"/>
+                                <div style="position: absolute; right: -10px; top: -10px; z-index: 10;">
+                                    <MudTooltip Delay="@Constants.Tooltip.DELAY" Placement="Placement.Top">
+                                        <TooltipContent>
+                                            <MudText Typo="Typo.body2" Class="pa-1" Align="Align.Left">
+                                                @Localizer[Langs.DerivedUnitConversionTooltipDescription]
+                                                <br /><br />
+                                                <b>@Localizer[Langs.DerivedUnitConversionTooltipExample]</b><br />
+                                                @Localizer[Langs.DerivedUnitConversionTooltipBody1]<br />
+                                                @Localizer[Langs.DerivedUnitConversionTooltipBody2]
+                                            </MudText>
+                                        </TooltipContent>
+                                        <ChildContent>
+                                            <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Medium" Style="color: var(--mud-palette-text-secondary); background-color: #ffffff; border-radius: 50%;" />
+                                        </ChildContent>
+                                    </MudTooltip>
+                                </div>
+                            </div>
                         </div>
                         <MudIconButton Icon="@Icons.Material.Outlined.RemoveCircleOutline" OnClick="@(() => RemoveChildUnit(child))"/>
                     </div>
@@ -62,6 +82,7 @@
 
     [Parameter]
     public UnitDTO? Unit { get; set; }
+    UnitDTO? ParentUnit { get; set; }
 
     private List<int> _removedUnits { get; set; }
     private IValidator _validator;
@@ -105,7 +126,7 @@
             var result = Enums.Result.Error;
             if (_model.Id != null && _model.Id != 0)
             {
-                result = await ProductService.UpdateMeasurementUnit(_model.ToDTO(), _removedUnits);
+                result = await ProductService.UpdateMeasurementUnit(_model.ToDTO(ParentUnit), _removedUnits);
             }
             else
             {
@@ -158,6 +179,7 @@
             _model.Name = Unit.Name;
             _model.Symbol = Unit.Symbol;
             _model.Id = Unit.Id;
+            _model.ParentUnitConversionRate = Unit.ParentUnitConversionRate;
             _model.RelatedUnits = new List<MeasurementUnitFormModel>();
             foreach (var child in Unit.RelatedUnits)
             {
@@ -169,6 +191,8 @@
                     ParentUnitConversionRate = child.ParentUnitConversionRate
                 });
             }
+            if (Unit.ParentUnit != null)
+                ParentUnit = Unit.ParentUnit;
         }
     }
 }

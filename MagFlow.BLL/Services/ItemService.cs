@@ -116,7 +116,6 @@ namespace MagFlow.BLL.Services
                 return Enums.Result.Error;
 
             item.Status = unblock ? (item.Status == Enums.ItemStatus.Blocked ? Enums.ItemStatus.Available : item.Status) : Enums.ItemStatus.Blocked;
-            item.IsBlocked = unblock;
             var result = await _itemRepository.UpdateAsync(item);
             return result;
         }
@@ -137,7 +136,6 @@ namespace MagFlow.BLL.Services
             foreach (var item in items)
             {
                 item.Status = unblock ? (item.Status == Enums.ItemStatus.Blocked ? Enums.ItemStatus.Available : item.Status) : Enums.ItemStatus.Blocked;
-                item.IsBlocked = unblock;
             }
             var result = await _itemRepository.UpdateRangeAsync(items);
             return result;
@@ -157,6 +155,32 @@ namespace MagFlow.BLL.Services
         {
             var itemsIds = itemsDTOs.Select(x => x.Id).ToList();
             var result = await _itemRepository.DeleteManyAsync(x => itemsIds.Contains(x.Id));
+            return result;
+        }
+
+        public async Task<Enums.Result> RestoreItem(ItemDTO itemDTO)
+        {
+            var originalItem = await _itemRepository.GetByIdAsync(itemDTO.Id);
+            if (originalItem == null)
+                return Enums.Result.Error;
+
+            originalItem.RemovedAt = null;
+            originalItem.Status = Enums.ItemStatus.Available;
+            var result = await _itemRepository.UpdateAsync(originalItem);
+            return result;
+        }
+
+        public async Task<Enums.Result> RestoreItems(List<ItemDTO> itemsDTOs)
+        {
+            var itemsIds = itemsDTOs.Select(x => x.Id).ToList();
+            var originalItems = await _itemRepository.GetAllAsync(x => itemsIds.Contains(x.Id), archive: true);
+
+            foreach(var originalItem in originalItems)
+            {
+                originalItem.RemovedAt = null;
+                originalItem.Status = Enums.ItemStatus.Available;
+            }
+            var result = await _itemRepository.UpdateRangeAsync(originalItems);
             return result;
         }
     }

@@ -43,6 +43,23 @@
                                  MaxItems="_pageSize"
                                  ToStringFunc="@(t => t?.Name)"
                                  SearchFunc="@SearchForUnit">
+                    <ItemTemplate Context="unit">
+                        @if(unit != null)
+                        {
+                            if(unit.ParentUnit != null)
+                            {
+                                <MudText Typo="Typo.body2" Class="ms-5 mud-text-secondary">
+                                    @unit.Name
+                                </MudText>
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.body2" Style="font-weight: 500;">
+                                    @unit.Name
+                                </MudText>
+                            }
+                        }
+                    </ItemTemplate>
                     <ProgressIndicatorInPopoverTemplate>
                         <MudList T="string" ReadOnly>
                             <MudListItem>
@@ -165,8 +182,17 @@
     private async Task<IEnumerable<UnitDTO>> SearchForUnit(string value, CancellationToken token)
     {
         _searchString = value;
-        var response = await ProductService.GetUnits(0, _pageSize, _searchString);
-        _units = response.Elements;
+        var response = await ProductService.GetUnits(0, _pageSize, _searchString, searchRelated: true);
+        var flatList = response.Elements.SelectMany(baseUnit =>
+        {
+            var items = new List<UnitDTO> { baseUnit };
+            if(baseUnit.RelatedUnits?.Any() == true)
+            {
+                items.AddRange(baseUnit.RelatedUnits);
+            }
+            return items;
+        });
+        _units = flatList.ToList();
         return _units;
     }
 }
