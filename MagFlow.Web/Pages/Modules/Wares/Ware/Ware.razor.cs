@@ -1,10 +1,12 @@
-﻿using MagFlow.Domain.CompanyScope;
+﻿using MagFlow.BLL.Helpers.Localization;
+using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Web.Components.Dialogs;
 using MagFlow.Web.Resources;
 using MudBlazor;
+using static MudBlazor.CategoryTypes;
 
 namespace MagFlow.Web.Pages.Modules.Wares.Ware
 {
@@ -27,6 +29,43 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                     _item = await ItemService.GetItem(id);
                 if (_item == null)
                     ItemId = string.Empty;
+            }
+        }
+
+        private async Task RestoreItem()
+        {
+            if (!HasModulePermission("Wares", PermissionFlags.Edit))
+                return;
+
+            if (_item == null || _loadingDelete || _isBusy)
+                return;
+
+            try
+            {
+                _isBusy = true;
+                _loadingDelete = true;
+
+                var parameters = new DialogParameters<ConfirmRestoreDialog> { { x => x.ContentText, string.Format(Localizer[Langs.RestoreWareConfirmation], _item?.Product?.Name) } };
+                var dialog = await DialogService.ShowAsync<ConfirmRestoreDialog>(Localizer[Langs.RestoreWareConfirmation], parameters);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    var result = await ItemService.RestoreItem(_item);
+                    if (result == Enums.Result.Success)
+                    {
+                        NavigationManager.NavigateTo("/");
+                        Snackbar.Add(Localizer[Langs.RestoreSuccess], Severity.Success);
+                    }
+                    else
+                    {
+                        Snackbar.Add(Localizer[Langs.RestoreFailed], Severity.Error);
+                    }
+                }
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingDelete = false;
             }
         }
 

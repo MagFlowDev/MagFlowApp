@@ -1513,7 +1513,7 @@ i uprawnieniami użytkowników</value>
   <data name="CurrencyPLN" xml:space="preserve">
     <value>zł</value>
   </data>
-  <data name="CurrencyEuro" xml:space="preserve">
+  <data name="CurrencyEURO" xml:space="preserve">
     <value>€</value>
   </data>
   <data name="CurrencyUSD" xml:space="preserve">
@@ -1572,5 +1572,56 @@ i uprawnieniami użytkowników</value>
   </data>
   <data name="History" xml:space="preserve">
     <value>Historia</value>
+  </data>
+  <data name="Conversion" xml:space="preserve">
+    <value>Przelicznik</value>
+  </data>
+  <data name="ConversionExample" xml:space="preserve">
+    <value>Np. 2,54</value>
+  </data>
+  <data name="DerivedUnitConversionTooltipDescription" xml:space="preserve">
+    <value>Wartość, przez którą należy pomnożyć jednostkę bazową, aby otrzymać jednostkę pochodną.</value>
+  </data>
+  <data name="DerivedUnitConversionTooltipExample" xml:space="preserve">
+    <value>Przykłady:</value>
+  </data>
+  <data name="DerivedUnitConversionTooltipBody1" xml:space="preserve">
+    <value>• Dla metra i centymetra wpisz: 100 (1 m = 100 cm)</value>
+  </data>
+  <data name="DerivedUnitConversionTooltipBody2" xml:space="preserve">
+    <value>• Dla litra i mililitra wpisz: 1000 (1 l = 1000 ml)</value>
+  </data>
+  <data name="Released" xml:space="preserve">
+    <value>Wydany</value>
+  </data>
+  <data name="Used" xml:space="preserve">
+    <value>Zużyty</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Usunięty</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Ilość</value>
+  </data>
+  <data name="StockRemovalDate" xml:space="preserve">
+    <value>Data zejścia ze stanu</value>
+  </data>
+  <data name="RestoreWareConfirmation" xml:space="preserve">
+    <value>Potwierdź przywrócenie towaru</value>
+  </data>
+  <data name="RestoreWareConfirmation_Few" xml:space="preserve">
+    <value>Czy na pewno chcesz przywrócić {0} towary?</value>
+  </data>
+  <data name="RestoreWareConfirmation_Many" xml:space="preserve">
+    <value>Czy na pewno chcesz przywrócić {0} towarów?</value>
+  </data>
+  <data name="RestoreWareConfirmation_One" xml:space="preserve">
+    <value>Czy na pewno chcesz przywrócić towar '{0}'?</value>
+  </data>
+  <data name="RestoreSuccess" xml:space="preserve">
+    <value>Zasób został przywrócony</value>
+  </data>
+  <data name="RestoreFailed" xml:space="preserve">
+    <value>Nie udało się przywrócić zasobu. Spróbuj później</value>
   </data>
 </root>

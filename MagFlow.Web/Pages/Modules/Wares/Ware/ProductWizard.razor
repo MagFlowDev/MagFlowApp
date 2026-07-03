@@ -175,8 +175,8 @@
                             <MudStep Title="@Localizer[Langs.Prices]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
-                                        <MudTextField Label="@Localizer[Langs.PurchasePriceNet]" Variant="Variant.Outlined" T="decimal?" @bind-Value="@_model.Prices.PurchasePrice" For="@(() => _model.Prices.PurchasePrice)" Class="w-100 my-0"></MudTextField>
-                                        <MudTextField Label="@Localizer[Langs.SellingPriceNet]" Variant="Variant.Outlined" T="decimal?" @bind-Value="@_model.Prices.SellingPrice" For="@(() => _model.Prices.SellingPrice)" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.PurchasePriceNet]" Format="0.##" Variant="Variant.Outlined" T="decimal?" @bind-Value="@_model.Prices.PurchasePrice" For="@(() => _model.Prices.PurchasePrice)" Class="w-100 my-0"></MudTextField>
+                                        <MudTextField Label="@Localizer[Langs.SellingPriceNet]" Format="0.##" Variant="Variant.Outlined" T="decimal?" @bind-Value="@_model.Prices.SellingPrice" For="@(() => _model.Prices.SellingPrice)" Class="w-100 my-0"></MudTextField>
                                         <MudSelect T="Enums.TaxRate?" Label="@Localizer[Langs.TaxRate]" FullWidth="true" Variant="Variant.Outlined" Placeholder="@Localizer[Langs.TaxRateExample]" @bind-Value="_model.Prices.TaxRate" For="@(() => _model.Prices.TaxRate)">
                                             @foreach (var valueType in Enum.GetValues<Enums.TaxRate>())
                                             {

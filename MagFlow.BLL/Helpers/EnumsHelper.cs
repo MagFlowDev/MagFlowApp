@@ -95,6 +95,9 @@ namespace MagFlow.BLL.Helpers
         {
             return status switch
             {
+                Enums.ItemStatus.Deleted => Color.Error,
+                Enums.ItemStatus.Released => Color.Info,
+                Enums.ItemStatus.Used => Color.Dark,
                 Enums.ItemStatus.Available => Color.Success,
                 Enums.ItemStatus.Blocked => Color.Error,
                 Enums.ItemStatus.Unknown => Color.Default,

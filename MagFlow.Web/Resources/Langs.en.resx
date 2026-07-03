@@ -1512,7 +1512,7 @@
   <data name="CurrencyPLN" xml:space="preserve">
     <value>PLN</value>
   </data>
-  <data name="CurrencyEuro" xml:space="preserve">
+  <data name="CurrencyEURO" xml:space="preserve">
     <value>€</value>
   </data>
   <data name="CurrencyUSD" xml:space="preserve">
@@ -1571,5 +1571,56 @@
   </data>
   <data name="History" xml:space="preserve">
     <value>History</value>
+  </data>
+  <data name="Conversion" xml:space="preserve">
+    <value>Conversion</value>
+  </data>
+  <data name="ConversionExample" xml:space="preserve">
+    <value>E.g. 2,54</value>
+  </data>
+  <data name="DerivedUnitConversionTooltipDescription" xml:space="preserve">
+    <value>The value by which the base unit must be multiplied to get the derived unit.</value>
+  </data>
+  <data name="DerivedUnitConversionTooltipExample" xml:space="preserve">
+    <value>Examples:</value>
+  </data>
+  <data name="DerivedUnitConversionTooltipBody1" xml:space="preserve">
+    <value>• For meter and centimeter enter: 100 (1 m = 100 cm)</value>
+  </data>
+  <data name="DerivedUnitConversionTooltipBody2" xml:space="preserve">
+    <value>• For liter and milliliter enter: 1000 (1 l = 1000 ml)</value>
+  </data>
+  <data name="Released" xml:space="preserve">
+    <value>Released</value>
+  </data>
+  <data name="Used" xml:space="preserve">
+    <value>Used</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="StockRemovalDate" xml:space="preserve">
+    <value>Stock removal date</value>
+  </data>
+  <data name="RestoreWareConfirmation" xml:space="preserve">
+    <value>Confirm ware restore</value>
+  </data>
+  <data name="RestoreWareConfirmation_Few" xml:space="preserve">
+    <value>Are you sure you want to restore {0} wares?</value>
+  </data>
+  <data name="RestoreWareConfirmation_Many" xml:space="preserve">
+    <value>Are you sure you want to restore {0} wares?</value>
+  </data>
+  <data name="RestoreWareConfirmation_One" xml:space="preserve">
+    <value>Are you sure you want to restore {0} wares?</value>
+  </data>
+  <data name="RestoreSuccess" xml:space="preserve">
+    <value>The resource has been restored</value>
+  </data>
+  <data name="RestoreFailed" xml:space="preserve">
+    <value>Failed to restore resource. Please try again later.</value>
   </data>
 </root>

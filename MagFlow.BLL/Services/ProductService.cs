@@ -166,9 +166,9 @@ namespace MagFlow.BLL.Services
             };
         }
 
-        public async Task<QueryResponse<UnitDTO>> GetUnits(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<UnitDTO>> GetUnits(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false, bool searchRelated = false)
         {
-            var queryResponse = await _unitRepository.GetAsync(new QueryOptions<Unit>()
+            var queryOptions = new QueryOptions<Unit>()
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -177,13 +177,21 @@ namespace MagFlow.BLL.Services
                     { nameof(Unit.ParentUnitId), null }
                 },
                 Search = search,
-                SearchColumns = new Expression<Func<Unit, string?>>[]
-                {
-                    x => x.Name
-                },
                 SortBy = sortBy,
                 Descending = descending
-            }, x => x.Include(y => y.RelatedUnits));
+            };
+            if (searchRelated)
+                queryOptions.SearchColumns = new Expression<Func<Unit, string?>>[]
+                {
+                    x => x.Name,
+                    x => x.RelatedUnits.Any(y => y.Name.Contains(search ?? string.Empty)) ? search : null
+                };
+            else
+                queryOptions.SearchColumns = new Expression<Func<Unit, string?>>[]
+                {
+                    x => x.Name,
+                };
+            var queryResponse = await _unitRepository.GetAsync(queryOptions, x => x.Include(y => y.RelatedUnits));
             return new QueryResponse<UnitDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -267,7 +275,7 @@ namespace MagFlow.BLL.Services
 
         public async Task<Enums.Result> UpdateMeasurementUnit(UnitDTO unitDTO, List<int>? removedUnits = null)
         {
-            var unit = unitDTO.ToEntity();
+            var unit = unitDTO.ToEntity(unitDTO?.ParentUnit?.ToEntity());
             var originalUnit = await _unitRepository.GetByIdAsync(unit.Id, unit => unit.Include(x => x.RelatedUnits));
             if (removedUnits != null && removedUnits.Any())
             {

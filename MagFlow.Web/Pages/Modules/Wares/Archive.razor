@@ -3,6 +3,7 @@
 @using MagFlow.Shared.DTOs.CompanyScope
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
@@ -18,21 +19,41 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer[Langs.Archive]</MudText>
         <MudSpacer />
+        <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_EDIT">
+            <Authorized>
+                <LoadingButton Loading="_loadingRestoreMany" Color="Color.Secondary" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.RestartAlt" Class="mr-2" OnClick="RestoreItems">@Localizer[Langs.Restore]</LoadingButton>
+            </Authorized>
+        </AuthorizeView>
         <MudIconButton Color="Color.Primary" OnClick="_itemsDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
     </ToolBarContent>
     <Columns>
         <SelectColumn T="ItemDTO" HeaderStyle="width: 1%" />
         <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" />
         <PropertyColumn T="ItemDTO" TProperty="int" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="item => item.Id" />
+        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
+            </CellTemplate>
+        </TemplateColumn>
         <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Type != null ? item.Product.Type.Name : string.Empty)" />
         <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Category]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Category != null ? item.Product.Category.Name : string.Empty)" />
-        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.StockQuantity]" Sortable="false" CellClass="text-nowrap">
+        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Quantity]" Sortable="false" CellClass="text-nowrap">
             <CellTemplate>
                 @($"{context.Item.Quantity:0.##} {context.Item.Unit?.Symbol}")
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Location]" Sortable="false" CellClass="text-nowrap" Property="item => item.Location" />
         <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.CreationDate]" Sortable="false" CellClass="text-nowrap" Property="item => (item.CreatedAt.HasValue ? item.CreatedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" />
-
+        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.StockRemovalDate]" Sortable="false" CellClass="text-nowrap" Property="item => (item.RemovedAt.HasValue ? item.RemovedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" />
+        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+            <CellTemplate>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE">
+                    <Authorized Context="authorizedContext">
+                        <MudTooltip Text="@Localizer[Langs.Restore]" Delay="@Constants.Tooltip.DELAY">
+                            <LoadingIconButton Loading="LoadingRestore(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.RestartAlt" OnClick="() => RestoreItem(context.Item)" />
+                        </MudTooltip>
+                    </Authorized>
+                </AuthorizeView>
+            </CellTemplate>
+        </TemplateColumn>
     </Columns>
 </MagFlowDataGrid>
