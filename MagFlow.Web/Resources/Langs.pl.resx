@@ -1624,4 +1624,10 @@ i uprawnieniami użytkowników</value>
   <data name="RestoreFailed" xml:space="preserve">
     <value>Nie udało się przywrócić zasobu. Spróbuj później</value>
   </data>
+  <data name="SelectedComponents" xml:space="preserve">
+    <value>Wybrane komponenty</value>
+  </data>
+  <data name="AddOrDragComponent" xml:space="preserve">
+    <value>Dodaj lub przeciągnij i upuść tutaj produkt</value>
+  </data>
 </root>

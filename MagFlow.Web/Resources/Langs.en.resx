@@ -1623,4 +1623,10 @@
   <data name="RestoreFailed" xml:space="preserve">
     <value>Failed to restore resource. Please try again later.</value>
   </data>
+  <data name="SelectedComponents" xml:space="preserve">
+    <value>Selected components</value>
+  </data>
+  <data name="AddOrDragComponent" xml:space="preserve">
+    <value>Add or drag and drop product here</value>
+  </data>
 </root>

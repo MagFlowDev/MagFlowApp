@@ -33,6 +33,8 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private string _unitSearchString = "";
         private string _parameterSearchString = "";
         private string _selectedParameterSearchString = "";
+        private string _productSearchString = "";
+        private string _selectedComponentSearchString = "";
         private int _pageSize = 25;
         private bool _loadingAddParameter = false;
 
@@ -40,8 +42,10 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private List<ProductCategoryDTO> _productCategories = new List<ProductCategoryDTO>();
         private List<UnitDTO> _units = new List<UnitDTO>();
         private List<ParameterDTO> _parameters = new List<ParameterDTO>();
+        private List<ComponentDTO> _components = new List<ComponentDTO>();
 
-        private MudDropContainer<ParameterDTO> _container;
+        private MudDropContainer<ParameterDTO> _parametersContainer;
+        private MudDropContainer<ComponentDTO> _componentsContainer;
 
         protected override async Task OnInitializedAsync()
         {
@@ -52,7 +56,8 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             {
                 [0] = () => _model.GeneralInformation,
                 [1] = () => _model.Parameters,
-                [2] = () => _model.Prices,
+                [2] = () => _model.Components,
+                [3] = () => _model.Prices,
             };
 
             try
@@ -85,6 +90,13 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 _parameters.Add(parameter);
             });
 
+            dto.Components?.ForEach(component =>
+            {
+                _model.Components.Components.Add(component);
+                component.DropZoneSelector = MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR;
+                _components.Add(component);
+            });
+
             _model.Prices.PurchasePrice = dto.PurchasePrice;
             _model.Prices.SellingPrice = dto.SellingPrice;
             _model.Prices.TaxRate = dto.TaxRate;
@@ -102,18 +114,24 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             await base.OnPreviewInteraction(arg);
             if (arg.StepIndex == 1 && arg.Action != StepAction.Complete)
                 await SearchForProductParameter("", CancellationToken.None);
+            else if (arg.StepIndex == 2 && arg.Action != StepAction.Complete)
+                await SearchForProductComponent("", CancellationToken.None);
         }
 
         protected override async Task ControlStepCompletion(StepperInteractionEventArgs arg)
         {
             await base.ControlStepCompletion(arg);
             if(arg.StepIndex == 0)
+            {
                 await SearchForProductParameter("", CancellationToken.None);
+                await SearchForProductComponent("", CancellationToken.None);
+            }
         }
 
         protected override async Task Save()
         {
             _model.Parameters.Parameters = _parameters.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
+            _model.Components.Components = _components.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
             if (_isBusy)
                 return;
 
@@ -183,12 +201,28 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             dropItem.Item.DropZoneSelector = dropItem.DropzoneIdentifier;
         }
 
+        private void ItemUpdated(MudItemDropInfo<ComponentDTO> dropItem)
+        {
+            if (dropItem.Item == null)
+                return;
+
+            dropItem.Item.DropZoneSelector = dropItem.DropzoneIdentifier;
+        }
+
         private async Task OnParameterSearchChanged(string value)
         {
             _parameterSearchString = value;
             await SearchForProductParameter(_parameterSearchString, CancellationToken.None);
             StateHasChanged();
-            _container?.Refresh();
+            _parametersContainer?.Refresh();
+        }
+
+        private async Task OnProductSearchChanged(string value)
+        {
+            _productSearchString = value;
+            await SearchForProductComponent(_productSearchString, CancellationToken.None);
+            StateHasChanged();
+            _componentsContainer?.Refresh();
         }
 
         private async Task OnSelectedParameterSearchChanged(string value)
@@ -202,7 +236,21 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             unsearchedParameters.ForEach(x => x.DropZoneHidden = true);
 
             StateHasChanged();
-            _container?.Refresh();
+            _parametersContainer?.Refresh();
+        }
+
+        private async Task OnSelectedProductSearchChanged(string value)
+        {
+            _selectedComponentSearchString = value;
+            var selectedComponents = _components.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
+            var searchedComponents = selectedComponents.Where(x => x.Product.Name.IndexOf(_selectedComponentSearchString, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+            var unsearchedComponents = selectedComponents.Except(searchedComponents).ToList();
+
+            searchedComponents.ForEach(x => x.DropZoneHidden = false);
+            unsearchedComponents.ForEach(x => x.DropZoneHidden = true);
+
+            StateHasChanged();
+            _componentsContainer?.Refresh();
         }
 
         private async Task AddParameter()
@@ -223,7 +271,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 {
                     await SearchForProductParameter(_parameterSearchString, CancellationToken.None);
                     StateHasChanged();
-                    _container?.Refresh();
+                    _parametersContainer?.Refresh();
                 }
             }
             finally
@@ -237,7 +285,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             parameter.DropZoneSelector = zone;
             parameter.DropZoneHidden = false;
             StateHasChanged();
-            _container?.Refresh();
+            _parametersContainer?.Refresh();
         }
 
         private async Task<IEnumerable<ParameterDTO>> SearchForProductParameter(string value, CancellationToken token)
@@ -250,6 +298,27 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             _parameters = _parameters.Where(x => !ids.Contains(x.Id)).ToList();
             _parameters.AddRange(alreadySelected);
             return _parameters;
+        }
+
+        private void ChangeComponentZone(ComponentDTO component, string zone)
+        {
+            component.DropZoneSelector = zone;
+            component.DropZoneHidden = false;
+            StateHasChanged();
+            _componentsContainer?.Refresh();
+        }
+
+        private async Task<IEnumerable<ComponentDTO>> SearchForProductComponent(string value, CancellationToken token)
+        {
+            _productSearchString = value;
+            var response = await ProductService.GetProducts(0, _pageSize, _productSearchString);
+            var alreadySelected = _components.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
+            var ids = alreadySelected.Select(x => x.Product.Id);
+            var products = response.Elements;
+            var components = products.Select(x => new ComponentDTO() { Product = x, Quantity = 1, IsRequired = true });
+            _components = components.Where(x => !ids.Contains(x.Product.Id)).ToList();
+            _components.AddRange(alreadySelected);
+            return _components;
         }
     }
 }

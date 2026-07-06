@@ -10,12 +10,14 @@ namespace MagFlow.Shared.Models.FormModels
         public ProductFormGeneralInformation GeneralInformation { get; set; }
         public ProductFormParameters Parameters { get; set; }
         public ProductFormPrices Prices { get; set; }
+        public ProductFormComponents Components { get; set; }
 
         public ProductFormModel()
         {
             GeneralInformation = new ProductFormGeneralInformation();
             Parameters = new ProductFormParameters();
             Prices = new ProductFormPrices();
+            Components = new ProductFormComponents();
         }
     }
 
@@ -36,6 +38,16 @@ namespace MagFlow.Shared.Models.FormModels
         public ProductFormParameters()
         {
             Parameters = new List<ParameterDTO>();
+        }
+    }
+
+    public class ProductFormComponents
+    {
+        public List<ComponentDTO> Components { get; set; }
+
+        public ProductFormComponents()
+        {
+            Components = new List<ComponentDTO>();
         }
     }
 

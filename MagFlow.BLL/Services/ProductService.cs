@@ -71,7 +71,8 @@ namespace MagFlow.BLL.Services
                 .Include(x => x.Category)
                 .Include(x => x.Type).ThenInclude(y => y.Category)
                 .Include(x => x.Unit).ThenInclude(y => y.RelatedUnits)
-                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit));
+                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit)
+                .Include(x => x.Components).ThenInclude(y => y.Component));
             return new QueryResponse<ProductDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
