@@ -23,5 +23,6 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public UserDTO? CreatedBy { get; set; }
 
         public List<ParameterDTO> Parameters { get; set; } = new List<ParameterDTO>();
+        public List<ComponentDTO> Components { get; set; } = new List<ComponentDTO>();
     }
 }

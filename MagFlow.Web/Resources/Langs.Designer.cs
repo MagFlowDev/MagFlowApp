@@ -241,6 +241,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dodaj lub przeciągnij i upuść tutaj produkt.
+        /// </summary>
+        public static string AddOrDragComponent {
+            get {
+                return ResourceManager.GetString("AddOrDragComponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dodaj lub przeciągnij i upuść tutaj parametr.
         /// </summary>
         public static string AddOrDragParameter {
@@ -3522,6 +3531,15 @@ namespace MagFlow.Web.Resources {
         public static string SelectAll {
             get {
                 return ResourceManager.GetString("SelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wybrane komponenty.
+        /// </summary>
+        public static string SelectedComponents {
+            get {
+                return ResourceManager.GetString("SelectedComponents", resourceCulture);
             }
         }
         

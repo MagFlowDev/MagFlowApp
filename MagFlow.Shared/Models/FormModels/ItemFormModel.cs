@@ -9,11 +9,13 @@ namespace MagFlow.Shared.Models.FormModels
     {
         public ItemFormGeneralInformation GeneralInformation { get; set; }
         public ItemFormParameterValues ParameterValues { get; set; }
+        public ItemFormComponents Components { get; set; }
         
         public ItemFormModel()
         {
             GeneralInformation = new ItemFormGeneralInformation();
             ParameterValues = new ItemFormParameterValues();
+            Components = new ItemFormComponents();
         }
     }
 
@@ -37,6 +39,16 @@ namespace MagFlow.Shared.Models.FormModels
         }
     }
 
+    public class ItemFormComponents
+    {
+        public List<ItemFormComponent> Components { get; set; }
+
+        public ItemFormComponents()
+        {
+            Components = new List<ItemFormComponent>();
+        }
+    }
+
     public class ItemFormParameterValue
     {
         public ParameterDTO Parameter { get; set; }
@@ -47,5 +59,26 @@ namespace MagFlow.Shared.Models.FormModels
             Parameter = parameter;
             Value = value;
         }
+    }
+
+    public class ItemFormComponent
+    {
+        public ProductDTO Product { get; set; }
+        public decimal RequiredQuantity { get; set; }
+
+        public List<ItemFormComponentRecord> Components { get; set; }
+
+        public ItemFormComponent(ProductDTO product, decimal requiredQuantity)
+        {
+            Product = product;
+            RequiredQuantity = requiredQuantity;
+            Components = new List<ItemFormComponentRecord>();
+        }
+    }
+
+    public class ItemFormComponentRecord
+    {
+        public ItemDTO Item { get; set; }
+        public decimal Quantity { get; set; }
     }
 }

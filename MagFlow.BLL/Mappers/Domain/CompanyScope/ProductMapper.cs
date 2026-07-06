@@ -25,6 +25,23 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     parameters.Add(dto);
                 }
             }
+            var components = new List<ComponentDTO>();
+            if (product.Components != null)
+            {
+                foreach (var component in product.Components)
+                {
+                    if (component.Product == null)
+                        continue;
+                    var dto = component.Product.ToDTO();
+                    components.Add(new ComponentDTO()
+                    {
+                        Product = dto,
+                        IsRequired = component.IsRequired,
+                        Note = component.Note,
+                        Quantity = component.Quantity
+                    });
+                }
+            }
 
             return new ProductDTO()
             {
@@ -39,7 +56,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 SellingPrice = product.DefaultSellPrice,
                 TaxRate = EnumsHelper.ToTaxRate(product.DefaultVatRate),
                 Currency = product.Currency,
-                Parameters = parameters
+                Parameters = parameters,
+                Components = components
             };
         }
 
@@ -62,6 +80,16 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     IsRequired = parameter.IsRequired,
                 });
             }
+            var components = new List<ComponentDTO>();
+            foreach (var component in model.Components.Components)
+            {
+                components.Add(new ComponentDTO()
+                {
+                    Product = component.Product,
+                    Quantity = component.Quantity,
+                    IsRequired = true
+                });
+            }
 
             return new ProductDTO()
             {
@@ -75,7 +103,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 SellingPrice = model.Prices.SellingPrice,
                 TaxRate = model.Prices.TaxRate,
                 Currency = model.Prices.Currency,
-                Parameters = parameters
+                Parameters = parameters,
+                Components = components
             };
         }
 

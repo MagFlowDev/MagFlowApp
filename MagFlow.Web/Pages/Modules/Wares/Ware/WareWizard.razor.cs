@@ -113,6 +113,10 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             {
                 _model.ParameterValues.Parameters.Add(new ItemFormParameterValue(parameter, null));
             }
+            foreach(var component in product.Components)
+            {
+                _model.Components.Components.Add(new ItemFormComponent(component.Product, component.Quantity));
+            }
         }
 
         private void OnParameterValueChanged(ParameterDTO parameter, object value)
