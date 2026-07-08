@@ -1629,4 +1629,13 @@
   <data name="AddOrDragComponent" xml:space="preserve">
     <value>Add or drag and drop product here</value>
   </data>
+  <data name="AddReadyProduct" xml:space="preserve">
+    <value>Add finished product</value>
+  </data>
+  <data name="AddComponents" xml:space="preserve">
+    <value>Add components</value>
+  </data>
+  <data name="WareAddedWithoutComponents" xml:space="preserve">
+    <value>The item will be added without components</value>
+  </data>
 </root>

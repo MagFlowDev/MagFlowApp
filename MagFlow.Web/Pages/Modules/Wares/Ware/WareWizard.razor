@@ -25,7 +25,7 @@
             @if (_model != null)
             {
                 <EditForm EditContext="@_context" class="flex-grow-1 d-flex flex-column h-100" style="min-height: 0;">
-                    <MudStepper @ref="_stepper" NonLinear ActiveIndex="_step" ActiveIndexChanged="StepChanged" Class="flex-grow-1 d-flex flex-column h-100" Style="min-height: 0;" StepClass="d-flex flex-column flex-grow-1" NavClass="minh-72px" OnPreviewInteraction="OnPreviewInteraction">
+                    <MudStepper @ref="_stepper" @key="_stepperKey" NonLinear ActiveIndex="_step" ActiveIndexChanged="StepChanged" Class="flex-grow-1 d-flex flex-column h-100" Style="min-height: 0;" StepClass="d-flex flex-column flex-grow-1" NavClass="minh-72px" OnPreviewInteraction="OnPreviewInteraction">
                         <ChildContent>
                             <MudStep Title="@Localizer[Langs.GeneralInformation]" Style="min-height: 0; height: 100%">
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
@@ -101,6 +101,31 @@
                                     </div>
                                 </div>
                             </MudStep>
+                            @if(ShowComponentsStep)
+                            {
+                                <MudStep Title="@Localizer[Langs.Components]" Style="min-height: 0; height: 100%" >
+                                    <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
+                                        <div class="d-flex flex-column align-items-start w-100 mud-height-full" style="gap: 16px; max-width: 550px;">
+                                            <MudRadioGroup @bind-Value="_addComponentType">
+                                                <MudRadio Label="@Localizer[Langs.AddReadyProduct]" Value="@AddComponentType.ReadyProduct" />
+                                                <MudRadio Label="@Localizer[Langs.AddComponents]" Value="@AddComponentType.AddComponents" />
+                                            </MudRadioGroup>
+                                            <div class="d-flex flex-column w-100 my-0 align-self-stretch mud-height-full">
+                                                @if(_addComponentType == AddComponentType.ReadyProduct)
+                                                {
+                                                    <div class="d-flex flex-column w-100 mud-height-full align-items-center justify-content-center">
+                                                        test
+                                                    </div>
+                                                }
+                                                else if(_addComponentType == AddComponentType.AddComponents)
+                                                {
+                                                    
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </MudStep>
+                            }
                         </ChildContent>
                         <ActionContent Context="stepper">
                             @if (_step == 0)

@@ -47,6 +47,11 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private MudDropContainer<ParameterDTO> _parametersContainer;
         private MudDropContainer<ComponentDTO> _componentsContainer;
 
+        private string _stepperKey => $"{ShowComponentsStep}";
+
+        private bool ShowComponentsStep => _model.GeneralInformation.ProductCategory != null
+            && _model.GeneralInformation.ProductCategory.IsBasic == false;
+
         protected override async Task OnInitializedAsync()
         {
             base.SetServices(LocalCacheService, Services, JS, Snackbar, NavigationManager);
@@ -131,7 +136,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         protected override async Task Save()
         {
             _model.Parameters.Parameters = _parameters.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
-            _model.Components.Components = _components.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
+            _model.Components.Components = _components.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR && x.Quantity > 0).ToList();
             if (_isBusy)
                 return;
 
@@ -162,6 +167,31 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 _isBusy = false;
                 _loading = false;
             }
+        }
+
+        private void OnProductCategoryChanged(ProductCategoryDTO category)
+        {
+            _model.GeneralInformation.ProductCategory = category;
+            if(category == null || category.IsBasic)
+            {
+                _stepSections = new()
+                {
+                    [0] = () => _model.GeneralInformation,
+                    [1] = () => _model.Parameters,
+                    [3] = () => _model.Prices,
+                };
+            }
+            else
+            {
+                _stepSections = new()
+                {
+                    [0] = () => _model.GeneralInformation,
+                    [1] = () => _model.Parameters,
+                    [2] = () => _model.Components,
+                    [3] = () => _model.Prices,
+                };
+            }
+            StateHasChanged();
         }
 
         private async Task<IEnumerable<ProductTypeDTO>> SearchForProductType(string value, CancellationToken token)

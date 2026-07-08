@@ -25,6 +25,13 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
 
         private List<ProductDTO> _products = new List<ProductDTO>();
 
+        private string _stepperKey => $"{ShowComponentsStep}";
+
+        private bool ShowComponentsStep => _model.Components?.Components != null
+            && _model.Components.Components.Any(x => x.Product != null);
+
+        private AddComponentType _addComponentType { get; set; } = AddComponentType.ReadyProduct;
+
         protected override async Task OnInitializedAsync()
         {
             base.SetServices(LocalCacheService, Services, JS, Snackbar, NavigationManager);
@@ -65,6 +72,8 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             {
                 _model.ParameterValues.Parameters.Add(new ItemFormParameterValue(parameter.Parameter, parameter.Value));
             });
+
+            
         }
 
         protected override async Task Save()
@@ -99,6 +108,12 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 _isBusy = false;
                 _loading = false;
             }
+        }
+
+        enum AddComponentType
+        {
+            ReadyProduct,
+            AddComponents
         }
 
         private void ProductSelected(ProductDTO product)

@@ -30,9 +30,9 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             {
                 foreach (var component in product.Components)
                 {
-                    if (component.Product == null)
+                    if (component.Component == null)
                         continue;
-                    var dto = component.Product.ToDTO();
+                    var dto = component.Component.ToSimpleDTO();
                     components.Add(new ComponentDTO()
                     {
                         Product = dto,
@@ -113,6 +113,57 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return models.Select(x => x.ToDTO()).ToList();
         }
 
+        public static ProductDTO ToSimpleDTO(this ProductFormModel model)
+        {
+            return new ProductDTO()
+            {
+                Name = model.GeneralInformation.Name,
+                Code = model.GeneralInformation.Code,
+                Status = Enums.ProductStatus.Active,
+                Type = model.GeneralInformation.ProductType,
+                Category = model.GeneralInformation.ProductCategory,
+                Unit = model.GeneralInformation.Unit,
+                PurchasePrice = model.Prices.PurchasePrice,
+                SellingPrice = model.Prices.SellingPrice,
+                TaxRate = model.Prices.TaxRate,
+                Currency = model.Prices.Currency,
+                Parameters = new List<ParameterDTO>(),
+                Components = new List<ComponentDTO>()
+            };
+        }
+
+        public static List<ProductDTO> ToSimpleDTO(this IEnumerable<ProductFormModel> models)
+        {
+            return models.Select(x => x.ToSimpleDTO()).ToList();
+        }
+
+        public static ProductDTO ToSimpleDTO(this Product product)
+        {
+            return new ProductDTO
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Code = product.Code,
+                Status = product.IsActive
+           ? Enums.ProductStatus.Active
+           : Enums.ProductStatus.Inactive,
+                Type = product.Type?.ToDTO(),
+                Category = product.Category?.ToDTO(),
+                Unit = product.Unit?.ToDTO(),
+                PurchasePrice = product.DefaultPurchasePrice,
+                SellingPrice = product.DefaultSellPrice,
+                TaxRate = EnumsHelper.ToTaxRate(product.DefaultVatRate),
+                Currency = product.Currency,
+                Parameters = new List<ParameterDTO>(),
+                Components = new List<ComponentDTO>()
+            };
+        }
+
+        public static List<ProductDTO> ToSimpleDTO(this IEnumerable<Product> products)
+        {
+            return products.Select(x => x.ToSimpleDTO()).ToList();
+        }
+
 
 
         public static Product ToEntity(this ProductDTO product, Guid? userId = null)
@@ -126,8 +177,18 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     IsRequired = parameter.IsRequired
                 });
             }
+            var components = new List<ProductComponent>();
+            foreach (var component in product.Components)
+            {
+                components.Add(new ProductComponent()
+                {
+                    ComponentId = component.Product.Id,
+                    Quantity = component.Quantity,
+                    IsRequired = true,
+                });
+            }
 
-            return new Product()
+            var productToAdd = new Product()
             {
                 Name = product.Name,
                 Code = product.Code,
@@ -143,8 +204,10 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 DefaultVatRate = product.TaxRate?.ToDecimal(),
                 Currency = product.Currency,
 
-                Parameters = parameters
+                Parameters = parameters,
             };
+
+            return productToAdd;
         }
 
         public static List<Product> ToEntity(this IEnumerable<ProductDTO> products, Guid? userId = null)
@@ -161,6 +224,16 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 {
                     ParameterId = parameter.Id,
                     IsRequired = false
+                });
+            }
+            var components = new List<ProductComponent>();
+            foreach (var component in model.Components.Components)
+            {
+                components.Add(new ProductComponent()
+                {
+                    ComponentId = component.Product.Id,
+                    Quantity = component.Quantity,
+                    IsRequired = true,
                 });
             }
 
@@ -180,7 +253,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 DefaultVatRate = model.Prices.TaxRate?.ToDecimal(),
                 Currency = model.Prices.Currency,
 
-                Parameters = parameters
+                Parameters = parameters,
+                Components = components
             };
         }
 

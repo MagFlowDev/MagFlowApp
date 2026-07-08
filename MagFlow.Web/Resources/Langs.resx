@@ -1630,4 +1630,13 @@ i uprawnieniami użytkowników</value>
   <data name="AddOrDragComponent" xml:space="preserve">
     <value>Dodaj lub przeciągnij i upuść tutaj produkt</value>
   </data>
+  <data name="AddReadyProduct" xml:space="preserve">
+    <value>Dodaj gotowy produkt</value>
+  </data>
+  <data name="AddComponents" xml:space="preserve">
+    <value>Dodaj komponenty</value>
+  </data>
+  <data name="WareAddedWithoutComponents" xml:space="preserve">
+    <value>Towar zostanie dodany bez komponentów</value>
+  </data>
 </root>
