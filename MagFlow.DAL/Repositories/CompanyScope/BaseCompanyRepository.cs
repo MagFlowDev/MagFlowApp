@@ -63,6 +63,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     using (context = _companyContextFactory.CreateDbContext())
                     {
+                        var test = System.Text.Json.JsonSerializer.Serialize(entity);
                         await context.Set<TEntity>().AddAsync(entity);
                         await context.SaveChangesAsync();
                     }
