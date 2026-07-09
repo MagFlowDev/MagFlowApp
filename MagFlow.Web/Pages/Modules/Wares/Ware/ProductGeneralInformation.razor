@@ -1,5 +1,251 @@
-﻿<h3>ProductGeneralInformation</h3>
+﻿@using FluentValidation
+@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Validators.Company
+@using MagFlow.Shared.Validators.Resources
+@using MagFlow.Web.Components.Buttons
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject IProductService ProductService
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<Validations> Validations
+@inherits AuthComponentBase
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 24px; padding-right: 40px; margin-top: 24px;">
+    <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.GeneralInformation]</MudText>
+    @if(_product != null)
+    {
+         <EditForm EditContext="@_context" class="align-self-stretch d-flex flex-column align-items-start" style="gap: 16px; padding-bottom: 24px;">
+             <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 24px;">
+                <MudTextField Label="@Localizer[Langs.Name]" Placeholder="@Localizer[Langs.ProductExample]" Variant="Variant.Outlined" T="string" @bind-Value="_product.Name" For="@(() => _model.GeneralInformation.Name)" Class="w-100 my-0"></MudTextField>
+                <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_product.Code" For="@(() => _model.GeneralInformation.Code)"
+                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.AutoAwesome" OnAdornmentClick="GenerateCode"></MudTextField>
+                <div class="d-flex w-100 my-0 align-items-stretch">
+                    <MudAutocomplete Value="_product.Category"
+                                    ValueChanged="OnProductCategoryChanged"
+                                    For="@(() => _model.GeneralInformation.ProductCategory)"
+                                    T="ProductCategoryDTO"
+                                    ResetValueOnEmptyText="true"
+                                    Label="@Localizer[Langs.Category]"
+                                    Placeholder="@Localizer[Langs.CategoryExample]"
+                                    Variant="Variant.Outlined"
+                                    AnchorOrigin="Origin.BottomLeft"
+                                    TransformOrigin="Origin.TopLeft"
+                                    DebounceInterval="300"
+                                    MaxItems="_pageSize"
+                                    ToStringFunc="@(t => t?.Name)"
+                                    SearchFunc="@SearchForProductCategory">
+                        <ProgressIndicatorInPopoverTemplate>
+                            <MudList T="string" ReadOnly>
+                                <MudListItem>
+                                    @Localizer[Langs.Loading]
+                                </MudListItem>
+                            </MudList>
+                        </ProgressIndicatorInPopoverTemplate>
+                    </MudAutocomplete>
+                </div>
+                <div class="d-flex w-100 my-0 align-items-stretch">
+                    <MudAutocomplete @bind-Value="_product.Type"
+                                        For="@(() => _model.GeneralInformation.ProductType)"
+                                        Disabled="@(_product.Category == null)"
+                                        T="ProductTypeDTO"
+                                        Label="@Localizer[Langs.Type]"
+                                        Placeholder="@Localizer[Langs.TypeExample]"
+                                        Variant="Variant.Outlined"
+                                        AnchorOrigin="Origin.BottomLeft"
+                                        TransformOrigin="Origin.TopLeft"
+                                        DebounceInterval="300"
+                                        MaxItems="_pageSize"
+                                        ToStringFunc="@(t => t?.Name)"
+                                        SearchFunc="@SearchForProductType">
+                        <ProgressIndicatorInPopoverTemplate>
+                            <MudList T="string" ReadOnly>
+                                <MudListItem>
+                                    @Localizer[Langs.Loading]
+                                </MudListItem>
+                            </MudList>
+                        </ProgressIndicatorInPopoverTemplate>
+                    </MudAutocomplete>
+                </div>
+                <div class="d-flex w-100 my-0 align-items-stretch">
+                    <MudAutocomplete @bind-Value="_product.Unit"
+                                        For="@(() => _model.GeneralInformation.Unit)"
+                                        T="UnitDTO"
+                                        Label="@Localizer[Langs.MeasurementUnit]"
+                                        Placeholder="@Localizer[Langs.MeasurementUnitExample]"
+                                        Variant="Variant.Outlined"
+                                        AnchorOrigin="Origin.BottomLeft"
+                                        TransformOrigin="Origin.TopLeft"
+                                        DebounceInterval="300"
+                                        MaxItems="_pageSize"
+                                        ToStringFunc="@(t => t?.Name)"
+                                        SearchFunc="@SearchForUnit">
+                        <ProgressIndicatorInPopoverTemplate>
+                            <MudList T="string" ReadOnly>
+                                <MudListItem>
+                                    @Localizer[Langs.Loading]
+                                </MudListItem>
+                            </MudList>
+                        </ProgressIndicatorInPopoverTemplate>
+                    </MudAutocomplete>
+                </div>
+                <div class="d-flex justify-content-between align-items-start align-self-stretch" style="gap: 8px">
+                    <MudTextField Label="@Localizer[Langs.PurchasePriceNet]" Format="0.##" Variant="Variant.Outlined" T="decimal?" @bind-Value="@_product.PurchasePrice" For="@(() => _model.Prices.PurchasePrice)" Class="w-100 my-0"></MudTextField>
+                    <MudTextField Label="@Localizer[Langs.SellingPriceNet]" Format="0.##" Variant="Variant.Outlined" T="decimal?" @bind-Value="@_product.SellingPrice" For="@(() => _model.Prices.SellingPrice)" Class="w-100 my-0"></MudTextField>
+                </div>
+                <div class="d-flex justify-content-between align-items-start align-self-stretch" style="gap: 8px">
+                    <MudSelect T="Enums.TaxRate?" Label="@Localizer[Langs.TaxRate]" FullWidth="true" Variant="Variant.Outlined" Placeholder="@Localizer[Langs.TaxRateExample]" @bind-Value="_product.TaxRate" For="@(() => _model.Prices.TaxRate)">
+                        @foreach (var valueType in Enum.GetValues<Enums.TaxRate>())
+                        {
+                            <MudSelectItem T="Enums.TaxRate?" Value="@valueType">@string.Concat((int)valueType, "%")</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudSelect T="Enums.Currency?" Label="@Localizer[Langs.Currency]" FullWidth="true" Variant="Variant.Outlined" Placeholder="@Localizer[Langs.CurrencyExample]" @bind-Value="_product.Currency" For="@(() => _model.Prices.Currency)">
+                        @foreach (var valueType in Enum.GetValues<Enums.Currency>())
+                        {
+                            <MudSelectItem T="Enums.Currency?" Value="@valueType">@valueType.GetDisplayName(Localizer)</MudSelectItem>
+                        }
+                    </MudSelect>
+                </div>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_EDIT" Context="authorizedContext">
+                    <Authorized>
+                        <LoadingButton Loading="Submitting" Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@Localizer[Langs.Save]</LoadingButton>
+                    </Authorized>
+                </AuthorizeView>
+             </div>
+         </EditForm>
+    }
+</div>
 
 @code {
+    [CascadingParameter(Name = "Product")]
+    ProductDTO? _product { get; set; }
 
+    [Parameter]
+    public EventCallback OnProductUpdated { get; set; }
+
+    [Parameter]
+    public bool Submitting { get; set; }
+
+    [Parameter]
+    public bool IsBusy { get; set; }
+
+    private IValidator _validator;
+    private ProductFormModel _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
+
+    private string _typeSearchString = "";
+    private string _categorySearchString = "";
+    private string _unitSearchString = "";
+    private int _pageSize = 25;
+
+    private List<ProductTypeDTO> _productTypes = new List<ProductTypeDTO>();
+    private List<ProductCategoryDTO> _productCategories = new List<ProductCategoryDTO>();
+    private List<UnitDTO> _units = new List<UnitDTO>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _model = new ProductFormModel();
+        _context = new EditContext(_model);
+        _validator = new ProductFormValidator(Validations);
+        _messageStore = new ValidationMessageStore(_context);
+    }
+
+    private async Task Submit()
+    {
+        if (IsBusy || _product == null)
+            return;
+
+        if (!HasModulePermission("Wares", PermissionFlags.Edit))
+            return;
+
+        try
+        {
+            IsBusy = true;
+            Submitting = true;
+
+            FillModel();
+            var isValid = await _messageStore.IsFormValid(_validator, _model);
+            _context.NotifyValidationStateChanged();
+
+            if (!isValid)
+                return;
+
+            await OnProductUpdated.InvokeAsync();
+        }
+        finally
+        {
+            IsBusy = false;
+            Submitting = false;
+        }
+    }
+
+    private void GenerateCode()
+    {
+        if (!string.IsNullOrEmpty(_product?.Name))
+            _product.Code = CodesGenerator.GeneratePrefix(_product.Name);
+    }
+
+    private void FillModel()
+    {
+        if (_product == null)
+            return;
+
+        _model.GeneralInformation.Name = _product.Name;
+        _model.GeneralInformation.ProductCategory = _product.Category;
+        _model.GeneralInformation.ProductType = _product.Type;
+        _model.GeneralInformation.Unit = _product.Unit;
+
+        _model.Prices.PurchasePrice = _product.PurchasePrice;
+        _model.Prices.SellingPrice = _product.SellingPrice;
+        _model.Prices.Currency = _product.Currency;
+        _model.Prices.TaxRate = _product.TaxRate ;
+    }
+
+    private void OnProductCategoryChanged(ProductCategoryDTO category)
+    {
+        if (_product == null)
+            return;
+        if (_product.Category != category)
+            _product.Type = null;
+        _product.Category = category;
+        StateHasChanged();
+    }
+
+    private async Task<IEnumerable<ProductTypeDTO>> SearchForProductType(string value, CancellationToken token)
+    {
+        _typeSearchString = value;
+        if (_product?.Category == null)
+        {
+            _productTypes = new List<ProductTypeDTO>();
+            return _productTypes;
+        }
+        var response = await ProductService.GetTypes(0, _pageSize, _typeSearchString, productCategory: _product?.Category);
+        _productTypes = response.Elements;
+        return _productTypes;
+    }
+
+    private async Task<IEnumerable<ProductCategoryDTO>> SearchForProductCategory(string value, CancellationToken token)
+    {
+        _categorySearchString = value;
+        var response = await ProductService.GetCategories(0, _pageSize, _categorySearchString);
+        _productCategories = response.Elements;
+        return _productCategories;
+    }
+
+    private async Task<IEnumerable<UnitDTO>> SearchForUnit(string value, CancellationToken token)
+    {
+        _unitSearchString = value;
+        var response = await ProductService.GetUnits(0, _pageSize, _unitSearchString);
+        _units = response.Elements;
+        return _units;
+    }
 }

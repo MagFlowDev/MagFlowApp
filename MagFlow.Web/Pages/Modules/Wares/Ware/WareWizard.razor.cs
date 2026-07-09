@@ -81,6 +81,11 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             if (_isBusy)
                 return;
 
+            if(_addComponentType == AddComponentType.ReadyProduct)
+            {
+                _model.Components.Components = new List<ItemFormComponent>();
+            }
+
             var step = _stepper.Steps[_step];
             if (step == null || !await ValidateStep(_step))
                 return;
@@ -119,19 +124,41 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private void ProductSelected(ProductDTO product)
         {
             _model.GeneralInformation.Product = product;
-            _model.GeneralInformation.ProductCategory = product.Category;
-            _model.GeneralInformation.ProductType = product.Type;
-            _model.GeneralInformation.Unit = product.Unit;
+            if (product != null)
+            {
+                _model.GeneralInformation.ProductCategory = product.Category;
+                _model.GeneralInformation.ProductType = product.Type;
+                _model.GeneralInformation.Unit = product.Unit;
 
-            _model.ParameterValues.Parameters = new List<ItemFormParameterValue>();
-            foreach(var parameter in product.Parameters)
-            {
-                _model.ParameterValues.Parameters.Add(new ItemFormParameterValue(parameter, null));
+                _model.ParameterValues.Parameters = new List<ItemFormParameterValue>();
+                foreach (var parameter in product.Parameters)
+                {
+                    _model.ParameterValues.Parameters.Add(new ItemFormParameterValue(parameter, null));
+                }
+                _model.Components.Components = new List<ItemFormComponent>();
+                foreach (var component in product.Components)
+                {
+                    _model.Components.Components.Add(new ItemFormComponent(component.Product, component.Quantity));
+                }
             }
-            foreach(var component in product.Components)
+            if(product != null && product.Components.Any())
             {
-                _model.Components.Components.Add(new ItemFormComponent(component.Product, component.Quantity));
+                _stepSections = new()
+                {
+                    [0] = () => _model.GeneralInformation,
+                    [1] = () => _model.ParameterValues,
+                    [2] = () => _model.Components
+                };
             }
+            else
+            {
+                _stepSections = new()
+                {
+                    [0] = () => _model.GeneralInformation,
+                    [1] = () => _model.ParameterValues
+                };
+            }
+            StateHasChanged();
         }
 
         private void OnParameterValueChanged(ParameterDTO parameter, object value)

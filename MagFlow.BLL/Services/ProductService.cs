@@ -49,7 +49,8 @@ namespace MagFlow.BLL.Services
                 .Include(x => x.Category)
                 .Include(x => x.Type)
                 .Include(x => x.Unit)
-                .Include(x => x.Parameters));
+                .Include(x => x.Parameters).ThenInclude(y => y.Parameter)
+                .Include(x => x.Components).ThenInclude(y => y.Component));
             var dto = product?.ToDTO();
             return dto;
         }
@@ -295,6 +296,117 @@ namespace MagFlow.BLL.Services
             return result;
         }
 
+        public async Task<Enums.Result> UpdateProductParameters(ProductDTO product, List<ParameterDTO> parametersToAdd, List<ParameterDTO> parametersToRemove)
+        {
+            try
+            {
+                var originalProduct = _productRepository.GetById(product.Id, product => product
+                .Include(x => x.Parameters));
+                if (originalProduct == null)
+                    return Enums.Result.Error;
+
+                var result = Enums.Result.Success;
+
+                if (parametersToRemove.Any())
+                {
+                    var parametersIdsToRemove = parametersToRemove.Select(x => x.Id).ToList();
+                    var originalProductParametersToRemove = originalProduct.Parameters.Where(x => parametersIdsToRemove.Contains(x.ParameterId)).ToList();
+                    result = await _productRepository.RemoveProductParameters(originalProductParametersToRemove);
+                    if (result != Enums.Result.Success)
+                        return result;
+
+                    originalProductParametersToRemove.ForEach(x => originalProduct.Parameters.Remove(x));
+                }
+
+                var parametersIdsToAdd = parametersToAdd.Select(x => x.Id).ToList();
+                var existingParametersIds = originalProduct.Parameters.Where(x => parametersIdsToAdd.Contains(x.ParameterId)).Select(x => x.ParameterId).ToList();
+                parametersIdsToAdd = parametersIdsToAdd.Except(existingParametersIds).ToList();
+
+                if (parametersIdsToAdd.Any())
+                {
+                    foreach (var parameter in parametersIdsToAdd)
+                    {
+                        originalProduct.Parameters.Add(new ProductParameter()
+                        {
+                            ParameterId = parameter,
+                            IsRequired = false
+                        });
+                    }
+                    result = await _productRepository.UpdateAsync(originalProduct);
+                }
+
+                return result;
+            }
+            catch(Exception ex)
+            {
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<Enums.Result> UpdateProductComponents(ProductDTO product, List<ComponentDTO> componentsToAdd, List<ComponentDTO> componentsToRemove)
+        {
+            try
+            {
+                var originalProduct = _productRepository.GetById(product.Id, product => product
+                    .Include(x => x.Components));
+                if (originalProduct == null)
+                    return Enums.Result.Error;
+
+                var result = Enums.Result.Success;
+
+                if (componentsToRemove.Any())
+                {
+                    var componentsIdsToRemove = componentsToRemove.Select(x => x.Product.Id).ToList();
+                    var originalProductComponentsToRemove = originalProduct.Components.Where(x => componentsIdsToRemove.Contains(x.ComponentId)).ToList();
+                    result = await _productRepository.RemoveProductComponents(originalProductComponentsToRemove);
+                    if (result != Enums.Result.Success)
+                        return result;
+
+                    originalProductComponentsToRemove.ForEach(x => originalProduct.Components.Remove(x));
+                }
+
+                var componentsIdsToAdd = componentsToAdd.Select(x => x.Product.Id).ToList();
+                var existingComponentsIds = originalProduct.Components.Where(x => componentsIdsToAdd.Contains(x.ComponentId)).Select(x => x.ComponentId).ToList();
+                componentsIdsToAdd = componentsIdsToAdd.Except(existingComponentsIds).ToList();
+
+                bool update = false;
+                if (componentsIdsToAdd.Any())
+                {
+                    var components = componentsToAdd.Where(x => componentsIdsToAdd.Contains(x.Product.Id)).ToList();
+                    foreach (var component in components)
+                    {
+                        originalProduct.Components.Add(new ProductComponent()
+                        {
+                            ComponentId = component.Product.Id,
+                            Quantity = component.Quantity,
+                            IsRequired = false
+                        });
+                    }
+                    update = true;
+                }
+                if(existingComponentsIds.Any())
+                {
+                    var components = componentsToAdd.Where(x => existingComponentsIds.Contains(x.Product.Id)).ToList();
+                    foreach (var component in components)
+                    {
+                        var productComponent = originalProduct.Components.FirstOrDefault(x => x.ComponentId == component.Product.Id);
+                        if (productComponent == null)
+                            continue;
+                        productComponent.Quantity = component.Quantity;
+                    }
+                    update = true;
+                }
+                if(update)
+                    result = await _productRepository.UpdateAsync(originalProduct);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return Enums.Result.Error;
+            }
+        }
+
 
 
         public async Task<Enums.Result> DeleteProduct(ProductDTO productDTO)
@@ -390,5 +502,6 @@ namespace MagFlow.BLL.Services
             var result = await _unitRepository.DeleteManyAsync(originalUnits);
             return result;
         }
+
     }
 }

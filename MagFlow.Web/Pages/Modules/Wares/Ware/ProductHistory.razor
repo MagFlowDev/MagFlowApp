@@ -1,5 +1,15 @@
-﻿<h3>ProductHistory</h3>
+﻿@using MagFlow.Shared.DTOs.CompanyScope
+@using MudBlazor
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 16px; padding-right: 40px; margin-top: 24px;">
+    <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.History]</MudText>
+    @if (_product != null)
+    {
+
+    }
+</div>
 
 @code {
-
+    [CascadingParameter(Name = "Product")]
+    ProductDTO? _product { get; set; }
 }

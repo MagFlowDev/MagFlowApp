@@ -80,7 +80,15 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 _isBusy = true;
                 _loadingSave = true;
 
-                await Task.Delay(2000);
+                var result = await ProductService.UpdateProduct(_product);
+                if (result == MagFlow.Shared.Models.Enums.Result.Success)
+                {
+                    Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add(Localizer[Langs.ErrorOccured], MudBlazor.Severity.Error);
+                }
             }
             finally
             {

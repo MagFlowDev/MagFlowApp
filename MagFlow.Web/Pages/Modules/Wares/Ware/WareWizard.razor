@@ -106,20 +106,24 @@
                                 <MudStep Title="@Localizer[Langs.Components]" Style="min-height: 0; height: 100%" >
                                     <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                         <div class="d-flex flex-column align-items-start w-100 mud-height-full" style="gap: 16px; max-width: 550px;">
-                                            <MudRadioGroup @bind-Value="_addComponentType">
+                                            <MudRadioGroup @bind-Value="_addComponentType" Class="w-100" InputClass="justify-content-center gap-3">
                                                 <MudRadio Label="@Localizer[Langs.AddReadyProduct]" Value="@AddComponentType.ReadyProduct" />
                                                 <MudRadio Label="@Localizer[Langs.AddComponents]" Value="@AddComponentType.AddComponents" />
                                             </MudRadioGroup>
                                             <div class="d-flex flex-column w-100 my-0 align-self-stretch mud-height-full">
                                                 @if(_addComponentType == AddComponentType.ReadyProduct)
                                                 {
-                                                    <div class="d-flex flex-column w-100 mud-height-full align-items-center justify-content-center">
-                                                        test
+                                                    <div class="d-flex w-100 mud-height-full align-items-center justify-content-center" style="gap: 16px">
+                                                        <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Medium" Style="color: var(--mud-palette-text-disabled)" />
+                                                        <MudText Typo="Typo.h6" Style="font-weight: 600; color: var(--mud-palette-text-disabled)">@Localizer[Langs.WareAddedWithoutComponents]</MudText>
                                                     </div>
                                                 }
                                                 else if(_addComponentType == AddComponentType.AddComponents)
                                                 {
-                                                    
+                                                    <div class="d-flex w-100 mud-height-full align-items-center justify-content-center" style="gap: 16px">
+                                                        <MudIcon Icon="@Icons.Material.Outlined.Settings" Size="Size.Medium" />
+                                                        <MudText Typo="Typo.h6" Style="font-weight: 600;">@Localizer[Langs.UnderConstruction]</MudText>
+                                                    </div>
                                                 }
                                             </div>
                                         </div>

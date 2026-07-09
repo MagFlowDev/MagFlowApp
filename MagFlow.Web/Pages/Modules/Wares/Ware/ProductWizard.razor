@@ -63,8 +63,9 @@
                                         <div class="d-flex w-100 my-0 align-items-stretch">
                                             <MudAutocomplete @bind-Value="_model.GeneralInformation.ProductType"
                                                              For="@(() => _model.GeneralInformation.ProductType)"
+                                                             Disabled="@(_model.GeneralInformation.ProductCategory == null)"
                                                              T="ProductTypeDTO"
-                                                             Label="@Localizer[Langs.TypeOptional]"
+                                                             Label="@Localizer[Langs.Type]"
                                                              Placeholder="@Localizer[Langs.TypeExample]"
                                                              Variant="Variant.Outlined"
                                                              AnchorOrigin="Origin.BottomLeft"
@@ -203,7 +204,7 @@
                                                                 </div>
                                                                 <div class="d-flex align-items-start align-self-stretch mud-height-full" style="gap: 16px">
                                                                     <MudDropZone T="ComponentDTO" Identifier="@MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR" Class="rounded-lg border-2 border-dashed mud-border-lines-default flex-grow-1 align-self-stretch mud-height-full w-100">
-                                                                        @if (!_parameters.Any(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR))
+                                                                        @if (!_components.Any(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR))
                                                                         {
                                                                             <div class="d-flex flex-column align-self-stretch mud-height-full">
                                                                                 <div class="d-flex flex-column align-self-stretch mud-height-full align-items-center justify-content-center flex-shrink-0" style="gap: 24px; padding: 24px 0">
