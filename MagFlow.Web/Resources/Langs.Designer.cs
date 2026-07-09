@@ -4165,6 +4165,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Przeliczniki jednostek.
+        /// </summary>
+        public static string UnitConversions {
+            get {
+                return ResourceManager.GetString("UnitConversions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         /// Wyszukuje zlokalizowany ciąg podobny do ciągu Jednostka (opcjonalne).
         /// </summary>
         public static string UnitOptional {

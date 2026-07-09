@@ -171,6 +171,8 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
 
         private void OnProductCategoryChanged(ProductCategoryDTO category)
         {
+            if (_model.GeneralInformation.ProductCategory != category)
+                _model.GeneralInformation.ProductType = null;
             _model.GeneralInformation.ProductCategory = category;
             if(category == null || category.IsBasic)
             {
@@ -178,7 +180,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 {
                     [0] = () => _model.GeneralInformation,
                     [1] = () => _model.Parameters,
-                    [3] = () => _model.Prices,
+                    [2] = () => _model.Prices,
                 };
             }
             else

@@ -52,6 +52,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Type = product.Type?.ToDTO(),
                 Category = product.Category?.ToDTO(),
                 Unit = product.Unit?.ToDTO(),
+                CreatedAt = product.CreatedAt,
+                CreatedBy = new Shared.DTOs.CoreScope.UserDTO() { Id = product.CreatedById },
                 PurchasePrice = product.DefaultPurchasePrice,
                 SellingPrice = product.DefaultSellPrice,
                 TaxRate = EnumsHelper.ToTaxRate(product.DefaultVatRate),
@@ -190,6 +192,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
             var productToAdd = new Product()
             {
+                Id = product.Id,
                 Name = product.Name,
                 Code = product.Code,
                 CreatedAt = product.CreatedAt ?? DateTime.UtcNow,

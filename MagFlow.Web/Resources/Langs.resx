@@ -1639,4 +1639,7 @@ i uprawnieniami użytkowników</value>
   <data name="WareAddedWithoutComponents" xml:space="preserve">
     <value>Towar zostanie dodany bez komponentów</value>
   </data>
+  <data name="UnitConversions" xml:space="preserve">
+    <value>Przeliczniki jednostek</value>
+  </data>
 </root>

@@ -1,5 +1,35 @@
-﻿<h3>ProductConversions</h3>
+﻿@using FluentValidation
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Validators.Resources
+@using MudBlazor
+
+@inject IProductService ProductService
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<Validations> Validations
+@inherits AuthComponentBase
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 16px; padding-right: 40px; margin-top: 24px;">
+    <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.UnitConversions]</MudText>
+    @if (_product != null)
+    {
+
+    }
+</div>
 
 @code {
+    [CascadingParameter(Name = "Product")]
+    ProductDTO? _product { get; set; }
 
+    [Parameter]
+    public EventCallback OnProductUpdated { get; set; }
+
+    private IValidator _validator;
+    private ProductFormModel _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
+
+    private bool _isBusy;
+    private bool _loading;
 }

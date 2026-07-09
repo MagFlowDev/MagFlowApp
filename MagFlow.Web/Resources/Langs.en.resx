@@ -1638,4 +1638,7 @@
   <data name="WareAddedWithoutComponents" xml:space="preserve">
     <value>The item will be added without components</value>
   </data>
+  <data name="UnitConversions" xml:space="preserve">
+    <value>Units conversion</value>
+  </data>
 </root>

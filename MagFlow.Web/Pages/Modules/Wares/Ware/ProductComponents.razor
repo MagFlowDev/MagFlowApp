@@ -1,5 +1,233 @@
-﻿<h3>ProductComponents</h3>
+﻿@using FluentValidation
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Validators.Company
+@using MagFlow.Shared.Validators.Resources
+@using MagFlow.Web.Components.Buttons
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject IProductService ProductService
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<Validations> Validations
+@inherits AuthComponentBase
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 800px; min-height: 0; gap: 16px; padding-right: 40px; margin-top: 24px;">
+    @if(_product != null)
+    {
+        <EditForm EditContext="@_context" class="align-self-stretch d-flex flex-column align-items-start mud-height-full" style="gap: 16px; padding-bottom: 24px;">
+            <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
+                <div class="d-flex flex-column align-items-center w-100 mud-height-full" style="max-width: 800px;">
+                    <MudDropContainer T="ComponentDTO" @ref="_componentsContainer" Items="@_components" ItemsSelector="@((item, dropzone) => item.DropZoneSelector == dropzone)" ItemDropped="ItemUpdated" CanDropClass="mud-border-success" Class="d-flex flex-wrap flex-grow-1 align-self-stretch" Style="min-height: 0;" Context="dzContext">
+                        <ChildContent>
+                            <div class="d-flex flex-grow-1 align-items-center mud-height-full align-self-stretch" Style="gap: 0">
+                                <div class="d-flex flex-column align-items-start w-50 mud-height-full" style="gap: 16px; padding-top: 16px;">
+                                    <div class="d-flex align-items-center align-self-stretch" style="gap: 12px">
+                                        <MudText Typo="Typo.subtitle1" Class="text-nowrap" Style="font-weight: 500">@Localizer[Langs.Components]</MudText>
+                                        <MudTextField T="string" Value="_productSearchString" ValueChanged="@OnProductSearchChanged" DebounceInterval="300" Variant="Variant.Text" Placeholder="@Localizer[Langs.Search]" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.Search" />
+                                    </div>
+                                    <div class="d-flex align-items-start align-self-stretch mud-height-full" style="gap: 16px; padding: 0 0 16px 0; min-height: 0;">
+                                        <MudDropZone T="ComponentDTO" Identifier="@MagFlow.Shared.Constants.Identificators.DropZoneID.AVAILABLE_SELECTOR" Style="min-height: 0; overflow-y: auto" Class="rounded-lg border-1 border-solid mud-border-lines-default flex-grow-1 align-self-stretch mud-height-full w-100">
+
+                                        </MudDropZone>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-grow-1 align-self-stretch mud-height-full align-items-center justify-content-center" style="max-width: 24px; min-width: 24px; width: 24px; padding: 16px 0">
+                                    <div style="@($"width: 1px; background: {Colors.Gray.Lighten2}")" class="h-100"></div>
+                                </div>
+                                <div class="d-flex flex-column align-items-start w-50 mud-height-full" style="gap: 16px; padding-top: 16px;">
+                                    <div class="d-flex flex-column align-items-center justify-content-center align-self-stretch mud-height-full" style="gap: 16px; padding: 0px 8px 16px 8px;">
+                                        <div class="d-flex justify-content-between align-items-center align-self-stretch" style="gap: 10px">
+                                            <MudText Typo="Typo.subtitle1" Class="text-nowrap" Style="font-weight: 500">@Localizer[Langs.SelectedComponents]</MudText>
+                                            <MudTextField T="string" Value="_selectedComponentSearchString" ValueChanged="@OnSelectedProductSearchChanged" DebounceInterval="300" Variant="Variant.Text" Placeholder="@Localizer[Langs.Search]" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.Search" />
+                                        </div>
+                                        <div class="d-flex align-items-start align-self-stretch mud-height-full" style="gap: 16px; min-height: 0;">
+                                            <MudDropZone T="ComponentDTO" Identifier="@MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR" Style="min-height: 0; overflow-y: auto" Class="rounded-lg border-2 border-dashed mud-border-lines-default flex-grow-1 align-self-stretch mud-height-full w-100">
+                                                @if (!_components.Any(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR))
+                                                {
+                                                    <div class="d-flex flex-column align-self-stretch mud-height-full">
+                                                        <div class="d-flex flex-column align-self-stretch mud-height-full align-items-center justify-content-center flex-shrink-0" style="gap: 24px; padding: 24px 0">
+                                                            <div class="d-flex flex-column align-items-center align-self-stretch" style="gap: 24px">
+                                                                <MudIcon Style="width: 80px; height: 80px;" Color="Color.Default" Icon="@Icons.Material.Outlined.MoveToInbox" />
+                                                                <MudText Typo="Typo.subtitle1" Style="font-weight: 500" Class="text-center">@Localizer[Langs.AddOrDragComponent]</MudText>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </MudDropZone>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ChildContent>
+                        <ItemRenderer>
+                            @if (!dzContext.DropZoneHidden)
+                            {
+                                @if (dzContext.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.AVAILABLE_SELECTOR)
+                                {
+                                    <div class="d-flex justify-content-between align-items-center align-self-stretch mx-3" style="@($"border-bottom: 1px solid {Colors.Gray.Lighten2}")">
+                                        <MudText Typo="Typo.body1" Style="font-weight: 400">@dzContext.Product.Name</MudText>
+                                        <MudIconButton Icon="@Icons.Material.Outlined.AddCircleOutline" OnClick="@(() => ChangeComponentZone(dzContext, MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR))" />
+                                    </div>
+                                }
+                                else if (dzContext.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR)
+                                {
+                                    <div class="d-flex justify-content-between align-items-center align-self-stretch mx-3" style="@($"gap: 16px; border-bottom: 1px solid {Colors.Gray.Lighten2}")">
+                                        <div class="d-flex justify-content-between align-items-center my-1 w-100" style="gap: 16px">
+                                            <MudText Typo="Typo.body1" Style="font-weight: 400" Class="text-nowrap">@dzContext.Product.Name</MudText>
+                                            <MudNumericField Min="0" T="decimal" Format="0.##" @bind-Value="dzContext.Quantity" Variant="Variant.Outlined" Label="@Localizer[Langs.Quantity]" Placeholder="@Localizer[Langs.ValueExample]" Style="max-height: 56px; max-width: 120px" Class="align-items-end" />
+                                        </div>
+                                        <MudIconButton Icon="@Icons.Material.Outlined.RemoveCircleOutline" Color="Color.Error" OnClick="@(() => ChangeComponentZone(dzContext, MagFlow.Shared.Constants.Identificators.DropZoneID.AVAILABLE_SELECTOR))" />
+                                    </div>
+                                }
+                            }
+                        </ItemRenderer>
+                    </MudDropContainer>
+                    <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_EDIT" Context="authorizedContext">
+                        <Authorized>
+                            <LoadingButton Loading="Submitting" Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit" Class="align-self-start" Style="min-height: 37px;">@Localizer[Langs.Save]</LoadingButton>
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
+            </div>
+        </EditForm>
+    }
+</div>
 
 @code {
+    [CascadingParameter(Name = "Product")]
+    ProductDTO? _product { get; set; }
 
+    [Parameter]
+    public EventCallback OnProductUpdated { get; set; }
+
+    [Parameter]
+    public bool Submitting { get; set; }
+
+    [Parameter]
+    public bool IsBusy { get; set; }
+
+    private IValidator _validator;
+    private ProductFormModel _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
+
+    private MudDropContainer<ComponentDTO> _componentsContainer;
+    private string _productSearchString = "";
+    private string _selectedComponentSearchString = "";
+    private int _pageSize = 25;
+    private List<ComponentDTO> _components = new List<ComponentDTO>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _model = new ProductFormModel();
+        _context = new EditContext(_model);
+        _validator = new ProductFormValidator(Validations);
+        _messageStore = new ValidationMessageStore(_context);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (_product != null && _components?.Any() != true)
+        {
+            _components = new List<ComponentDTO>();
+            _product.Components?.ForEach(component =>
+            {
+                component.DropZoneSelector = MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR;
+                _components.Add(component);
+            });
+            await SearchForProductComponent("", CancellationToken.None);
+            StateHasChanged();
+            _componentsContainer?.Refresh();
+        }
+    }
+
+    private async Task Submit()
+    {
+        if (IsBusy || _product == null)
+            return;
+
+        if (!HasModulePermission("Wares", PermissionFlags.Edit))
+            return;
+
+        try
+        {
+            IsBusy = true;
+            Submitting = true;
+
+            var components = _components.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
+            var componentsToRemove = _product.Components.Except(components).ToList();
+
+            var result = await ProductService.UpdateProductComponents(_product, components, componentsToRemove);
+            if (result == MagFlow.Shared.Models.Enums.Result.Success)
+            {
+                Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
+                _product.Components = components;
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], MudBlazor.Severity.Error);
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+            Submitting = false;
+        }
+    }
+
+    private void ItemUpdated(MudItemDropInfo<ComponentDTO> dropItem)
+    {
+        if (dropItem.Item == null)
+            return;
+
+        dropItem.Item.DropZoneSelector = dropItem.DropzoneIdentifier;
+    }
+
+    private async Task OnProductSearchChanged(string value)
+    {
+        _productSearchString = value;
+        await SearchForProductComponent(_productSearchString, CancellationToken.None);
+        StateHasChanged();
+        _componentsContainer?.Refresh();
+    }
+
+    private async Task OnSelectedProductSearchChanged(string value)
+    {
+        _selectedComponentSearchString = value;
+        var selectedComponents = _components.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
+        var searchedComponents = selectedComponents.Where(x => x.Product.Name.IndexOf(_selectedComponentSearchString, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+        var unsearchedComponents = selectedComponents.Except(searchedComponents).ToList();
+
+        searchedComponents.ForEach(x => x.DropZoneHidden = false);
+        unsearchedComponents.ForEach(x => x.DropZoneHidden = true);
+
+        StateHasChanged();
+        _componentsContainer?.Refresh();
+    }
+
+    private void ChangeComponentZone(ComponentDTO component, string zone)
+    {
+        component.DropZoneSelector = zone;
+        component.DropZoneHidden = false;
+        StateHasChanged();
+        _componentsContainer?.Refresh();
+    }
+
+    private async Task<IEnumerable<ComponentDTO>> SearchForProductComponent(string value, CancellationToken token)
+    {
+        _productSearchString = value;
+        var response = await ProductService.GetProducts(0, _pageSize, _productSearchString);
+        var alreadySelected = _components.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
+        var ids = alreadySelected.Select(x => x.Product.Id);
+        var products = response.Elements;
+        var components = products.Select(x => new ComponentDTO() { Product = x, Quantity = 1, IsRequired = true });
+        _components = components.Where(x => !ids.Contains(x.Product.Id)).ToList();
+        _components.AddRange(alreadySelected);
+        return _components;
+    }
 }

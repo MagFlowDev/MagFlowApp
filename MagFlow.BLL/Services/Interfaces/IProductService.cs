@@ -29,6 +29,10 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> UpdateParameter(ParameterDTO parameterDTO);
         Task<Enums.Result> UpdateMeasurementUnit(UnitDTO unitDTO, List<int>? removedUnits = null);
 
+        Task<Enums.Result> UpdateProductParameters(ProductDTO product, List<ParameterDTO> parametersToAdd, List<ParameterDTO> parametersToRemove);
+        Task<Enums.Result> UpdateProductComponents(ProductDTO product, List<ComponentDTO> componentsToAdd, List<ComponentDTO> componentsToRemove);
+
+
         Task<Enums.Result> DeleteProduct(ProductDTO productDTO);
         Task<Enums.Result> DeleteProducts(List<ProductDTO> productDTOs);
         Task<Enums.Result> DeleteType(ProductTypeDTO typeDTO);

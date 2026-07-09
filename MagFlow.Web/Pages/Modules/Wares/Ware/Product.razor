@@ -47,9 +47,12 @@
                         <MudTooltip Text="@Localizer[Langs.Parameters]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
                             <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.ShapeLine" OnClick="@(() => OnSectionChanged(SectionsEnums.ProductDetailsSection.Parameters))" IconColor="@_currentSection.GetIconColor(SectionsEnums.ProductDetailsSection.Parameters)" Class="@_currentSection.GetNavClass(SectionsEnums.ProductDetailsSection.Parameters)">@Localizer[Langs.Parameters]</MudNavLink>
                         </MudTooltip>
-                        <MudTooltip Text="@Localizer[Langs.Components]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
-                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.ReceiptLong" OnClick="@(() => OnSectionChanged(SectionsEnums.ProductDetailsSection.Components))" IconColor="@_currentSection.GetIconColor(SectionsEnums.ProductDetailsSection.Components)" Class="@_currentSection.GetNavClass(SectionsEnums.ProductDetailsSection.Components)">@Localizer[Langs.Components]</MudNavLink>
-                        </MudTooltip>
+                        @if (_product?.Category != null && _product.Category.IsBasic == false)
+                        {
+                            <MudTooltip Text="@Localizer[Langs.Components]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.ReceiptLong" OnClick="@(() => OnSectionChanged(SectionsEnums.ProductDetailsSection.Components))" IconColor="@_currentSection.GetIconColor(SectionsEnums.ProductDetailsSection.Components)" Class="@_currentSection.GetNavClass(SectionsEnums.ProductDetailsSection.Components)">@Localizer[Langs.Components]</MudNavLink>
+                            </MudTooltip>
+                        }
                         <MudTooltip Text="@Localizer[Langs.Conversions]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
                             <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Scale" OnClick="@(() => OnSectionChanged(SectionsEnums.ProductDetailsSection.Conversion))" IconColor="@_currentSection.GetIconColor(SectionsEnums.ProductDetailsSection.Conversion)" Class="@_currentSection.GetNavClass(SectionsEnums.ProductDetailsSection.Conversion)">@Localizer[Langs.Conversions]</MudNavLink>
                         </MudTooltip>
@@ -64,17 +67,17 @@
                         {
                              case SectionsEnums.ProductDetailsSection.GeneralInformation:
                                 <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
-                                    <ProductGeneralInformation/>
+                                    <ProductGeneralInformation OnProductUpdated="SaveChanges" IsBusy="_isBusy" Submitting="_loadingSave"/>
                                 </div>
                                 break;
                             case SectionsEnums.ProductDetailsSection.Parameters:
                                 <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
-                                    <ProductParameters />
+                                    <ProductParameters IsBusy="_isBusy" Submitting="_loadingSave" />
                                 </div>
                                 break;
                             case SectionsEnums.ProductDetailsSection.Components:
                                 <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
-                                    <ProductComponents />
+                                    <ProductComponents IsBusy="_isBusy" Submitting="_loadingSave" />
                                 </div>
                                 break;
                             case SectionsEnums.ProductDetailsSection.Conversion:
