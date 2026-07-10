@@ -11,6 +11,7 @@ namespace MagFlow.Shared.Models.FormModels
         public ProductFormParameters Parameters { get; set; }
         public ProductFormPrices Prices { get; set; }
         public ProductFormComponents Components { get; set; }
+        public ProductFormUnitConversions UnitConversions { get; set; }
 
         public ProductFormModel()
         {
@@ -18,6 +19,7 @@ namespace MagFlow.Shared.Models.FormModels
             Parameters = new ProductFormParameters();
             Prices = new ProductFormPrices();
             Components = new ProductFormComponents();
+            UnitConversions = new ProductFormUnitConversions();
         }
     }
 
@@ -57,6 +59,22 @@ namespace MagFlow.Shared.Models.FormModels
         public decimal? SellingPrice { get; set; }
         public Enums.TaxRate? TaxRate { get; set; }
         public Enums.Currency? Currency { get; set; }
+    }
+
+    public class ProductFormUnitConversions
+    {
+        public List<UnitConversionDTO> Conversions { get; set; }
+
+        public ProductFormUnitConversions()
+        {
+            Conversions = new List<UnitConversionDTO>();
+        }
+    }
+
+    public class ProductFormUnitConversion
+    {
+        public int Id { get; set; }
+        public UnitConversionDTO UnitConversion { get; set; }
     }
 
     public class ProductTypeFormModel

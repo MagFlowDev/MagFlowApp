@@ -1642,4 +1642,25 @@ i uprawnieniami użytkowników</value>
   <data name="UnitConversions" xml:space="preserve">
     <value>Przeliczniki jednostek</value>
   </data>
+  <data name="FromUnit" xml:space="preserve">
+    <value>Z jednostki</value>
+  </data>
+  <data name="ToUnit" xml:space="preserve">
+    <value>Na jednostkę</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+  <data name="AddConversion" xml:space="preserve">
+    <value>Dodaj przelicznik</value>
+  </data>
+  <data name="UnitConversionExample1" xml:space="preserve">
+    <value>Np. Kg</value>
+  </data>
+  <data name="UnitConversionExample2" xml:space="preserve">
+    <value>Np. Szt</value>
+  </data>
+  <data name="EditConversion" xml:space="preserve">
+    <value>Edytuj przelicznik</value>
+  </data>
 </root>

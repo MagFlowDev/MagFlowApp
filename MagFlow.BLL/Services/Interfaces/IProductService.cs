@@ -18,12 +18,14 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<QueryResponse<UnitDTO>> GetUnits(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false, bool searchRelated = false);
 
         Task<Enums.Result> AddProduct(ProductFormModel model);
+        Task<Enums.Result> AddProductUnitConversion(ProductDTO productDTO, UnitConversionDTO unitConversionDTO);
         Task<Enums.Result> AddType(ProductTypeFormModel model);
         Task<Enums.Result> AddCategory(ProductCategoryFormModel model);
         Task<Enums.Result> AddParameter(ParameterFormModel model);
         Task<Enums.Result> AddMeasurementUnit(MeasurementUnitFormModel model);
 
         Task<Enums.Result> UpdateProduct(ProductDTO productDTO);
+        Task<Enums.Result> UpdateProductUnitConversion(ProductDTO productDTO, UnitConversionDTO unitConversionDTO);
         Task<Enums.Result> UpdateType(ProductTypeDTO typeDTO);
         Task<Enums.Result> UpdateCategory(ProductCategoryDTO categoryDTO);
         Task<Enums.Result> UpdateParameter(ParameterDTO parameterDTO);
@@ -43,5 +45,6 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<Enums.Result> DeleteParameters(List<ParameterDTO> parameterDTOs);
         Task<Enums.Result> DeleteMeasurementUnit(UnitDTO unitDTO);
         Task<Enums.Result> DeleteMeasurementUnits(List<UnitDTO> unitDTOs);
+        Task<Enums.Result> DeleteProductUnitsConversions(ProductDTO productDTO, List<UnitConversionDTO> unitConversionsToRemove);
     }
 }

@@ -1641,4 +1641,25 @@
   <data name="UnitConversions" xml:space="preserve">
     <value>Units conversion</value>
   </data>
+  <data name="FromUnit" xml:space="preserve">
+    <value>From unit</value>
+  </data>
+  <data name="ToUnit" xml:space="preserve">
+    <value>To unit</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="AddConversion" xml:space="preserve">
+    <value>Add conversion</value>
+  </data>
+  <data name="UnitConversionExample1" xml:space="preserve">
+    <value>E.g. Kg</value>
+  </data>
+  <data name="UnitConversionExample2" xml:space="preserve">
+    <value>E.g. Pcs</value>
+  </data>
+  <data name="EditConversion" xml:space="preserve">
+    <value>Edit conversion</value>
+  </data>
 </root>
