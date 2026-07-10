@@ -1,0 +1,178 @@
+﻿@using FluentValidation
+@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Helpers.Localization.Display
+@using MagFlow.BLL.Mappers.Domain.CompanyScope
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Validators.Company
+@using MagFlow.Shared.Validators.Resources
+@using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Helpers
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+
+@inject IProductService ProductService
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<Validations> Validations
+
+<MudDialog Style="max-width: 500px; width: 100%">
+    <DialogContent>
+        <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">
+            <div class="d-flex w-100 my-0 align-items-stretch">
+                <MudAutocomplete @bind-Value="_model.UnitConversion.FromUnit"
+                                 Label="@Localizer[Langs.FromUnit]"
+                                 Placeholder="@Localizer[Langs.UnitConversionExample1]"
+                                 Variant="Variant.Outlined"
+                                 AnchorOrigin="Origin.BottomLeft"
+                                 TransformOrigin="Origin.TopLeft"
+                                 DebounceInterval="300"
+                                 MaxItems="25"
+                                 ToStringFunc="@(t => t?.Name)"
+                                 SearchFunc="@SearchForProductUnit">
+                    <ProgressIndicatorInPopoverTemplate>
+                        <MudList T="string" ReadOnly>
+                            <MudListItem>
+                                @Localizer[Langs.Loading]
+                            </MudListItem>
+                        </MudList>
+                    </ProgressIndicatorInPopoverTemplate>
+                </MudAutocomplete>
+            </div>
+            <div class="d-flex w-100 my-0 align-items-stretch">
+                <MudAutocomplete @bind-Value="_model.UnitConversion.ToUnit"
+                                 Label="@Localizer[Langs.ToUnit]"
+                                 Placeholder="@Localizer[Langs.UnitConversionExample2]"
+                                 Variant="Variant.Outlined"
+                                 AnchorOrigin="Origin.BottomLeft"
+                                 TransformOrigin="Origin.TopLeft"
+                                 DebounceInterval="300"
+                                 MaxItems="25"
+                                 ToStringFunc="@(t => t?.Name)"
+                                 SearchFunc="@SearchForProductUnit">
+                    <ProgressIndicatorInPopoverTemplate>
+                        <MudList T="string" ReadOnly>
+                            <MudListItem>
+                                @Localizer[Langs.Loading]
+                            </MudListItem>
+                        </MudList>
+                    </ProgressIndicatorInPopoverTemplate>
+                </MudAutocomplete>
+            </div>
+            <MudNumericField Min="0" Class="my-0 w-100" T="decimal" Format="0.##" @bind-Value="@_model.UnitConversion.ConversionRate" Variant="Variant.Outlined" Label="@Localizer[Langs.Conversion]" Placeholder="@Localizer[Langs.ValueExample]" />
+            <MudTextField T="string"
+                          @bind-Value="@_model.UnitConversion.Note"
+                          Label="@Localizer[Langs.Description]"
+                          Variant="Variant.Outlined"
+                          Lines="3"
+                          Sizing="InputSizing.Fixed" />
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@Localizer[Langs.Cancel]</MudButton>
+        <LoadingButton Loading="_loading" Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@Localizer[Langs.Save]</LoadingButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter, EditorRequired]
+    public ProductDTO Product { get; set; }
+
+    [Parameter]
+    public UnitConversionDTO? UnitConversion { get; set; }
+
+    private IValidator _validator;
+    private ProductFormUnitConversion _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
+
+    private bool _isBusy;
+    private bool _loading;
+
+
+    private async Task Submit()
+    {
+        if (_isBusy)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loading = true;
+
+            var isValid = await _messageStore.IsFormValid(_validator, _model);
+            _context.NotifyValidationStateChanged();
+
+            if (!isValid)
+                return;
+
+            var result = Enums.Result.Error;
+            if (_model?.Id != null && _model.Id != 0)
+            {
+                result = await ProductService.UpdateProductUnitConversion(Product, _model.UnitConversion);
+            }
+            else
+            {
+                if(_model != null)
+                    result = await ProductService.AddProductUnitConversion(Product, _model.UnitConversion);
+            }
+            if (_model != null && result == MagFlow.Shared.Models.Enums.Result.Success)
+            {
+                if (_model?.Id != null && _model.Id != 0)
+                    Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
+                else
+                    Snackbar.Add(Localizer[Langs.ResourceCreated], MudBlazor.Severity.Success);
+                MudDialog.Close(DialogResult.Ok(_model!.UnitConversion));
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], MudBlazor.Severity.Error);
+                MudDialog.Close(DialogResult.Ok(false));
+            }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loading = false;
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _model = new ProductFormUnitConversion();
+        _model.UnitConversion = new UnitConversionDTO();
+        _context = new EditContext(_model);
+        _validator = new MeasurementUnitValidator(Validations);
+        _messageStore = new ValidationMessageStore(_context);
+
+        this.MudDialog.SetOptionsAsync(new DialogOptions()
+        {
+            CloseButton = true,
+            Position = DialogPosition.Center
+        });
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (UnitConversion != null && UnitConversion.Id.HasValue && UnitConversion.Id != 0 && _model.Id == 0)
+        {
+            _model.Id = UnitConversion.Id.Value;
+            _model.UnitConversion = UnitConversion;
+        }
+    }
+
+    private async Task<IEnumerable<UnitDTO>> SearchForProductUnit(string value, CancellationToken token)
+    {
+        var response = await ProductService.GetUnits(0, 25, value);
+        return response.Elements;
+    }
+}

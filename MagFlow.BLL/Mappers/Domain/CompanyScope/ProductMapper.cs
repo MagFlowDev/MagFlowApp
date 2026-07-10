@@ -42,6 +42,25 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     });
                 }
             }
+            var unitConversions = new List<UnitConversionDTO>();
+            if (product.Conversions != null)
+            {
+                foreach(var conversion in product.Conversions)
+                {
+                    if (conversion.FromUnit == null || conversion.ToUnit == null)
+                        continue;
+                    var fromUnitDTO = conversion.FromUnit.ToDTO();
+                    var toUnitDTO = conversion.ToUnit.ToDTO();
+                    unitConversions.Add(new UnitConversionDTO()
+                    {
+                        Id = conversion.Id,
+                        FromUnit = fromUnitDTO,
+                        ToUnit = toUnitDTO,
+                        ConversionRate = conversion.ConversionRate,
+                        Note = conversion.Note,
+                    });
+                }
+            }
 
             return new ProductDTO()
             {
@@ -59,7 +78,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 TaxRate = EnumsHelper.ToTaxRate(product.DefaultVatRate),
                 Currency = product.Currency,
                 Parameters = parameters,
-                Components = components
+                Components = components,
+                UnitConversions = unitConversions,
             };
         }
 
@@ -92,6 +112,12 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     IsRequired = true
                 });
             }
+            var unitConversions = new List<UnitConversionDTO>();
+            foreach (var conversion in model.UnitConversions.Conversions)
+            {
+                if(conversion != null)
+                    unitConversions.Add(conversion);
+            }
 
             return new ProductDTO()
             {
@@ -106,7 +132,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 TaxRate = model.Prices.TaxRate,
                 Currency = model.Prices.Currency,
                 Parameters = parameters,
-                Components = components
+                Components = components,
+                UnitConversions = unitConversions
             };
         }
 
@@ -130,7 +157,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 TaxRate = model.Prices.TaxRate,
                 Currency = model.Prices.Currency,
                 Parameters = new List<ParameterDTO>(),
-                Components = new List<ComponentDTO>()
+                Components = new List<ComponentDTO>(),
+                UnitConversions = new List<UnitConversionDTO>()
             };
         }
 
@@ -157,7 +185,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 TaxRate = EnumsHelper.ToTaxRate(product.DefaultVatRate),
                 Currency = product.Currency,
                 Parameters = new List<ParameterDTO>(),
-                Components = new List<ComponentDTO>()
+                Components = new List<ComponentDTO>(),
+                UnitConversions = new List<UnitConversionDTO>()
             };
         }
 
@@ -189,6 +218,18 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     IsRequired = true,
                 });
             }
+            var unitConversions = new List<ProductUnitConversion>();
+            foreach(var conversion in product.UnitConversions)
+            {
+                unitConversions.Add(new ProductUnitConversion()
+                {
+                    Id = conversion.Id ?? 0,
+                    FromUnitId = conversion.FromUnit.Id,
+                    ToUnitId = conversion.ToUnit.Id,
+                    Note = conversion.Note,
+                    ConversionRate = conversion.ConversionRate,
+                });
+            }
 
             var productToAdd = new Product()
             {
@@ -208,6 +249,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Currency = product.Currency,
 
                 Parameters = parameters,
+                Components = components,
+                Conversions = unitConversions
             };
 
             return productToAdd;
@@ -239,6 +282,18 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     IsRequired = true,
                 });
             }
+            var unitConversions = new List<ProductUnitConversion>();
+            foreach (var conversion in model.UnitConversions.Conversions)
+            {
+                unitConversions.Add(new ProductUnitConversion()
+                {
+                    Id = conversion.Id ?? 0,
+                    FromUnitId = conversion.FromUnit.Id,
+                    ToUnitId = conversion.ToUnit.Id,
+                    Note = conversion.Note,
+                    ConversionRate = conversion.ConversionRate,
+                });
+            }
 
             return new Product()
             {
@@ -257,7 +312,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Currency = model.Prices.Currency,
 
                 Parameters = parameters,
-                Components = components
+                Components = components,
+                Conversions = unitConversions
             };
         }
 

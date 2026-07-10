@@ -73,7 +73,9 @@ namespace MagFlow.BLL.Services
                 .Include(x => x.Type).ThenInclude(y => y.Category)
                 .Include(x => x.Unit).ThenInclude(y => y.RelatedUnits)
                 .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit)
-                .Include(x => x.Components).ThenInclude(y => y.Component));
+                .Include(x => x.Components).ThenInclude(y => y.Component)
+                .Include(x => x.Conversions).ThenInclude(y => y.FromUnit)
+                .Include(x => x.Conversions).ThenInclude(y => y.ToUnit));
             return new QueryResponse<ProductDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -217,6 +219,11 @@ namespace MagFlow.BLL.Services
             return result;
         }
 
+        public async Task<Enums.Result> AddProductUnitConversion(ProductDTO productDTO, UnitConversionDTO unitConversionDTO)
+        {
+            return Enums.Result.Error;
+        }
+
         public async Task<Enums.Result> AddType(ProductTypeFormModel model)
         {
             var unit = model.ToEntity();
@@ -252,6 +259,11 @@ namespace MagFlow.BLL.Services
             var product = productDTO.ToEntity();
             var result = await _productRepository.UpdateAsync(product);
             return result;
+        }
+
+        public async Task<Enums.Result> UpdateProductUnitConversion(ProductDTO productDTO, UnitConversionDTO unitConversionDTO)
+        {
+            return Enums.Result.Error;
         }
 
         public async Task<Enums.Result> UpdateType(ProductTypeDTO typeDTO)
@@ -501,6 +513,11 @@ namespace MagFlow.BLL.Services
             
             var result = await _unitRepository.DeleteManyAsync(originalUnits);
             return result;
+        }
+
+        public async Task<Enums.Result> DeleteProductUnitsConversions(ProductDTO productDTO, List<UnitConversionDTO> unitConversionsToRemove)
+        {
+            return Enums.Result.Error;
         }
 
     }
