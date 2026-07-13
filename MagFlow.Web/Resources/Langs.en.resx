@@ -1662,4 +1662,10 @@
   <data name="EditConversion" xml:space="preserve">
     <value>Edit conversion</value>
   </data>
+  <data name="DeleteUnitConversionsConfirmation" xml:space="preserve">
+    <value>Confirm conversions deletion</value>
+  </data>
+  <data name="DeletionConfirmation" xml:space="preserve">
+    <value>Confirm deletion</value>
+  </data>
 </root>

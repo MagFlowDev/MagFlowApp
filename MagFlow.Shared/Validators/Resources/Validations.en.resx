@@ -180,4 +180,7 @@
   <data name="ValueInvalid" xml:space="preserve">
     <value>Invalid value.</value>
   </data>
+  <data name="UnitsMustVary" xml:space="preserve">
+    <value>Units must vary.</value>
+  </data>
 </root>
