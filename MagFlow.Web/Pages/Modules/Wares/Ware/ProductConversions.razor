@@ -1,11 +1,14 @@
 ﻿@using FluentValidation
+@using MagFlow.BLL.Helpers.Localization
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
 @using MagFlow.Shared.Models.Enumerators
 @using MagFlow.Shared.Models.FormModels
 @using MagFlow.Shared.Validators.Resources
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Components.Dialogs
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 
@@ -60,12 +63,49 @@
 
     private async Task DeleteSelectedConversions()
     {
+        if (!HasModulePermission("Wares", PermissionFlags.Edit))
+            return;
 
+        var unitConversions = _conversionsDataGrid?.Selection?.ToList();
+        if (unitConversions == null || !unitConversions.Any())
+            return;
+
+        if (_isBusy || _loading)
+            return;
+
+        try
+        {
+            _isBusy = true;
+            _loading = true;
+
+            var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, Localizer[Langs.DeleteUnitConversionsConfirmation] } };
+            var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeletionConfirmation], parameters);
+            var confirmation = await dialog.Result;
+            if (confirmation != null && !confirmation.Canceled)
+            {
+                var result = await ProductService.DeleteProductUnitsConversions(_product, unitConversions);
+                if (result == Enums.Result.Success)
+                {
+                    Snackbar.Add(Localizer[Langs.DeleteSuccess], MudBlazor.Severity.Success);
+                    _product = await ProductService.GetProduct(_product.Id);
+                    StateHasChanged();
+                }
+                else
+                {
+                    Snackbar.Add(Localizer[Langs.DeleteFailed], MudBlazor.Severity.Error);
+                }
+            }
+        }
+        finally
+        {
+            _isBusy = false;
+            _loading = false;
+        }
     }
 
     private async Task AddNewConversion()
     {
-        if (!HasModulePermission("Wares", PermissionFlags.Read))
+        if (!HasModulePermission("Wares", PermissionFlags.Edit))
             return;
 
         var parameters = new DialogParameters<AddUnitConversionDialog> { { x => x.Product, _product } };
@@ -75,7 +115,8 @@
         {
             try
             {
-
+                _product = await ProductService.GetProduct(_product.Id);
+                StateHasChanged();
             }
             catch { }
         }
@@ -83,17 +124,26 @@
 
     private async Task OpenConversionDetails(UnitConversionDTO unitConversion)
     {
-        if (!HasModulePermission("Wares", PermissionFlags.Read))
+        if (!HasModulePermission("Wares", PermissionFlags.Edit))
             return;
 
-        var parameters = new DialogParameters<AddUnitConversionDialog> { { x => x.Product, _product }, { x => x.UnitConversion, unitConversion } };
+        var toEdit = new UnitConversionDTO()
+        {
+            Id = unitConversion.Id,
+            ConversionRate = unitConversion.ConversionRate,
+            FromUnit = unitConversion.FromUnit,
+            ToUnit = unitConversion.ToUnit,
+            Note = unitConversion.Note
+        };
+        var parameters = new DialogParameters<AddUnitConversionDialog> { { x => x.Product, _product }, { x => x.UnitConversion, toEdit } };
         var dialog = await DialogService.ShowAsync<AddUnitConversionDialog>(Localizer[Langs.EditConversion], parameters);
         var confirmation = await dialog.Result;
         if (confirmation != null && !confirmation.Canceled && confirmation?.Data is UnitConversionDTO result)
         {
             try
             {
-                
+                _product = await ProductService.GetProduct(_product.Id);
+                StateHasChanged();
             }
             catch { }
         }

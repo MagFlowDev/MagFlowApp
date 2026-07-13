@@ -1663,4 +1663,10 @@ i uprawnieniami użytkowników</value>
   <data name="EditConversion" xml:space="preserve">
     <value>Edytuj przelicznik</value>
   </data>
+  <data name="DeleteUnitConversionsConfirmation" xml:space="preserve">
+    <value>Potwierdź usunięcie przeliczników</value>
+  </data>
+  <data name="DeletionConfirmation" xml:space="preserve">
+    <value>Potwierdź usunięcie</value>
+  </data>
 </root>

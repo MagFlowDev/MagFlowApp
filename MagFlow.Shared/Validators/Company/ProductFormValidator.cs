@@ -62,4 +62,30 @@ namespace MagFlow.Shared.Validators.Company
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
         }
     }
+
+    public class ProductUnitConversionValidator : AbstractValidator<ProductFormUnitConversion>
+    {
+        public ProductUnitConversionValidator(IStringLocalizer<Validations> localizer)
+        {
+            RuleFor(x => x.UnitConversion.FromUnit).NotEmpty().WithMessage(localizer[Validations.UnitRequired]);
+            
+            RuleFor(x => x.UnitConversion.ToUnit)
+                .NotEmpty()
+                .WithMessage(localizer[Validations.UnitRequired])
+                .Must((root, toUnit) =>
+                {
+                    if (toUnit == null)
+                        return false;
+
+                    if (root.UnitConversion.FromUnit == null)
+                        return false;
+
+                    if (toUnit.Id == root.UnitConversion.FromUnit.Id)
+                        return false;
+
+                    return true;
+                })
+                .WithMessage(localizer[Validations.UnitsMustVary]);
+        }
+    }
 }

@@ -48,9 +48,11 @@ namespace MagFlow.BLL.Services
             var product = await _productRepository.GetByIdAsync(id, product => product
                 .Include(x => x.Category)
                 .Include(x => x.Type)
-                .Include(x => x.Unit)
-                .Include(x => x.Parameters).ThenInclude(y => y.Parameter)
-                .Include(x => x.Components).ThenInclude(y => y.Component));
+                .Include(x => x.Unit).ThenInclude(y => y.RelatedUnits)
+                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit)
+                .Include(x => x.Components).ThenInclude(y => y.Component)
+                .Include(x => x.Conversions).ThenInclude(y => y.FromUnit)
+                .Include(x => x.Conversions).ThenInclude(y => y.ToUnit));
             var dto = product?.ToDTO();
             return dto;
         }
@@ -221,7 +223,32 @@ namespace MagFlow.BLL.Services
 
         public async Task<Enums.Result> AddProductUnitConversion(ProductDTO productDTO, UnitConversionDTO unitConversionDTO)
         {
-            return Enums.Result.Error;
+            try
+            {
+                var originalProduct = _productRepository.GetById(productDTO.Id, product => product
+                .Include(x => x.Conversions));
+                if (originalProduct == null)
+                    return Enums.Result.Error;
+
+                if (originalProduct.Conversions.Any(x =>
+                    (x.FromUnitId == unitConversionDTO.FromUnit.Id && x.ToUnitId == unitConversionDTO.ToUnit.Id) ||
+                    (x.ToUnitId == unitConversionDTO.FromUnit.Id && x.FromUnitId == unitConversionDTO.ToUnit.Id)))
+                    return Enums.Result.Error;
+
+                originalProduct.Conversions.Add(new ProductUnitConversion()
+                {
+                    FromUnitId = unitConversionDTO.FromUnit.Id,
+                    ToUnitId = unitConversionDTO.ToUnit.Id,
+                    ConversionRate = unitConversionDTO.ConversionRate,
+                    Note = unitConversionDTO.Note
+                });
+                var result = await _productRepository.UpdateAsync(originalProduct);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return Enums.Result.Error;
+            }
         }
 
         public async Task<Enums.Result> AddType(ProductTypeFormModel model)
@@ -263,7 +290,26 @@ namespace MagFlow.BLL.Services
 
         public async Task<Enums.Result> UpdateProductUnitConversion(ProductDTO productDTO, UnitConversionDTO unitConversionDTO)
         {
-            return Enums.Result.Error;
+            try
+            {
+                var originalProduct = _productRepository.GetById(productDTO.Id, product => product
+                .Include(x => x.Conversions));
+                if (originalProduct == null)
+                    return Enums.Result.Error;
+
+                var unitConversion = originalProduct.Conversions.FirstOrDefault(x => x.FromUnitId == unitConversionDTO.FromUnit.Id && x.ToUnitId == unitConversionDTO.ToUnit.Id);
+                if (unitConversion == null)
+                    return Enums.Result.Error;
+                unitConversion.ConversionRate = unitConversionDTO.ConversionRate;
+                unitConversion.Note = string.IsNullOrEmpty(unitConversionDTO.Note) ? null : unitConversionDTO.Note;
+
+                var result = await _productRepository.UpdateProductConversion(unitConversion);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return Enums.Result.Error;
+            }
         }
 
         public async Task<Enums.Result> UpdateType(ProductTypeDTO typeDTO)
@@ -517,7 +563,22 @@ namespace MagFlow.BLL.Services
 
         public async Task<Enums.Result> DeleteProductUnitsConversions(ProductDTO productDTO, List<UnitConversionDTO> unitConversionsToRemove)
         {
-            return Enums.Result.Error;
+            try
+            {
+                var originalProduct = _productRepository.GetById(productDTO.Id, product => product
+                .Include(x => x.Conversions));
+                if (originalProduct == null)
+                    return Enums.Result.Error;
+
+                var idsToRemove = unitConversionsToRemove.Where(x => x.Id.HasValue).Select(x => x.Id!.Value).ToList();
+                var toRemove = originalProduct.Conversions.Where(x => idsToRemove.Contains(x.Id)).ToList();
+                var result = await _productRepository.RemoveProductConversions(toRemove);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return Enums.Result.Error;
+            }
         }
 
     }

@@ -23,6 +23,7 @@
         <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">
             <div class="d-flex w-100 my-0 align-items-stretch">
                 <MudAutocomplete @bind-Value="_model.UnitConversion.FromUnit"
+                                 For="@(() => _model.UnitConversion.FromUnit)"
                                  Label="@Localizer[Langs.FromUnit]"
                                  Placeholder="@Localizer[Langs.UnitConversionExample1]"
                                  Variant="Variant.Outlined"
@@ -32,6 +33,23 @@
                                  MaxItems="25"
                                  ToStringFunc="@(t => t?.Name)"
                                  SearchFunc="@SearchForProductUnit">
+                    <ItemTemplate Context="unit">
+                        @if (unit != null)
+                        {
+                            if (unit.ParentUnit != null)
+                            {
+                                <MudText Typo="Typo.body2" Class="ms-5 mud-text-secondary">
+                                    @unit.Name
+                                </MudText>
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.body2" Style="font-weight: 500;">
+                                    @unit.Name
+                                </MudText>
+                            }
+                        }
+                    </ItemTemplate>
                     <ProgressIndicatorInPopoverTemplate>
                         <MudList T="string" ReadOnly>
                             <MudListItem>
@@ -43,6 +61,7 @@
             </div>
             <div class="d-flex w-100 my-0 align-items-stretch">
                 <MudAutocomplete @bind-Value="_model.UnitConversion.ToUnit"
+                                 For="@(() => _model.UnitConversion.ToUnit)"
                                  Label="@Localizer[Langs.ToUnit]"
                                  Placeholder="@Localizer[Langs.UnitConversionExample2]"
                                  Variant="Variant.Outlined"
@@ -52,6 +71,23 @@
                                  MaxItems="25"
                                  ToStringFunc="@(t => t?.Name)"
                                  SearchFunc="@SearchForProductUnit">
+                    <ItemTemplate Context="unit">
+                        @if (unit != null)
+                        {
+                            if (unit.ParentUnit != null)
+                            {
+                                <MudText Typo="Typo.body2" Class="ms-5 mud-text-secondary">
+                                    @unit.Name
+                                </MudText>
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.body2" Style="font-weight: 500;">
+                                    @unit.Name
+                                </MudText>
+                            }
+                        }
+                    </ItemTemplate>
                     <ProgressIndicatorInPopoverTemplate>
                         <MudList T="string" ReadOnly>
                             <MudListItem>
@@ -61,8 +97,8 @@
                     </ProgressIndicatorInPopoverTemplate>
                 </MudAutocomplete>
             </div>
-            <MudNumericField Min="0" Class="my-0 w-100" T="decimal" Format="0.##" @bind-Value="@_model.UnitConversion.ConversionRate" Variant="Variant.Outlined" Label="@Localizer[Langs.Conversion]" Placeholder="@Localizer[Langs.ValueExample]" />
-            <MudTextField T="string"
+            <MudNumericField Min="0" Class="my-0 w-100" T="decimal" Format="0.##" @bind-Value="@_model.UnitConversion.ConversionRate" Variant="Variant.Outlined" Label="@Localizer[Langs.Conversion]" Placeholder="@Localizer[Langs.ValueExample]"  HideSpinButtons="true"/>
+            <MudTextField T="string" Class="my-0 w-100"
                           @bind-Value="@_model.UnitConversion.Note"
                           Label="@Localizer[Langs.Description]"
                           Variant="Variant.Outlined"
@@ -93,6 +129,10 @@
 
     private bool _isBusy;
     private bool _loading;
+
+    private bool _disabledUnitChange =>
+        UnitConversion != null && UnitConversion.Id.HasValue &&
+        UnitConversion.FromUnit.Id != 0 && UnitConversion.ToUnit.Id != 0;
 
 
     private async Task Submit()
@@ -135,6 +175,10 @@
                 MudDialog.Close(DialogResult.Ok(false));
             }
         }
+        catch(Exception ex)
+        {
+            
+        }
         finally
         {
             _isBusy = false;
@@ -151,7 +195,7 @@
         _model = new ProductFormUnitConversion();
         _model.UnitConversion = new UnitConversionDTO();
         _context = new EditContext(_model);
-        _validator = new MeasurementUnitValidator(Validations);
+        _validator = new ProductUnitConversionValidator(Validations);
         _messageStore = new ValidationMessageStore(_context);
 
         this.MudDialog.SetOptionsAsync(new DialogOptions()
@@ -172,7 +216,16 @@
 
     private async Task<IEnumerable<UnitDTO>> SearchForProductUnit(string value, CancellationToken token)
     {
-        var response = await ProductService.GetUnits(0, 25, value);
-        return response.Elements;
+        var response = await ProductService.GetUnits(0, 25, value, searchRelated: true);
+        var flatList = response.Elements.SelectMany(baseUnit =>
+        {
+            var items = new List<UnitDTO> { baseUnit };
+            if (baseUnit.RelatedUnits?.Any() == true)
+            {
+                items.AddRange(baseUnit.RelatedUnits);
+            }
+            return items;
+        }).ToList();
+        return flatList;
     }
 }

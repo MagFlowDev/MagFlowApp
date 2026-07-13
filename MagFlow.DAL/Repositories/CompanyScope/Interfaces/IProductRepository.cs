@@ -13,5 +13,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope.Interfaces
     {
         Task<Enums.Result> RemoveProductParameters(List<ProductParameter> parameters);
         Task<Enums.Result> RemoveProductComponents(List<ProductComponent> components);
+        Task<Enums.Result> RemoveProductConversions(List<ProductUnitConversion> conversions);
+
+        Task<Enums.Result> UpdateProductConversion(ProductUnitConversion conversion);
     }
 }

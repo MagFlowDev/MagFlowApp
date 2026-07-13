@@ -1240,6 +1240,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Potwierdź usunięcie przeliczników.
+        /// </summary>
+        public static string DeleteUnitConversionsConfirmation {
+            get {
+                return ResourceManager.GetString("DeleteUnitConversionsConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Usuń użytkownika.
         /// </summary>
         public static string DeleteUser {
@@ -1308,6 +1317,15 @@ namespace MagFlow.Web.Resources {
         public static string Deleting {
             get {
                 return ResourceManager.GetString("Deleting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Potwierdź usunięcie.
+        /// </summary>
+        public static string DeletionConfirmation {
+            get {
+                return ResourceManager.GetString("DeletionConfirmation", resourceCulture);
             }
         }
         

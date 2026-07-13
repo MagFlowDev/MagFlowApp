@@ -55,5 +55,42 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 return Enums.Result.Error;
             }
         }
+
+        public async Task<Enums.Result> UpdateProductConversion(ProductUnitConversion conversion)
+        {
+            try
+            {
+                using (var context = _companyContextFactory.CreateDbContext())
+                {
+                    context.ProductUnitConversions.Update(conversion);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+        
+        public async Task<Enums.Result> RemoveProductConversions(List<ProductUnitConversion> conversions)
+        {
+            try
+            {
+                using (var context = _companyContextFactory.CreateDbContext())
+                {
+                    context.ProductUnitConversions.RemoveRange(conversions);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
     }
 }

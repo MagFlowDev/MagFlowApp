@@ -180,4 +180,7 @@
   <data name="ValueInvalid" xml:space="preserve">
     <value>Niepoprawna wartość.</value>
   </data>
+  <data name="UnitsMustVary" xml:space="preserve">
+    <value>Jednostki muszą się różnić.</value>
+  </data>
 </root>
