@@ -55,11 +55,14 @@
                         <MudTooltip Text="@Localizer[Langs.GeneralInformation]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
                             <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Label" OnClick="@(() => OnSectionChanged(SectionsEnums.WareDetailsSection.GeneralInformation))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WareDetailsSection.GeneralInformation)" Class="@_currentSection.GetNavClass(SectionsEnums.WareDetailsSection.GeneralInformation)">@Localizer[Langs.GeneralInformation]</MudNavLink>
                         </MudTooltip>
-                        <MudTooltip Text="@Localizer[Langs.Components]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
-                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.ShapeLine" OnClick="@(() => OnSectionChanged(SectionsEnums.WareDetailsSection.Components))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WareDetailsSection.Components)" Class="@_currentSection.GetNavClass(SectionsEnums.WareDetailsSection.Components)">@Localizer[Langs.Components]</MudNavLink>
-                        </MudTooltip>
+                        @if (ShowComponents)
+                        {
+                            <MudTooltip Text="@Localizer[Langs.Components]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.ReceiptLong" OnClick="@(() => OnSectionChanged(SectionsEnums.WareDetailsSection.Components))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WareDetailsSection.Components)" Class="@_currentSection.GetNavClass(SectionsEnums.WareDetailsSection.Components)">@Localizer[Langs.Components]</MudNavLink>
+                            </MudTooltip>
+                        }
                         <MudTooltip Text="@Localizer[Langs.History]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
-                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.ReceiptLong" OnClick="@(() => OnSectionChanged(SectionsEnums.WareDetailsSection.History))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WareDetailsSection.History)" Class="@_currentSection.GetNavClass(SectionsEnums.WareDetailsSection.History)">@Localizer[Langs.History]</MudNavLink>
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.History" OnClick="@(() => OnSectionChanged(SectionsEnums.WareDetailsSection.History))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WareDetailsSection.History)" Class="@_currentSection.GetNavClass(SectionsEnums.WareDetailsSection.History)">@Localizer[Langs.History]</MudNavLink>
                         </MudTooltip>
                     </MudNavMenu>
                 </MudDrawer>

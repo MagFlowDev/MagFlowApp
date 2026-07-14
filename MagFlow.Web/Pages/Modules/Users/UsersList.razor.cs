@@ -42,7 +42,10 @@ namespace MagFlow.Web.Pages.Modules.Users
             var dialog = await DialogService.ShowAsync<AddUserDialog>(Localizer[Langs.AddUser]);
             var confirmation = await dialog.Result;
             if (confirmation?.Data is bool result && result == true)
+            {
+                _usersDataGrid.Selection.Clear();
                 await _usersDataGrid.ReloadServerData();
+            }
         }
 
 

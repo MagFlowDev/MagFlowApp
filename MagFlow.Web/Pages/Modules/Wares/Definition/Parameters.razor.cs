@@ -24,7 +24,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                 var column = _parametersDataGrid.RenderedColumns.FirstOrDefault(c => c.PropertyName == sortBy);
                 sortBy = column?.Tag?.ToString();
             }
-            sortBy = sortBy ?? nameof(ParameterDTO.Id);
+            sortBy = sortBy ?? "Id";
             var response = await ProductService.GetParameters(state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
 
             return new GridData<ParameterDTO>
@@ -42,7 +42,10 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             var dialog = await DialogService.ShowAsync<ParameterModal>(Localizer[Langs.AddParameter]);
             var confirmation = await dialog.Result;
             if (confirmation?.Data is bool result && result == true)
+            {
+                _parametersDataGrid.Selection.Clear();
                 await _parametersDataGrid.ReloadServerData();
+            }
         }
 
         private async Task OpenParameterDetails(ParameterDTO parameter)
@@ -73,13 +76,13 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             if (!HasModulePermission("Wares", PermissionFlags.Delete))
                 return;
 
-            if (_isBusy || (_loadingDelete.TryGetValue(parameter.Id, out var loading) && loading))
+            if (_isBusy || (_loadingDelete.TryGetValue(parameter.ParameterId, out var loading) && loading))
                 return;
 
             try
             {
                 _isBusy = true;
-                _loadingDelete[parameter.Id] = true;
+                _loadingDelete[parameter.ParameterId] = true;
 
                 var parameters = new DialogParameters<ConfirmDeleteDialog> { { x => x.ContentText, string.Format(Localizer.GetConfirmationMessage(nameof(Langs.DeleteParameterConfirmation), 1), parameter.Name) } };
                 var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.DeleteParameterConfirmation], parameters);
@@ -106,7 +109,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             finally
             {
                 _isBusy = false;
-                _loadingDelete[parameter.Id] = false;
+                _loadingDelete[parameter.ParameterId] = false;
             }
         }
         private async Task DeleteParameters()

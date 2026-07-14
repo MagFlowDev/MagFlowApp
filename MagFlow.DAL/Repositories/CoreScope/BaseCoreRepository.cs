@@ -999,5 +999,10 @@ namespace MagFlow.DAL.Repositories.CoreScope
         {
             throw new NotImplementedException();
         }
+
+        public async Task<QueryResponse<IEntityHistory>?> GetHistoryAsync(QueryOptions<IEntityHistory> options, Enums.HistoryEntityType entityType, int entityId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

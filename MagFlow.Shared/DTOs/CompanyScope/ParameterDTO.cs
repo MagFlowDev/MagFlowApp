@@ -7,7 +7,8 @@ namespace MagFlow.Shared.DTOs.CompanyScope
 {
     public class ParameterDTO
     {
-        public int Id { get; set; }
+        public int ParameterId { get; set; }
+        public int EntityTableId { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
         public Enums.ValueType? ValueType { get; set; }

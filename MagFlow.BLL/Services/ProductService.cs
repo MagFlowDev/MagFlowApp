@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.Mappers.Domain.CompanyScope;
+﻿using MagFlow.BLL.Mappers.Domain;
+using MagFlow.BLL.Mappers.Domain.CompanyScope;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
 using MagFlow.Domain.CompanyScope;
@@ -16,7 +17,7 @@ using System.Text;
 
 namespace MagFlow.BLL.Services
 {
-    public class ProductService : IProductService
+    public class ProductService : BaseCompanyService<Product>, IProductService
     {
         private readonly IProductRepository _productRepository;
         private readonly IProductCategoryRepository _categoryRepository;
@@ -33,7 +34,7 @@ namespace MagFlow.BLL.Services
             IParameterRepository parameterRepository,
             IProductParameterRepository productParameterRepository,
             IUnitRepository unitRepository,
-            INetworkService networkService)
+            INetworkService networkService) : base(productRepository)
         {
             _productRepository = productRepository;
             _categoryRepository = productCategoryRepository;
@@ -55,27 +56,6 @@ namespace MagFlow.BLL.Services
                 .Include(x => x.Conversions).ThenInclude(y => y.FromUnit)
                 .Include(x => x.Conversions).ThenInclude(y => y.ToUnit));
             var dto = product?.ToDTO();
-            return dto;
-        }
-
-        public async Task<ProductDTO?> GetProductHistory(int id, int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
-        {
-            var product = await _productRepository.GetByIdAsync(id);
-            if(product == null)
-                return null;
-
-            var queryOptions = new QueryOptions<IEntityHistory>()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Search = search,
-                SortBy = sortBy,
-                Descending = descending
-            };
-
-            var count = await _productRepository.LoadHistoryAsync(product, queryOptions);
-            var dto = product?.ToDTO();
-            dto?.HistoryCount = count;
             return dto;
         }
 
@@ -389,7 +369,7 @@ namespace MagFlow.BLL.Services
 
                 if (parametersToRemove.Any())
                 {
-                    var parametersIdsToRemove = parametersToRemove.Select(x => x.Id).ToList();
+                    var parametersIdsToRemove = parametersToRemove.Select(x => x.ParameterId).ToList();
                     var originalProductParametersToRemove = originalProduct.Parameters.Where(x => parametersIdsToRemove.Contains(x.ParameterId)).ToList();
                     result = await _productRepository.RemoveProductParameters(originalProductParametersToRemove);
                     if (result != Enums.Result.Success)
@@ -398,7 +378,7 @@ namespace MagFlow.BLL.Services
                     originalProductParametersToRemove.ForEach(x => originalProduct.Parameters.Remove(x));
                 }
 
-                var parametersIdsToAdd = parametersToAdd.Select(x => x.Id).ToList();
+                var parametersIdsToAdd = parametersToAdd.Select(x => x.ParameterId).ToList();
                 var existingParametersIds = originalProduct.Parameters.Where(x => parametersIdsToAdd.Contains(x.ParameterId)).Select(x => x.ParameterId).ToList();
                 parametersIdsToAdd = parametersIdsToAdd.Except(existingParametersIds).ToList();
 
@@ -409,7 +389,7 @@ namespace MagFlow.BLL.Services
                         originalProduct.Parameters.Add(new ProductParameter()
                         {
                             ParameterId = parameter,
-                            IsRequired = false
+                            IsRequired = true
                         });
                     }
                     result = await _productRepository.UpdateAsync(originalProduct);
@@ -542,7 +522,7 @@ namespace MagFlow.BLL.Services
 
         public async Task<Enums.Result> DeleteParameter(ParameterDTO parameterDTO)
         {
-            var originalParameter = await _parameterRepository.GetByIdAsync(parameterDTO.Id);
+            var originalParameter = await _parameterRepository.GetByIdAsync(parameterDTO.ParameterId);
             if (originalParameter == null)
                 return Enums.Result.Error;
 
@@ -552,7 +532,7 @@ namespace MagFlow.BLL.Services
 
         public async Task<Enums.Result> DeleteParameters(List<ParameterDTO> parameterDTOs)
         {
-            var parametersIds = parameterDTOs.Select(x => x.Id).ToList();
+            var parametersIds = parameterDTOs.Select(x => x.ParameterId).ToList();
             var result = await _parameterRepository.DeleteManyAsync(x => parametersIds.Contains(x.Id));
             return result;
         }

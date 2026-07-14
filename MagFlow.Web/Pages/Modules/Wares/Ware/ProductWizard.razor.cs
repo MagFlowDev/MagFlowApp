@@ -325,9 +325,9 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             _parameterSearchString = value;
             var response = await ProductService.GetParameters(0, _pageSize, _parameterSearchString);
             var alreadySelected = _parameters.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
-            var ids = alreadySelected.Select(x => x.Id);
+            var ids = alreadySelected.Select(x => x.ParameterId);
             _parameters = response.Elements;
-            _parameters = _parameters.Where(x => !ids.Contains(x.Id)).ToList();
+            _parameters = _parameters.Where(x => !ids.Contains(x.ParameterId)).ToList();
             _parameters.AddRange(alreadySelected);
             return _parameters;
         }

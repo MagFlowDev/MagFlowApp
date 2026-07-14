@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Item : ISoftDeletable
+    public class Item : ISoftDeletable, IHistoryEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -59,5 +59,11 @@ namespace MagFlow.Domain.CompanyScope
         public Unit? DefaultUnit { get; set; }
 
         public ICollection<ItemParameter> Parameters { get; set; }
+
+        [NotMapped]
+        public Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Item;
+
+        [NotMapped]
+        public ICollection<IEntityHistory> History { get; set; } = [];
     }
 }

@@ -42,7 +42,10 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             var dialog = await DialogService.ShowAsync<TypeModal>(Localizer[Langs.AddType]);
             var confirmation = await dialog.Result;
             if (confirmation?.Data is bool result && result == true)
+            {
+                _typesDataGrid.Selection.Clear();
                 await _typesDataGrid.ReloadServerData();
+            }
         }
 
         private async Task OpenTypeDetails(ProductTypeDTO type)

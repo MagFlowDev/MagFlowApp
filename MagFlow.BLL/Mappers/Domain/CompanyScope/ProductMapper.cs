@@ -21,6 +21,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     if (parameter.Parameter == null)
                         continue;
                     var dto = parameter.Parameter.ToDTO();
+                    dto.EntityTableId = parameter.Id;
                     dto.IsRequired = parameter.IsRequired;
                     parameters.Add(dto);
                 }
@@ -79,8 +80,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Currency = product.Currency,
                 Parameters = parameters,
                 Components = components,
-                UnitConversions = unitConversions,
-                History = product.History.ToDTO()
+                UnitConversions = unitConversions
             };
         }
 
@@ -205,7 +205,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             {
                 parameters.Add(new ProductParameter()
                 {
-                    ParameterId = parameter.Id,
+                    Id = parameter.EntityTableId,
+                    ParameterId = parameter.ParameterId,
                     IsRequired = parameter.IsRequired
                 });
             }
@@ -269,8 +270,9 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             {
                 parameters.Add(new ProductParameter()
                 {
-                    ParameterId = parameter.Id,
-                    IsRequired = false
+                    Id = parameter.EntityTableId,
+                    ParameterId = parameter.ParameterId,
+                    IsRequired = true
                 });
             }
             var components = new List<ProductComponent>();

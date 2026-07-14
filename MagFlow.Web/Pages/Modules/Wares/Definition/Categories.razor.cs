@@ -42,7 +42,10 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             var dialog = await DialogService.ShowAsync<CategoryModal>(Localizer[Langs.AddCategory]);
             var confirmation = await dialog.Result;
             if (confirmation?.Data is bool result && result == true)
+            {
+                _categoriesDataGrid.Selection.Clear();
                 await _categoriesDataGrid.ReloadServerData();
+            }
         }
 
         private async Task OpenCategoryDetails(ProductCategoryDTO category)

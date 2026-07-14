@@ -1,5 +1,25 @@
-﻿<h3>WareComponents</h3>
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
+@using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Components.DataGrid
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject IItemService ItemService
+@inherits AuthComponentBase
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 800px; min-height: 0; gap: 16px; padding-right: 40px; margin-top: 24px;">
+    @if (_item != null)
+    {
+        <div class="d-flex w-100 mud-height-full align-items-center justify-content-center" style="gap: 16px">
+            <MudIcon Icon="@Icons.Material.Outlined.Settings" Size="Size.Medium" />
+            <MudText Typo="Typo.h6" Style="font-weight: 600;">@Localizer[Langs.UnderConstruction]</MudText>
+        </div>
+    }
+</div>
 
 @code {
-
+    [CascadingParameter(Name = "Item")]
+    ItemDTO? _item { get; set; }
 }

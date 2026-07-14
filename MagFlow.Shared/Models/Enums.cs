@@ -13,7 +13,7 @@ namespace MagFlow.Shared.Models
             Unknown = 0,
             User = 1,
             Product = 2,
-            Ware = 3
+            Item = 3
         }
 
         public enum TaxRate
