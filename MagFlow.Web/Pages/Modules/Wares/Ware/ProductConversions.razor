@@ -19,7 +19,6 @@
 @inherits AuthComponentBase
 
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 800px; min-height: 0; gap: 16px; padding-right: 40px; margin-top: 24px;">
-    <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.UnitConversions]</MudText>
     @if (_product != null)
     {
         <MagFlowDataGrid @ref="_conversionsDataGrid" T="UnitConversionDTO" Items="_product.UnitConversions" Filterable="false" MultiSelection="true" OnRowClicked="OpenConversionDetails" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager striped-grid overflow-x-auto my-2 shadow-none">

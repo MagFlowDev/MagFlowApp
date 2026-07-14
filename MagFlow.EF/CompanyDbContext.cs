@@ -53,6 +53,7 @@ namespace MagFlow.EF
         public DbSet<WarehouseStorage> WarehouseStorages { get; set; }
         public DbSet<DefaultWorkingHour> DefaultWorkingHours { get; set; }
         public DbSet<WorkDay> WorkDays { get; set; }
+        public DbSet<EntityHistory> EntitiesHistory { get; set; }
 
         public CompanyDbContext(string connectionString) : base(BuildOptions(connectionString))
         {
@@ -83,6 +84,13 @@ namespace MagFlow.EF
             {
                 e.RoleId,
                 e.ClaimId
+            });
+
+            builder.Entity<EntityHistory>().Property(x => x.EntityType).HasConversion<string>();
+            builder.Entity<EntityHistory>().HasIndex(x => new
+            {
+                x.EntityType,
+                x.EntityId
             });
 
             builder.Entity<Contractor>().HasMany(c => c.Orders).WithOne(o => o.Contractor);

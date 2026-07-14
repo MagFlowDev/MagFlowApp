@@ -994,5 +994,10 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 return null;
             }
         }
+
+        public async Task<int> LoadHistoryAsync(TEntity entity, QueryOptions<IEntityHistory>? options = null, CompanyDbContext? companyContext = null, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

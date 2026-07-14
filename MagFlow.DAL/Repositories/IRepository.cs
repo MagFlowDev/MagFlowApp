@@ -1,5 +1,6 @@
 ﻿using MagFlow.EF;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -51,5 +52,7 @@ namespace MagFlow.DAL.Repositories
         Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate, bool archive = false);
 
         DbSet<TEntity>? GetSet(bool tracking = true, bool ignoreAutoInclude = false);
+
+        Task<int> LoadHistoryAsync(TEntity entity, QueryOptions<IEntityHistory>? options = null, CompanyDbContext? companyContext = null, CancellationToken cancellationToken = default);
     }
 }

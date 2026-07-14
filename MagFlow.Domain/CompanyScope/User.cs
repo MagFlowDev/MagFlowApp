@@ -9,7 +9,7 @@ using MagFlow.Shared.Models.Interfaces;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class User : ISoftDeletable
+    public class User : IUser, ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

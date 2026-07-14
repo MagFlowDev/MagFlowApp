@@ -1,17 +1,73 @@
-﻿@using MagFlow.Shared.DTOs.CompanyScope
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Components.DataGrid
+@using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 
+@inject IProductService ProductService
 @inherits AuthComponentBase
 
-<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 16px; padding-right: 40px; margin-top: 24px;">
-    <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.History]</MudText>
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 800px; min-height: 0; gap: 16px; padding-right: 40px; margin-top: 24px;">
     @if (_product != null)
     {
-
+        <MagFlowDataGrid @ref="_historyDataGrid" T="EntityHistoryDTO" ServerData="ServerReloadHistory" Filterable="false" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager striped-grid overflow-x-auto my-2 shadow-none">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">@Localizer[Langs.History]</MudText>
+                <MudSpacer />
+                <MudIconButton Color="Color.Primary" OnClick="_historyDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
+            </ToolBarContent>
+            <Columns>
+                <PropertyColumn T="EntityHistoryDTO" TProperty="string" Title="@Localizer[Langs.Date]" CellClass="text-nowrap" Property="history => history.OccurredAt.ToLocalTime().ToShortDateString()" />
+                <PropertyColumn T="EntityHistoryDTO" TProperty="string" Title="@Localizer[Langs.Description]" CellClass="text-nowrap" Property="history => history.EventType" />
+                <PropertyColumn T="EntityHistoryDTO" TProperty="string" Title="@Localizer[Langs.User]" CellClass="text-nowrap" Property="@(history => (history.User != null ? $"{history.User.FirstName} {history.User.LastName}" : string.Empty))" />
+            </Columns>
+        </MagFlowDataGrid>
     }
 </div>
 
 @code {
     [CascadingParameter(Name = "Product")]
     ProductDTO? _product { get; set; }
+
+    MudDataGrid<EntityHistoryDTO> _historyDataGrid;
+
+    string? _searchString = null;
+
+    private async Task<GridData<EntityHistoryDTO>> ServerReloadHistory(GridState<EntityHistoryDTO> state, CancellationToken token)
+    {
+        if(_product == null)
+        {
+            return new GridData<EntityHistoryDTO>
+            {
+                Items = new List<EntityHistoryDTO>(),
+                TotalItems = 0,
+            };
+        }
+
+        var sortDefinition = state.SortDefinitions.FirstOrDefault();
+        string? sortBy = sortDefinition?.SortBy;
+        if (Guid.TryParse(sortBy, out _))
+        {
+            var column = _historyDataGrid.RenderedColumns.FirstOrDefault(c => c.PropertyName == sortBy);
+            sortBy = column?.Tag?.ToString();
+        }
+        sortBy = sortBy ?? nameof(EntityHistoryDTO.Id);
+        var response = await ProductService.GetProductHistory(_product.Id, state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
+
+        if (response == null)
+        {
+            return new GridData<EntityHistoryDTO>
+            {
+                Items = new List<EntityHistoryDTO>(),
+                TotalItems = 0,
+            };
+        }
+
+        return new GridData<EntityHistoryDTO>
+        {
+            Items = response.History,
+            TotalItems = response.HistoryCount,
+        };
+    }
 }

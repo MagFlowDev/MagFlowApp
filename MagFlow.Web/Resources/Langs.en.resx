@@ -1668,4 +1668,10 @@
   <data name="DeletionConfirmation" xml:space="preserve">
     <value>Confirm deletion</value>
   </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
 </root>
