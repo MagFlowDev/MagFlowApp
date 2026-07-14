@@ -1669,4 +1669,10 @@ i uprawnieniami użytkowników</value>
   <data name="DeletionConfirmation" xml:space="preserve">
     <value>Potwierdź usunięcie</value>
   </data>
+  <data name="Date" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Użytkownik</value>
+  </data>
 </root>

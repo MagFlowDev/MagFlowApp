@@ -25,5 +25,8 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public List<ParameterDTO> Parameters { get; set; } = new List<ParameterDTO>();
         public List<ComponentDTO> Components { get; set; } = new List<ComponentDTO>();
         public List<UnitConversionDTO> UnitConversions { get; set; } = new List<UnitConversionDTO>();
+
+        public List<EntityHistoryDTO> History { get; set; } = [];
+        public int HistoryCount { get; set; }
     }
 }

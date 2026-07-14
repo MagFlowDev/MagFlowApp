@@ -8,6 +8,14 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum HistoryEntityType
+        {
+            Unknown = 0,
+            User = 1,
+            Product = 2,
+            Ware = 3
+        }
+
         public enum TaxRate
         {
             _0 = 0,

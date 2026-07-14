@@ -7,6 +7,7 @@ using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
+using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -54,6 +55,27 @@ namespace MagFlow.BLL.Services
                 .Include(x => x.Conversions).ThenInclude(y => y.FromUnit)
                 .Include(x => x.Conversions).ThenInclude(y => y.ToUnit));
             var dto = product?.ToDTO();
+            return dto;
+        }
+
+        public async Task<ProductDTO?> GetProductHistory(int id, int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+            if(product == null)
+                return null;
+
+            var queryOptions = new QueryOptions<IEntityHistory>()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Search = search,
+                SortBy = sortBy,
+                Descending = descending
+            };
+
+            var count = await _productRepository.LoadHistoryAsync(product, queryOptions);
+            var dto = product?.ToDTO();
+            dto?.HistoryCount = count;
             return dto;
         }
 

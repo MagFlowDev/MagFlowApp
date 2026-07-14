@@ -1008,5 +1008,90 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 return null;
             }
         }
+
+        public async Task<int> LoadHistoryAsync(TEntity entity, QueryOptions<IEntityHistory>? options = null, CompanyDbContext? companyContext = null, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                if (!typeof(IHistoryEntity).IsAssignableFrom(typeof(TEntity)))
+                    return -1;
+
+                var historyEntity = (IHistoryEntity)entity;
+                if (historyEntity == null)
+                    return -1;
+
+                if (companyContext != null)
+                {
+                    if (options == null)
+                    {
+                        var history = companyContext.EntitiesHistory
+                            .Include(x => x.User)
+                            .Where(x =>
+                                x.EntityType == historyEntity.EntityType &&
+                                x.EntityId == historyEntity.Id)
+                            .OrderByDescending(x => x.OccurredAt);
+                        historyEntity.History = await history.Cast<IEntityHistory>().ToListAsync();
+                        return await history.CountAsync();
+                    }
+                    else
+                    {
+                        var query = companyContext.EntitiesHistory
+                            .Include(x => x.User)
+                            .Where(x =>
+                                x.EntityType == historyEntity.EntityType &&
+                                x.EntityId == historyEntity.Id)
+                            .OrderByDescending(x => x.OccurredAt)
+                            .AsQueryable();
+                        query = query.ApplyColumnFilters(options.Filters);
+                        query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
+                        query = query.SortBy(options.SortBy, options.Descending);
+                        var count = await query.CountAsync();
+                        var entities = await query.Paginate(options.PageNumber, options.PageSize).ToListAsync();
+                        historyEntity.History = entities.Cast<IEntityHistory>().ToList();
+                        return count;
+                    }
+                }
+
+                else
+                {
+                    using (var context = _companyContextFactory.CreateDbContext())
+                    {
+                        if(options == null)
+                        {
+                            var history = context.EntitiesHistory
+                                .Include(x => x.User)
+                                .Where(x =>
+                                    x.EntityType == historyEntity.EntityType &&
+                                    x.EntityId == historyEntity.Id)
+                                .OrderByDescending(x => x.OccurredAt);
+                            historyEntity.History = await history.Cast<IEntityHistory>().ToListAsync();
+                            return await history.CountAsync();
+                        }
+                        else
+                        {
+                            var query = context.EntitiesHistory
+                                .Include(x => x.User)
+                                .Where(x =>
+                                    x.EntityType == historyEntity.EntityType &&
+                                    x.EntityId == historyEntity.Id)
+                                .OrderByDescending(x => x.OccurredAt)
+                                .AsQueryable();
+                            query = query.ApplyColumnFilters(options.Filters);
+                            query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
+                            query = query.SortBy(options.SortBy, options.Descending);
+                            var count = await query.CountAsync();
+                            var entities = await query.Paginate(options.PageNumber, options.PageSize).ToListAsync();
+                            historyEntity.History = entities.Cast<IEntityHistory>().ToList();
+                            return count;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return -1;
+            }
+        }
     }
 }

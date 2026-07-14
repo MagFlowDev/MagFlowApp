@@ -80,6 +80,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Parameters = parameters,
                 Components = components,
                 UnitConversions = unitConversions,
+                History = product.History.ToDTO()
             };
         }
 
