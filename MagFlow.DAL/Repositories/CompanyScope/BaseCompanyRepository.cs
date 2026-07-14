@@ -1,5 +1,6 @@
 ﻿using MagFlow.DAL.Helpers;
 using MagFlow.EF;
+using MagFlow.EF.MultiTenancy;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -1091,6 +1092,38 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             {
                 _logger.LogError(ex, ex.Message);
                 return -1;
+            }
+        }
+
+        public async Task<QueryResponse<IEntityHistory>?> GetHistoryAsync(QueryOptions<IEntityHistory> options, Enums.HistoryEntityType entityType, int entityId)
+        {
+            try
+            {
+                using (var context = _companyContextFactory.CreateDbContext())
+                {
+                    var query = context.EntitiesHistory
+                                .Include(x => x.User)
+                                .Where(x =>
+                                    x.EntityType == entityType &&
+                                    x.EntityId == entityId)
+                                .OrderByDescending(x => x.OccurredAt)
+                                .AsQueryable();
+                    query = query.ApplyColumnFilters(options.Filters);
+                    query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
+                    query = query.SortBy(options.SortBy, options.Descending);
+                    var count = await query.CountAsync();
+                    var entities = await query.Paginate(options.PageNumber, options.PageSize).Cast<IEntityHistory>().ToListAsync();
+                    return new QueryResponse<IEntityHistory>()
+                    {
+                        Elements = entities,
+                        TotalCount = count
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
             }
         }
     }

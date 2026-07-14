@@ -37,7 +37,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Unit = item.DefaultUnit?.ToDTO(),
                 Product = item.Product?.ToDTO(),
                 Location = item.Location,
-                Parameters = parameters,
+                Parameters = parameters
             };
         }
 
@@ -58,7 +58,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     continue;
                 parameters.Add(new ItemParameter()
                 {
-                    ParameterId = parameter.Parameter.Id,
+                    ParameterId = parameter.Parameter.ParameterId,
                     Value = value
                 });
             }
@@ -99,7 +99,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     continue;
                 parameters.Add(new ItemParameter()
                 {
-                    ParameterId = parameter.Parameter.Id,
+                    ParameterId = parameter.Parameter.ParameterId,
                     Value = value
                 });
             }

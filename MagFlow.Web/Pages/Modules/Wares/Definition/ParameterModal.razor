@@ -113,10 +113,10 @@
                 return;
 
             var result = Enums.Result.Error;
-            if (Parameter != null && Parameter.Id != 0)
+            if (Parameter != null && Parameter.ParameterId != 0)
             {
                 var dto = _model.ToDTO();
-                dto.Id = Parameter.Id;
+                dto.ParameterId = Parameter.ParameterId;
                 result = await ProductService.UpdateParameter(dto);
             }
             else
@@ -125,7 +125,7 @@
             }
             if (result == MagFlow.Shared.Models.Enums.Result.Success)
             {
-                if (Parameter != null && Parameter.Id != 0)
+                if (Parameter != null && Parameter.ParameterId != 0)
                     Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
                 else
                     Snackbar.Add(Localizer[Langs.ResourceCreated], MudBlazor.Severity.Success);
@@ -170,7 +170,7 @@
 
     protected override void OnParametersSet()
     {
-        if (Parameter != null && Parameter.Id != 0)
+        if (Parameter != null && Parameter.ParameterId != 0)
         {
             _model.Name = Parameter.Name;
             _model.Code = Parameter.Code;

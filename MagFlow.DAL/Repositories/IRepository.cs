@@ -53,6 +53,7 @@ namespace MagFlow.DAL.Repositories
 
         DbSet<TEntity>? GetSet(bool tracking = true, bool ignoreAutoInclude = false);
 
+        Task<QueryResponse<IEntityHistory>?> GetHistoryAsync(QueryOptions<IEntityHistory> options, Enums.HistoryEntityType entityType, int entityId);
         Task<int> LoadHistoryAsync(TEntity entity, QueryOptions<IEntityHistory>? options = null, CompanyDbContext? companyContext = null, CancellationToken cancellationToken = default);
     }
 }

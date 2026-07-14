@@ -77,7 +77,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new ParameterDTO()
             {
-                Id = parameter.Id,
+                ParameterId = parameter.Id,
                 Name = parameter.Name,
                 Code = parameter.Code,
                 ValueType = parameter.ValueType,
@@ -112,7 +112,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new CustomParameter()
             {
-                Id = parameter.Id,
+                Id = parameter.ParameterId,
                 Name = parameter.Name,
                 Code = parameter.Code,
                 UnitId = parameter.Unit?.Id,

@@ -1,5 +1,6 @@
 ﻿@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
 @using Microsoft.AspNetCore.Components.Authorization
@@ -53,21 +54,11 @@
             sortBy = column?.Tag?.ToString();
         }
         sortBy = sortBy ?? nameof(EntityHistoryDTO.Id);
-        var response = await ProductService.GetProductHistory(_product.Id, state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
-
-        if (response == null)
-        {
-            return new GridData<EntityHistoryDTO>
-            {
-                Items = new List<EntityHistoryDTO>(),
-                TotalItems = 0,
-            };
-        }
-
+        var response = await ProductService.GetEntityHistory(_product.Id, Enums.HistoryEntityType.Product, state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
         return new GridData<EntityHistoryDTO>
         {
-            Items = response.History,
-            TotalItems = response.HistoryCount,
+            Items = response.Elements,
+            TotalItems = response.TotalCount,
         };
     }
 }

@@ -15,13 +15,13 @@ using System.Text;
 
 namespace MagFlow.BLL.Services
 {
-    public class ItemService : IItemService
+    public class ItemService : BaseCompanyService<Item>, IItemService
     {
         private readonly IItemRepository _itemRepository;
         private readonly INetworkService _networkService;
 
         public ItemService(IItemRepository itemRepository, 
-            INetworkService networkService)
+            INetworkService networkService) : base(itemRepository)
         {
             _itemRepository = itemRepository;
             _networkService = networkService;
@@ -30,10 +30,10 @@ namespace MagFlow.BLL.Services
         public async Task<ItemDTO?> GetItem(int id)
         {
             var product = await _itemRepository.GetByIdAsync(id, item => item
-                .Include(x => x.Product)
+                .Include(x => x.Product).ThenInclude(y => y.Components).ThenInclude(z => z.Component)
                 .Include(x => x.DefaultUnit)
                 .Include(x => x.CreatedBy)
-                .Include(x => x.Parameters));
+                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit));
             var dto = product?.ToDTO();
             return dto;
         }

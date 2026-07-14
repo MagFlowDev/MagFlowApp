@@ -55,7 +55,7 @@
                                             </MudAutocomplete>
                                         </div>
                                         <div class="d-flex w-100 my-0 align-items-start align-self-stretch" style="gap: 16px">
-                                            <MudTextField Label="@Localizer[Langs.StockQuantity]" Class="w-50 mud-border-primary" T="decimal?" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.Quantity" For="@(() => _model.GeneralInformation.Quantity)"></MudTextField>
+                                            <MudTextField Label="@Localizer[Langs.StockQuantity]" Format="0.##" Class="w-50 mud-border-primary" T="decimal?" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.Quantity" For="@(() => _model.GeneralInformation.Quantity)"></MudTextField>
                                             <div class="d-flex w-50">
                                                 <MudSelect @bind-Value="_model.GeneralInformation.Unit"
                                                             For="@(() => _model.GeneralInformation.Unit)"

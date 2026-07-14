@@ -51,7 +51,10 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
             var dialog = await DialogService.ShowAsync<UnitModal>(Localizer[Langs.AddMeasurement]);
             var confirmation = await dialog.Result;
             if (confirmation?.Data is bool result && result == true)
+            {
+                _unitsDataGrid.Selection.Clear();
                 await _unitsDataGrid.ReloadServerData();
+            }
         }
 
         private async Task OpenUnitDetails(UnitDTO unit)

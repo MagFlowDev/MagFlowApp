@@ -1,4 +1,5 @@
-﻿using MagFlow.Shared.DTOs.CompanyScope;
+﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
 using System;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace MagFlow.BLL.Services.Interfaces
 {
-    public interface IItemService
+    public interface IItemService : IBaseCompanyService<Item>
     {
         Task<ItemDTO?> GetItem(int id);
 

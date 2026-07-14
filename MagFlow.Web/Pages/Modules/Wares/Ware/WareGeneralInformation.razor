@@ -1,5 +1,224 @@
-﻿<h3>WareGeneralInformation</h3>
+﻿@using FluentValidation
+@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Validators.Company
+@using MagFlow.Shared.Validators.Resources
+@using MagFlow.Web.Components.Buttons
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject IItemService ItemService
+@inject IProductService ProductService
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<Validations> Validations
+@inherits AuthComponentBase
+
+<div class="d-flex flex-column align-items-start w-100 h-100" style="max-width: 1000px; min-height: 0; gap: 24px; margin-left: 16px; margin-right: 16px; padding-top: 24px;">
+    @if (_item != null)
+    {
+        <EditForm EditContext="@_context" class="align-self-stretch d-flex flex-column align-items-start h-100" style="gap: 16px; padding-bottom: 24px;">
+            <div class="d-flex align-items-start justify-content-between align-self-stretch w-100 h-100 overflow-y-hidden" style="gap: 24px; min-height: 0">
+                <div class="d-flex flex-column align-items-start align-self-stretch w-50" style="gap: 16px">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.GeneralInformation]</MudText>
+                    <div class="d-flex flex-column align-items-start align-self-stretch overflow-y-auto" style="gap: 24px; min-height: 0; flex: 0 1 auto; padding-right: 10px;">
+                        <div class="d-flex w-100 my-0 align-items-stretch">
+                            <MudAutocomplete Value="_item.Product"
+                                             ValueChanged="ProductSelected"
+                                             For="@(() => _model.GeneralInformation.Product)"
+                                             T="ProductDTO"
+                                             Label="@Localizer[Langs.Product]"
+                                             Placeholder="@Localizer[Langs.ProductExample]"
+                                             Variant="Variant.Outlined"
+                                             AnchorOrigin="Origin.BottomLeft"
+                                             TransformOrigin="Origin.TopLeft"
+                                             DebounceInterval="300"
+                                             MaxItems="_pageSize"
+                                             ReadOnly="true"
+                                             ToStringFunc="@(t => t?.Name)"
+                                             SearchFunc="@SearchForProduct">
+                                <ProgressIndicatorInPopoverTemplate>
+                                    <MudList T="string" ReadOnly>
+                                        <MudListItem>
+                                            @Localizer[Langs.Loading]
+                                        </MudListItem>
+                                    </MudList>
+                                </ProgressIndicatorInPopoverTemplate>
+                            </MudAutocomplete>
+                        </div>
+                        <div class="d-flex w-100 my-0 align-items-start align-self-stretch" style="gap: 16px">
+                            <MudTextField Label="@Localizer[Langs.StockQuantity]" Class="w-50 mud-border-primary" T="decimal" Variant="Variant.Outlined" @bind-Value="@_item.Quantity" Format="0.##"></MudTextField>
+                            <div class="d-flex w-50">
+                                <MudSelect @bind-Value="_item.Unit"
+                                           For="@(() => _model.GeneralInformation.Unit)"
+                                           T="UnitDTO"
+                                           ReadOnly="true"
+                                           Label="@Localizer[Langs.Unit]"
+                                           Placeholder="@Localizer[Langs.MeasurementUnitExample]"
+                                           Variant="Variant.Outlined"
+                                           AnchorOrigin="Origin.BottomLeft"
+                                           TransformOrigin="Origin.TopLeft"
+                                           ToStringFunc="@(t => t?.Name)">
+                                    @if (_item?.Unit != null)
+                                    {
+                                        <MudSelectItem Value="_item.Unit">@_item.Unit.Name</MudSelectItem>
+                                        @foreach (var unit in _item.Unit?.RelatedUnits ?? new List<UnitDTO>())
+                                        {
+                                            <MudSelectItem Value="@unit">@unit.Name</MudSelectItem>
+                                        }
+                                    }
+                                </MudSelect>
+                            </div>
+                        </div>
+                        <MudTextField Disabled Label="@Localizer[Langs.Type]" Placeholder="@Localizer[Langs.TypeExample]" Variant="Variant.Outlined" @bind-Value="@_item.Product?.Type?.Name" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)"></MudTextField>
+                        <MudTextField Disabled Label="@Localizer[Langs.Category]" Placeholder="@Localizer[Langs.CategoryExample]" Variant="Variant.Outlined" @bind-Value="@_item.Product?.Category?.Name" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)"></MudTextField>
+                        <MudTextField Label="@Localizer[Langs.LocationOptional]" Variant="Variant.Outlined" T="string" @bind-Value="@_item.Location" For="@(() => _model.GeneralInformation.Location)" Class="w-100 my-0"></MudTextField>
+                    </div>
+                </div>
+                <div class="d-flex flex-column align-items-start align-self-stretch w-50">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.Parameters]</MudText>
+                    <div class="d-flex flex-column w-100" style="min-height: 0; flex: 1 1 auto">
+                        <div style="overflow-y: auto; flex: 0 1 auto; min-height: 0; padding-right: 10px;" class="d-flex flex-column align-items-center pt-3">
+                            <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
+                                <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 16px">
+                                    @foreach (var parameter in _item.Parameters)
+                                    {
+                                        @if (parameter.Parameter.ValueType.HasValue)
+                                        {
+                                            <div class="d-flex justify-content-between align-items-center align-self-stretch" style="@($"border-bottom: 1px solid {Colors.Gray.Lighten2}")">
+                                                <MudText Typo="Typo.body1" Style="font-weight: 400">@parameter.Parameter.Name</MudText>
+                                                <MudTextField Style="width: 177px" Class="flex-grow-0 my-2" Variant="Variant.Outlined" Label="@Localizer[Langs.Value]" Placeholder="@Localizer[Langs.ValueExample]" T="string" @bind-Value="parameter.Value" Adornment="Adornment.End" AdornmentText="@(parameter.Parameter.Unit?.Symbol != null ? parameter.Parameter.Unit.Symbol : string.Empty)" />
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_EDIT" Context="authorizedContext">
+                <Authorized>
+                    <LoadingButton Loading="Submitting" Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@Localizer[Langs.Save]</LoadingButton>
+                </Authorized>
+            </AuthorizeView>
+        </EditForm>
+    }
+</div>
 
 @code {
+    [CascadingParameter(Name = "Item")]
+    ItemDTO? _item { get; set; }
 
+    [Parameter]
+    public EventCallback OnSubmitted { get; set; }
+
+    [Parameter]
+    public bool Submitting { get; set; }
+
+    [Parameter]
+    public bool IsBusy { get; set; }
+
+    private IValidator _validator;
+    private ItemFormModel _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
+
+    private string _productSearchString = "";
+    private string _unitSearchString = "";
+    private int _pageSize = 25;
+
+    private List<ProductDTO> _products = new List<ProductDTO>();
+    private List<UnitDTO> _units = new List<UnitDTO>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _model = new ItemFormModel();
+        _context = new EditContext(_model);
+        _validator = new ItemFormValidator(Validations);
+        _messageStore = new ValidationMessageStore(_context);
+    }
+
+    private async Task Submit()
+    {
+        if (IsBusy || _item == null)
+            return;
+
+        if (!HasModulePermission("Wares", PermissionFlags.Edit))
+            return;
+
+        try
+        {
+            IsBusy = true;
+            Submitting = true;
+
+            FillModel();
+            var isValid = await _messageStore.IsFormValid(_validator, _model);
+            _context.NotifyValidationStateChanged();
+
+            if (!isValid)
+                return;
+
+            await OnSubmitted.InvokeAsync();
+        }
+        finally
+        {
+            IsBusy = false;
+            Submitting = false;
+        }
+    }
+
+    private void FillModel()
+    {
+        if (_item == null)
+            return;
+
+        _model.GeneralInformation.Product = _item.Product;
+        _model.GeneralInformation.ProductCategory = _item.Product?.Category;
+        _model.GeneralInformation.ProductType = _item.Product?.Type;
+        _model.GeneralInformation.Unit = _item.Unit;
+        _model.GeneralInformation.Location = _item.Location;
+        _model.GeneralInformation.Quantity = _item.Quantity;
+
+        _model.ParameterValues.Parameters = new List<ItemFormParameterValue>();
+        foreach(var parameter in _item.Parameters)
+        {
+            _model.ParameterValues.Parameters.Add(new ItemFormParameterValue(parameter.Parameter, parameter.Value));
+        }
+
+        _model.Components.Components = new List<ItemFormComponent>();
+
+    }
+
+    private void ProductSelected(ProductDTO product)
+    {
+        _item?.Product = product;
+        if (_item?.Product != null)
+        {
+            _item.Parameters = new List<ItemParameterDTO>();
+            foreach (var parameter in product.Parameters)
+            {
+                _item.Parameters.Add(new ItemParameterDTO()
+                {
+                    Parameter = parameter,
+                    Value = "1"
+                });
+            }
+            FillModel();
+        }
+        StateHasChanged();
+    }
+
+    private async Task<IEnumerable<ProductDTO>> SearchForProduct(string value, CancellationToken token)
+    {
+        _productSearchString = value;
+        var response = await ProductService.GetProducts(0, _pageSize, _productSearchString);
+        _products = response.Elements;
+        return _products;
+    }
 }
