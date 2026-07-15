@@ -19,7 +19,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public UserDTO? CreatedBy { get; set; }
         public Enums.ItemStatus Status { get; set; }
 
-        public List<ItemParameterDTO> Parameters { get; set; } = new List<ItemParameterDTO>();
-        public List<ComponentDTO> Components { get; set; } = new List<ComponentDTO>();
+        public List<ItemParameterDTO> Parameters { get; set; } = [];
+        public List<ItemComponentDTO> Components { get; set; } = [];
     }
 }

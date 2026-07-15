@@ -1674,4 +1674,13 @@
   <data name="User" xml:space="preserve">
     <value>User</value>
   </data>
+  <data name="Fill_InWares" xml:space="preserve">
+    <value>Fill in wares</value>
+  </data>
+  <data name="Fill_In" xml:space="preserve">
+    <value>Fill in</value>
+  </data>
+  <data name="SelectWare" xml:space="preserve">
+    <value>Select ware</value>
+  </data>
 </root>

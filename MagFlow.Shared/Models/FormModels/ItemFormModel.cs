@@ -65,6 +65,7 @@ namespace MagFlow.Shared.Models.FormModels
     {
         public ProductDTO Product { get; set; }
         public decimal RequiredQuantity { get; set; }
+        public bool ShowItems { get; set; }
 
         public List<ItemFormComponentRecord> Components { get; set; }
 

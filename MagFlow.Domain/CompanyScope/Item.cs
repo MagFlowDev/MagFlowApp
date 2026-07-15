@@ -58,7 +58,8 @@ namespace MagFlow.Domain.CompanyScope
         [ForeignKey(nameof(DefaultUnitId))]
         public Unit? DefaultUnit { get; set; }
 
-        public ICollection<ItemParameter> Parameters { get; set; }
+        public ICollection<ItemParameter> Parameters { get; set; } = [];
+        public ICollection<ItemComponent> Components { get; set; } = [];
 
         [NotMapped]
         public Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Item;

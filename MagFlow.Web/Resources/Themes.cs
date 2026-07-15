@@ -18,6 +18,7 @@ namespace MagFlow.Web.Resources
                 //TextSecondary = "#495057",
                 //ActionDefault = "#BDBDBD",
                 ActionDefault = "#757575",
+                //TableStriped = "#f5f5f5"
             },
             Typography = new Typography
             {

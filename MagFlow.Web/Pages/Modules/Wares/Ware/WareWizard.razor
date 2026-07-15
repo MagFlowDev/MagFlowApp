@@ -10,6 +10,7 @@
 
 @layout MainLayout
 @inherits StepperWizardBase<ItemFormModel>
+@inject IDialogService DialogService
 @inject IProductService ProductService
 @inject IItemService ItemService
 
@@ -105,7 +106,7 @@
                             {
                                 <MudStep Title="@Localizer[Langs.Components]" Style="min-height: 0; height: 100%" >
                                     <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
-                                        <div class="d-flex flex-column align-items-start w-100 mud-height-full" style="gap: 16px; max-width: 550px;">
+                                        <div class="d-flex flex-column align-items-start w-100 mud-height-full" style="gap: 16px; max-width: 800px;">
                                             <MudRadioGroup @bind-Value="_addComponentType" Class="w-100" InputClass="justify-content-center gap-3">
                                                 <MudRadio Label="@Localizer[Langs.AddReadyProduct]" Value="@AddComponentType.ReadyProduct" />
                                                 <MudRadio Label="@Localizer[Langs.AddComponents]" Value="@AddComponentType.AddComponents" />
@@ -120,9 +121,52 @@
                                                 }
                                                 else if(_addComponentType == AddComponentType.AddComponents)
                                                 {
-                                                    <div class="d-flex w-100 mud-height-full align-items-center justify-content-center" style="gap: 16px">
-                                                        <MudIcon Icon="@Icons.Material.Outlined.Settings" Size="Size.Medium" />
-                                                        <MudText Typo="Typo.h6" Style="font-weight: 600;">@Localizer[Langs.UnderConstruction]</MudText>
+                                                    <div class="d-flex flex-column w-100 mud-height-full align-items-center justify-content-start px-1" style="gap: 16px">
+                                                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-start">@Localizer[Langs.Fill_InWares]</MudText>
+                                                        <MudTable Items="@_model.Components.Components" Context="tableContext" Class="w-100" Elevation="0" Striped="true" Dense="true" Style="--mud-palette-table-striped: #eeeff0">
+                                                            <ColGroup>
+                                                                <col style="width: 1%; white-space: nowrap;" />
+                                                                <col />
+                                                                <col style="width: 45%; min-width: 100px; max-width: 300px; white-space: nowrap;" />
+                                                                <col style="width: 1%; white-space: nowrap;" />
+                                                            </ColGroup>
+                                                            <RowTemplate>
+                                                                <MudTh><MudIconButton Size="Size.Medium" OnClick="@(() => ShowComponentItemsBtnPressed(tableContext.Product.Id))" Icon="@((tableContext.ShowItems == true) ? Icons.Material.Outlined.KeyboardArrowDown : Icons.Material.Outlined.KeyboardArrowRight)" Disabled="@(tableContext.Components.Any() != true)" Class="px-0" /></MudTh>
+                                                                <MudTh>@tableContext.Product.Name</MudTh>
+                                                                <MudTh>
+                                                                    <div class="d-flex align-items-center" style="gap: 16px;">
+                                                                        <MudProgressLinear Color="Color.Success" Max="@MaxProgress(tableContext)" Value="@ActualProgress(tableContext)" Rounded ShowBackground="true" />
+                                                                        <MudText Class="text-nowrap">@string.Concat(ActualProgress(tableContext), "/", MaxProgress(tableContext)," ", tableContext.Product.Unit?.Symbol)</MudText>
+                                                                    </div>
+                                                                </MudTh>
+                                                                <MudTh><LoadingButton Loading="@LoadingFill(tableContext.Product.Id)" Variant="Variant.Outlined" OnClick="@(async () => await AddComponent(tableContext))" Disabled="@(RemainingQuantity(tableContext) <= 0)">@Localizer[Langs.Fill_In]</LoadingButton></MudTh>
+                                                            </RowTemplate>
+                                                            <ChildRowContent>
+                                                                @if(tableContext.ShowItems)
+                                                                {
+                                                                    <MudTr>
+                                                                        <td colspan="4">
+                                                                            <MudCard Elevation="0">
+                                                                                <MudCardContent Class="pa-0">
+                                                                                    <MudTable Items="@tableContext.Components" Context="componentContext" Elevation="0">
+                                                                                        <ColGroup>
+                                                                                            <col />
+                                                                                            <col />
+                                                                                            <col />
+                                                                                        </ColGroup>
+                                                                                        <RowTemplate>
+                                                                                            <MudTd>@componentContext.Item.Id</MudTd>
+                                                                                            <MudTd>@componentContext.Quantity</MudTd>
+                                                                                            <MudTd><MudIconButton Icon="@Icons.Material.Outlined.RemoveCircleOutline" Color="Color.Error" OnClick="@(() => RemoveComponent(tableContext, componentContext))" /></MudTd>
+                                                                                        </RowTemplate>
+                                                                                    </MudTable>
+                                                                                </MudCardContent>
+                                                                            </MudCard>
+                                                                        </td>
+                                                                    </MudTr>
+                                                                }
+                                                            </ChildRowContent>
+                                                        </MudTable>
                                                     </div>
                                                 }
                                             </div>
