@@ -10,6 +10,7 @@ using MagFlow.Shared.Models.FormModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Text;
 
@@ -51,9 +52,33 @@ namespace MagFlow.BLL.Services
                 .Include(x => x.Product).ThenInclude(y => y.Type).ThenInclude(z => z.Category)
                 .Include(x => x.Product).ThenInclude(y => y.Category)
                 .Include(x => x.Product).ThenInclude(y => y.Unit)
+                .Include(x => x.Product).ThenInclude(y => y.Components).ThenInclude(z => z.Component)
                 .Include(x => x.DefaultUnit)
                 .Include(x => x.CreatedBy)
-                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit));
+                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit)
+                .Include(x => x.Components));
+            return new QueryResponse<ItemDTO>()
+            {
+                Elements = queryResponse?.Elements.Select(x =>
+                {
+                    var dto = x.ToDTO();
+                    return dto;
+                }).ToList() ?? new List<ItemDTO>(),
+                TotalCount = queryResponse?.TotalCount ?? 0
+            };
+        }
+
+        public async Task<QueryResponse<ItemDTO>> GetItems(QueryOptions<Item> options)
+        {
+            var queryResponse = await _itemRepository.GetAsync(options, items => items
+                .Include(x => x.Product).ThenInclude(y => y.Type).ThenInclude(z => z.Category)
+                .Include(x => x.Product).ThenInclude(y => y.Category)
+                .Include(x => x.Product).ThenInclude(y => y.Unit)
+                .Include(x => x.Product).ThenInclude(y => y.Components).ThenInclude(z => z.Component)
+                .Include(x => x.DefaultUnit)
+                .Include(x => x.CreatedBy)
+                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit)
+                .Include(x => x.Components));
             return new QueryResponse<ItemDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -103,6 +128,7 @@ namespace MagFlow.BLL.Services
             var result = await _itemRepository.AddAsync(unit);
             return result;
         }
+
 
 
 

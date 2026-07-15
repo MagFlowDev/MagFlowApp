@@ -3,12 +3,14 @@ using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
+using MagFlow.Web.Components.Dialogs;
 using MagFlow.Web.Components.Wizards;
 using MagFlow.Web.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MudBlazor;
 using System.Text.Json;
+using static MudBlazor.CategoryTypes;
 
 namespace MagFlow.Web.Pages.Modules.Wares.Ware
 {
@@ -27,8 +29,8 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
 
         private string _stepperKey => $"{ShowComponentsStep}";
 
-        private bool ShowComponentsStep => _model.Components?.Components != null
-            && _model.Components.Components.Any(x => x.Product != null);
+        private bool ShowComponentsStep => (_model.Components?.Components != null && _model.Components.Components.Any(x => x.Product != null)) || 
+            (_model.GeneralInformation.Product?.Components != null && _model.GeneralInformation.Product.Components.Any(x => x.Product != null));
 
         private AddComponentType _addComponentType { get; set; } = AddComponentType.ReadyProduct;
 
@@ -58,6 +60,16 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             catch { }
         }
 
+        private void ShowComponentItemsBtnPressed(int? id)
+        {
+            if (!id.HasValue)
+                return;
+
+            var component = _model.Components.Components.FirstOrDefault(x => x.Product?.Id == id.Value);
+            if(component != null)
+                component.ShowItems = !component.ShowItems;
+        }
+
         private void CreateCopy(ItemDTO dto)
         {
             _model.GeneralInformation.Product = dto.Product;
@@ -73,7 +85,11 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 _model.ParameterValues.Parameters.Add(new ItemFormParameterValue(parameter.Parameter, parameter.Value));
             });
 
-            
+            _model.Components.Components = new List<ItemFormComponent>();
+            dto.Product?.Components?.ForEach(component =>
+            {
+                _model.Components.Components.Add(new ItemFormComponent(component.Product, component.Quantity));
+            });
         }
 
         protected override async Task Save()
@@ -176,6 +192,56 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             var response = await ProductService.GetProducts(0, _pageSize, _productSearchString);
             _products = response.Elements;
             return _products;
+        }
+
+        private Dictionary<int, bool> _loadingFill = [];
+        private bool LoadingFill(int id) => _loadingFill.TryGetValue(id, out var value) && value;
+        private async Task AddComponent(ItemFormComponent componentTemplate)
+        {
+            if (_isBusy || (_loadingFill.TryGetValue(componentTemplate.Product.Id, out var loading) && loading))
+                return;
+
+            try
+            {
+                _isBusy = true;
+                _loadingFill[componentTemplate.Product.Id] = true;
+                var remainingQuantity = RemainingQuantity(componentTemplate);
+                DialogOptions options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true };
+                var parameters = new DialogParameters<AddComponentDialog> { { x => x.Product, componentTemplate.Product }, { x => x.Quantity, remainingQuantity } };
+                var dialog = await DialogService.ShowAsync<AddComponentDialog>(Localizer[Langs.SelectWare], parameters, options);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled && confirmation.Data is ItemDTO component)
+                {
+                    
+                    StateHasChanged();
+                }
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingFill[componentTemplate.Product.Id] = false;
+            }
+        }
+
+        private void RemoveComponent(ItemFormComponent component, ItemFormComponentRecord itemRecord)
+        {
+            component.Components.Remove(itemRecord);
+        }
+
+        private decimal RemainingQuantity(ItemFormComponent component)
+        {
+            var filledQuantity = component.Components.Select(x => x.Quantity).Sum();
+            return component.RequiredQuantity - filledQuantity;
+        }
+
+        private double MaxProgress(ItemFormComponent component)
+        {
+            return (double)component.RequiredQuantity;
+        }
+
+        private double ActualProgress(ItemFormComponent component)
+        {
+            return (double)component.Components.Select(x => x.Quantity).Sum();
         }
     }
 }

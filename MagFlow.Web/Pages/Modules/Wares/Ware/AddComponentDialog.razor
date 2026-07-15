@@ -1,0 +1,134 @@
+﻿@using System.Linq.Expressions
+@using FluentValidation
+@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Helpers.Localization.Display
+@using MagFlow.BLL.Mappers.Domain.CompanyScope
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Web.Components.DataGrid
+@using MudBlazor
+
+@inject IItemService ItemService
+
+<MudDialog>
+    <DialogContent>
+        <MagFlowDataGrid @ref="_itemsDataGrid" T="ItemDTO" ServerData="ServerReloadItems" Filterable="false" MultiSelection="false" Style="min-height: 200px">
+            <Columns>
+                <TemplateColumn T="ItemDTO" Style="width: 1%; white-space: nowrap;">
+                    <CellTemplate>
+                        <MudRadio Value="@(IsRowSelected(context.Item))"
+                                  @onclick="@(() => OnRadioClicked(context.Item))"
+                                  T="bool"
+                                  Color="Color.Dark" />
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" />
+                <PropertyColumn T="ItemDTO" TProperty="int" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="item => item.Id" />
+                <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
+                    <CellTemplate>
+                        <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Type != null ? item.Product.Type.Name : string.Empty)" />
+                <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Category]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Category != null ? item.Product.Category.Name : string.Empty)" />
+                <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.StockQuantity]" Sortable="false" CellClass="text-nowrap">
+                    <CellTemplate>
+                        @($"{context.Item.Quantity:0.##} {context.Item.Unit?.Symbol}")
+                    </CellTemplate>
+                </TemplateColumn>
+                <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Location]" Sortable="false" CellClass="text-nowrap" Property="item => item.Location" />
+            </Columns>
+        </MagFlowDataGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@Localizer[Langs.Cancel]</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@Localizer[Langs.Save]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter, EditorRequired]
+    public ProductDTO Product { get; set; }
+
+    [Parameter, EditorRequired]
+    public decimal Quantity { get; set; }
+
+    MudDataGrid<ItemDTO> _itemsDataGrid;
+    ItemDTO? _selectedItem;
+    string? _searchString = null;
+
+    private bool IsRowSelected(ItemDTO item)
+    {
+        return _selectedItem?.Product != null && _selectedItem.Product.Id == item.Product?.Id;
+    }
+
+    private void OnRadioClicked(ItemDTO item)
+    {
+        _selectedItem = item;
+    }
+
+    private async Task Submit()
+    {
+
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        this.MudDialog.SetOptionsAsync(new DialogOptions()
+        {
+            CloseButton = true,
+            Position = DialogPosition.Center
+        });
+    }
+
+    private async Task<GridData<ItemDTO>> ServerReloadItems(GridState<ItemDTO> state, CancellationToken token)
+    {
+        _selectedItem = null;
+        if(Product == null || Product.Id == 0)
+        {
+            return new GridData<ItemDTO>
+            {
+                Items = new List<ItemDTO>(),
+                TotalItems = 0,
+            };
+        }
+
+        var sortDefinition = state.SortDefinitions.FirstOrDefault();
+        string? sortBy = sortDefinition?.SortBy;
+        if (Guid.TryParse(sortBy, out _))
+        {
+            var column = _itemsDataGrid.RenderedColumns.FirstOrDefault(c => c.PropertyName == sortBy);
+            sortBy = column?.Tag?.ToString();
+        }
+        sortBy = sortBy ?? nameof(ItemDTO.Id);
+        var response = await ItemService.GetItems(new MagFlow.Shared.Models.QueryOptions<MagFlow.Domain.CompanyScope.Item>()
+        {
+            PageNumber = state.Page,
+            PageSize = state.PageSize,
+            Search = _searchString,
+            SortBy = sortBy,
+            SearchColumns = new Expression<Func<MagFlow.Domain.CompanyScope.Item, string?>>[]
+            {
+                u =>  u.Product.Name
+            },
+            Filters = new Dictionary<string, object>()
+            {
+                { nameof(MagFlow.Domain.CompanyScope.Item.ProductId), Product.Id }
+            },
+            Descending = sortDefinition?.Descending == true
+        });
+
+        return new GridData<ItemDTO>
+        {
+            Items = response.Elements,
+            TotalItems = response.TotalCount,
+        };
+    }
+}

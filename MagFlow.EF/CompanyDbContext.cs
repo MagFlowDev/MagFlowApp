@@ -18,6 +18,7 @@ namespace MagFlow.EF
         public DbSet<FunctionParameter> FunctionParameters { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemParameter> ItemParameters { get; set; }
+        public DbSet<ItemComponent> ItemComponents { get; set; }
         public DbSet<Machine> Machines { get; set; }
         public DbSet<MachineFunction> MachineFunctions { get; set; }
         public DbSet<MachineFunctionParameter> MachineFunctionParameters { get; set; }
@@ -147,6 +148,8 @@ namespace MagFlow.EF
             builder.Entity<Item>().HasOne(x => x.Storage).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.RemovedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<ItemComponent>().HasOne(x => x.Parent).WithMany(x => x.Components).HasForeignKey(p => p.ParentId).OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<ItemComponent>().HasOne(i => i.Component).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Contractor>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Document>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Machine>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);

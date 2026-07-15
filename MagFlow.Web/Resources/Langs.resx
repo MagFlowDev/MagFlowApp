@@ -1675,4 +1675,13 @@ i uprawnieniami użytkowników</value>
   <data name="User" xml:space="preserve">
     <value>Użytkownik</value>
   </data>
+  <data name="Fill_InWares" xml:space="preserve">
+    <value>Uzupełnij towary</value>
+  </data>
+  <data name="Fill_In" xml:space="preserve">
+    <value>Uzupełnij</value>
+  </data>
+  <data name="SelectWare" xml:space="preserve">
+    <value>Wybierz towar</value>
+  </data>
 </root>

@@ -21,7 +21,7 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         bool _loadingSave = false;
         bool _isBusy = false;
 
-        private bool ShowComponents => (_item?.Components != null && _item.Components.Any(x => x.Product != null)) || 
+        private bool ShowComponents => (_item?.Components != null && _item.Components.Any(x => x.Component != null)) || 
             (_item?.Product?.Components != null && _item.Product.Components.Any(x => x.Product != null));
 
         protected override async Task OnParametersSetAsync()
