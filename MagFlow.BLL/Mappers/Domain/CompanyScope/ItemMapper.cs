@@ -25,6 +25,17 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     parameters.Add(new ItemParameterDTO() { Parameter = dto, Value = value });
                 }
             }
+            var components = new List<ItemComponentDTO>();
+            if (item.Components != null)
+            {
+                foreach(var component in item.Components)
+                {
+                    if (component.Component == null)
+                        continue;
+                    var dto = component.Component.ToDTO();
+                    components.Add(new ItemComponentDTO() { Component = dto, Quantity = component.Quantity, Note = component.Note });
+                }
+            }
 
             return new ItemDTO()
             {
@@ -37,7 +48,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Unit = item.DefaultUnit?.ToDTO(),
                 Product = item.Product?.ToDTO(),
                 Location = item.Location,
-                Parameters = parameters
+                Parameters = parameters,
+                Components = components
             };
         }
 
@@ -62,6 +74,15 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     Value = value
                 });
             }
+            var components = new List<ItemComponent>();
+            foreach (var component in item.Components)
+            {
+                components.Add(new ItemComponent()
+                {
+                    ComponentId = component.Component.Id,
+                    Quantity = component.Quantity
+                });
+            }
 
             return new Item()
             {
@@ -80,7 +101,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 TaxRate = item.Product?.TaxRate?.ToDecimal(),
                 Currency = item.Product?.Currency,
 
-                Parameters = parameters
+                Parameters = parameters,
+                Components = components
             };
         }
 
@@ -103,6 +125,18 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     Value = value
                 });
             }
+            var components = new List<ItemComponent>();
+            foreach (var component in model.Components.Components)
+            {
+                foreach(var item in component.Components)
+                {
+                    components.Add(new ItemComponent()
+                    {
+                        ComponentId = item.Item.Id,
+                        Quantity = item.Quantity
+                    });
+                }
+            }
 
             return new Item()
             {
@@ -120,7 +154,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 TaxRate = model.GeneralInformation.Product?.TaxRate?.ToDecimal(),
                 Currency = model.GeneralInformation.Product?.Currency,
 
-                Parameters = parameters
+                Parameters = parameters,
+                Components = components
             };
         }
 

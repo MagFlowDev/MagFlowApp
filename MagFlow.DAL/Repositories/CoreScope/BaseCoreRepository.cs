@@ -4,6 +4,7 @@ using MagFlow.EF.MultiTenancy;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,62 @@ namespace MagFlow.DAL.Repositories.CoreScope
             _coreContextFactory = coreContextFactory;
             _companyContextFactory = companyContextFactory;
             _logger = logger;
+        }
+
+
+        public virtual async Task<(CoreDbContext context, IDbContextTransaction transaction)> BeingTransaction()
+        {
+            CoreDbContext? context = null;
+            IDbContextTransaction? transaction = null;
+            try
+            {
+                context = _coreContextFactory.CreateDbContext();
+                transaction = await context.Database.BeginTransactionAsync();
+                return (context, transaction);
+            }
+            catch (Exception)
+            {
+                if (transaction != null)
+                    await transaction.RollbackAsync();
+
+                transaction?.Dispose();
+                context?.Dispose();
+                return (null, null);
+            }
+        }
+
+        public virtual async Task<Enums.Result> CommitTransaction(CoreDbContext context, IDbContextTransaction transaction)
+        {
+            try
+            {
+                await transaction.CommitAsync();
+                transaction.Dispose();
+                context.Dispose();
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                transaction?.Dispose();
+                context?.Dispose();
+                return Enums.Result.Error;
+            }
+        }
+
+        public virtual async Task<Enums.Result> RollbackTransaction(CoreDbContext context, IDbContextTransaction transaction)
+        {
+            try
+            {
+                await transaction.CommitAsync();
+                transaction.Dispose();
+                context.Dispose();
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                transaction?.Dispose();
+                context?.Dispose();
+                return Enums.Result.Error;
+            }
         }
 
         public virtual Enums.Result Add(TEntity entity, CoreDbContext? context = default)
@@ -688,6 +745,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                     if (include != null)
                         query = include(query);
                     query = query.ApplyColumnFilters(options.Filters);
+                    query = query.ExcludeColumnFilters(options.Exludes);
                     query = query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                     query = query.SortBy(options.SortBy, options.Descending);
                     var count = await query.CountAsync();

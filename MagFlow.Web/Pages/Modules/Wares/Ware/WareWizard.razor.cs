@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.Services.Interfaces;
+﻿using MagFlow.BLL.Helpers;
+using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
@@ -90,6 +91,16 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             {
                 _model.Components.Components.Add(new ItemFormComponent(component.Product, component.Quantity));
             });
+
+            if(ShowComponentsStep)
+            {
+                _stepSections = new()
+                {
+                    [0] = () => _model.GeneralInformation,
+                    [1] = () => _model.ParameterValues,
+                    [2] = () => _model.Components
+                };
+            }
         }
 
         protected override async Task Save()
@@ -201,18 +212,38 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             if (_isBusy || (_loadingFill.TryGetValue(componentTemplate.Product.Id, out var loading) && loading))
                 return;
 
+            if (componentTemplate.Product.Unit == null)
+                return;
+
+            var remainingQuantity = RemainingQuantity(componentTemplate);
+            if (remainingQuantity <= 0)
+                return;
+
             try
             {
                 _isBusy = true;
                 _loadingFill[componentTemplate.Product.Id] = true;
-                var remainingQuantity = RemainingQuantity(componentTemplate);
                 DialogOptions options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true };
-                var parameters = new DialogParameters<AddComponentDialog> { { x => x.Product, componentTemplate.Product }, { x => x.Quantity, remainingQuantity } };
+                var alreadyAdded = componentTemplate.Components.Select(x => x.Item.Id).ToList();
+                var parameters = new DialogParameters<AddComponentDialog> { { x => x.Product, componentTemplate.Product }, { x => x.Quantity, remainingQuantity }, { x => x.AlreadyAdded, alreadyAdded } };
                 var dialog = await DialogService.ShowAsync<AddComponentDialog>(Localizer[Langs.SelectWare], parameters, options);
                 var confirmation = await dialog.Result;
                 if (confirmation != null && !confirmation.Canceled && confirmation.Data is ItemDTO component)
                 {
-                    
+                    if (component.Unit == null)
+                        return;
+                    var requiredUnit = componentTemplate.Product.Unit;
+
+                    decimal itemAvailableAmount = UnitHelper.ConvertValue(component.Quantity, component.Unit, requiredUnit);
+                    decimal amountToTakeIn = Math.Min(remainingQuantity, itemAvailableAmount);
+                    decimal amountToDeduct = UnitHelper.ConvertValue(amountToTakeIn, requiredUnit, component.Unit);
+
+                    component.TempQuantity = component.Quantity - amountToDeduct;
+                    componentTemplate.Components.Add(new ItemFormComponentRecord()
+                    {
+                        Item = component,
+                        Quantity = amountToTakeIn
+                    });
                     StateHasChanged();
                 }
             }

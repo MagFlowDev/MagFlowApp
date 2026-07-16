@@ -10,16 +10,15 @@
 
 @inject IItemService ItemService
 
-<MudDialog>
+<MudDialog Class="mud-dialog-width-xxl">
     <DialogContent>
         <MagFlowDataGrid @ref="_itemsDataGrid" T="ItemDTO" ServerData="ServerReloadItems" Filterable="false" MultiSelection="false" Style="min-height: 200px">
             <Columns>
                 <TemplateColumn T="ItemDTO" Style="width: 1%; white-space: nowrap;">
                     <CellTemplate>
-                        <MudRadio Value="@(IsRowSelected(context.Item))"
-                                  @onclick="@(() => OnRadioClicked(context.Item))"
-                                  T="bool"
-                                  Color="Color.Dark" />
+                        <MudRadioGroup T="bool" Value="@(IsRowSelected(context.Item))" ValueChanged="@((bool isSelected) => OnRadioClicked(context.Item))">
+                            <MudRadio Value="true" Color="Color.Dark" />
+                        </MudRadioGroup>
                     </CellTemplate>
                 </TemplateColumn>
                 <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" />
@@ -56,13 +55,16 @@
     [Parameter, EditorRequired]
     public decimal Quantity { get; set; }
 
+    [Parameter]
+    public List<int> AlreadyAdded { get; set; } = [];
+
     MudDataGrid<ItemDTO> _itemsDataGrid;
     ItemDTO? _selectedItem;
     string? _searchString = null;
 
     private bool IsRowSelected(ItemDTO item)
     {
-        return _selectedItem?.Product != null && _selectedItem.Product.Id == item.Product?.Id;
+        return _selectedItem != null && _selectedItem.Id == item.Id;
     }
 
     private void OnRadioClicked(ItemDTO item)
@@ -72,7 +74,10 @@
 
     private async Task Submit()
     {
-
+        if (_selectedItem != null)
+        {
+            MudDialog.Close(DialogResult.Ok(_selectedItem));
+        }
     }
 
     private void Cancel() => MudDialog.Cancel();
@@ -108,7 +113,7 @@
             sortBy = column?.Tag?.ToString();
         }
         sortBy = sortBy ?? nameof(ItemDTO.Id);
-        var response = await ItemService.GetItems(new MagFlow.Shared.Models.QueryOptions<MagFlow.Domain.CompanyScope.Item>()
+        var queryOptions = new MagFlow.Shared.Models.QueryOptions<MagFlow.Domain.CompanyScope.Item>()
         {
             PageNumber = state.Page,
             PageSize = state.PageSize,
@@ -123,7 +128,13 @@
                 { nameof(MagFlow.Domain.CompanyScope.Item.ProductId), Product.Id }
             },
             Descending = sortDefinition?.Descending == true
-        });
+        };
+        if(AlreadyAdded.Any())
+        {
+            queryOptions.Exludes = new List<KeyValuePair<string, object>>();
+            AlreadyAdded.ForEach(x => queryOptions.Exludes.Add(new KeyValuePair<string, object>(nameof(MagFlow.Domain.CompanyScope.Item.Id), x)));
+        }
+        var response = await ItemService.GetItems(queryOptions);
 
         return new GridData<ItemDTO>
         {
