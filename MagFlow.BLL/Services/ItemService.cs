@@ -8,6 +8,7 @@ using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,11 +22,15 @@ namespace MagFlow.BLL.Services
         private readonly IItemRepository _itemRepository;
         private readonly INetworkService _networkService;
 
+        private readonly ILogger<ItemService> _logger;
+
         public ItemService(IItemRepository itemRepository, 
-            INetworkService networkService) : base(itemRepository)
+            INetworkService networkService,
+            ILogger<ItemService> logger) : base(itemRepository)
         {
             _itemRepository = itemRepository;
             _networkService = networkService;
+            _logger = logger;
         }
 
         public async Task<ItemDTO?> GetItem(int id)
@@ -119,14 +124,50 @@ namespace MagFlow.BLL.Services
 
 
 
+
+
         public async Task<Enums.Result> AddItem(ItemFormModel model)
         {
             var userId = _networkService.GetUserId();
             if (!userId.HasValue)
                 return Enums.Result.Error;
             var unit = model.ToEntity(userId.Value);
-            var result = await _itemRepository.AddAsync(unit);
-            return result;
+            var contextTransaction = await _itemRepository.BeingTransaction();
+            var result = Enums.Result.Error;
+            if (contextTransaction.context == null || contextTransaction.transaction == null)
+                return result;
+
+            try
+            {
+                result = await _itemRepository.AddAsync(unit);
+                if(result != Enums.Result.Success)
+                {
+                    await _itemRepository.RollbackTransaction(contextTransaction.context, contextTransaction.transaction);
+                    return result;
+                }
+
+                var itemQuantity = model.Components.Components
+                        .SelectMany(x => x.Components)
+                        .Where(x => x.Item.TempQuantity.HasValue)
+                        .Select(x => new { Id = x.Item.Id, NewQuantity = x.Item.TempQuantity!.Value })
+                        .ToDictionary(x => x.Id, x => x.NewQuantity);
+
+                result = await _itemRepository.UpdateItemQuantity(itemQuantity, Enums.ItemStatus.Used, contextTransaction.context);
+                if(result != Enums.Result.Success)
+                {
+                    await _itemRepository.RollbackTransaction(contextTransaction.context, contextTransaction.transaction);
+                    return result;
+                }
+
+                result = await _itemRepository.CommitTransaction(contextTransaction.context, contextTransaction.transaction);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                await _itemRepository.RollbackTransaction(contextTransaction.context, contextTransaction.transaction);
+                return Enums.Result.Error;
+            }
         }
 
 

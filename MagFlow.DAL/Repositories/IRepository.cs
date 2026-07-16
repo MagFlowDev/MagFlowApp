@@ -2,6 +2,7 @@
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,10 @@ namespace MagFlow.DAL.Repositories
 {
     public interface IRepository<TEntity, TContext> where TEntity : class where TContext : DbContext
     {
+        Task<(TContext? context, IDbContextTransaction? transaction)> BeingTransaction();
+        Task<Enums.Result> CommitTransaction(TContext context, IDbContextTransaction transaction);
+        Task<Enums.Result> RollbackTransaction(TContext context, IDbContextTransaction transaction);
+
         IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool tracking = true, bool archive = false);
         Task<QueryResponse<TEntity>?> GetAsync(QueryOptions<TEntity> options, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool archive = false);
         Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? predicate = null, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool tracking = true, bool archive = false);

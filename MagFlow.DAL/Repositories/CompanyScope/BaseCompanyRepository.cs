@@ -4,7 +4,9 @@ using MagFlow.EF.MultiTenancy;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using Org.BouncyCastle.Tls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +31,62 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             _companyContextFactory = companyContextFactory;
             _logger = logger;
         }
+
+        public virtual async Task<(CompanyDbContext context, IDbContextTransaction transaction)> BeingTransaction()
+        {
+            CompanyDbContext? context = null;
+            IDbContextTransaction? transaction = null;
+            try
+            {
+                context = _companyContextFactory.CreateDbContext();
+                transaction = await context.Database.BeginTransactionAsync();
+                return (context, transaction);
+            }
+            catch(Exception)
+            {
+                if (transaction != null)
+                    await transaction.RollbackAsync();
+
+                transaction?.Dispose();
+                context?.Dispose();
+                return (null, null);
+            }
+        }
+
+        public virtual async Task<Enums.Result> CommitTransaction(CompanyDbContext context, IDbContextTransaction transaction)
+        {
+            try
+            {
+                await transaction.CommitAsync();
+                transaction.Dispose();
+                context.Dispose();
+                return Enums.Result.Success;
+            }
+            catch(Exception ex)
+            {
+                transaction?.Dispose();
+                context?.Dispose();
+                return Enums.Result.Error;
+            }
+        }
+
+        public virtual async Task<Enums.Result> RollbackTransaction(CompanyDbContext context, IDbContextTransaction transaction)
+        {
+            try
+            {
+                await transaction.CommitAsync();
+                transaction.Dispose();
+                context.Dispose();
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                transaction?.Dispose();
+                context?.Dispose();
+                return Enums.Result.Error;
+            }
+        }
+
 
         public virtual Enums.Result Add(TEntity entity, CompanyDbContext? context = default)
         {
@@ -64,7 +122,6 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     using (context = _companyContextFactory.CreateDbContext())
                     {
-                        var test = System.Text.Json.JsonSerializer.Serialize(entity);
                         await context.Set<TEntity>().AddAsync(entity);
                         await context.SaveChangesAsync();
                     }
@@ -689,6 +746,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                     if (include != null)
                         query = include(query);
                     query = query.ApplyColumnFilters(options.Filters);
+                    query = query.ExcludeColumnFilters(options.Exludes);
                     query = query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                     query = query.SortBy(options.SortBy, options.Descending);
                     var count = await query.CountAsync();
@@ -1044,6 +1102,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                             .OrderByDescending(x => x.OccurredAt)
                             .AsQueryable();
                         query = query.ApplyColumnFilters(options.Filters);
+                        query = query.ExcludeColumnFilters(options.Exludes);
                         query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                         query = query.SortBy(options.SortBy, options.Descending);
                         var count = await query.CountAsync();
@@ -1078,6 +1137,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                 .OrderByDescending(x => x.OccurredAt)
                                 .AsQueryable();
                             query = query.ApplyColumnFilters(options.Filters);
+                            query = query.ExcludeColumnFilters(options.Exludes);
                             query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                             query = query.SortBy(options.SortBy, options.Descending);
                             var count = await query.CountAsync();
@@ -1109,6 +1169,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                 .OrderByDescending(x => x.OccurredAt)
                                 .AsQueryable();
                     query = query.ApplyColumnFilters(options.Filters);
+                    query = query.ExcludeColumnFilters(options.Exludes);
                     query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                     query = query.SortBy(options.SortBy, options.Descending);
                     var count = await query.CountAsync();

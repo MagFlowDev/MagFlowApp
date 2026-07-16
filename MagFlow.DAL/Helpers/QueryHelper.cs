@@ -81,7 +81,47 @@ namespace MagFlow.DAL.Helpers
 
             return query.Where(lambda);
         }
-        
+
+        public static IQueryable<T> ExcludeColumnFilters<T>(this IQueryable<T> query, IEnumerable<KeyValuePair<string, object>>? filters)
+        {
+            if (filters == null || !filters.Any()) return query;
+
+            var parameter = Expression.Parameter(typeof(T), "x");
+            Expression? body = null;
+
+            foreach (var filter in filters)
+            {
+                var property = Expression.PropertyOrField(parameter, filter.Key);
+                var propertyType = property.Type;
+                Expression comparison;
+
+                if (filter.Value == null)
+                {
+                    comparison = Expression.Equal(property, Expression.Constant(null, propertyType));
+                }
+                else if (propertyType == typeof(string))
+                {
+                    var containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!;
+                    var value = Expression.Constant(filter.Value?.ToString());
+                    comparison = Expression.Call(property, containsMethod, value);
+                }
+                else
+                {
+                    var constant = Expression.Constant(Convert.ChangeType(filter.Value, propertyType));
+                    comparison = Expression.Equal(property, constant);
+                }
+
+                body = body == null ? comparison : Expression.OrElse(body, comparison);
+            }
+
+            if (body == null) return query;
+
+            var negatedBody = Expression.Not(body);
+
+            var lambda = Expression.Lambda<Func<T, bool>>(negatedBody, parameter);
+            return query.Where(lambda);
+        }
+
         public static IQueryable<T> ApplyGlobalSearch<T>(this IQueryable<T> query, string? search, params Expression<Func<T, string?>>[] properties)
         {
             if (string.IsNullOrWhiteSpace(search) || properties.Length == 0)
@@ -139,6 +179,29 @@ namespace MagFlow.DAL.Helpers
 
             var lambda = Expression.Lambda<Func<T, bool>>(body!, parameter);
             return query.Where(lambda);
+        }
+
+        public static Expression<Func<TEntity, TProperty>> BuildCaseExpression<TEntity, TKey, TProperty>(
+            string keyPropertyName,
+            string targetPropertyName,
+            Dictionary<TKey, TProperty> updates)
+        {
+            if (updates == null || updates.Count == 0)
+                throw new ArgumentException("Updates dictionary cannot be empty");
+
+            var parameter = Expression.Parameter(typeof(TEntity), "entity");
+
+            var keyProperty = Expression.Property(parameter, keyPropertyName);
+            var targetProperty = Expression.Property(parameter, targetPropertyName);
+
+            Expression currentExpression = targetProperty;
+            foreach(var kvp in updates)
+            {
+                var testExpression = Expression.Equal(keyProperty, Expression.Constant(kvp.Key, typeof(TKey)));
+                var ifTrueExpression = Expression.Constant(kvp.Value, typeof(TProperty));
+                currentExpression = Expression.Condition(testExpression, ifTrueExpression, currentExpression);
+            }
+            return Expression.Lambda<Func<TEntity, TProperty>>(currentExpression, parameter);
         }
     }
 }

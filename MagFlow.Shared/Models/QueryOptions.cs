@@ -10,6 +10,8 @@ namespace MagFlow.Shared.Models
 
         public Dictionary<string, object>? Filters { get; set; }
 
+        public List<KeyValuePair<string, object>>? Exludes { get; set; }
+
         public string? SortBy { get; set; }
 
         public bool Descending { get; set; }
