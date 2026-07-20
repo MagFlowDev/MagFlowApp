@@ -39,7 +39,8 @@ namespace MagFlow.BLL.Services
                 .Include(x => x.Product).ThenInclude(y => y.Components).ThenInclude(z => z.Component)
                 .Include(x => x.DefaultUnit)
                 .Include(x => x.CreatedBy)
-                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit));
+                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit)
+                .Include(x => x.Components).ThenInclude(y => y.Component).ThenInclude(z => z.Product));
             var dto = product?.ToDTO();
             return dto;
         }

@@ -28,8 +28,10 @@ namespace MagFlow.DAL.Repositories.CompanyScope
         {
             try
             {
-                var now = DateTime.UtcNow;
+                if (itemsQuantity.Count == 0)
+                    return Enums.Result.Success;
 
+                var now = DateTime.UtcNow;
 
                 if (context == null)
                 {

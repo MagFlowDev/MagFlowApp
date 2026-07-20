@@ -1,25 +1,255 @@
-﻿@using MagFlow.BLL.Services.Interfaces
+﻿@using FluentValidation
+@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CompanyScope
 @using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Validators.Company
+@using MagFlow.Shared.Validators.Resources
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 
 @inject IItemService ItemService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IStringLocalizer<Validations> Validations
 @inherits AuthComponentBase
+
 
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 800px; min-height: 0; gap: 16px; padding-right: 40px; margin-top: 24px;">
     @if (_item != null)
     {
-        <div class="d-flex w-100 mud-height-full align-items-center justify-content-center" style="gap: 16px">
-            <MudIcon Icon="@Icons.Material.Outlined.Settings" Size="Size.Medium" />
-            <MudText Typo="Typo.h6" Style="font-weight: 600;">@Localizer[Langs.UnderConstruction]</MudText>
+        <div class="align-self-stretch d-flex flex-column align-items-start h-100" style="gap: 16px; padding-bottom: 24px;">
+            <div class="d-flex flex-column w-100 mud-height-full align-items-center justify-content-start px-1" style="gap: 16px; min-height: 0">
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 500;" Class="align-self-start">@Localizer[Langs.Components]</MudText>
+                <div class="d-flex flex-column align-items-start align-self-stretch w-100" style="min-height: 0">
+                    <MudTable Items="@_model.Components.Components" Context="tableContext" Class="w-100 align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager overflow-x-auto" Elevation="0" Striped="true" Dense="true" Style="--mud-palette-table-striped: #eeeff0">
+                        <ColGroup>
+                            <col style="width: 1%; white-space: nowrap;" class="px-1" />
+                            <col class="pl-0" />
+                            <col style="width: 45%; min-width: 100px; max-width: 300px; white-space: nowrap;" />
+                            <col style="width: 1%; white-space: nowrap;" />
+                        </ColGroup>
+                        <RowTemplate>
+                            <MudTd><MudIconButton Size="Size.Medium" OnClick="@(() => ShowComponentItemsBtnPressed(tableContext.Product.Id))" Icon="@((tableContext.ShowItems == true) ? Icons.Material.Outlined.KeyboardArrowDown : Icons.Material.Outlined.KeyboardArrowRight)" Disabled="@(tableContext.Components.Any() != true)" Class="px-0" /></MudTd>
+                            <MudTd><MudText Style="font-weight: 400" Typo="Typo.body2" Class="pl-0">@tableContext.Product.Name</MudText> </MudTd>
+                            <MudTd>
+                                <div class="d-flex align-items-center" style="gap: 16px;">
+                                    <MudProgressLinear Color="Color.Success" Max="@MaxProgress(tableContext)" Value="@ActualProgress(tableContext)" Rounded ShowBackground="true" />
+                                    <MudText Class="text-nowrap">@string.Concat(ActualProgress(tableContext).ToString("0.##"), "/", MaxProgress(tableContext).ToString("0.##"), " ", tableContext.Product.Unit?.Symbol)</MudText>
+                                </div>
+                            </MudTd>
+                            <MudTh><LoadingButton Loading="@LoadingFill(tableContext.Product.Id)" Variant="Variant.Outlined" OnClick="@(async () => await AddComponent(tableContext))" Disabled="@(RemainingQuantity(tableContext) <= 0)">@Localizer[Langs.Fill_In]</LoadingButton></MudTh>
+                        </RowTemplate>
+                        <ChildRowContent>
+                            @if (tableContext.ShowItems)
+                            {
+                                <MudTr>
+                                    <td colspan="4">
+                                        <MudCard Elevation="0">
+                                            <MudCardContent Class="pa-0">
+                                                <MudTable Items="@tableContext.Components" Context="componentContext" Elevation="0">
+                                                    <ColGroup>
+                                                        <col class="pl-6" />
+                                                        <col style="width: 50%; min-width: 100px; max-width: 300px; white-space: nowrap;" />
+                                                        <col style="width: 1%; white-space: nowrap;" />
+                                                    </ColGroup>
+                                                    <RowTemplate>
+                                                        <MudTd Class="pl-6"><MudText Style="font-weight: 400" Typo="Typo.body2">@componentContext.Item.Id</MudText></MudTd>
+                                                        <MudTd><MudText Style="font-weight: 400" Typo="Typo.body2" Class="align-self-start align-items-start">@string.Concat(componentContext.Quantity.ToString("0.##"), " ", tableContext.Product.Unit?.Symbol)</MudText></MudTd>
+                                                        <MudTd><MudIconButton Icon="@Icons.Material.Outlined.RemoveCircleOutline" Color="Color.Error" OnClick="@(() => RemoveComponent(tableContext, componentContext))" /></MudTd>
+                                                    </RowTemplate>
+                                                </MudTable>
+                                            </MudCardContent>
+                                        </MudCard>
+                                    </td>
+                                </MudTr>
+                            }
+                        </ChildRowContent>
+                    </MudTable>
+                </div>
+            </div>
+            <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_EDIT" Context="authorizedContext">
+                <Authorized>
+                    <LoadingButton Loading="Submitting" Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@Localizer[Langs.Save]</LoadingButton>
+                </Authorized>
+            </AuthorizeView>
         </div>
+
     }
 </div>
 
 @code {
     [CascadingParameter(Name = "Item")]
     ItemDTO? _item { get; set; }
+
+
+    [Parameter]
+    public EventCallback OnSubmitted { get; set; }
+
+    [Parameter]
+    public bool Submitting { get; set; }
+
+    [Parameter]
+    public bool IsBusy { get; set; }
+
+    private IValidator _validator;
+    private ItemFormModel _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _model = new ItemFormModel();
+        _context = new EditContext(_model);
+        _validator = new ItemFormValidator(Validations);
+        _messageStore = new ValidationMessageStore(_context);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if(_item != null)
+        {
+            FillModel();
+        }
+    }
+
+    private async Task Submit()
+    {
+        if (IsBusy || _item == null)
+            return;
+
+        if (!HasModulePermission("Wares", PermissionFlags.Edit))
+            return;
+
+        try
+        {
+            IsBusy = true;
+            Submitting = true;
+
+            FillModel();
+            var isValid = await _messageStore.IsFormValid(_validator, _model);
+            _context.NotifyValidationStateChanged();
+
+            if (!isValid)
+                return;
+
+            await OnSubmitted.InvokeAsync();
+        }
+        finally
+        {
+            IsBusy = false;
+            Submitting = false;
+        }
+    }
+
+    private void FillModel()
+    {
+        if (_item == null)
+            return;
+
+        _model.Components.Components = new List<ItemFormComponent>();
+        _item.Product?.Components?.ForEach(component =>
+        {
+            _model.Components.Components.Add(new ItemFormComponent(component.Product, component.Quantity));
+        });
+
+        _item.Components.ForEach(component =>
+        {
+            var productComponent = _model.Components.Components.FirstOrDefault(c => c.Product.Id == component.Component.Product?.Id);
+            if(productComponent != null)
+            {
+                productComponent.Components.Add(new ItemFormComponentRecord()
+                {
+                    Item = component.Component,
+                    Quantity = component.Quantity
+                });
+            }
+        });
+    }
+
+    private void ShowComponentItemsBtnPressed(int? id)
+    {
+        if (!id.HasValue)
+            return;
+
+        var component = _model.Components.Components.FirstOrDefault(x => x.Product?.Id == id.Value);
+        if (component != null)
+            component.ShowItems = !component.ShowItems;
+    }
+
+    private Dictionary<int, bool> _loadingFill = [];
+    private bool LoadingFill(int id) => _loadingFill.TryGetValue(id, out var value) && value;
+    private async Task AddComponent(ItemFormComponent componentTemplate)
+    {
+        if (IsBusy || (_loadingFill.TryGetValue(componentTemplate.Product.Id, out var loading) && loading))
+            return;
+
+        if (componentTemplate.Product.Unit == null)
+            return;
+
+        var remainingQuantity = RemainingQuantity(componentTemplate);
+        if (remainingQuantity <= 0)
+            return;
+
+        try
+        {
+            IsBusy = true;
+            _loadingFill[componentTemplate.Product.Id] = true;
+            DialogOptions options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraExtraLarge, FullWidth = true };
+            var alreadyAdded = componentTemplate.Components.Select(x => x.Item.Id).ToList();
+            var parameters = new DialogParameters<AddComponentDialog> { { x => x.Product, componentTemplate.Product }, { x => x.Quantity, remainingQuantity }, { x => x.AlreadyAdded, alreadyAdded } };
+            var dialog = await DialogService.ShowAsync<AddComponentDialog>(Localizer[Langs.SelectWare], parameters, options);
+            var confirmation = await dialog.Result;
+            if (confirmation != null && !confirmation.Canceled && confirmation.Data is ItemDTO component)
+            {
+                if (component.Unit == null)
+                    return;
+                var requiredUnit = componentTemplate.Product.Unit;
+
+                decimal itemAvailableAmount = UnitHelper.ConvertValue(component.Quantity, component.Unit, requiredUnit);
+                decimal amountToTakeIn = Math.Min(remainingQuantity, itemAvailableAmount);
+                decimal amountToDeduct = UnitHelper.ConvertValue(amountToTakeIn, requiredUnit, component.Unit);
+
+                component.TempQuantity = component.Quantity - amountToDeduct;
+                componentTemplate.Components.Add(new ItemFormComponentRecord()
+                {
+                    Item = component,
+                    Quantity = amountToTakeIn
+                });
+                StateHasChanged();
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+            _loadingFill[componentTemplate.Product.Id] = false;
+        }
+    }
+
+    private void RemoveComponent(ItemFormComponent component, ItemFormComponentRecord itemRecord)
+    {
+        component.Components.Remove(itemRecord);
+    }
+
+    private decimal RemainingQuantity(ItemFormComponent component)
+    {
+        var filledQuantity = component.Components.Select(x => x.Quantity).Sum();
+        return component.RequiredQuantity - filledQuantity;
+    }
+
+    private double MaxProgress(ItemFormComponent component)
+    {
+        return (double)component.RequiredQuantity;
+    }
+
+    private double ActualProgress(ItemFormComponent component)
+    {
+        return (double)component.Components.Select(x => x.Quantity).Sum();
+    }
 }
