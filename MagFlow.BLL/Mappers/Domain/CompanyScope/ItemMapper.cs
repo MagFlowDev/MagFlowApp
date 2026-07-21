@@ -21,6 +21,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     if (parameter.Parameter == null)
                         continue;
                     var dto = parameter.Parameter.ToDTO();
+                    dto.EntityTableId = parameter.Id;
                     var value = parameter.Value;
                     parameters.Add(new ItemParameterDTO() { Parameter = dto, Value = value });
                 }
@@ -42,6 +43,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Id = item.Id,
                 ExternalId = item.ExternalId,
                 CreatedAt = item.CreatedAt,
+                CreatedBy = new Shared.DTOs.CoreScope.UserDTO() { Id = item.CreatedById },
                 RemovedAt = item.RemovedAt,
                 Quantity = item.Quantity,
                 Status = item.Status,
@@ -70,6 +72,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     continue;
                 parameters.Add(new ItemParameter()
                 {
+                    Id = parameter.Parameter.EntityTableId,
                     ParameterId = parameter.Parameter.ParameterId,
                     Value = value
                 });
@@ -86,6 +89,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
             return new Item()
             {
+                Id = item.Id,
                 ProductId = item.Product?.Id ?? 0,
                 Location = item.Location,
                 CreatedAt = item.CreatedAt ?? DateTime.UtcNow,
@@ -121,6 +125,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     continue;
                 parameters.Add(new ItemParameter()
                 {
+                    Id = parameter.Parameter.EntityTableId,
                     ParameterId = parameter.Parameter.ParameterId,
                     Value = value
                 });

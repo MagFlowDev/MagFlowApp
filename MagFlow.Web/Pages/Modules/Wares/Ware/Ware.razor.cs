@@ -1,4 +1,5 @@
 ﻿using MagFlow.BLL.Helpers.Localization;
+using MagFlow.BLL.Services;
 using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
@@ -122,7 +123,19 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
                 _isBusy = true;
                 _loadingSave = true;
 
-                await Task.Delay(2000);
+                var tempComponents = new List<ItemComponentDTO>();
+                _item.Components.ForEach(x => tempComponents.Add(new ItemComponentDTO() { Component = x.Component, IsRequired = x.IsRequired, Note = x.Note, Quantity = x.Quantity }));
+                _item.Components = new List<ItemComponentDTO>();
+                var result = await ItemService.UpdateItem(_item);
+                _item.Components = tempComponents;
+                if (result == MagFlow.Shared.Models.Enums.Result.Success)
+                {
+                    Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add(Localizer[Langs.ErrorOccured], MudBlazor.Severity.Error);
+                }
             }
             finally
             {

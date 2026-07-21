@@ -28,8 +28,10 @@ namespace MagFlow.DAL.Repositories.CompanyScope
         {
             try
             {
-                var now = DateTime.UtcNow;
+                if (itemsQuantity.Count == 0)
+                    return Enums.Result.Success;
 
+                var now = DateTime.UtcNow;
 
                 if (context == null)
                 {
@@ -126,6 +128,24 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 return Enums.Result.Success;
             }
             catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<Enums.Result> RemoveItemComponents(List<ItemComponent> components)
+        {
+            try
+            {
+                using (var context = _companyContextFactory.CreateDbContext())
+                {
+                    context.ItemComponents.RemoveRange(components);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return Enums.Result.Error;
