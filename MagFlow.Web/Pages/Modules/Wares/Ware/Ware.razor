@@ -72,12 +72,12 @@
                         {
                             case SectionsEnums.WareDetailsSection.GeneralInformation:
                                 <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
-                                    <WareGeneralInformation />
+                                    <WareGeneralInformation OnSubmitted="SaveChanges" IsBusy="_isBusy" Submitting="_loadingSave" />
                                 </div>
                                 break;
                             case SectionsEnums.WareDetailsSection.Components:
                                 <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
-                                    <WareComponents />
+                                    <WareComponents IsBusy="_isBusy" Submitting="_loadingSave" />
                                 </div>
                                 break;
                             case SectionsEnums.WareDetailsSection.History:

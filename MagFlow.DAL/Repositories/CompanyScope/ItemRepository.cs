@@ -134,6 +134,24 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
+        public async Task<Enums.Result> RemoveItemComponents(List<ItemComponent> components)
+        {
+            try
+            {
+                using (var context = _companyContextFactory.CreateDbContext())
+                {
+                    context.ItemComponents.RemoveRange(components);
+                    await context.SaveChangesAsync();
+                }
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Enums.Result.Error;
+            }
+        }
+
         public override async Task<Enums.Result> DeleteAsync(Item entity, CompanyDbContext? context = null)
         {
             try

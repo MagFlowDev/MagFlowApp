@@ -132,7 +132,7 @@ namespace MagFlow.BLL.Services
             var userId = _networkService.GetUserId();
             if (!userId.HasValue)
                 return Enums.Result.Error;
-            var unit = model.ToEntity(userId.Value);
+            var item = model.ToEntity(userId.Value);
             var contextTransaction = await _itemRepository.BeingTransaction();
             var result = Enums.Result.Error;
             if (contextTransaction.context == null || contextTransaction.transaction == null)
@@ -140,7 +140,7 @@ namespace MagFlow.BLL.Services
 
             try
             {
-                result = await _itemRepository.AddAsync(unit);
+                result = await _itemRepository.AddAsync(item);
                 if(result != Enums.Result.Success)
                 {
                     await _itemRepository.RollbackTransaction(contextTransaction.context, contextTransaction.transaction);
@@ -172,6 +172,84 @@ namespace MagFlow.BLL.Services
         }
 
 
+
+        public async Task<Enums.Result> UpdateItem(ItemDTO itemDTO)
+        {
+            var item = itemDTO.ToEntity();
+            var result = await _itemRepository.UpdateAsync(item);
+            return result;
+        }
+
+        public async Task<Enums.Result> UpdateItemComponents(ItemDTO itemDTO, List<ItemComponentDTO> componentsToAdd, List<ItemComponentDTO> componentsToRemove)
+        {
+            var originalItem = _itemRepository.GetById(itemDTO.Id, item => item
+                   .Include(x => x.Components));
+            if (originalItem == null)
+                return Enums.Result.Error;
+
+            var contextTransaction = await _itemRepository.BeingTransaction();
+            var result = Enums.Result.Error;
+            if (contextTransaction.context == null || contextTransaction.transaction == null)
+                return result;
+
+            try
+            {
+                if (componentsToRemove.Any())
+                {
+                    var componentsIdsToRemove = componentsToRemove.Select(x => x.Component.Id).ToList();
+                    var originalItemComponentsToRemove = originalItem.Components.Where(x => componentsIdsToRemove.Contains(x.ComponentId)).ToList();
+                    result = await _itemRepository.RemoveItemComponents(originalItemComponentsToRemove);
+                    if (result != Enums.Result.Success)
+                        return result;
+
+                    originalItemComponentsToRemove.ForEach(x => originalItem.Components.Remove(x));
+                }
+
+                var componentsIdsToAdd = componentsToAdd.Select(x => x.Component.Id).ToList();
+                var existingComponentsIds = originalItem.Components.Where(x => componentsIdsToAdd.Contains(x.ComponentId)).Select(x => x.ComponentId).ToList();
+                componentsIdsToAdd = componentsIdsToAdd.Except(existingComponentsIds).ToList();
+
+                bool update = false;
+                if (componentsIdsToAdd.Any())
+                {
+                    var components = componentsToAdd.Where(x => componentsIdsToAdd.Contains(x.Component.Id)).ToList();
+                    foreach (var component in components)
+                    {
+                        originalItem.Components.Add(new ItemComponent()
+                        {
+                            ComponentId = component.Component.Id,
+                            Quantity = component.Quantity,
+                        });
+                    }
+                    update = true;
+                }
+                if (update)
+                {
+                    result = await _itemRepository.UpdateAsync(originalItem);
+
+                    var itemQuantity = componentsToAdd
+                         .Select(x => x.Component)
+                         .Where(x => x.TempQuantity.HasValue)
+                         .Select(x => new { Id = x.Id, NewQuantity = x.TempQuantity!.Value })
+                         .ToDictionary(x => x.Id, x => x.NewQuantity);
+                    result = await _itemRepository.UpdateItemQuantity(itemQuantity, Enums.ItemStatus.Used, contextTransaction.context);
+                    if (result != Enums.Result.Success)
+                    {
+                        await _itemRepository.RollbackTransaction(contextTransaction.context, contextTransaction.transaction);
+                        return result;
+                    }
+                }
+
+                result = await _itemRepository.CommitTransaction(contextTransaction.context, contextTransaction.transaction);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                await _itemRepository.RollbackTransaction(contextTransaction.context, contextTransaction.transaction);
+                return Enums.Result.Error;
+            }
+        }
 
 
 

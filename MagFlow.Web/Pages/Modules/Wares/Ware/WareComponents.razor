@@ -132,13 +132,30 @@
             IsBusy = true;
             Submitting = true;
 
-            FillModel();
-            var isValid = await _messageStore.IsFormValid(_validator, _model);
-            _context.NotifyValidationStateChanged();
 
-            if (!isValid)
-                return;
+            var existingComponents = _item.Components.ToList();
+            var existingComponentsIds = existingComponents.Select(x => x.Component.Id).ToList();
 
+            var componentsRecords = _model.Components.Components.SelectMany(x => x.Components).ToList();
+            var itemsIds = componentsRecords.Select(x => x.Item.Id).ToList();
+
+            var removedItemsIds = existingComponentsIds.Except(itemsIds).ToList();
+            var removedItems = existingComponents.Where(x => removedItemsIds.Contains(x.Component.Id)).ToList();
+
+            var components = new List<ItemComponentDTO>();
+            var newComponents = componentsRecords.Where(x => !existingComponentsIds.Contains(x.Item.Id)).ToList();
+            newComponents.ForEach(x => components.Add(new ItemComponentDTO() { Component = x.Item, Quantity = x.Quantity }));
+
+            var result = await ItemService.UpdateItemComponents(_item, components, removedItems);
+            if (result == MagFlow.Shared.Models.Enums.Result.Success)
+            {
+                Snackbar.Add(Localizer[Langs.ChangesSaved], MudBlazor.Severity.Success);
+                _item.Components = existingComponents.Concat(components).ToList();
+            }
+            else
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], MudBlazor.Severity.Error);
+            }
             await OnSubmitted.InvokeAsync();
         }
         finally

@@ -18,6 +18,9 @@ namespace MagFlow.BLL.Services.Interfaces
 
         Task<Enums.Result> AddItem(ItemFormModel model);
 
+        Task<Enums.Result> UpdateItem(ItemDTO itemDTO);
+        Task<Enums.Result> UpdateItemComponents(ItemDTO itemDTO, List<ItemComponentDTO> componentsToAdd, List<ItemComponentDTO> componentsToRemove);
+
         Task<Enums.Result> BlockItem(ItemDTO itemDTO, bool unblock = false);
         Task<Enums.Result> BlockItems(List<ItemDTO> itemsDTO, bool unblock = false);
         Task<Enums.Result> DeleteItem(ItemDTO itemDTO);
