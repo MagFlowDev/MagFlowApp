@@ -2,6 +2,7 @@
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.Models.Enumerators
 @using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Components.Select
 @using Microsoft.AspNetCore.Authorization
 @using MagFlow.Web.Components.Wizards
 @using MagFlow.Shared.Models.FormModels
@@ -84,26 +85,9 @@
                                             </MudAutocomplete>
                                         </div>
                                         <div class="d-flex w-100 my-0 align-items-stretch">
-                                            <MudAutocomplete @bind-Value="_model.GeneralInformation.Unit"
-                                                             For="@(() => _model.GeneralInformation.Unit)"
-                                                             T="UnitDTO"
-                                                             Label="@Localizer[Langs.MeasurementUnit]"
-                                                             Placeholder="@Localizer[Langs.MeasurementUnitExample]"
-                                                             Variant="Variant.Outlined"
-                                                             AnchorOrigin="Origin.BottomLeft"
-                                                             TransformOrigin="Origin.TopLeft"
-                                                             DebounceInterval="300"
-                                                             MaxItems="_pageSize"
-                                                             ToStringFunc="@(t => t?.Name)"
-                                                             SearchFunc="@SearchForUnit">
-                                                <ProgressIndicatorInPopoverTemplate>
-                                                    <MudList T="string" ReadOnly>
-                                                        <MudListItem>
-                                                            @Localizer[Langs.Loading]
-                                                        </MudListItem>
-                                                    </MudList>
-                                                </ProgressIndicatorInPopoverTemplate>
-                                            </MudAutocomplete>
+                                            <UnitAutocomplete @bind-Unit="_model.GeneralInformation.Unit" 
+                                                              Validation="@(() => _model.GeneralInformation.Unit)" 
+                                                              PageSize="_pageSize"/>
                                         </div>
                                     </div>
                                 </div>
