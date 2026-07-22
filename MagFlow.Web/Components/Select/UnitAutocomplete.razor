@@ -1,0 +1,96 @@
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MudBlazor
+
+@inject IProductService ProductService
+
+<MudAutocomplete Value="Unit"
+                 ValueChanged="OnValueChanged"
+                 For="Validation"
+                 T="UnitDTO"
+                 ResetValueOnEmptyText="true"
+                 Label="@Localizer[Langs.MeasurementUnit]"
+                 Placeholder="@Localizer[Langs.MeasurementUnitExample]"
+                 Variant="Variant.Outlined"
+                 AnchorOrigin="Origin.BottomLeft"
+                 TransformOrigin="Origin.TopLeft"
+                 DebounceInterval="300"
+                 MaxItems="PageSize"
+                 ToStringFunc="@(t => t?.Name)"
+                 SearchFunc="@SearchForUnit"
+                 Class="@Class"
+                 Style="@Style">
+    <ItemTemplate Context="unit">
+        @if (unit != null)
+        {
+            if (unit.ParentUnit != null)
+            {
+                <MudText Typo="Typo.body2" Class="ms-5 mud-text-secondary">
+                    @unit.Name
+                </MudText>
+            }
+            else
+            {
+                <MudText Typo="Typo.body2" Style="font-weight: 500;">
+                    @unit.Name
+                </MudText>
+            }
+        }
+    </ItemTemplate>
+    <ProgressIndicatorInPopoverTemplate>
+        <MudList T="string" ReadOnly>
+            <MudListItem>
+                @Localizer[Langs.Loading]
+            </MudListItem>
+        </MudList>
+    </ProgressIndicatorInPopoverTemplate>
+</MudAutocomplete>
+
+@code {
+    [Parameter, EditorRequired]
+    public UnitDTO? Unit { get; set; }
+
+    [Parameter]
+    public EventCallback<UnitDTO?> UnitChanged { get; set; }
+
+    [Parameter]
+    public int PageSize { get; set; } = 25;
+
+    [Parameter]
+    public System.Linq.Expressions.Expression<Func<UnitDTO>>? Validation { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public string Style { get; set; }
+
+    private string _searchString = "";
+    private List<UnitDTO> _units = new List<UnitDTO>();
+
+    private async Task OnValueChanged(UnitDTO? newValue)
+    {
+        Unit = newValue;
+        if (UnitChanged.HasDelegate)
+        {
+            await UnitChanged.InvokeAsync(newValue);
+        }
+    }
+
+    private async Task<IEnumerable<UnitDTO>> SearchForUnit(string value, CancellationToken token)
+    {
+        _searchString = value;
+        var response = await ProductService.GetUnits(0, PageSize, _searchString, searchRelated: true);
+        var flatList = response.Elements.SelectMany(baseUnit =>
+        {
+            var items = new List<UnitDTO> { baseUnit };
+            if (baseUnit.RelatedUnits?.Any() == true)
+            {
+                items.AddRange(baseUnit.RelatedUnits);
+            }
+            return items;
+        });
+        _units = flatList.ToList();
+        return _units;
+    }
+}
