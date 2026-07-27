@@ -60,7 +60,7 @@ namespace MagFlow.Web.Pages.Modules
         protected virtual async Task ReadSection()
         {
             var section = await LocalCacheService.GetCurrentModuleSection(SessionId, ModuleId);
-            if (section != null)
+            if (section != null && !section.Equals(BaseSectionEnum.DefaultSection.None))
                 _currentSection = section;
         }
 

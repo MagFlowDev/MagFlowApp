@@ -104,5 +104,16 @@ namespace MagFlow.BLL.Helpers
                 _ => Color.Default
             };
         }
+
+        public static Color ToColor(this Enums.WarehouseStatus status)
+        {
+            return status switch
+            {
+                Enums.WarehouseStatus.Deleted => Color.Error,
+                Enums.WarehouseStatus.Active => Color.Success,
+                Enums.WarehouseStatus.Unknown => Color.Default,
+                _ => Color.Default
+            };
+        }
     }
 }

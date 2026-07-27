@@ -17,7 +17,7 @@ using System.Text;
 
 namespace MagFlow.BLL.Services
 {
-    public class ProductService : BaseCompanyService<Product>, IProductService
+    public class ProductService : BaseCompanyService<Product, ProductDTO>, IProductService
     {
         private readonly IProductRepository _productRepository;
         private readonly IProductCategoryRepository _categoryRepository;

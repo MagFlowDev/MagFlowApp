@@ -207,6 +207,7 @@ namespace MagFlow.Web.Extensions
             // Company scope
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IWarehouseService, WarehouseService>();
 
             services.RegisterCommonServices();
         }
@@ -228,8 +229,10 @@ namespace MagFlow.Web.Extensions
             // Company scope
             services.AddScoped<ItemService>();
             services.AddScoped<ProductService>();
+            services.AddScoped<WarehouseService>();
             services.AddScoped<IItemService>(sp => sp.GetRequiredService<ItemService>().WithProxy<IItemService>(sp));
             services.AddScoped<IProductService>(sp => sp.GetRequiredService<ProductService>().WithProxy<IProductService>(sp));
+            services.AddScoped<IWarehouseService>(sp => sp.GetRequiredService<WarehouseService>().WithProxy<IWarehouseService>(sp));
 
             services.RegisterCommonServices();
         }
