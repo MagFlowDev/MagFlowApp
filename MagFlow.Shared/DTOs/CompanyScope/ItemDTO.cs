@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MagFlow.Shared.DTOs.CompanyScope
 {
-    public class ItemDTO
+    public class ItemDTO : BaseDTO
     {
         public int Id { get; set; }
         public string? ExternalId { get; set; }

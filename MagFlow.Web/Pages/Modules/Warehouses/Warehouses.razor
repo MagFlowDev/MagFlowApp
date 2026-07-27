@@ -1,8 +1,83 @@
 ﻿@using MagFlow.Shared.Models.Interfaces
+@using MagFlow.Web.Components.Status
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+@using MagFlow.Web.Helpers;
+@using MagFlow.Shared.Models;
+@using MagFlow.Shared.Extensions.Enum;
+
 @implements IModule
 @inherits BaseModuleComponent
 
-<h3>Warehouses</h3>
+<AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_READ">
+    <Authorized>
+        <div class="d-flex flex-column w-100 flex-grow-1" style="min-height: 0">
+            <div class="d-flex w-100" style="flex: 1 1 0; min-height: 0">
+                <MudPaper Height="100%" Style="overflow:hidden; position:relative; background-color: transparent" Class="w-100" Elevation="0">
+                    <MudDrawerContainer Class="mud-height-full">
+                        <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" Breakpoint="Breakpoint.None">
+                            <MudNavMenu>
+                                <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
+                                <MudTooltip Text="@Localizer[Langs.WarehousesList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.FormatListNumbered" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehousesModuleSection.WarehousesList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehousesModuleSection.WarehousesList)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehousesModuleSection.WarehousesList)">@Localizer[Langs.WarehousesList]</MudNavLink>
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer[Langs.LocationList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Place" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehousesModuleSection.LocationList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehousesModuleSection.LocationList)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehousesModuleSection.LocationList)">@Localizer[Langs.LocationList]</MudNavLink>
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer[Langs.Inventories]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Assignment" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehousesModuleSection.Inventories))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehousesModuleSection.Inventories)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehousesModuleSection.Inventories)">@Localizer[Langs.Inventories]</MudNavLink>
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer[Langs.WarehouseMovementsList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.History" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehousesModuleSection.MovementsList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehousesModuleSection.MovementsList)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehousesModuleSection.MovementsList)">@Localizer[Langs.WarehouseMovementsList]</MudNavLink>
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer[Langs.Archive]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Archive" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehousesModuleSection.Archive))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehousesModuleSection.Archive)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehousesModuleSection.Archive)">@Localizer[Langs.Archive]</MudNavLink>
+                                </MudTooltip>
+                            </MudNavMenu>
+                        </MudDrawer>
+                        <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
+                            @if(Initialized)
+                            {
+                                @switch (_currentSection)
+                                {
+                                    case SectionsEnums.WarehousesModuleSection.WarehousesList:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
+                                            <WarehousesList/>
+                                        </div>
+                                        break;
+                                    case SectionsEnums.WarehousesModuleSection.LocationList:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                            <LocationList/>
+                                        </div>
+                                        break;
+                                    case SectionsEnums.WarehousesModuleSection.Inventories:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                            <Inventories/>
+                                        </div>
+                                        break;
+                                    case SectionsEnums.WarehousesModuleSection.MovementsList:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                            <MovementsList/>
+                                        </div>
+                                        break;
+                                    case SectionsEnums.WarehousesModuleSection.Archive:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                            <Archive/>
+                                        </div>
+                                        break;
+                                    default: break;
+                                }
+                            }
+                        </div>
+                    </MudDrawerContainer>
+                </MudPaper>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <Denied/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     public string TabTitle => "Warehouses";

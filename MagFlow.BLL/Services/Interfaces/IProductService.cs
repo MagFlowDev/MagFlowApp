@@ -8,7 +8,7 @@ using System.Text;
 
 namespace MagFlow.BLL.Services.Interfaces
 {
-    public interface IProductService : IBaseCompanyService<Product>
+    public interface IProductService : IBaseCompanyService<Product, ProductDTO>
     {
         Task<ProductDTO?> GetProduct(int id);
 

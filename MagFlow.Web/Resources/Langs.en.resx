@@ -1683,4 +1683,31 @@
   <data name="SelectWare" xml:space="preserve">
     <value>Select ware</value>
   </data>
+  <data name="WarehousesList" xml:space="preserve">
+    <value>Warehouses list</value>
+  </data>
+  <data name="LocationList" xml:space="preserve">
+    <value>Warehouse locations</value>
+  </data>
+  <data name="WarehouseMovementsList" xml:space="preserve">
+    <value>Warehouse operations</value>
+  </data>
+  <data name="Inventories" xml:space="preserve">
+    <value>Inventories</value>
+  </data>
+  <data name="AddWarehouse" xml:space="preserve">
+    <value>Add warehouse</value>
+  </data>
+  <data name="Main" xml:space="preserve">
+    <value>Main</value>
+  </data>
+  <data name="Temporary" xml:space="preserve">
+    <value>Temporary</value>
+  </data>
+  <data name="Secondary" xml:space="preserve">
+    <value>Secondary</value>
+  </data>
+  <data name="ChangeStatus" xml:space="preserve">
+    <value>Change status</value>
+  </data>
 </root>

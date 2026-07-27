@@ -8,12 +8,30 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        
+
+        public enum WarehouseType
+        {
+            [Display(Name = "Unknown")]
+            Unknown = 0,
+
+            [Display(Name = "Main")]
+            Main = 1,
+
+            [Display(Name = "Secondary")]
+            Secondary = 2,
+
+            [Display(Name = "Temporary")]
+            Temporary = 3
+        }
+
         public enum HistoryEntityType
         {
             Unknown = 0,
             User = 1,
             Product = 2,
-            Item = 3
+            Item = 3,
+            Warehouse = 4,
         }
 
         public enum TaxRate
@@ -133,6 +151,18 @@ namespace MagFlow.Shared.Models
 
             [Display(Name = "Released")]
             Released = 5
+        }
+
+        public enum WarehouseStatus
+        {
+            [Display(Name = "UnknownStatus")]
+            Unknown = 0,
+
+            [Display(Name = "Active")]
+            Active = 1,
+
+            [Display(Name = "Deleted")]
+            Deleted = 2,
         }
 
         public enum ProductStatus
@@ -270,6 +300,15 @@ namespace MagFlow.Shared.Models
 
     public static class SectionsEnums
     {
+        public enum WarehousesModuleSection
+        {
+            WarehousesList,
+            LocationList,
+            Inventories,
+            MovementsList,
+            Archive
+        }
+
         public enum WaresDefinitionSection
         {
             Categories,
