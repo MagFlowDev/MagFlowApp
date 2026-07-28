@@ -19,45 +19,19 @@ namespace MagFlow.BLL.Services
     {
         private readonly IWarehouseRepository _warehouseRepository;
 
-        public WarehouseService(IWarehouseRepository warehouseRepository) : base(warehouseRepository)
+        private readonly INetworkService _networkService;
+
+        public WarehouseService(IWarehouseRepository warehouseRepository,
+            INetworkService networkService) : base(warehouseRepository, networkService)
         {
             _warehouseRepository = warehouseRepository;
+            _networkService = networkService;
         }
 
         public async Task<WarehouseDTO?> GetWarehouse(int id)
         {
-            var warehouse = await _warehouseRepository.GetByIdAsync(id, warehouse => warehouse
-                .Include(x => x.Items)
-                .Include(x => x.Storages));
-            var dto = warehouse?.ToDTO();
-            return dto;
-        }
-
-        public async Task<QueryResponse<WarehouseDTO>> GetWarehouses(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
-        {
-            var queryResponse = await _warehouseRepository.GetAsync(new QueryOptions<Warehouse>()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Search = search,
-                SearchColumns = new Expression<Func<Warehouse, string?>>[]
-                {
-                    u => u.Name
-                },
-                SortBy = sortBy,
-                Descending = descending
-            }, warehouses => warehouses
-                .Include(x => x.Items)
-                .Include(x => x.Storages));
-            return new QueryResponse<WarehouseDTO>()
-            {
-                Elements = queryResponse?.Elements.Select(x =>
-                {
-                    var dto = x.ToDTO();
-                    return dto;
-                }).ToList() ?? new List<WarehouseDTO>(),
-                TotalCount = queryResponse?.TotalCount ?? 0
-            };
+            return await base.GetEntityAsync(id, warehouse => warehouse
+                .Include(x => x.Items.Where(i => i.SectorId == null)));
         }
 
     }

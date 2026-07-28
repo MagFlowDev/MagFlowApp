@@ -1,10 +1,11 @@
+using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MagFlow.Shared.Models;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Document
+    public class Document : StatusEntity, IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -22,8 +23,6 @@ namespace MagFlow.Domain.CompanyScope
         [Required]
         public DateTime DocumentDate { get; set; }
         public DateTime? DeliveryDate { get; set; }
-        [Required]
-        public Enums.DocumentStatus Status { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
         [Required]
@@ -53,5 +52,15 @@ namespace MagFlow.Domain.CompanyScope
         public ICollection<OrderDocument> Orders { get; set; }
         public ICollection<ProcessDocument> Processes { get; set; }
         public ICollection<DocumentItem> Items { get; set; }
+
+
+        private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()
+        {
+            Enums.EntityStatus.Unknown,
+            Enums.EntityStatus.Active,
+            Enums.EntityStatus.Deleted,
+        };
+
+        public Document() : base(_allowedStatuses) { }
     }
 }

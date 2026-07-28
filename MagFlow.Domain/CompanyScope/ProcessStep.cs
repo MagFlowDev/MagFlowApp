@@ -1,10 +1,11 @@
+using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MagFlow.Shared.Models;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class ProcessStep
+    public class ProcessStep : StatusEntity, IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -23,9 +24,7 @@ namespace MagFlow.Domain.CompanyScope
         [Required]
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
-        [Required]
-        public Enums.ProcessStatus Status { get; set; }
-        
+
         [ForeignKey(nameof(ProcessId))]
         public Process? Process { get; set; }
         [ForeignKey(nameof(MachineId))]
@@ -35,6 +34,15 @@ namespace MagFlow.Domain.CompanyScope
 
         public ICollection<ProcessStepIO> StepIO { get; set; }
         public ICollection<ProcessStepParameter> Parameters { get; set; }
-        
+
+
+        private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()
+        {
+            Enums.EntityStatus.Unknown,
+            Enums.EntityStatus.Active,
+            Enums.EntityStatus.Deleted,
+        };
+
+        public ProcessStep() : base(_allowedStatuses) { }
     }
 }

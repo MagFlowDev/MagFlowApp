@@ -1,12 +1,13 @@
 ﻿using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace MagFlow.Shared.DTOs.CompanyScope
 {
-    public class ItemDTO : BaseDTO
+    public class ItemDTO : IBaseDTO
     {
         public int Id { get; set; }
         public string? ExternalId { get; set; }
@@ -18,7 +19,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public DateTime? CreatedAt { get; set; }
         public DateTime? RemovedAt { get; set; }
         public UserDTO? CreatedBy { get; set; }
-        public Enums.ItemStatus Status { get; set; }
+        public Enums.EntityStatus Status { get; set; }
 
         public List<ItemParameterDTO> Parameters { get; set; } = [];
         public List<ItemComponentDTO> Components { get; set; } = [];

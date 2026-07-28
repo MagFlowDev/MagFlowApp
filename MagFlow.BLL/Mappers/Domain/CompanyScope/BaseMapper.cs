@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static Grpc.Core.Metadata;
 
 namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 {
@@ -25,6 +26,12 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                         return (TDTO)(object)ItemMapper.ToDTO((Item)(object)entity);
                     case nameof(Warehouse):
                         return (TDTO)(object)WarehouseMapper.ToDTO((Warehouse)(object)entity);
+                    case nameof(WarehouseSector):
+                        return (TDTO)(object)WarehouseMapper.ToDTO((WarehouseSector)(object)entity);
+                    case nameof(WarehouseSectorRow):
+                        return (TDTO)(object)WarehouseMapper.ToDTO((WarehouseSectorRow)(object)entity);
+                    case nameof(WarehouseSectorRowSlot):
+                        return (TDTO)(object)WarehouseMapper.ToDTO((WarehouseSectorRowSlot)(object)entity);
                     default:
                         return default(TDTO);
                 }
@@ -38,6 +45,45 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         public static List<TDTO> ToDTO<TDTO, TEntity>(this ICollection<TEntity> entities)
         {
             return entities.Select(x => x.ToDTO<TDTO, TEntity>()).ToList();
+        }
+
+
+
+        public static TEntity ToEntity<TEntity, TDTO>(this TDTO dto)
+        {
+            if (dto == null)
+                return default(TEntity);
+
+            try
+            {
+                var dtoType = typeof(TDTO);
+                switch (dtoType.Name)
+                {
+                    case nameof(ProductDTO):
+                        return (TEntity)(object)ProductMapper.ToEntity((ProductDTO)(object)dto);
+                    case nameof(ItemDTO):
+                        return (TEntity)(object)ItemMapper.ToEntity((ItemDTO)(object)dto);
+                    case nameof(WarehouseDTO):
+                        return (TEntity)(object)WarehouseMapper.ToEntity((WarehouseDTO)(object)dto);
+                    case nameof(SectorDTO):
+                        return (TEntity)(object)WarehouseMapper.ToEntity((SectorDTO)(object)dto);
+                    case nameof(RowDTO):
+                        return (TEntity)(object)WarehouseMapper.ToEntity((RowDTO)(object)dto);
+                    case nameof(SlotDTO):
+                        return (TEntity)(object)WarehouseMapper.ToEntity((SlotDTO)(object)dto);
+                    default:
+                        return default(TEntity);
+                }
+            }
+            catch(Exception ex)
+            {
+                return default(TEntity);
+            }
+        }
+
+        public static List<TEntity> ToEntity<TEntity, TDTO>(this ICollection<TDTO> dtos)
+        {
+            return dtos.Select(x => x.ToEntity<TEntity, TDTO>()).ToList();
         }
     }
 }

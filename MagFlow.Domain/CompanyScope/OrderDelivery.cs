@@ -1,10 +1,11 @@
+using MagFlow.Shared.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.Contracts;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class OrderDelivery
+    public class OrderDelivery : IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

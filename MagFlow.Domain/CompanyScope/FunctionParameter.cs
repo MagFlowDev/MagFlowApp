@@ -1,10 +1,11 @@
+using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MagFlow.Shared.Models;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class FunctionParameter
+    public class FunctionParameter : IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

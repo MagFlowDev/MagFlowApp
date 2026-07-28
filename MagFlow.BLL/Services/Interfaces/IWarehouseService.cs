@@ -10,6 +10,5 @@ namespace MagFlow.BLL.Services.Interfaces
     public interface IWarehouseService : IBaseCompanyService<Warehouse, WarehouseDTO>
     {
         Task<WarehouseDTO?> GetWarehouse(int id);
-        Task<QueryResponse<WarehouseDTO>> GetWarehouses(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
     }
 }

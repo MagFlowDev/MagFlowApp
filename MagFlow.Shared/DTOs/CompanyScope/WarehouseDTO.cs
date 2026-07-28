@@ -1,11 +1,12 @@
 ﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace MagFlow.Shared.DTOs.CompanyScope
 {
-    public class WarehouseDTO : BaseDTO
+    public class WarehouseDTO : IBaseDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -13,15 +14,48 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public string? Description { get; set; }
         public bool IsActive { get; set; }
         public Enums.WarehouseType Type { get; set; }
-        public Enums.WarehouseStatus Status { get; set; }
+        public Enums.EntityStatus Status { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? RemovedAt { get; set; }
         public ICollection<ItemDTO> Items { get; set; } = new List<ItemDTO>();
-        public ICollection<WarehouseStorageDTO> Storages { get; set; } = new List<WarehouseStorageDTO>();
+        public ICollection<SectorDTO> Sectors { get; set; } = new List<SectorDTO>();
     }
 
-    public class WarehouseStorageDTO
+    public class SectorDTO : IBaseDTO
     {
         public int Id { get; set; }
+        public int WarehouseId { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public Enums.EntityStatus Status { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? RemovedAt { get; set; }
+        public ICollection<ItemDTO> Items { get; set; } = new List<ItemDTO>();
+        public ICollection<RowDTO> Rows { get; set; } = new List<RowDTO>();
+    }
+
+    public class RowDTO : IBaseDTO
+    {
+        public int Id { get; set; }
+        public int SectorId { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public Enums.EntityStatus Status { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? RemovedAt { get; set; }
+        public ICollection<ItemDTO> Items { get; set; } = new List<ItemDTO>();
+        public ICollection<SlotDTO> Slots { get; set; } = new List<SlotDTO>();
+    }
+
+    public class SlotDTO : IBaseDTO
+    {
+        public int Id { get; set; }
+        public int RowId { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public Enums.EntityStatus Status { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? RemovedAt { get; set; }
+        public ICollection<ItemDTO> Items { get; set; } = new List<ItemDTO>();
     }
 }

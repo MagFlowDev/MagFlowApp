@@ -1,4 +1,5 @@
 ﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.Models.Interfaces;
 using MagFlow.Shared.Models.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -51,7 +52,9 @@ namespace MagFlow.EF
         public DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<Claim> Claims { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
-        public DbSet<WarehouseStorage> WarehouseStorages { get; set; }
+        public DbSet<WarehouseSector> WarehouseSectors { get; set; }
+        public DbSet<WarehouseSectorRow> WarehouseSectorRows { get; set; }
+        public DbSet<WarehouseSectorRowSlot> WarehouseSectorRowSlots { get; set; }
         public DbSet<DefaultWorkingHour> DefaultWorkingHours { get; set; }
         public DbSet<WorkDay> WorkDays { get; set; }
         public DbSet<EntityHistory> EntitiesHistory { get; set; }
@@ -115,8 +118,13 @@ namespace MagFlow.EF
             builder.Entity<Product>().HasMany(c => c.Components).WithOne(p => p.Product);
             builder.Entity<Product>().HasMany(c => c.Parameters).WithOne(p => p.Product);
             builder.Entity<Product>().HasMany(c => c.Conversions).WithOne(p => p.Product);
-            builder.Entity<Warehouse>().HasMany(w => w.Storages).WithOne(s => s.Warehouse);
+            builder.Entity<Warehouse>().HasMany(w => w.Sectors).WithOne(s => s.Warehouse);
             builder.Entity<Warehouse>().HasMany(w => w.Items).WithOne(i => i.Warehouse);
+            builder.Entity<WarehouseSector>().HasMany(w => w.Rows).WithOne(s => s.Sector);
+            builder.Entity<WarehouseSector>().HasMany(w => w.Items).WithOne(i => i.Sector);
+            builder.Entity<WarehouseSectorRow>().HasMany(w => w.Slots).WithOne(s => s.Row);
+            builder.Entity<WarehouseSectorRow>().HasMany(w => w.Items).WithOne(i => i.Row);
+            builder.Entity<WarehouseSectorRowSlot>().HasMany(w => w.Items).WithOne(i => i.Slot);
 
             builder.Entity<CustomParameter>().HasOne(x => x.Unit).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<FunctionParameter>().HasOne(x => x.Unit).WithMany().OnDelete(DeleteBehavior.NoAction);
@@ -145,7 +153,9 @@ namespace MagFlow.EF
             builder.Entity<ProductType>().HasOne(x => x.Category).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.Product).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.Warehouse).WithMany().OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Item>().HasOne(x => x.Storage).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.Sector).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.Row).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.Slot).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.RemovedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<ItemComponent>().HasOne(x => x.Parent).WithMany(x => x.Components).HasForeignKey(p => p.ParentId).OnDelete(DeleteBehavior.NoAction);
@@ -163,6 +173,14 @@ namespace MagFlow.EF
             builder.Entity<Document>().HasOne(x => x.ConfirmedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Order>().HasOne(x => x.ConfirmedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
 
+            builder.Ignore<Shared.Models.StatusEntity>();
+            foreach(var entityType in builder.Model.GetEntityTypes())
+            {
+                if (typeof(IStatusEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    builder.Entity(entityType.ClrType).Property(nameof(IStatusEntity.Status)).HasField("_status").UsePropertyAccessMode(PropertyAccessMode.Field);
+                }
+            }
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

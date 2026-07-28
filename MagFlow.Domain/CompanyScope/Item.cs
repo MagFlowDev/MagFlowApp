@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Item : ISoftDeletable, IHistoryEntity
+    public class Item : StatusEntity, IBaseEntity, ISoftDeletable, IHistoryEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -14,9 +14,14 @@ namespace MagFlow.Domain.CompanyScope
         public string? ExternalId { get; set; }
         [Required]
         public int ProductId { get; set; }
+
+        // Location
         public int? WarehouseId { get; set; }
-        public int? StorageId { get; set; }
+        public int? SectorId { get; set; }
+        public int? RowId { get; set; }
+        public int? SlotId { get; set; }
         public string? Location { get; set; }
+
         [Required]
         [Precision(18, 4)]
         public decimal Quantity { get; set; }
@@ -32,8 +37,6 @@ namespace MagFlow.Domain.CompanyScope
         public DateTime? ConsumptionDate { get; set; }
         [Required]
         public Enums.Condition Condition { get; set; }
-        [Required]
-        public Enums.ItemStatus Status { get; set; }
         public string? Note { get; set; }
         [Precision(18, 4)]
         public decimal? PurchasePrice { get; set; }
@@ -47,10 +50,16 @@ namespace MagFlow.Domain.CompanyScope
         
         [ForeignKey(nameof(ProductId))]
         public Product? Product { get; set; }
+
         [ForeignKey(nameof(WarehouseId))]
         public Warehouse? Warehouse { get; set; }
-        [ForeignKey(nameof(StorageId))]
-        public WarehouseStorage? Storage { get; set; }
+        [ForeignKey(nameof(SectorId))]
+        public WarehouseSector? Sector { get; set; }
+        [ForeignKey(nameof(RowId))]
+        public WarehouseSectorRow? Row { get; set; }
+        [ForeignKey(nameof(SlotId))]
+        public WarehouseSectorRowSlot? Slot { get; set; }
+
         [ForeignKey(nameof(CreatedById))]
         public User? CreatedBy { get; set; }
         [ForeignKey(nameof(RemovedById))]
@@ -66,5 +75,18 @@ namespace MagFlow.Domain.CompanyScope
 
         [NotMapped]
         public ICollection<IEntityHistory> History { get; set; } = [];
+
+
+        private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()
+        {
+            Enums.EntityStatus.Unknown, 
+            Enums.EntityStatus.Available, 
+            Enums.EntityStatus.Blocked, 
+            Enums.EntityStatus.Deleted, 
+            Enums.EntityStatus.Used,
+            Enums.EntityStatus.Released
+        };
+
+        public Item() : base(_allowedStatuses) { }
     }
 }

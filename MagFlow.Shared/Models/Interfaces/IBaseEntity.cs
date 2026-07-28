@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MagFlow.Shared.DTOs.CompanyScope
+namespace MagFlow.Shared.Models.Interfaces
 {
-    public interface BaseDTO
+    public interface IBaseEntity
     {
         int Id { get; set; }
     }

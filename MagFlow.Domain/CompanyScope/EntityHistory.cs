@@ -8,7 +8,7 @@ using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class EntityHistory : IEntityHistory
+    public class EntityHistory : IBaseEntity, IEntityHistory
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -1,4 +1,5 @@
 ﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Order
+    public class Order : StatusEntity, IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -21,8 +22,6 @@ namespace MagFlow.Domain.CompanyScope
         [Required]
         public string OrderNumber { get; set; }
         public string? ClientOrderNumber { get; set; }
-        [Required]
-        public Enums.OrderStatus Status { get; set; }
         [Required]
         public DateTime OrderDate { get; set; }
         [Required]
@@ -45,5 +44,15 @@ namespace MagFlow.Domain.CompanyScope
         public ICollection<OrderDelivery> Deliveries { get; set; }
         public ICollection<OrderDocument> Documents { get; set; }
         public ICollection<OrderItem> Items { get; set; }
+
+       
+        private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()
+        {
+            Enums.EntityStatus.Unknown,
+            Enums.EntityStatus.Active,
+            Enums.EntityStatus.Deleted,
+        };
+
+        public Order() : base(_allowedStatuses) { }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MagFlow.Shared.Models;
+﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.Models;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
 using System;
@@ -91,29 +92,35 @@ namespace MagFlow.BLL.Helpers
             };
         }
 
-        public static Color ToColor(this Enums.ItemStatus status)
+        public static Color ToColor(this Enums.EntityStatus status)
         {
             return status switch
             {
-                Enums.ItemStatus.Deleted => Color.Error,
-                Enums.ItemStatus.Released => Color.Info,
-                Enums.ItemStatus.Used => Color.Dark,
-                Enums.ItemStatus.Available => Color.Success,
-                Enums.ItemStatus.Blocked => Color.Error,
-                Enums.ItemStatus.Unknown => Color.Default,
+                Enums.EntityStatus.Deleted => Color.Error,
+                Enums.EntityStatus.Released => Color.Info,
+                Enums.EntityStatus.Used => Color.Dark,
+                Enums.EntityStatus.Available => Color.Success,
+                Enums.EntityStatus.Active => Color.Success,
+                Enums.EntityStatus.Blocked => Color.Error,
+                Enums.EntityStatus.Inactive => Color.Error,
+                Enums.EntityStatus.Unknown => Color.Default,
                 _ => Color.Default
             };
         }
 
-        public static Color ToColor(this Enums.WarehouseStatus status)
+        public static Enums.HistoryEntityType ToHistoryEntityType(Type entityType)
         {
-            return status switch
+            switch(entityType.Name)
             {
-                Enums.WarehouseStatus.Deleted => Color.Error,
-                Enums.WarehouseStatus.Active => Color.Success,
-                Enums.WarehouseStatus.Unknown => Color.Default,
-                _ => Color.Default
-            };
+                case nameof(Product):
+                    return Enums.HistoryEntityType.Product;
+                case nameof(Item):
+                    return Enums.HistoryEntityType.Item;
+                case nameof(Warehouse):
+                    return Enums.HistoryEntityType.Warehouse;
+                default:
+                    return Enums.HistoryEntityType.Unknown;
+            }
         }
     }
 }

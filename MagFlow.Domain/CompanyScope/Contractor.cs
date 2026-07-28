@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Contractor : ISoftDeletable
+    public class Contractor : IBaseEntity, ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
