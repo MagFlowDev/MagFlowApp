@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MagFlow.Shared.Models.Interfaces
 {
-    public interface IEntityHistory 
+    public interface IEntityHistory
     {
         int Id { get; set; }
         int EntityId { get; set; }

@@ -68,7 +68,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Id = product.Id,
                 Name = product.Name,
                 Code = product.Code,
-                Status = product.IsActive ? Enums.ProductStatus.Active : Enums.ProductStatus.Inactive,
+                Status = product.IsActive ? Enums.EntityStatus.Active : Enums.EntityStatus.Inactive,
                 Type = product.Type?.ToDTO(),
                 Category = product.Category?.ToDTO(),
                 Unit = product.Unit?.ToDTO(),
@@ -124,7 +124,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             {
                 Name = model.GeneralInformation.Name,
                 Code = model.GeneralInformation.Code,
-                Status = Enums.ProductStatus.Active,
+                Status = Enums.EntityStatus.Active,
                 Type = model.GeneralInformation.ProductType,
                 Category = model.GeneralInformation.ProductCategory,
                 Unit = model.GeneralInformation.Unit,
@@ -149,7 +149,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             {
                 Name = model.GeneralInformation.Name,
                 Code = model.GeneralInformation.Code,
-                Status = Enums.ProductStatus.Active,
+                Status = Enums.EntityStatus.Active,
                 Type = model.GeneralInformation.ProductType,
                 Category = model.GeneralInformation.ProductCategory,
                 Unit = model.GeneralInformation.Unit,
@@ -176,8 +176,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Name = product.Name,
                 Code = product.Code,
                 Status = product.IsActive
-           ? Enums.ProductStatus.Active
-           : Enums.ProductStatus.Inactive,
+           ? Enums.EntityStatus.Active
+           : Enums.EntityStatus.Inactive,
                 Type = product.Type?.ToDTO(),
                 Category = product.Category?.ToDTO(),
                 Unit = product.Unit?.ToDTO(),
@@ -240,7 +240,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Code = product.Code,
                 CreatedAt = product.CreatedAt ?? DateTime.UtcNow,
                 CreatedById = product.CreatedBy?.Id ?? userId ?? Guid.Empty,
-                IsActive = product.Status == Enums.ProductStatus.Active,
+                IsActive = product.Status == Enums.EntityStatus.Active,
                 TypeId = product.Type?.Id ?? 0,
                 CategoryId = product.Category?.Id,
                 UnitId = product.Unit?.Id ?? 0,

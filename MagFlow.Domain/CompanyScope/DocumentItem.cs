@@ -1,11 +1,12 @@
+using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using MagFlow.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class DocumentItem
+    public class DocumentItem : IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -39,6 +40,6 @@ namespace MagFlow.Domain.CompanyScope
         [ForeignKey(nameof(WarehouseId))]
         public Warehouse? Warehouse { get; set; }
         [ForeignKey(nameof(StorageId))]
-        public WarehouseStorage? Storage { get; set; }
+        public WarehouseSector? Storage { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace MagFlow.BLL.Services
 
         public ItemService(IItemRepository itemRepository, 
             INetworkService networkService,
-            ILogger<ItemService> logger) : base(itemRepository)
+            ILogger<ItemService> logger) : base(itemRepository, networkService)
         {
             _itemRepository = itemRepository;
             _networkService = networkService;
@@ -153,7 +153,7 @@ namespace MagFlow.BLL.Services
                         .Select(x => new { Id = x.Item.Id, NewQuantity = x.Item.TempQuantity!.Value })
                         .ToDictionary(x => x.Id, x => x.NewQuantity);
 
-                result = await _itemRepository.UpdateItemQuantity(itemQuantity, Enums.ItemStatus.Used, contextTransaction.context);
+                result = await _itemRepository.UpdateItemQuantity(itemQuantity, Enums.EntityStatus.Used, contextTransaction.context);
                 if(result != Enums.Result.Success)
                 {
                     await _itemRepository.RollbackTransaction(contextTransaction.context, contextTransaction.transaction);
@@ -232,7 +232,7 @@ namespace MagFlow.BLL.Services
                          .Where(x => x.TempQuantity.HasValue)
                          .Select(x => new { Id = x.Id, NewQuantity = x.TempQuantity!.Value })
                          .ToDictionary(x => x.Id, x => x.NewQuantity);
-                    result = await _itemRepository.UpdateItemQuantity(itemQuantity, Enums.ItemStatus.Used, contextTransaction.context);
+                    result = await _itemRepository.UpdateItemQuantity(itemQuantity, Enums.EntityStatus.Used, contextTransaction.context);
                     if (result != Enums.Result.Success)
                     {
                         await _itemRepository.RollbackTransaction(contextTransaction.context, contextTransaction.transaction);
@@ -261,7 +261,10 @@ namespace MagFlow.BLL.Services
             if (item == null)
                 return Enums.Result.Error;
 
-            item.Status = unblock ? (item.Status == Enums.ItemStatus.Blocked ? Enums.ItemStatus.Available : item.Status) : Enums.ItemStatus.Blocked;
+            if (unblock && item.Status == Enums.EntityStatus.Blocked)
+                item.ChangeStatus(Enums.EntityStatus.Available);
+            else if (!unblock)
+                item.ChangeStatus(Enums.EntityStatus.Blocked);
             var result = await _itemRepository.UpdateAsync(item);
             return result;
         }
@@ -281,7 +284,10 @@ namespace MagFlow.BLL.Services
 
             foreach (var item in items)
             {
-                item.Status = unblock ? (item.Status == Enums.ItemStatus.Blocked ? Enums.ItemStatus.Available : item.Status) : Enums.ItemStatus.Blocked;
+                if (unblock && item.Status == Enums.EntityStatus.Blocked)
+                    item.ChangeStatus(Enums.EntityStatus.Available);
+                else if (!unblock)
+                    item.ChangeStatus(Enums.EntityStatus.Blocked);
             }
             var result = await _itemRepository.UpdateRangeAsync(items);
             return result;
@@ -311,7 +317,7 @@ namespace MagFlow.BLL.Services
                 return Enums.Result.Error;
 
             originalItem.RemovedAt = null;
-            originalItem.Status = Enums.ItemStatus.Available;
+            originalItem.ChangeStatus(Enums.EntityStatus.Available);
             var result = await _itemRepository.UpdateAsync(originalItem);
             return result;
         }
@@ -324,7 +330,7 @@ namespace MagFlow.BLL.Services
             foreach(var originalItem in originalItems)
             {
                 originalItem.RemovedAt = null;
-                originalItem.Status = Enums.ItemStatus.Available;
+                originalItem.ChangeStatus(Enums.EntityStatus.Available);
             }
             var result = await _itemRepository.UpdateRangeAsync(originalItems);
             return result;

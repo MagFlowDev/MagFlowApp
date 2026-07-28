@@ -1,4 +1,5 @@
 ﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class DefaultWorkingHour
+    public class DefaultWorkingHour : IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

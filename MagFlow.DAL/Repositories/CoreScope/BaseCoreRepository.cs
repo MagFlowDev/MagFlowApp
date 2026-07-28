@@ -349,6 +349,10 @@ namespace MagFlow.DAL.Repositories.CoreScope
                             var isActiveProperty = entity.GetType().GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                             if (isActiveProperty != null)
                                 isActiveProperty.SetValue(entity, false);
+
+                            if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                                ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
+
                             context.Set<TEntity>().Update(entity);
                         }
                         else

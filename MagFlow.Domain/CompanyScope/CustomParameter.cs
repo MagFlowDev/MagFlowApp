@@ -5,7 +5,7 @@ using MagFlow.Shared.Models.Interfaces;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class CustomParameter : ISoftDeletable
+    public class CustomParameter : IBaseEntity, ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -151,7 +151,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Quantity = model.GeneralInformation.Quantity ?? 0,
                 CreatedById = userId,
                 Condition = Shared.Models.Enums.Condition.Unknown,
-                Status = Shared.Models.Enums.ItemStatus.Available,
+                Status = Shared.Models.Enums.EntityStatus.Available,
                 DefaultUnitId = model.GeneralInformation.Unit?.Id ?? 0,
 
                 PurchasePrice = model.GeneralInformation.Product?.PurchasePrice,

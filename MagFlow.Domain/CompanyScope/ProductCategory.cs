@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class ProductCategory : ISoftDeletable
+    public class ProductCategory : IBaseEntity, ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

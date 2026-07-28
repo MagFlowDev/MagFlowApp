@@ -24,7 +24,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
         {
         }
 
-        public async Task<Enums.Result> UpdateItemQuantity(Dictionary<int, decimal> itemsQuantity, Enums.ItemStatus removalReason, CompanyDbContext? context = null)
+        public async Task<Enums.Result> UpdateItemQuantity(Dictionary<int, decimal> itemsQuantity, Enums.EntityStatus removalReason, CompanyDbContext? context = null)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                         .ToDictionary(kvp => kvp.Key, kvp => (DateTime?)now);
                         var removedItemsDict2 = itemsQuantity
                             .Where(kvp => kvp.Value == 0m)
-                            .ToDictionary(kvp => kvp.Key, kvp => Enums.ItemStatus.Used);
+                            .ToDictionary(kvp => kvp.Key, kvp => Enums.EntityStatus.Used);
 
                         if (removedItemsDict.Any())
                         {
@@ -66,7 +66,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                targetPropertyName: nameof(Item.RemovedAt),
                                updates: removedItemsDict
                             );
-                            var removedAtCase2 = QueryHelper.BuildCaseExpression<Item, int, Enums.ItemStatus>(
+                            var removedAtCase2 = QueryHelper.BuildCaseExpression<Item, int, Enums.EntityStatus>(
                                keyPropertyName: nameof(Item.Id),
                                targetPropertyName: nameof(Item.Status),
                                updates: removedItemsDict2
@@ -111,7 +111,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                            targetPropertyName: nameof(Item.RemovedAt),
                            updates: removedItemsDict
                         );
-                        var removedAtCase2 = QueryHelper.BuildCaseExpression<Item, int, Enums.ItemStatus>(
+                        var removedAtCase2 = QueryHelper.BuildCaseExpression<Item, int, Enums.EntityStatus>(
                            keyPropertyName: nameof(Item.Id),
                            targetPropertyName: nameof(Item.Status),
                            updates: removedItemsDict2
@@ -161,7 +161,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                     using (context = _companyContextFactory.CreateDbContext())
                     {
                         entity.RemovedAt = DateTime.UtcNow;
-                        entity.Status = Enums.ItemStatus.Deleted;
+                        entity.ChangeStatus(Enums.EntityStatus.Deleted);
                         context.Items.Update(entity);
                         await context.SaveChangesAsync();
                     }
@@ -169,7 +169,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 else
                 {
                     entity.RemovedAt = DateTime.UtcNow;
-                    entity.Status = Enums.ItemStatus.Deleted;
+                    entity.ChangeStatus(Enums.EntityStatus.Deleted);
                     context.Items.Update(entity);
                     await context.SaveChangesAsync();
                 }
@@ -196,7 +196,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                         foreach (var entity in entities)
                         {
                             entity.RemovedAt = DateTime.UtcNow;
-                            entity.Status = Enums.ItemStatus.Deleted;
+                            entity.ChangeStatus(Enums.EntityStatus.Deleted);
                         }
                         context.Items.UpdateRange(entities);
                         await context.SaveChangesAsync();
@@ -210,7 +210,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                     foreach (var entity in entities)
                     {
                         entity.RemovedAt = DateTime.UtcNow;
-                        entity.Status = Enums.ItemStatus.Deleted;
+                        entity.ChangeStatus(Enums.EntityStatus.Deleted);
                     }
                     context.Items.UpdateRange(entities);
                     await context.SaveChangesAsync();

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Unit : ISoftDeletable
+    public class Unit : IBaseEntity, ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

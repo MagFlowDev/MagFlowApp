@@ -132,7 +132,7 @@ namespace MagFlow.Shared.Models
             Out
         }
 
-        public enum ItemStatus
+        public enum EntityStatus
         {
             [Display(Name = "UnknownStatus")]
             Unknown = 0,
@@ -150,25 +150,13 @@ namespace MagFlow.Shared.Models
             Used = 4,
 
             [Display(Name = "Released")]
-            Released = 5
-        }
-
-        public enum WarehouseStatus
-        {
-            [Display(Name = "UnknownStatus")]
-            Unknown = 0,
+            Released = 5,
 
             [Display(Name = "Active")]
-            Active = 1,
+            Active = 6,
 
-            [Display(Name = "Deleted")]
-            Deleted = 2,
-        }
-
-        public enum ProductStatus
-        {
-            Active,
-            Inactive,
+            [Display(Name = "Inactive")]
+            Inactive = 7,
         }
 
         public enum OverallState
@@ -176,21 +164,6 @@ namespace MagFlow.Shared.Models
             Unknown = 0,
             Operative = 1,
             Inoperative = 2,
-        }
-
-        public enum DocumentStatus
-        {
-            Unknown
-        }
-
-        public enum ProcessStatus
-        {
-            Unknown
-        }
-
-        public enum OrderStatus
-        {
-            Unknown
         }
 
         public enum ContractorType

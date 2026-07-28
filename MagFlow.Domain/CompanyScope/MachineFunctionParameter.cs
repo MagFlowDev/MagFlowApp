@@ -1,9 +1,10 @@
+using MagFlow.Shared.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class MachineFunctionParameter
+    public class MachineFunctionParameter : IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -1,24 +1,24 @@
-using MagFlow.Shared.Models;
+﻿using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Interfaces;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Warehouse : StatusEntity, IBaseEntity, ISoftDeletable, IHistoryEntity
+    public class WarehouseSectorRowSlot : StatusEntity, IBaseEntity, ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public int RowId { get; set; }
         [Required]
         public string Code { get; set; }
-        public string? Description { get; set; }
         [Required]
-        public bool IsActive { get; set; }
-        [Required]
-        public Enums.WarehouseType Type { get; set; }
+        public string Name { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
         [Required]
@@ -27,18 +27,9 @@ namespace MagFlow.Domain.CompanyScope
         public Guid? RemovedById { get; set; }
 
         public ICollection<Item> Items { get; set; }
-        public ICollection<WarehouseSector> Sectors { get; set; }
 
-        [ForeignKey(nameof(CreatedById))]
-        public User? CreatedBy { get; set; }
-        [ForeignKey(nameof(RemovedById))]
-        public User? RemovedBy { get; set; }
-
-        [NotMapped]
-        public Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Warehouse;
-
-        [NotMapped]
-        public ICollection<IEntityHistory> History { get; set; } = [];
+        [ForeignKey(nameof(RowId))]
+        public WarehouseSectorRow? Row { get; set; }
 
 
         private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()
@@ -48,6 +39,6 @@ namespace MagFlow.Domain.CompanyScope
             Enums.EntityStatus.Deleted,
         };
 
-        public Warehouse() : base(_allowedStatuses) { }
+        public WarehouseSectorRowSlot() : base(_allowedStatuses) { }
     }
 }

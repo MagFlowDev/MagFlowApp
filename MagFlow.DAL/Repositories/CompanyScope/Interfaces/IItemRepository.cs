@@ -11,7 +11,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope.Interfaces
 {
     public interface IItemRepository : IRepository<Item, CompanyDbContext>
     {
-        Task<Enums.Result> UpdateItemQuantity(Dictionary<int, decimal> itemsQuantity, Enums.ItemStatus removalReason, CompanyDbContext? context = null);
+        Task<Enums.Result> UpdateItemQuantity(Dictionary<int, decimal> itemsQuantity, Enums.EntityStatus removalReason, CompanyDbContext? context = null);
         Task<Enums.Result> RemoveItemComponents(List<ItemComponent> components);
     }
 }

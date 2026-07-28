@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Product : ISoftDeletable, IHistoryEntity
+    public class Product : StatusEntity, IBaseEntity, ISoftDeletable, IHistoryEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -34,7 +34,8 @@ namespace MagFlow.Domain.CompanyScope
         [Precision(18, 4)]
         public decimal? DefaultVatRate { get; set; }
         public Enums.Currency? Currency { get; set; }
-        
+
+
         [ForeignKey(nameof(TypeId))]
         public ProductType? Type { get; set; }
         [ForeignKey(nameof(CategoryId))]
@@ -55,5 +56,14 @@ namespace MagFlow.Domain.CompanyScope
 
         [NotMapped]
         public ICollection<IEntityHistory> History { get; set; } = [];
+
+        private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()
+        {
+            Enums.EntityStatus.Unknown,
+            Enums.EntityStatus.Active,
+            Enums.EntityStatus.Inactive,
+        };
+
+        public Product() : base(_allowedStatuses) { }
     }
 }

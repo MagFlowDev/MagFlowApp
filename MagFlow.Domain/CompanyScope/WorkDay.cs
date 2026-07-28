@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MagFlow.Shared.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class WorkDay
+    public class WorkDay : IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -22,7 +22,18 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
                 sortBy = column?.Tag?.ToString();
             }
             sortBy = sortBy ?? nameof(WarehouseDTO.Id);
-            var response = await WarehouseService.GetWarehouses(state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
+            var response = await WarehouseService.GetManyAsync(new QueryOptions<Domain.CompanyScope.Warehouse>()
+            {
+                PageNumber = state.Page,
+                PageSize = state.PageSize,
+                Search = _searchString,
+                SearchColumns = new System.Linq.Expressions.Expression<Func<Domain.CompanyScope.Warehouse, string?>>[]
+                {
+                    u => u.Name
+                },
+                SortBy = sortBy,
+                Descending = sortDefinition?.Descending == true
+            });
 
             return new GridData<WarehouseDTO>
             {

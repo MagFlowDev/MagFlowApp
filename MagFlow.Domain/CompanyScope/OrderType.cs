@@ -1,4 +1,5 @@
 ﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class OrderType
+    public class OrderType : IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

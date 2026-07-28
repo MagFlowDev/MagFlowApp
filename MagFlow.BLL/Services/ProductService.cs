@@ -34,7 +34,7 @@ namespace MagFlow.BLL.Services
             IParameterRepository parameterRepository,
             IProductParameterRepository productParameterRepository,
             IUnitRepository unitRepository,
-            INetworkService networkService) : base(productRepository)
+            INetworkService networkService) : base(productRepository, networkService)
         {
             _productRepository = productRepository;
             _categoryRepository = productCategoryRepository;
