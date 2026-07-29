@@ -17,7 +17,7 @@ namespace MagFlow.EF.MultiTenancy
             _coreContextFactory = coreContextFactory;
         }
 
-        public async Task<string?> GetTenantConnectionString(string userEmail)
+        public async Task<(string? connectionString, int? companyNumber)> GetTenantInfo(string userEmail)
         {
             try
             {
@@ -28,16 +28,19 @@ namespace MagFlow.EF.MultiTenancy
                         .Include(c => c.DefaultCompany)
                         .FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail);
 
-                    return user?.DefaultCompany?.ConnectionString;
+                    var connectionString = user?.DefaultCompany?.ConnectionString;
+                    var companyNumber = user?.DefaultCompany?.CompanyNumber;
+
+                    return (connectionString, companyNumber);
                 }
             }
             catch(Exception ex)
             {
-                return null;
+                return (null, null);
             }
         }
 
-        public async Task<string?> GetTenantConnectionString(Guid companyId)
+        public async Task<(string? connectionString, int? companyNumber)> GetTenantInfo(Guid companyId)
         {
             try
             {
@@ -45,12 +48,15 @@ namespace MagFlow.EF.MultiTenancy
                 {
                     var company = await context.Companies.FirstOrDefaultAsync(i => i.Id == companyId);
 
-                    return company?.ConnectionString;
+                    var connectionString = company?.ConnectionString;
+                    var companyNumber = company?.CompanyNumber;
+
+                    return (connectionString, companyNumber);
                 }
             }
             catch (Exception ex)
             {
-                return null;
+                return (null, null);
             }
         }
     }

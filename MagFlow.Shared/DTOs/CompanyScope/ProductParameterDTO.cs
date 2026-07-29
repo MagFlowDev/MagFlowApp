@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using MagFlow.Shared.Models;
 
 namespace MagFlow.Shared.DTOs.CompanyScope
 {
-    public class ProductParameterDTO
+    public class ProductParameterDTO : ICodeDTO
     {
         public int Id { get; set; }
         public int ParameterId { get; set; }

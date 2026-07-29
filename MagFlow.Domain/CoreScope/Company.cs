@@ -13,6 +13,7 @@ namespace MagFlow.Domain.CoreScope
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        public int CompanyNumber { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

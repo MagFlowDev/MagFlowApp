@@ -9,6 +9,7 @@ namespace MagFlow.EF.MultiTenancy
     public interface ICompanyContext
     {
         string? ConnectionString { get; }
+        int? CompanyNumber { get; }
 
         Task SetCompanyContext(string userEmail);
     }

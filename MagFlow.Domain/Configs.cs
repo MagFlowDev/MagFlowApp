@@ -13,6 +13,24 @@ namespace MagFlow.Domain
         {
             var entityType = baseEntity.GetType();
 
+            if (entityType == typeof(Item))
+                return GetConfig(baseEntity, 0);
+
+            return Domain.Configs.Instance.TryGetValue(entityType, out var config)
+                ? config
+                : new CodeConfig { Prefix = "MFO", IncludeYear = false, MinDigits = 4 };
+        }
+
+        public static CodeConfig GetConfig(ICodeEntity baseEntity, int companyNumber)
+        {
+            var entityType = baseEntity.GetType();
+
+            if (entityType == typeof(Item))
+            {
+                var base35 = Shared.Generators.Base35Generator.ConvertObfuscated(companyNumber);
+                return new CodeConfig { Prefix = $"MFW-{base35}", IncludeYear = false, MinDigits = 6 };
+            }
+
             return Domain.Configs.Instance.TryGetValue(entityType, out var config)
                 ? config
                 : new CodeConfig { Prefix = "MFO", IncludeYear = false, MinDigits = 4 };
@@ -20,7 +38,7 @@ namespace MagFlow.Domain
 
         public static readonly Configs Instance = new()
         {
-            { typeof(Item), Code("MFW", minDigits: 5) },
+            { typeof(Item), Code("MFW", minDigits: 6) },
             { typeof(Product), Code("PRD") },
             { typeof(Contractor), Code("CTR") },
 

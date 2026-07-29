@@ -34,7 +34,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 if (user.Id == Guid.Empty || string.IsNullOrEmpty(user.Email))
                     return Enums.Result.Error;
 
-                using (var context = new CompanyDbContext(company.ConnectionString))
+                using (var context = new CompanyDbContext(company.ConnectionString, company.CompanyNumber))
                 {
                     if(await context.Users.AnyAsync(x => x.Id == user.Id))
                         return Enums.Result.Error;
@@ -59,7 +59,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 if(result != Enums.Result.Success)
                     return result;
 
-                using (var companyDbContext = new CompanyDbContext(entity.ConnectionString))
+                using (var companyDbContext = new CompanyDbContext(entity.ConnectionString, entity.CompanyNumber))
                 {
                     await companyDbContext.Database.MigrateAsync();
                     await CompanyDbSeeder.SeedAsync(companyDbContext, CancellationToken.None);
@@ -233,7 +233,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
 
                 using (var coreContext = _coreContextFactory.CreateDbContext())
                 {
-                    using (var companyContext = new CompanyDbContext(entity.ConnectionString))
+                    using (var companyContext = new CompanyDbContext(entity.ConnectionString, entity.CompanyNumber))
                     {
                         var companyUsersIds = companyContext.Users
                             .Select(u => u.Id)
@@ -281,7 +281,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
 
                 using (var coreContext = _coreContextFactory.CreateDbContext())
                 {
-                    using (var companyContext = new CompanyDbContext(entity.ConnectionString))
+                    using (var companyContext = new CompanyDbContext(entity.ConnectionString, entity.CompanyNumber))
                     {
                         var companyUsersIds = await companyContext.Users
                             .Select(u => u.Id)

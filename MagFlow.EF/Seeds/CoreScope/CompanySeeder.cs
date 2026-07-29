@@ -25,7 +25,7 @@ namespace MagFlow.EF.Seeds.CoreScope
 
         public async Task SeedAsync(CoreDbContext context, CancellationToken cancellationToken)
         {
-            List<string> seededDbConnectionStrings = new List<string>();
+            List<KeyValuePair<string, int>> seededDbs = new List<KeyValuePair<string, int>>();
             bool seed = false;
 
             var now = DateTime.UtcNow;
@@ -59,7 +59,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                     await context.CompanyUsers.AddAsync(companyUser);
                 }
                 seed = true;
-                seededDbConnectionStrings.Add(testCompany.ConnectionString);
+                seededDbs.Add(new KeyValuePair<string, int>(testCompany.ConnectionString, testCompany.CompanyNumber));
             }
             else
             {
@@ -107,7 +107,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                     }
                 }
                 seed = true;
-                seededDbConnectionStrings.Add(demoCompany.ConnectionString);
+                seededDbs.Add(new KeyValuePair<string, int>(demoCompany.ConnectionString, demoCompany.CompanyNumber));
             }
             else
             {
@@ -138,13 +138,15 @@ namespace MagFlow.EF.Seeds.CoreScope
 
             }
 
-            if (seededDbConnectionStrings.Any())
+            if (seededDbs.Any())
             {
-                foreach(var connectionString in seededDbConnectionStrings)
+                foreach(var seededDb in seededDbs)
                 {
                     try
                     {
-                        using (var companyDbContext = new CompanyDbContext(connectionString))
+                        var connectionString = seededDb.Key;
+                        var companyNumber = seededDb.Value;
+                        using (var companyDbContext = new CompanyDbContext(connectionString, companyNumber))
                         {
                             await companyDbContext.Database.MigrateAsync();
                             if (adminUser != null)

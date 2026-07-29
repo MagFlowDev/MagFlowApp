@@ -14,6 +14,8 @@ namespace MagFlow.EF.MultiTenancy
 
         public string? ConnectionString { get; private set; }
 
+        public int? CompanyNumber { get; private set; }
+
         public CompanyContext(ITenantProvider tenantProvider,
             IHttpContextAccessor httpContextAccessor)
         {
@@ -24,7 +26,9 @@ namespace MagFlow.EF.MultiTenancy
 
         public async Task SetCompanyContext(string userEmail)
         {
-            ConnectionString = await _tenantProvider.GetTenantConnectionString(userEmail);
+            var tenantInfo = await _tenantProvider.GetTenantInfo(userEmail);
+            ConnectionString = tenantInfo.connectionString;
+            CompanyNumber = tenantInfo.companyNumber;
         }
 
         private void SetCompanyContext(IHttpContextAccessor httpContextAccessor)
@@ -34,10 +38,12 @@ namespace MagFlow.EF.MultiTenancy
                 return;
             try
             {
-                ConnectionString = Task.Run(async () =>
+                var tenantInfo = Task.Run(async () =>
                 {
-                    return await _tenantProvider.GetTenantConnectionString(companyId).ConfigureAwait(false);
+                    return await _tenantProvider.GetTenantInfo(companyId).ConfigureAwait(false);
                 }).Result;
+                ConnectionString = tenantInfo.connectionString;
+                CompanyNumber = tenantInfo.companyNumber;
             }
             catch(Exception ex)
             {

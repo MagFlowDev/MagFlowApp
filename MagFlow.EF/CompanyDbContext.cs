@@ -11,6 +11,8 @@ namespace MagFlow.EF
 {
     public class CompanyDbContext : DbContext
     {
+        private readonly int _companyNumber;
+
         public DbSet<Contractor> Contractors { get; set; }
         public DbSet<CustomParameter> CustomParameters { get; set; }
         public DbSet<Document> Documents { get; set; }
@@ -59,17 +61,24 @@ namespace MagFlow.EF
         public DbSet<WorkDay> WorkDays { get; set; }
         public DbSet<EntityHistory> EntitiesHistory { get; set; }
 
-        public CompanyDbContext(string connectionString) : base(BuildOptions(connectionString))
+        public CompanyDbContext(string connectionString, int companyNumber) : base(BuildOptions(connectionString))
         {
+            _companyNumber = companyNumber;
+        }
+
+        public CompanyDbContext(DbContextOptions<CompanyDbContext> options, int companyNumber) : base(options)
+        {
+            _companyNumber = companyNumber;
         }
 
         public CompanyDbContext(DbContextOptions<CompanyDbContext> options) : base(options)
         {
+            _companyNumber = 0;
         }
 
         public CompanyDbContext() : base(BuildOptions(AppSettings.ConnectionStrings.CompanyDb))
         {
-
+            _companyNumber = 0;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -230,7 +239,7 @@ namespace MagFlow.EF
 
                 foreach (var entry in addedEntries)
                 {
-                    var config = Domain.Configs.GetConfig(entry.Entity);
+                    var config = Domain.Configs.GetConfig(entry.Entity, _companyNumber);
 
                     var id = entry.Property("Id").CurrentValue;
                     var idFormat = $"D{config.MinDigits}";

@@ -8,4 +8,9 @@ namespace MagFlow.Shared.Models.Interfaces
     {
         string Code { get; }
     }
+
+    public interface ICodeDTO
+    {
+        string Code { get; }
+    }
 }
