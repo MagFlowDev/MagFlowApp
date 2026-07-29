@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -6,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace MagFlow.BLL.Helpers
 {
-    public static class CodesGenerator
+    public static class CodeHelper
     {
         private static readonly char[] Base36Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
 
@@ -75,5 +78,7 @@ namespace MagFlow.BLL.Helpers
 
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
+
+
     }
 }

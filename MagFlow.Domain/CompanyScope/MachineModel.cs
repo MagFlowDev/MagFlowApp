@@ -4,15 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class MachineModel : IBaseEntity
+    public class MachineModel : IBaseEntity, ICodeEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
-        public string Code { get; set; }
+        public string Code { get; private set; }
         [Required]
         public string Manufacturer { get; set; }
         public string? Description { get; set; }

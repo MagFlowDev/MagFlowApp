@@ -6,15 +6,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Product : StatusEntity, IBaseEntity, ISoftDeletable, IHistoryEntity
+    public class Product : StatusEntity, IBaseEntity, ICodeEntity, ISoftDeletable, IHistoryEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
-        public string Code { get; set; }
+        public string Code { get; private set; }
         [Required]
         public int TypeId { get; set; }
         public int? CategoryId { get; set; }

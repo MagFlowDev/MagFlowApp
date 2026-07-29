@@ -13,7 +13,6 @@ namespace MagFlow.Shared.Validators.Company
         public CustomParameterValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
-            RuleFor(x => x.Code).NotEmpty().WithMessage(localizer[Validations.CodeRequired]);
             RuleFor(x => x.ValueType).NotEmpty().WithMessage(localizer[Validations.TypeRequired]);
         }
     }

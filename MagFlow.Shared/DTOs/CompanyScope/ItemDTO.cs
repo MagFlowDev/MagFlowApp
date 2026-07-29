@@ -10,6 +10,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
     public class ItemDTO : IBaseDTO
     {
         public int Id { get; set; }
+        public string Code { get; init; }
         public string? ExternalId { get; set; }
         public decimal Quantity { get; set; }
         public decimal? TempQuantity { get; set; }

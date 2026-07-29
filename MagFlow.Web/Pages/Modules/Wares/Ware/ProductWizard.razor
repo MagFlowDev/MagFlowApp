@@ -35,8 +35,6 @@
                                 <div style="overflow-y: auto; flex-grow: 1; min-height: 0;" class="d-flex flex-column align-items-center pt-3">
                                     <div class="d-flex flex-column align-items-start w-100" style="gap: 24px; max-width: 550px;">
                                         <MudTextField Label="@Localizer[Langs.ProductName]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.Name" For="@(() => _model.GeneralInformation.Name)" Class="w-100 my-0"></MudTextField>  
-                                        <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.Code" For="@(() => _model.GeneralInformation.Code)"
-                                                      Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.AutoAwesome" OnAdornmentClick="GenerateCode"></MudTextField>
                                         <div class="d-flex w-100 my-0 align-items-stretch">
                                             <MudAutocomplete Value="_model.GeneralInformation.ProductCategory"
                                                              ValueChanged="OnProductCategoryChanged"

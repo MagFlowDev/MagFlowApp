@@ -43,8 +43,6 @@
                 </MudAutocomplete>
             </div>
             <MudTextField Label="@Localizer[Langs.Name]" Class="my-0 w-100" Placeholder="@Localizer[Langs.TypeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Name" For="@(() => _model.Name)"></MudTextField>
-            <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Code" For="@(() => _model.Code)"
-                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.AutoAwesome" OnAdornmentClick="GenerateCode"></MudTextField>
         </EditForm>
     </DialogContent>
     <DialogActions>
@@ -121,12 +119,6 @@
         }
     }
 
-    private void GenerateCode()
-    {
-        if(!string.IsNullOrEmpty(_model.Name))
-            _model.Code = CodesGenerator.GeneratePrefix(_model.Name);
-    }
-
     private void Cancel() => MudDialog.Cancel();
 
     protected override void OnInitialized()
@@ -150,7 +142,6 @@
         if (Type != null && Type.Id != 0)
         {
             _model.Name = Type.Name;
-            _model.Code = Type.Code;
             _model.ProductCategory = Type.Category;
         }
     }

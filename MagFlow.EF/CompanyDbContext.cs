@@ -178,7 +178,19 @@ namespace MagFlow.EF
             {
                 if (typeof(IStatusEntity).IsAssignableFrom(entityType.ClrType))
                 {
-                    builder.Entity(entityType.ClrType).Property(nameof(IStatusEntity.Status)).HasField("_status").UsePropertyAccessMode(PropertyAccessMode.Field);
+                    var property = entityType.ClrType.GetProperty(nameof(IStatusEntity.Status));
+                    if (property != null)
+                    {
+                        builder.Entity(entityType.ClrType).Property(property.Name).HasField("_status").UsePropertyAccessMode(PropertyAccessMode.Field);
+                    }
+                }
+                if (typeof(ICodeEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    var property = entityType.ClrType.GetProperty(nameof(ICodeEntity.Code));
+                    if(property != null)
+                    {
+                        builder.Entity(entityType.ClrType).Property(property.Name).IsRequired(false);
+                    }
                 }
             }
         }
@@ -196,6 +208,54 @@ namespace MagFlow.EF
             optionsBuilder.UseSqlServer(connectionString);
 
             return optionsBuilder.Options;
+        }
+
+        public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            var addedEntries = ChangeTracker.Entries<ICodeEntity>()
+                .Where(e => e.State == EntityState.Added)
+                .ToList();
+
+            if(!addedEntries.Any())
+            {
+                return await base.SaveChangesAsync(cancellationToken);
+            }
+
+            using var transaction = await Database.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                var result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+
+                string currentYear = DateTime.UtcNow.ToString("yy");
+
+                foreach (var entry in addedEntries)
+                {
+                    var config = Domain.Configs.GetConfig(entry.Entity);
+
+                    var id = entry.Property("Id").CurrentValue;
+                    var idFormat = $"D{config.MinDigits}";
+                    string formattedId = Convert.ToInt32(id).ToString(idFormat);
+
+                    string generatedCode = config.IncludeYear
+                        ? $"{config.Prefix}-{currentYear}-{formattedId}"
+                        : $"{config.Prefix}-{formattedId}";
+
+                    entry.State = EntityState.Unchanged;
+                    entry.Property(nameof(ICodeEntity.Code)).CurrentValue = generatedCode;
+                    entry.Property(nameof(ICodeEntity.Code)).IsModified = true;
+                }
+
+                await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+
+                return result;
+            }
+            catch(Exception)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                throw;
+            }
         }
     }
 }

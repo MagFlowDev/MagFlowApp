@@ -31,7 +31,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return new ProductCategoryDTO()
             {
                 Name = model.Name,
-                Code = model.Code,
                 IsBasic = model.IsBasic
             };
         }
@@ -50,7 +49,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             {
                 Id = type.Id,
                 Name = type.Name,
-                Code = type.Code,
                 IsActive = type.IsActive,
                 IsBasic = type.IsBasic
             };
@@ -66,7 +64,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return new ProductCategory()
             {
                 Name = model.Name,
-                Code = model.Code,
                 IsActive = true,
                 IsBasic = model.IsBasic,
             };

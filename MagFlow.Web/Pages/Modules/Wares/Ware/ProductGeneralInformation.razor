@@ -23,8 +23,6 @@
          <EditForm EditContext="@_context" class="align-self-stretch d-flex flex-column align-items-start" style="gap: 16px; padding-bottom: 24px;">
              <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 24px;">
                 <MudTextField Label="@Localizer[Langs.Name]" Placeholder="@Localizer[Langs.ProductExample]" Variant="Variant.Outlined" T="string" @bind-Value="_product.Name" For="@(() => _model.GeneralInformation.Name)" Class="w-100 my-0"></MudTextField>
-                <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_product.Code" For="@(() => _model.GeneralInformation.Code)"
-                              Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.AutoAwesome" OnAdornmentClick="GenerateCode"></MudTextField>
                 <div class="d-flex w-100 my-0 align-items-stretch">
                     <MudAutocomplete Value="_product.Category"
                                     ValueChanged="OnProductCategoryChanged"
@@ -186,12 +184,6 @@
             IsBusy = false;
             Submitting = false;
         }
-    }
-
-    private void GenerateCode()
-    {
-        if (!string.IsNullOrEmpty(_product?.Name))
-            _product.Code = CodesGenerator.GeneratePrefix(_product.Name);
     }
 
     private void FillModel()

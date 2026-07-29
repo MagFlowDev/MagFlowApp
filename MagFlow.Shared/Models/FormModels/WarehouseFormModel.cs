@@ -19,13 +19,11 @@ namespace MagFlow.Shared.Models.FormModels
     public class WarehouseFormGeneralInformation
     {
         public string Name { get; set; }
-        public string Code { get; set; }
     }
 
     public class WarehouseFormSector
     {
         public string Name { get; set; }
-        public string Code { get; set; }
 
         public List<WarehouseFormSectorRow> Rows { get; set; }
 
@@ -38,7 +36,6 @@ namespace MagFlow.Shared.Models.FormModels
     public class WarehouseFormSectorRow
     {
         public string Name { get; set; }
-        public string Code { get; set; }
 
         public List<WarehouseFormSectorRowSlot> Slots { get; set; }
 
@@ -51,6 +48,5 @@ namespace MagFlow.Shared.Models.FormModels
     public class WarehouseFormSectorRowSlot
     {
         public string Name { get; set; }
-        public string Code { get; set; }
     }
 }
