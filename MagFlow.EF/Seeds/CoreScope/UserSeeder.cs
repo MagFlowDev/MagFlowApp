@@ -69,7 +69,7 @@ namespace MagFlow.EF.Seeds.CoreScope
 
                     try
                     {
-                        using (var companyContext = new CompanyDbContext(demoCompany.ConnectionString))
+                        using (var companyContext = new CompanyDbContext(demoCompany.ConnectionString, demoCompany.CompanyNumber))
                         {
                             var existingUser = await companyContext.Users.FirstOrDefaultAsync(u => u.Id == adminUser.Id);
                             if (existingUser == null)
@@ -101,7 +101,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                         CompanyUser companyUser = new CompanyUser() { CompanyId = demoCompany.Id, UserId = adminUser.Id, AssignedAt = now };
                         await context.CompanyUsers.AddAsync(companyUser);
 
-                        using (var companyContext = new CompanyDbContext(demoCompany.ConnectionString))
+                        using (var companyContext = new CompanyDbContext(demoCompany.ConnectionString, demoCompany.CompanyNumber))
                         {
                             var existingUser = await companyContext.Users.FirstOrDefaultAsync(u => u.Id == adminUser.Id);
                             if (existingUser == null)
@@ -130,7 +130,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                     var testCompany = await context.Companies.FirstOrDefaultAsync(u => u.NormalizedName == "TEST");
                     if (testCompany != null)
                     {
-                        using (var companyContext = new CompanyDbContext(testCompany.ConnectionString))
+                        using (var companyContext = new CompanyDbContext(testCompany.ConnectionString, testCompany.CompanyNumber))
                         {
                             var existingUser = await companyContext.Users.FirstOrDefaultAsync(u => u.Id == adminUser.Id);
                             if (existingUser == null)
@@ -207,7 +207,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                     {
                         CompanyUser companyUser = new CompanyUser() { CompanyId = testCompany.Id, UserId = user.Id, AssignedAt = now };
                         await context.CompanyUsers.AddAsync(companyUser);
-                        using (var companyContext = new CompanyDbContext(testCompany.ConnectionString))
+                        using (var companyContext = new CompanyDbContext(testCompany.ConnectionString, testCompany.CompanyNumber))
                         {
                             var tempUser = new Domain.CompanyScope.User()
                             {

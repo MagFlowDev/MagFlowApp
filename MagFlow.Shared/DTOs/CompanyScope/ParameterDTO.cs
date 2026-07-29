@@ -1,11 +1,12 @@
 ﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace MagFlow.Shared.DTOs.CompanyScope
 {
-    public class ParameterDTO
+    public class ParameterDTO : ICodeDTO
     {
         public int ParameterId { get; set; }
         public int EntityTableId { get; set; }

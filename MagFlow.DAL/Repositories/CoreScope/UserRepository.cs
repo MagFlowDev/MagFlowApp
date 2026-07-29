@@ -103,7 +103,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                         var company = await coreContext.Companies.FirstOrDefaultAsync(x => x.Id == companyId.Value);
                         if (company == null)
                             return claims;
-                        using (var context = _companyContextFactory.CreateDbContext(company.ConnectionString))
+                        using (var context = _companyContextFactory.CreateDbContext(company.ConnectionString, company.CompanyNumber))
                         {
                             var roleClaims = await context.RoleClaims
                                 .Where(x => x.RoleId == roleId)
@@ -150,7 +150,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                         var company = await coreContext.Companies.FirstOrDefaultAsync(x => x.Id == companyId.Value);
                         if (company == null)
                             return claims;
-                        using (var context = _companyContextFactory.CreateDbContext(company.ConnectionString))
+                        using (var context = _companyContextFactory.CreateDbContext(company.ConnectionString, company.CompanyNumber))
                         {
                             var roleClaims = await context.RoleClaims
                                 .Where(x => x.RoleName == roleName)

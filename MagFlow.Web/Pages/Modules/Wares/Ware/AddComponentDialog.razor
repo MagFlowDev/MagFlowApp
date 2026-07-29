@@ -22,7 +22,7 @@
                     </CellTemplate>
                 </TemplateColumn>
                 <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" />
-                <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="item => item.Code" />
+                <MagFlowCodeColumn T="ItemDTO" Sortable="true" Title="@Localizer[Langs.Code]" />
                 <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
                     <CellTemplate>
                         <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">@context.Item.Status.GetDisplayName(Localizer)</MudChip>

@@ -123,6 +123,7 @@ namespace MagFlow.EF
             builder.Entity<SystemNotification>().HasOne(n => n.Notification);
             builder.Entity<UserSession>().HasMany(m => m.SessionModules).WithOne(s => s.Session);
             builder.Entity<SessionModule>().HasOne(m => m.Module).WithMany();
+            builder.Entity<Company>().Property(x => x.CompanyNumber).ValueGeneratedOnAdd();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

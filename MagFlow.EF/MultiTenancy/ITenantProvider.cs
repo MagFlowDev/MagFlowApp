@@ -8,8 +8,8 @@ namespace MagFlow.EF.MultiTenancy
 {
     public interface ITenantProvider
     {
-        Task<string?> GetTenantConnectionString(string userEmail);
+        Task<(string? connectionString, int? companyNumber)> GetTenantInfo(string userEmail);
 
-        Task<string?> GetTenantConnectionString(Guid companyId);
+        Task<(string? connectionString, int? companyNumber)> GetTenantInfo(Guid companyId);
     }
 }

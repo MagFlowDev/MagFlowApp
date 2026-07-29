@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MagFlow.Shared.DTOs.CompanyScope
 {
-    public class WarehouseDTO : IBaseDTO
+    public class WarehouseDTO : IBaseDTO, ICodeDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -21,7 +21,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public List<SectorDTO> Sectors { get; set; } = new List<SectorDTO>();
     }
 
-    public class SectorDTO : IBaseDTO
+    public class SectorDTO : IBaseDTO, ICodeDTO
     {
         public int Id { get; set; }
         public int WarehouseId { get; set; }
@@ -34,7 +34,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public List<RowDTO> Rows { get; set; } = new List<RowDTO>();
     }
 
-    public class RowDTO : IBaseDTO
+    public class RowDTO : IBaseDTO, ICodeDTO
     {
         public int Id { get; set; }
         public int SectorId { get; set; }
@@ -47,7 +47,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public List<SlotDTO> Slots { get; set; } = new List<SlotDTO>();
     }
 
-    public class SlotDTO : IBaseDTO
+    public class SlotDTO : IBaseDTO, ICodeDTO
     {
         public int Id { get; set; }
         public int RowId { get; set; }
