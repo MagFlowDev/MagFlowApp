@@ -21,7 +21,6 @@ namespace MagFlow.Shared.Validators.Company
         public WarehouseGeneralInformationValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
-            RuleFor(x => x.Code).NotEmpty().WithMessage(localizer[Validations.CodeRequired]);
         }
     }
 
@@ -30,7 +29,6 @@ namespace MagFlow.Shared.Validators.Company
         public WarehouseSectorValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
-            RuleFor(x => x.Code).NotEmpty().WithMessage(localizer[Validations.CodeRequired]);
         }
     }
 
@@ -39,7 +37,6 @@ namespace MagFlow.Shared.Validators.Company
         public WarehouseSectorRowValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
-            RuleFor(x => x.Code).NotEmpty().WithMessage(localizer[Validations.CodeRequired]);
         }
     }
 
@@ -48,7 +45,6 @@ namespace MagFlow.Shared.Validators.Company
         public WarehouseSectorRowSlotValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
-            RuleFor(x => x.Code).NotEmpty().WithMessage(localizer[Validations.CodeRequired]);
         }
     }
 

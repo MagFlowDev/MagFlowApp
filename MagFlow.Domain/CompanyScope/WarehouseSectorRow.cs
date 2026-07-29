@@ -8,15 +8,14 @@ using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class WarehouseSectorRow : StatusEntity, IBaseEntity, ISoftDeletable
+    public class WarehouseSectorRow : StatusEntity, IBaseEntity, ICodeEntity, ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public int SectorId { get; set; }
-        [Required]
-        public string Code { get; set; }
+        public string Code { get; private set; }
         [Required]
         public string Name { get; set; }
         [Required]

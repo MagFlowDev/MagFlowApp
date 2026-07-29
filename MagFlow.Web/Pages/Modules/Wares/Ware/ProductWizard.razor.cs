@@ -83,7 +83,6 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private void CreateCopy(ProductDTO dto)
         {
             _model.GeneralInformation.Name = dto.Name;
-            _model.GeneralInformation.Code = dto.Code;
             _model.GeneralInformation.ProductCategory = dto.Category;
             _model.GeneralInformation.ProductType = dto.Type;
             _model.GeneralInformation.Unit = dto.Unit;
@@ -106,12 +105,6 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             _model.Prices.SellingPrice = dto.SellingPrice;
             _model.Prices.TaxRate = dto.TaxRate;
             _model.Prices.Currency = dto.Currency;
-        }
-
-        private void GenerateCode()
-        {
-            if (!string.IsNullOrEmpty(_model.GeneralInformation.Name))
-                _model.GeneralInformation.Code = CodesGenerator.GeneratePrefix(_model.GeneralInformation.Name);
         }
 
         protected override async Task OnPreviewInteraction(StepperInteractionEventArgs arg)

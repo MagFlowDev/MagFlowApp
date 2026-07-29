@@ -10,7 +10,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Code { get; set; }
+        public string Code { get; init; }
         public string? Description { get; set; }
         public bool IsActive { get; set; }
         public Enums.WarehouseType Type { get; set; }
@@ -26,7 +26,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public int Id { get; set; }
         public int WarehouseId { get; set; }
         public string Name { get; set; }
-        public string Code { get; set; }
+        public string Code { get; init; }
         public Enums.EntityStatus Status { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? RemovedAt { get; set; }
@@ -39,7 +39,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public int Id { get; set; }
         public int SectorId { get; set; }
         public string Name { get; set; }
-        public string Code { get; set; }
+        public string Code { get; init; }
         public Enums.EntityStatus Status { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? RemovedAt { get; set; }
@@ -52,7 +52,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public int Id { get; set; }
         public int RowId { get; set; }
         public string Name { get; set; }
-        public string Code { get; set; }
+        public string Code { get; init; }
         public Enums.EntityStatus Status { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? RemovedAt { get; set; }

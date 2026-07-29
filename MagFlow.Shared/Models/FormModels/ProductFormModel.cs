@@ -26,7 +26,6 @@ namespace MagFlow.Shared.Models.FormModels
     public class ProductFormGeneralInformation
     {
         public string Name { get; set; }
-        public string Code { get; set; }
 
         public ProductTypeDTO? ProductType { get; set; }
         public ProductCategoryDTO? ProductCategory { get; set; }
@@ -80,14 +79,12 @@ namespace MagFlow.Shared.Models.FormModels
     public class ProductTypeFormModel
     {
         public string Name { get; set; }
-        public string Code { get; set; }
         public ProductCategoryDTO? ProductCategory { get; set; }
     }
 
     public class ProductCategoryFormModel
     {
         public string Name { get; set; }
-        public string Code { get; set; }
         public bool IsBasic { get; set; }
 
         public ProductCategoryFormModel()
@@ -104,7 +101,6 @@ namespace MagFlow.Shared.Models.FormModels
     public class ParameterFormModel
     {
         public string Name { get; set; }
-        public string Code { get; set; }
         public Enums.ValueType? ValueType { get; set; }
         public UnitDTO? Unit { get; set; }
     }

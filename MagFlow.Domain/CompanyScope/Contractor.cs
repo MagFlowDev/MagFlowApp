@@ -7,15 +7,14 @@ using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Contractor : IBaseEntity, ISoftDeletable
+    public class Contractor : IBaseEntity, ICodeEntity, ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
-        public string Code { get; set; }
+        public string Code { get; private set; }
         public string? TaxNumber { get; set; }
         public string? Address { get; set; }
         public string? PostalCode { get; set; }

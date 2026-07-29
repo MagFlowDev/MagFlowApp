@@ -21,8 +21,6 @@
     <DialogContent>
         <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">
             <MudTextField Label="@Localizer[Langs.Name]" Class="my-0 w-100" Placeholder="@Localizer[Langs.ParameterExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Name" For="@(() => _model.Name)"></MudTextField>
-            <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Code" For="@(() => _model.Code)"
-                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.AutoAwesome" OnAdornmentClick="GenerateCode"></MudTextField>
             <MudSelect T="Enums.ValueType?" Label="@Localizer[Langs.ValueType]" FullWidth="true" Variant="Variant.Outlined" Placeholder="@Localizer[Langs.ValueTypeExample]" @bind-Value="@_model.ValueType" For="@(() => _model.ValueType)">
                 @foreach (var valueType in Enum.GetValues<Enums.ValueType>())
                 {
@@ -144,12 +142,6 @@
         }
     }
 
-    private void GenerateCode()
-    {
-        if (!string.IsNullOrEmpty(_model.Name))
-            _model.Code = CodesGenerator.GeneratePrefix(_model.Name);
-    }
-
     private void Cancel() => MudDialog.Cancel();
 
     protected override void OnInitialized()
@@ -173,7 +165,6 @@
         if (Parameter != null && Parameter.ParameterId != 0)
         {
             _model.Name = Parameter.Name;
-            _model.Code = Parameter.Code;
             _model.ValueType = Parameter.ValueType;
             _model.Unit = Parameter.Unit;
         }

@@ -21,8 +21,6 @@
     <DialogContent>
         <EditForm EditContext="@_context" class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px">
             <MudTextField Label="@Localizer[Langs.Name]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CategoryExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Name" For="@(() => _model.Name)"></MudTextField>
-            <MudTextField Label="@Localizer[Langs.Code]" Class="my-0 w-100" Placeholder="@Localizer[Langs.CodeExample]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.Code" For="@(() => _model.Code)"
-                          Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.AutoAwesome" OnAdornmentClick="GenerateCode"></MudTextField>
             <MudSwitch Label="@Localizer[Langs.BaseCategory]" Class="my-0" @bind-Value="@_model.IsBasic" For="@(() => _model.IsBasic)" Color="Color.Primary" />
         </EditForm>
     </DialogContent>
@@ -97,12 +95,6 @@
         }
     }
 
-    private void GenerateCode()
-    {
-        if (!string.IsNullOrEmpty(_model.Name))
-            _model.Code = CodesGenerator.GeneratePrefix(_model.Name);
-    }
-
     private void Cancel() => MudDialog.Cancel();
 
     protected override void OnInitialized()
@@ -126,7 +118,6 @@
         if (Category != null && Category.Id != 0)
         {
             _model.Name = Category.Name;
-            _model.Code = Category.Code;
             _model.IsBasic = Category.IsBasic;
         }
     }

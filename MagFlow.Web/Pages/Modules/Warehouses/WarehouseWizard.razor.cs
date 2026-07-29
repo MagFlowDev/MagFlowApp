@@ -49,24 +49,20 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
         private void CreateCopy(WarehouseDTO dto)
         {
             _model.GeneralInformation.Name = dto.Name;
-            _model.GeneralInformation.Code = dto.Code;
 
             _model.Sectors = new List<WarehouseFormSector>();
             dto.Sectors?.ForEach(sector =>
             {
                 var newSector = new WarehouseFormSector();
                 newSector.Name = sector.Name;
-                newSector.Code = sector.Code;
                 sector.Rows?.ForEach(row =>
                 {
                     var newRow = new WarehouseFormSectorRow();
                     newRow.Name = row.Name;
-                    newRow.Code = row.Code;
                     row.Slots?.ForEach(slot =>
                     {
                         var newSlot = new WarehouseFormSectorRowSlot();
                         newSlot.Name = slot.Name;
-                        newSlot.Code = slot.Code;
                         newRow.Slots.Add(newSlot);
                     });
                     newSector.Rows.Add(newRow);

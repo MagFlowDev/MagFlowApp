@@ -10,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Order : StatusEntity, IBaseEntity
+    public class Order : StatusEntity, ICodeEntity, IBaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public string Code { get; private set; }
         [Required]
         public int ContractorId { get; set; }
         [Required]

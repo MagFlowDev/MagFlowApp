@@ -123,7 +123,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return new ProductDTO()
             {
                 Name = model.GeneralInformation.Name,
-                Code = model.GeneralInformation.Code,
                 Status = Enums.EntityStatus.Active,
                 Type = model.GeneralInformation.ProductType,
                 Category = model.GeneralInformation.ProductCategory,
@@ -148,7 +147,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return new ProductDTO()
             {
                 Name = model.GeneralInformation.Name,
-                Code = model.GeneralInformation.Code,
                 Status = Enums.EntityStatus.Active,
                 Type = model.GeneralInformation.ProductType,
                 Category = model.GeneralInformation.ProductCategory,
@@ -237,7 +235,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             {
                 Id = product.Id,
                 Name = product.Name,
-                Code = product.Code,
                 CreatedAt = product.CreatedAt ?? DateTime.UtcNow,
                 CreatedById = product.CreatedBy?.Id ?? userId ?? Guid.Empty,
                 IsActive = product.Status == Enums.EntityStatus.Active,
@@ -301,7 +298,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return new Product()
             {
                 Name = model.GeneralInformation.Name,
-                Code = model.GeneralInformation.Code,
                 CreatedAt = DateTime.UtcNow,
                 CreatedById = userId,
                 IsActive = true,

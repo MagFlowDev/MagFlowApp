@@ -5,11 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Unit : IBaseEntity, ISoftDeletable
+    public class Unit : IBaseEntity, ICodeEntity, ISoftDeletable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public string Code { get; private set; }
         [Required]
         public string Symbol { get; set; }
         [Required]

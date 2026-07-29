@@ -95,7 +95,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return new ParameterDTO()
             {
                 Name = model.Name,
-                Code = model.Code,
                 ValueType = model.ValueType,
                 Unit = model.Unit
             };
@@ -114,7 +113,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             {
                 Id = parameter.ParameterId,
                 Name = parameter.Name,
-                Code = parameter.Code,
                 UnitId = parameter.Unit?.Id,
                 ValueType = parameter.ValueType ?? Enums.ValueType.Decimal
             };
@@ -130,7 +128,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return new CustomParameter()
             {
                 Name = model.Name,
-                Code = model.Code,
                 UnitId = model.Unit?.Id,
                 ValueType = model.ValueType ?? Enums.ValueType.Decimal
             };

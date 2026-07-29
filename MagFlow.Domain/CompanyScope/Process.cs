@@ -5,13 +5,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Process : StatusEntity, IBaseEntity
+    public class Process : StatusEntity, IBaseEntity, ICodeEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required]
-        public string Code { get; set; }
+        public string Code { get; private set; }
         public string? Description { get; set; }
         [Required]
         public Enums.ProcessOriginType OriginType { get; set; }

@@ -41,6 +41,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return new ItemDTO()
             {
                 Id = item.Id,
+                Code = item.Code,
                 ExternalId = item.ExternalId,
                 CreatedAt = item.CreatedAt,
                 CreatedBy = new Shared.DTOs.CoreScope.UserDTO() { Id = item.CreatedById },
@@ -125,7 +126,6 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     continue;
                 parameters.Add(new ItemParameter()
                 {
-                    Id = parameter.Parameter.EntityTableId,
                     ParameterId = parameter.Parameter.ParameterId,
                     Value = value
                 });

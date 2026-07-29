@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Machine : IBaseEntity
+    public class Machine : IBaseEntity, ICodeEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -13,8 +13,7 @@ namespace MagFlow.Domain.CompanyScope
         public int MachineModelId { get; set; }
         [Required]
         public string Name { get; set; }
-        [Required]
-        public string Code { get; set; }
+        public string Code { get; private set; }
         public string? Location { get; set; }
         [Required]
         public DateTime InstallationDate { get; set; }
