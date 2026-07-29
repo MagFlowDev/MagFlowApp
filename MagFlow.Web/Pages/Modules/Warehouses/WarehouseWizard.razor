@@ -1,0 +1,35 @@
+﻿@page "/warehouse/add"
+@using MagFlow.Web.Components.Stepper
+@using MagFlow.Web.Components.Wizards
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.BLL.Services.Interfaces
+@using MudBlazor
+@using Microsoft.AspNetCore.Authorization
+
+@layout MainLayout
+@inherits StepperWizardBase<WarehouseFormModel>
+@inject IDialogService DialogService
+@inject IWarehouseService WarehouseService
+
+@attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_ADD)]
+
+@if (_model != null)
+{
+    <WizardTemplate EditContext="_context" Title="@Localizer[Langs.AddWarehouse]">
+        <MagFlowStepper @ref="_stepper" 
+                        ActiveIndex="_step" 
+                        ActiveIndexChanged="StepChanged" 
+                        OnPreviewInteraction="OnPreviewInteraction" 
+                        IsLoading="_loading" 
+                        OnCancel="@(async () => await Cancel(_stepper))" 
+                        OnReset="@(async () => await ResetForm(_stepper))" 
+                        OnSave="@(async () => await Save())">
+            <ChildContent>
+                <MagFlowStep Title="@Localizer[Langs.GeneralInformation]">
+                    <MudTextField Label="@Localizer[Langs.Name]" Placeholder="@Localizer[Langs.WarehouseExample]" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.Name" For="(() => _model.GeneralInformation.Name)" Class="w-100 my-0"></MudTextField>
+                </MagFlowStep>
+            </ChildContent>
+        </MagFlowStepper>
+    </WizardTemplate>
+}
+

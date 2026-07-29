@@ -7,6 +7,7 @@ using MagFlow.Domain.CompanyScope;
 using MagFlow.EF;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.FormModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -34,5 +35,9 @@ namespace MagFlow.BLL.Services
                 .Include(x => x.Items.Where(i => i.SectorId == null)));
         }
 
+        public async Task<Enums.Result> AddWarehouse(WarehouseFormModel model)
+        {
+            return Enums.Result.Error;
+        }
     }
 }

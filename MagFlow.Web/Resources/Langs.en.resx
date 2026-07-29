@@ -1710,4 +1710,7 @@
   <data name="ChangeStatus" xml:space="preserve">
     <value>Change status</value>
   </data>
+  <data name="WarehouseExample" xml:space="preserve">
+    <value>E.g. Warehouse A</value>
+  </data>
 </root>
