@@ -17,8 +17,8 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public Enums.EntityStatus Status { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? RemovedAt { get; set; }
-        public ICollection<ItemDTO> Items { get; set; } = new List<ItemDTO>();
-        public ICollection<SectorDTO> Sectors { get; set; } = new List<SectorDTO>();
+        public List<ItemDTO> Items { get; set; } = new List<ItemDTO>();
+        public List<SectorDTO> Sectors { get; set; } = new List<SectorDTO>();
     }
 
     public class SectorDTO : IBaseDTO
@@ -30,8 +30,8 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public Enums.EntityStatus Status { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? RemovedAt { get; set; }
-        public ICollection<ItemDTO> Items { get; set; } = new List<ItemDTO>();
-        public ICollection<RowDTO> Rows { get; set; } = new List<RowDTO>();
+        public List<ItemDTO> Items { get; set; } = new List<ItemDTO>();
+        public List<RowDTO> Rows { get; set; } = new List<RowDTO>();
     }
 
     public class RowDTO : IBaseDTO
@@ -43,8 +43,8 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public Enums.EntityStatus Status { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? RemovedAt { get; set; }
-        public ICollection<ItemDTO> Items { get; set; } = new List<ItemDTO>();
-        public ICollection<SlotDTO> Slots { get; set; } = new List<SlotDTO>();
+        public List<ItemDTO> Items { get; set; } = new List<ItemDTO>();
+        public List<SlotDTO> Slots { get; set; } = new List<SlotDTO>();
     }
 
     public class SlotDTO : IBaseDTO
@@ -56,6 +56,6 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public Enums.EntityStatus Status { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? RemovedAt { get; set; }
-        public ICollection<ItemDTO> Items { get; set; } = new List<ItemDTO>();
+        public List<ItemDTO> Items { get; set; } = new List<ItemDTO>();
     }
 }

@@ -1711,4 +1711,7 @@ i uprawnieniami użytkowników</value>
   <data name="ChangeStatus" xml:space="preserve">
     <value>Zmień status</value>
   </data>
+  <data name="WarehouseExample" xml:space="preserve">
+    <value>Np. Magazyn A</value>
+  </data>
 </root>
