@@ -1,0 +1,97 @@
+﻿@typeparam T
+@typeparam TProperty
+@using MagFlow.Shared.Models
+@using MudBlazor
+
+<div class="d-flex align-center gap-1 w-100" style="min-width: 140px;">
+    <MudSelect T="Shared.Models.FilterOperator"
+               Value="@GetSelectedOperator()"
+               ValueChanged="@OnOperatorChanged"
+               Dense="true"
+               Margin="Margin.Dense"
+               Style="width: 50px; max-width: 50px;"
+               Class="flex-grow-0">
+
+        @if (typeof(TProperty) == typeof(string))
+        {
+            <MudSelectItem Value="Shared.Models.FilterOperator.Contains">Zawiera</MudSelectItem>
+            <MudSelectItem Value="Shared.Models.FilterOperator.Equals">Równy</MudSelectItem>
+            <MudSelectItem Value="Shared.Models.FilterOperator.StartsWith">Zaczyna się od</MudSelectItem>
+        }
+        else
+        {
+            <MudSelectItem Value="Shared.Models.FilterOperator.Equals">Równy</MudSelectItem>
+            <MudSelectItem Value="Shared.Models.FilterOperator.GreaterThan">Większy niż</MudSelectItem>
+            <MudSelectItem Value="Shared.Models.FilterOperator.LessThan">Mniejszy niż</MudSelectItem>
+            <MudSelectItem Value="Shared.Models.FilterOperator.GreaterThanOrEqual">Większy lub równy</MudSelectItem>
+            <MudSelectItem Value="Shared.Models.FilterOperator.LessThanOrEqual">Mniejszy lub równy</MudSelectItem>
+        }
+        <MudSelectItem Value="Shared.Models.FilterOperator.IsEmpty">Brak wartości (NULL)</MudSelectItem>
+        <MudSelectItem Value="Shared.Models.FilterOperator.IsNotEmpty">Posiada wartość</MudSelectItem>
+    </MudSelect>
+
+    @if (ShouldShowValueField() && Context.FilterDefinition != null)
+    {
+        <MudTextField T="object"
+                      Value="@Context.FilterDefinition.Value"
+                      ValueChanged="@OnValueChanged"
+                      Margin="Margin.Dense"
+                      Placeholder="Szukaj..."
+                      Clearable="true"
+                      OnClearButtonClick="@(() => Context.Actions.ClearFilterAsync(Context.FilterDefinition))"
+                      Class="flex-grow-1" />
+    }
+    else if (Context.FilterDefinition != null)
+    {
+        <MudIconButton Icon="@Icons.Material.Filled.Clear"
+                       Size="Size.Small"
+                       Color="Color.Error"
+                       OnClick="@(() => Context.Actions.ClearFilterAsync(Context.FilterDefinition))" />
+    }
+</div>
+
+@code {
+    [Parameter] public FilterContext<T> Context { get; set; } = null!;
+
+    private Shared.Models.FilterOperator GetSelectedOperator()
+    {
+        if (Enum.TryParse<Shared.Models.FilterOperator>(Context.FilterDefinition?.Operator, out var op))
+            return op;
+
+        return typeof(TProperty) == typeof(string) ? Shared.Models.FilterOperator.Contains : Shared.Models.FilterOperator.Equals;
+    }
+
+    private async Task OnOperatorChanged(Shared.Models.FilterOperator op)
+    {
+        if (Context.FilterDefinition == null)
+            return;
+
+        Context.FilterDefinition.Operator = op.ToString();
+
+        if (op == Shared.Models.FilterOperator.IsEmpty || op == Shared.Models.FilterOperator.IsNotEmpty)
+        {
+            Context.FilterDefinition.Value = "[NULL_VALIDATION]";
+        }
+        else if (Context.FilterDefinition.Value?.ToString() == "[NULL_VALIDATION]")
+        {
+            Context.FilterDefinition.Value = null;
+        }
+
+        await Context.Actions.ApplyFilterAsync(Context.FilterDefinition);
+    }
+
+    private async Task OnValueChanged(object value)
+    {
+        if (Context.FilterDefinition == null)
+            return;
+
+        Context.FilterDefinition.Value = value;
+        await Context.Actions.ApplyFilterAsync(Context.FilterDefinition);
+    }
+
+    private bool ShouldShowValueField()
+    {
+        var op = GetSelectedOperator();
+        return op != Shared.Models.FilterOperator.IsEmpty && op != Shared.Models.FilterOperator.IsNotEmpty;
+    }
+}

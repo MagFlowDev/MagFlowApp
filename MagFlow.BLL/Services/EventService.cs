@@ -55,9 +55,9 @@ namespace MagFlow.BLL.Services
                 {
                     s => s.Details, s => s.OccuredAt.ToString()
                 },
-                Filters = new Dictionary<string, object>()
+                ColumnFilters = new List<ColumnFilter>()
                 {
-                    { nameof(EventLog.UserId), userId }
+                    { ColumnFilter.Create(nameof(EventLog.UserId), FilterOperator.Equals, userId) }
                 },
                 SortBy = sortBy,
                 Descending = descending

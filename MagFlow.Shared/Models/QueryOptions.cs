@@ -8,7 +8,7 @@ namespace MagFlow.Shared.Models
         public string? Search { get; set; }
         public Expression<Func<T, string?>>[]? SearchColumns { get; set; }
 
-        public Dictionary<string, object>? Filters { get; set; }
+        public List<ColumnFilter>? ColumnFilters { get; set; }
 
         public List<KeyValuePair<string, object>>? Exludes { get; set; }
 
@@ -22,5 +22,35 @@ namespace MagFlow.Shared.Models
 
 
         public Func<IQueryable<T>, IQueryable<T>>? Includes { get; set; } = null;
+    }
+
+    public class ColumnFilter
+    {
+        public string PropertyName { get; set; } = string.Empty;
+        public FilterOperator Operator { get; set; }
+        public object? Value { get; set; }
+
+        public static ColumnFilter Create(string propertyName, FilterOperator filterOperator, object? value)
+        {
+            return new ColumnFilter()
+            {
+                PropertyName = propertyName,
+                Operator = filterOperator,
+                Value = value
+            };
+        }
+    }
+
+    public enum FilterOperator
+    {
+        Equals,
+        Contains,
+        StartsWith,
+        GreaterThan,
+        LessThan,
+        GreaterThanOrEqual,
+        LessThanOrEqual,
+        IsEmpty,
+        IsNotEmpty
     }
 }
