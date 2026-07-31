@@ -107,9 +107,9 @@ namespace MagFlow.BLL.Services
             };
             if (productCategory != null)
             {
-                queryOptions.Filters = new Dictionary<string, object>()
+                queryOptions.ColumnFilters = new List<ColumnFilter>()
                 {
-                    { nameof(ProductType.CategoryId), productCategory.Id }
+                    { ColumnFilter.Create(nameof(ProductType.CategoryId), FilterOperator.Equals, productCategory.Id) }
                 };
             }
             var queryResponse = await _typeRepository.GetAsync(queryOptions, type => type.Include(x => x.Category));
@@ -180,9 +180,9 @@ namespace MagFlow.BLL.Services
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                Filters = new Dictionary<string, object>()
+                ColumnFilters = new List<ColumnFilter>()
                 {
-                    { nameof(Unit.ParentUnitId), null }
+                    { ColumnFilter.Create(nameof(Unit.ParentUnitId), FilterOperator.Equals, null) }
                 },
                 Search = search,
                 SortBy = sortBy,

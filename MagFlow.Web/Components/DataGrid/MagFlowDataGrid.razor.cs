@@ -33,6 +33,7 @@ namespace MagFlow.Web.Components.DataGrid
             RowsPerPage = 25;
             if(string.IsNullOrEmpty(Class))
                 Class = "align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager striped-grid overflow-x-auto";
+            FilterMode = DataGridFilterMode.ColumnFilterRow;
 
             RowClick = EventCallback.Factory.Create<DataGridRowClickEventArgs<T>>(this, OnRowClick);
             RowClassFunc = SelectedRowClassFunc;

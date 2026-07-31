@@ -748,7 +748,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                     }
                     if (include != null)
                         query = include(query);
-                    query = query.ApplyColumnFilters(options.Filters);
+                    query = query.ApplyColumnFilters(options.ColumnFilters);
                     query = query.ExcludeColumnFilters(options.Exludes);
                     query = query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                     query = query.SortBy(options.SortBy, options.Descending);

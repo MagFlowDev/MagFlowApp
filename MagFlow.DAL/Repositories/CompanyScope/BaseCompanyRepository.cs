@@ -753,7 +753,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                     }
                     if (include != null)
                         query = include(query);
-                    query = query.ApplyColumnFilters(options.Filters);
+                    query = query.ApplyColumnFilters(options.ColumnFilters);
                     query = query.ExcludeColumnFilters(options.Exludes);
                     query = query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                     query = query.SortBy(options.SortBy, options.Descending);
@@ -1109,7 +1109,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                 x.EntityId == historyEntity.Id)
                             .OrderByDescending(x => x.OccurredAt)
                             .AsQueryable();
-                        query = query.ApplyColumnFilters(options.Filters);
+                        query = query.ApplyColumnFilters(options.ColumnFilters);
                         query = query.ExcludeColumnFilters(options.Exludes);
                         query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                         query = query.SortBy(options.SortBy, options.Descending);
@@ -1144,7 +1144,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                     x.EntityId == historyEntity.Id)
                                 .OrderByDescending(x => x.OccurredAt)
                                 .AsQueryable();
-                            query = query.ApplyColumnFilters(options.Filters);
+                            query = query.ApplyColumnFilters(options.ColumnFilters);
                             query = query.ExcludeColumnFilters(options.Exludes);
                             query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                             query = query.SortBy(options.SortBy, options.Descending);
@@ -1176,7 +1176,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                     x.EntityId == entityId)
                                 .OrderByDescending(x => x.OccurredAt)
                                 .AsQueryable();
-                    query = query.ApplyColumnFilters(options.Filters);
+                    query = query.ApplyColumnFilters(options.ColumnFilters);
                     query = query.ExcludeColumnFilters(options.Exludes);
                     query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                     query = query.SortBy(options.SortBy, options.Descending);

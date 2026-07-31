@@ -1,3 +1,4 @@
+using MagFlow.Shared.Models;
 using System.Linq.Expressions;
 
 namespace MagFlow.DAL.Helpers
@@ -38,47 +39,107 @@ namespace MagFlow.DAL.Helpers
             return query.Provider.CreateQuery<T>(resultExpression);
         }
         
-        public static IQueryable<T> ApplyColumnFilters<T>(this IQueryable<T> query, Dictionary<string, object>? filters)
+        public static IQueryable<T> ApplyColumnFilters<T>(this IQueryable<T> query, List<ColumnFilter>? filters)
         {
-            if (filters == null || filters.Count == 0)
+            if (filters == null || !filters.Any())
                 return query;
 
-            var parameter = Expression.Parameter(typeof(T), "x");
-            Expression? body = null;
+            var parameter = Expression.Parameter(typeof(T), "e");
+            Expression? combinedExpression = null;
 
-            foreach (var filter in filters)
+            foreach(var filter in filters)
             {
-                var property = Expression.PropertyOrField(parameter, filter.Key);
-                var propertyType = property.Type;
+                if (string.IsNullOrEmpty(filter.PropertyName))
+                    continue;
 
-                Expression comparison;
-
-                if (filter.Value == null)
+                Expression propertyAccess = parameter;
+                foreach(var member in filter.PropertyName.Split('.'))
                 {
-                    comparison = Expression.Equal(property, Expression.Constant(null, propertyType));
+                    propertyAccess = Expression.PropertyOrField(propertyAccess, member);
                 }
-                else if (propertyType == typeof(string))
+
+                var targetType = propertyAccess.Type;
+                var underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+
+                Expression filterExpression;
+
+                if(filter.Operator == FilterOperator.IsEmpty)
                 {
-                    var containsMethod = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!;
-                    var value = Expression.Constant(filter.Value?.ToString());
-                    comparison = Expression.Call(property, containsMethod, value);
+                    var nullConstant = Expression.Constant(null, targetType);
+                    filterExpression = Expression.Equal(propertyAccess, nullConstant);
+
+                    if (targetType == typeof(string))
+                    {
+                        var emptyConstant = Expression.Constant(string.Empty, typeof(string));
+                        var isEmptyString = Expression.Equal(propertyAccess, emptyConstant);
+                        filterExpression = Expression.OrElse(filterExpression, isEmptyString);
+                    }
+                }
+                else if(filter.Operator == FilterOperator.IsNotEmpty)
+                {
+                    var nullConstant = Expression.Constant(null, targetType);
+                    filterExpression = Expression.NotEqual(propertyAccess, nullConstant);
+
+                    if (targetType == typeof(string))
+                    {
+                        var emptyConstant = Expression.Constant(string.Empty, typeof(string));
+                        var isNotEmptyString = Expression.NotEqual(propertyAccess, emptyConstant);
+                        filterExpression = Expression.AndAlso(filterExpression, isNotEmptyString);
+                    }
                 }
                 else
                 {
-                    var constant = Expression.Constant(Convert.ChangeType(filter.Value, propertyType));
-                    comparison = Expression.Equal(property, constant);
+                    if (filter.Value == null || string.IsNullOrWhiteSpace(filter.Value.ToString()))
+                        continue;
+
+                    object? convertedValue;
+                    try
+                    {
+                        if (underlyingType.IsEnum)
+                            convertedValue = Enum.Parse(underlyingType, filter.Value.ToString()!);
+                        else
+                            convertedValue = Convert.ChangeType(filter.Value, underlyingType);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    var constant = Expression.Constant(convertedValue, underlyingType);
+                    Expression finalConstant = targetType != underlyingType
+                        ? Expression.Convert(constant, targetType)
+                        : constant;
+
+                    filterExpression = filter.Operator switch
+                    {
+                        FilterOperator.Equals => Expression.Equal(propertyAccess, finalConstant),
+
+                        FilterOperator.Contains when targetType == typeof(string) => Expression.Call(
+                            propertyAccess,
+                            typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!,
+                            finalConstant),
+
+                        FilterOperator.StartsWith when targetType == typeof(string) => Expression.Call(
+                            propertyAccess,
+                            typeof(string).GetMethod(nameof(string.StartsWith), new[] { typeof(string) })!,
+                            finalConstant),
+
+                        FilterOperator.GreaterThan => Expression.GreaterThan(propertyAccess, finalConstant),
+                        FilterOperator.LessThan => Expression.LessThan(propertyAccess, finalConstant),
+                        FilterOperator.GreaterThanOrEqual => Expression.GreaterThanOrEqual(propertyAccess, finalConstant),
+                        FilterOperator.LessThanOrEqual => Expression.LessThanOrEqual(propertyAccess, finalConstant),
+                        _ => Expression.Equal(propertyAccess, finalConstant)
+                    };
                 }
 
-                body = body == null
-                    ? comparison
-                    : Expression.AndAlso(body, comparison);
+                combinedExpression = combinedExpression == null
+                    ? filterExpression
+                    : Expression.AndAlso(combinedExpression, filterExpression);
             }
 
-            if (body == null)
+            if (combinedExpression == null)
                 return query;
-
-            var lambda = Expression.Lambda<Func<T, bool>>(body, parameter);
-
+            var lambda = Expression.Lambda<Func<T, bool>>(combinedExpression, parameter);
             return query.Where(lambda);
         }
 
