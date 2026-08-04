@@ -4,7 +4,7 @@ using MudBlazor;
 
 namespace MagFlow.Web.Components.DataGrid
 {
-    public class MagFlowCodeColumn<T> : MagFlowTemplateColumn<T> where T : ICodeDTO
+    public class MagFlowCodeColumn<T> : MagFlowTemplateColumn<T, string> where T : ICodeDTO
     {
         protected override void OnInitialized()
         {

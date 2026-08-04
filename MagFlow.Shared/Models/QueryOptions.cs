@@ -27,7 +27,7 @@ namespace MagFlow.Shared.Models
     public class ColumnFilter
     {
         public string PropertyName { get; set; } = string.Empty;
-        public FilterOperator Operator { get; set; }
+        public FilterOperator Operator { get; set; } = FilterOperator.Equals;
         public object? Value { get; set; }
 
         public static ColumnFilter Create(string propertyName, FilterOperator filterOperator, object? value)
