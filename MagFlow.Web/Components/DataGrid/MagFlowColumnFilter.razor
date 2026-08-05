@@ -48,9 +48,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (!typeof(TFilter).IsEnum)
+        if (typeof(TFilter).IsEnum)
         {
             await OnOperatorChanged(Shared.Models.FilterOperator.Equals);
+        }
+        else
+        {
+            await OnOperatorChanged(Shared.Models.FilterOperator.Contains);
         }
         await base.OnInitializedAsync();
     }
