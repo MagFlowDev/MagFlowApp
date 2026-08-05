@@ -242,6 +242,56 @@ namespace MagFlow.DAL.Helpers
             return query.Where(lambda);
         }
 
+        public static IQueryable<T> ApplySorting<T>(this IQueryable<T> query, string? sortBy, bool descending)
+        {
+            if (string.IsNullOrWhiteSpace(sortBy))
+                return query;
+
+            var parameter = Expression.Parameter(typeof(T), "e");
+            Expression propertyAccess;
+
+            if(!sortBy.Contains('.'))
+            {
+                try
+                {
+                    propertyAccess = Expression.PropertyOrField(parameter, sortBy);
+                }
+                catch (ArgumentException)
+                {
+                    return query;
+                }
+            }
+            else
+            {
+                propertyAccess = parameter;
+                var parts = sortBy.Split('.');
+                try
+                {
+                    foreach (var member in parts)
+                    {
+                        propertyAccess = Expression.PropertyOrField(propertyAccess, member);
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    return query;
+                }
+            }
+
+            var lambda = Expression.Lambda(propertyAccess, parameter);
+            string methodName = descending ? nameof(Queryable.OrderByDescending) : nameof(Queryable.OrderBy);
+
+            var resultExpression = Expression.Call(
+                typeof(Queryable),
+                methodName,
+                new Type[] { typeof(T), propertyAccess.Type },
+                query.Expression,
+                Expression.Quote(lambda)
+            );
+
+            return query.Provider.CreateQuery<T>(resultExpression);
+        }
+
         public static Expression<Func<TEntity, TProperty>> BuildCaseExpression<TEntity, TKey, TProperty>(
             string keyPropertyName,
             string targetPropertyName,

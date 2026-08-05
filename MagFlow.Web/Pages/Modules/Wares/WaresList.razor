@@ -44,20 +44,20 @@
         <SelectColumn T="ItemDTO" HeaderStyle="width: 1%" />
         <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" Tag="@($"{nameof(ItemDTO.Product)}.{nameof(ItemDTO.Product.Name)}")" />
         <MagFlowCodeColumn T="ItemDTO" MagFlowSortable="true" Title="@Localizer[Langs.Code]" Tag="@($"{nameof(ItemDTO.Code)}")" />
-        <MagFlowTemplateColumn T="ItemDTO" TFilter="string" Title="@Localizer[Langs.Status]">
+        <MagFlowTemplateColumn T="ItemDTO" TFilter="string" Title="@Localizer[Langs.Status]" Tag="@($"{nameof(ItemDTO.Status)}")">
             <CellTemplate>
                 <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
             </CellTemplate>
         </MagFlowTemplateColumn> 
-        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Type]" Property="item => (item.Product != null && item.Product.Type != null ? item.Product.Type.Name : string.Empty)" />
-        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Category]" Property="item => (item.Product != null && item.Product.Category != null ? item.Product.Category.Name : string.Empty)" />
-        <MagFlowTemplateColumn T="ItemDTO" TFilter="string" Title="@Localizer[Langs.StockQuantity]">
+        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Type]" Property="item => (item.Product != null && item.Product.Type != null ? item.Product.Type.Name : string.Empty)" Tag="@($"{nameof(ItemDTO.Product)}.{nameof(ItemDTO.Product.Type)}.{nameof(ItemDTO.Product.Type.Name)}")" />
+        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Category]" Property="item => (item.Product != null && item.Product.Category != null ? item.Product.Category.Name : string.Empty)" Tag="@($"{nameof(ItemDTO.Product)}.{nameof(ItemDTO.Product.Category)}.{nameof(ItemDTO.Product.Category.Name)}")" />
+        <MagFlowTemplateColumn T="ItemDTO" TFilter="string" Title="@Localizer[Langs.StockQuantity]" Tag="@($"{nameof(ItemDTO.Quantity)}")">
             <CellTemplate>
                 @($"{context.Item.Quantity:0.##} {context.Item.Unit?.Symbol}")
             </CellTemplate>
         </MagFlowTemplateColumn>
-        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Location]" Property="item => item.Location" />
-        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.CreationDate]" Property="item => (item.CreatedAt.HasValue ? item.CreatedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" />
+        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Location]" Property="item => item.Location" Tag="@($"{nameof(ItemDTO.Location)}")" />
+        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.CreationDate]" Property="item => (item.CreatedAt.HasValue ? item.CreatedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" Tag="@($"{nameof(ItemDTO.CreatedAt)}")" />
         <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Actions]" CellClass="text-nowrap">
             <CellTemplate>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_READ">

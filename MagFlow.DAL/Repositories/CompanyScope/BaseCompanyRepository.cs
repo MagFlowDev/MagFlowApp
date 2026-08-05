@@ -756,7 +756,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                     query = query.ApplyColumnFilters(options.ColumnFilters);
                     query = query.ExcludeColumnFilters(options.Exludes);
                     query = query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
-                    query = query.SortBy(options.SortBy, options.Descending);
+                    query = query.ApplySorting(options.SortBy, options.Descending);
                     var count = await query.CountAsync();
                     var entities = await query.Paginate(options.PageNumber, options.PageSize).ToListAsync();
                     return new QueryResponse<TEntity>()
@@ -1112,7 +1112,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                         query = query.ApplyColumnFilters(options.ColumnFilters);
                         query = query.ExcludeColumnFilters(options.Exludes);
                         query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
-                        query = query.SortBy(options.SortBy, options.Descending);
+                        query = query.ApplySorting(options.SortBy, options.Descending);
                         var count = await query.CountAsync();
                         var entities = await query.Paginate(options.PageNumber, options.PageSize).ToListAsync();
                         historyEntity.History = entities.Cast<IEntityHistory>().ToList();
@@ -1147,7 +1147,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                             query = query.ApplyColumnFilters(options.ColumnFilters);
                             query = query.ExcludeColumnFilters(options.Exludes);
                             query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
-                            query = query.SortBy(options.SortBy, options.Descending);
+                            query = query.ApplySorting(options.SortBy, options.Descending);
                             var count = await query.CountAsync();
                             var entities = await query.Paginate(options.PageNumber, options.PageSize).ToListAsync();
                             historyEntity.History = entities.Cast<IEntityHistory>().ToList();
@@ -1179,7 +1179,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                     query = query.ApplyColumnFilters(options.ColumnFilters);
                     query = query.ExcludeColumnFilters(options.Exludes);
                     query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
-                    query = query.SortBy(options.SortBy, options.Descending);
+                    query = query.ApplySorting(options.SortBy, options.Descending);
                     var count = await query.CountAsync();
                     var entities = await query.Paginate(options.PageNumber, options.PageSize).Cast<IEntityHistory>().ToListAsync();
                     return new QueryResponse<IEntityHistory>()
