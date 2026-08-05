@@ -291,3 +291,23 @@ h1:focus {
 .mud-border-primary .mud-input-outlined-border {
     border-color: var(--mud-palette-primary) !important;
 }
+
+.mud-datagrid-column-header-button:disabled .mud-button-sort {
+    display: none !important;
+}
+
+.mud-table-cell .mud-datagrid-column-header .mud-icon-button {
+    opacity: 0 !important;
+    transition: opacity 0.15s ease-in-out;
+    pointer-events: none !important;
+}
+
+.mud-table-cell .mud-datagrid-column-header button.mud-icon-button.is-sorted {
+    opacity: 1 !important;
+    pointer-events: auto;
+}
+
+.mud-table-cell:hover .mud-datagrid-column-header .mud-icon-button {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}

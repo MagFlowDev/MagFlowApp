@@ -7,53 +7,60 @@ namespace MagFlow.Web.Components.DataGrid
 {
     public static class MagFlowColumnHeader
     {
-        public static RenderFragment<HeaderContext<T>>? GetHeaderTemplate<T, TProperty>(this Column<T> column, Expression<Func<T, TProperty>>? property)
+        public static RenderFragment<HeaderContext<T>>? GetHeaderTemplate<T, TProperty>(this Column<T> column, Expression<Func<T, TProperty>>? property, bool sortable = false)
         {
+            bool canSort = property != null && sortable;
+
             return headerContext => builder =>
             {
-                int cSeq = 1;
-                builder.OpenElement(cSeq++, "div");
-                builder.AddAttribute(cSeq++, "class", "mud-datagrid-column-header");
-                builder.AddAttribute(cSeq++, "style", "display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 8px;");
+                builder.OpenElement(0, "div");
+                builder.AddAttribute(1, "class", "mud-datagrid-column-header");
+                builder.AddAttribute(2, "style", "display: flex; align-items: center; width: 100%; justify-content: space-between; gap: 8px;");
 
-                builder.OpenElement(cSeq++, "div");
-                if (property != null && column.Sortable == true)
+                builder.OpenElement(3, "div");
+                if (property != null && sortable)
                 {
-                    builder.AddAttribute(cSeq++, "onclick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleColumnSortAsync(column, property)));
-                    builder.AddAttribute(cSeq++, "style", "cursor: pointer; flex-grow: 1; display: flex; align-items: center; gap: 4px; padding: 16px 0;");
+                    builder.AddAttribute(4, "onclick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleColumnSortAsync(column, property)));
+                    builder.AddAttribute(5, "style", "cursor: pointer; flex-grow: 1; display: flex; align-items: center; gap: 4px; padding: 16px 0;");
                 }
                 else
                 {
-                    builder.AddAttribute(cSeq++, "style", "flex-grow: 1; display: flex; align-items: center; gap: 4px; padding: 16px 0;");
+                    builder.AddAttribute(6, "style", "flex-grow: 1; display: flex; align-items: center; gap: 4px; padding: 16px 0;");
                 }
 
-                builder.OpenElement(cSeq++, "span");
-                builder.AddContent(cSeq++, column.Title ?? (property != null ? property.Type.Name : ""));
+                builder.OpenElement(7, "span");
+                builder.AddContent(8, column.Title ?? (property != null ? property.Type.Name : ""));
                 builder.CloseElement();
 
                 string sortKey = !string.IsNullOrEmpty(column.Title) ? column.Title : typeof(T).Name;
 
-                if (property != null && column.Sortable == true)
+                if (canSort && column.UserAttributes.TryGetValue("MagFlowSortDirection", out var directionObj) && directionObj is SortDirection currentDir && currentDir != SortDirection.None)
                 {
-                    var currentSortIndex = column.DataGrid?.SortDefinitions.Keys.ToList().IndexOf(sortKey) ?? -1;
-                    if (currentSortIndex >= 0)
-                    {
-                        var isDescending = column.DataGrid!.SortDefinitions[sortKey].Descending;
+                    bool isDescending = currentDir == SortDirection.Descending;
 
-                        builder.OpenComponent<MudIcon>(cSeq++);
-                        builder.AddAttribute(cSeq++, "Icon", isDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward);
-                        builder.AddAttribute(cSeq++, "Size", Size.Small);
-                        builder.CloseComponent();
-                    }
+                    builder.OpenComponent<MudIconButton>(9);
+                    builder.AddAttribute(10, "Icon", isDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward);
+                    builder.AddAttribute(11, "Size", Size.Small);
+                    builder.AddAttribute(12, "Class", "is-sorted");
+                    builder.AddAttribute(13, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleColumnSortAsync(column, property, true)));
+                    builder.CloseComponent();
                 }
                 builder.CloseElement();
 
-                if (column.Filterable == true)
+                if (column.Filterable == true && (column.DataGrid == null || column.DataGrid.Filterable == true))
                 {
-                    builder.OpenComponent<MudIconButton>(cSeq++);
-                    builder.AddAttribute(cSeq++, "Icon", Icons.Material.Filled.FilterAlt);
-                    builder.AddAttribute(cSeq++, "Size", Size.Small);
-                    builder.AddAttribute(cSeq++, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleGridFilters(column)));
+                    builder.OpenComponent<MudIconButton>(14);
+                    builder.AddAttribute(15, "Icon", Icons.Material.Filled.FilterAltOff);
+                    builder.AddAttribute(16, "Size", Size.Small);
+                    builder.AddAttribute(17, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleGridFilters(column, false)));
+                    builder.CloseComponent();
+                }
+                else if(column.DataGrid?.Filterable == false)
+                {
+                    builder.OpenComponent<MudIconButton>(14);
+                    builder.AddAttribute(15, "Icon", Icons.Material.Filled.FilterAlt);
+                    builder.AddAttribute(16, "Size", Size.Small);
+                    builder.AddAttribute(17, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleGridFilters(column, true)));
                     builder.CloseComponent();
                 }
 
@@ -61,7 +68,7 @@ namespace MagFlow.Web.Components.DataGrid
             };
         }
 
-        private static async Task ToggleColumnSortAsync<T, TProperty>(Column<T> column, Expression<Func<T, TProperty>> property)
+        private static async Task ToggleColumnSortAsync<T, TProperty>(Column<T> column, Expression<Func<T, TProperty>> property, bool iconClicked = false)
         {
             if (column.DataGrid == null)
                 return;
@@ -75,27 +82,68 @@ namespace MagFlow.Web.Components.DataGrid
 
             Func<T, object?> sortByFunc = sortByExpression.Compile();
 
-            if (column.DataGrid.SortDefinitions.TryGetValue(sortKey, out var currentSort))
+            SortDirection currentDir = SortDirection.None;
+            if (column.UserAttributes.TryGetValue("MagFlowSortDirection", out var dirObj) && dirObj is SortDirection existingDir)
             {
-                if (!currentSort.Descending)
+                currentDir = existingDir;
+            }
+
+            if (currentDir == SortDirection.None)
+            {
+                foreach (var col in column.DataGrid.RenderedColumns)
                 {
-                    await column.DataGrid.ExtendSortAsync(sortKey, SortDirection.Descending, sortByFunc, null);
+                    if (col != column)
+                    {
+                        if (col.UserAttributes.ContainsKey("MagFlowSortDirection"))
+                        {
+                            col.UserAttributes["MagFlowSortDirection"] = SortDirection.None;
+                        }
+                    }
                 }
-                else
-                {
-                    await column.DataGrid.RemoveSortAsync(sortKey);
-                }
+
+                column.DataGrid.SortDefinitions.Clear();
+
+                column.UserAttributes["MagFlowSortDirection"] = SortDirection.Ascending;
+                await column.DataGrid.ExtendSortAsync(sortKey, SortDirection.Ascending, sortByFunc, null);
+            }
+            else if (currentDir == SortDirection.Ascending)
+            {
+                column.UserAttributes["MagFlowSortDirection"] = SortDirection.Descending;
+                await column.DataGrid.ExtendSortAsync(sortKey, SortDirection.Descending, sortByFunc, null);
+            }
+            else if (currentDir == SortDirection.Descending && iconClicked)
+            {
+                column.UserAttributes["MagFlowSortDirection"] = SortDirection.Ascending;
+                await column.DataGrid.ExtendSortAsync(sortKey, SortDirection.Ascending, sortByFunc, null);
             }
             else
             {
-                await column.DataGrid.ExtendSortAsync(sortKey, SortDirection.Ascending, sortByFunc, null);
+                column.UserAttributes["MagFlowSortDirection"] = SortDirection.None;
+                await column.DataGrid.RemoveSortAsync(sortKey);
             }
+
+            ForceTableStateUpdate(column);
         }
 
 
-        private static void ToggleGridFilters<T>(Column<T> column)
+        private static void ToggleGridFilters<T>(Column<T> column, bool enable)
         {
-            column.DataGrid?.ToggleFiltersMenu();
+            if (column.DataGrid == null)
+                return;
+
+            column.DataGrid.Filterable = enable;
+            ForceTableStateUpdate(column);
+        }
+
+        private static void ForceTableStateUpdate<T>(Column<T> column)
+        {
+            if (column.DataGrid == null)
+                return;
+
+            var stateHasChangedMethod = typeof(MudDataGrid<T>)
+                .GetMethod("StateHasChanged", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+            stateHasChangedMethod?.Invoke(column.DataGrid, null);
         }
     }
 }

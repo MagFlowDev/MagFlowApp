@@ -9,15 +9,25 @@ namespace MagFlow.Web.Components.DataGrid
         [Parameter]
         public Expression<Func<T, string>>? PropertyExpression { get; set; }
 
+        [Parameter]
+        public bool MagFlowSortable { get; set; } = false;
+
         protected override void OnInitialized()
         {
             Filterable = true;
+            Sortable = false;
             FilterTemplate = context => builder =>
             {
                 builder.OpenComponent<MagFlowColumnFilter<T, string, TFilter>>(0);
                 builder.AddAttribute(1, "Context", context);
                 builder.CloseComponent();
             };
+
+            if (string.IsNullOrEmpty(HeaderClass))
+                HeaderClass = "text-nowrap hide-filter-initially";
+
+            if (string.IsNullOrEmpty(CellClass))
+                CellClass = "text-nowrap";
 
             base.OnInitialized();
         }
@@ -31,7 +41,7 @@ namespace MagFlow.Web.Components.DataGrid
                 SortBy = PropertyExpression.Compile();
             }
 
-            HeaderTemplate = MagFlowColumnHeader.GetHeaderTemplate(this, PropertyExpression);
+            HeaderTemplate = MagFlowColumnHeader.GetHeaderTemplate(this, PropertyExpression, MagFlowSortable);
         }
     }
 }

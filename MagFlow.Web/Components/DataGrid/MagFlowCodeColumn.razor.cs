@@ -8,9 +8,7 @@ namespace MagFlow.Web.Components.DataGrid
     {
         protected override void OnInitialized()
         {
-            if (string.IsNullOrEmpty(CellClass)) CellClass = "text-nowrap";
-            Sortable = true;
-            SortBy = item => item.Code;
+            PropertyExpression = item => item.Code;
 
             CellTemplate = context => (builder) =>
             {
