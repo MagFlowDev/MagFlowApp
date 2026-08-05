@@ -49,19 +49,41 @@ namespace MagFlow.Web.Components.DataGrid
 
                 if (column.Filterable == true && (column.DataGrid == null || column.DataGrid.Filterable == true))
                 {
-                    builder.OpenComponent<MudIconButton>(14);
-                    builder.AddAttribute(15, "Icon", Icons.Material.Filled.FilterAltOff);
-                    builder.AddAttribute(16, "Size", Size.Small);
-                    builder.AddAttribute(17, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleGridFilters(column, false)));
-                    builder.CloseComponent();
+                    if (column.FilterContext.FilterDefinition?.Value != null)
+                    {
+                        builder.OpenComponent<MudIconButton>(14);
+                        builder.AddAttribute(15, "Icon", Icons.Material.Filled.FilterAltOff);
+                        builder.AddAttribute(16, "Size", Size.Small);
+                        builder.AddAttribute(17, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleGridFilters(column, false)));
+                        builder.CloseComponent();
+                    }
+                    else
+                    {
+                        builder.OpenComponent<MudIconButton>(14);
+                        builder.AddAttribute(15, "Icon", Icons.Material.Outlined.FilterAltOff);
+                        builder.AddAttribute(16, "Size", Size.Small);
+                        builder.AddAttribute(17, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleGridFilters(column, false)));
+                        builder.CloseComponent();
+                    }
                 }
                 else if(column.DataGrid?.Filterable == false)
                 {
-                    builder.OpenComponent<MudIconButton>(14);
-                    builder.AddAttribute(15, "Icon", Icons.Material.Filled.FilterAlt);
-                    builder.AddAttribute(16, "Size", Size.Small);
-                    builder.AddAttribute(17, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleGridFilters(column, true)));
-                    builder.CloseComponent();
+                    if(column.FilterContext.FilterDefinition?.Value != null)
+                    {
+                        builder.OpenComponent<MudIconButton>(14);
+                        builder.AddAttribute(15, "Icon", Icons.Material.Filled.FilterAlt);
+                        builder.AddAttribute(16, "Size", Size.Small);
+                        builder.AddAttribute(17, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleGridFilters(column, true)));
+                        builder.CloseComponent();
+                    }
+                    else
+                    {
+                        builder.OpenComponent<MudIconButton>(14);
+                        builder.AddAttribute(15, "Icon", Icons.Material.Outlined.FilterAlt);
+                        builder.AddAttribute(16, "Size", Size.Small);
+                        builder.AddAttribute(17, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(column, _ => ToggleGridFilters(column, true)));
+                        builder.CloseComponent();
+                    }
                 }
 
                 builder.CloseElement();

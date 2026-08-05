@@ -24,7 +24,7 @@ namespace MagFlow.Web.Components.DataGrid
             };
 
             if (string.IsNullOrEmpty(HeaderClass))
-                HeaderClass = "text-nowrap hide-filter-initially";
+                HeaderClass = "text-nowrap";
 
             if (string.IsNullOrEmpty(CellClass))
                 CellClass = "text-nowrap";

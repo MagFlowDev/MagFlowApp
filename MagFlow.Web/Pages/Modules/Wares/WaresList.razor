@@ -58,7 +58,7 @@
         </MagFlowTemplateColumn>
         <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Location]" Property="item => item.Location" />
         <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.CreationDate]" Property="item => (item.CreatedAt.HasValue ? item.CreatedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" />
-        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Actions]">
+        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Actions]" CellClass="text-nowrap">
             <CellTemplate>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_READ">
                     <Authorized Context="authorizedContext">
