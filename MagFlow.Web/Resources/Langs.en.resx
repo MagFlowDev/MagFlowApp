@@ -1713,4 +1713,7 @@
   <data name="WarehouseExample" xml:space="preserve">
     <value>E.g. Warehouse A</value>
   </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
 </root>

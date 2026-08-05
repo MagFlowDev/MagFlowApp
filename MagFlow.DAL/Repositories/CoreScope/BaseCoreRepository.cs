@@ -751,7 +751,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                     query = query.ApplyColumnFilters(options.ColumnFilters);
                     query = query.ExcludeColumnFilters(options.Exludes);
                     query = query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
-                    query = query.SortBy(options.SortBy, options.Descending);
+                    query = query.ApplySorting(options.SortBy, options.Descending);
                     var count = await query.CountAsync();
                     var entities = await query.Paginate(options.PageNumber, options.PageSize).ToListAsync();
                     return new QueryResponse<TEntity>()

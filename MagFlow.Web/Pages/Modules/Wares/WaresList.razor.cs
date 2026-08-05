@@ -5,15 +5,16 @@ using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Web.Components.Dialogs;
+using MagFlow.Web.Helpers;
 using MagFlow.Web.Resources;
 using MudBlazor;
+using System.Linq.Expressions;
 
 namespace MagFlow.Web.Pages.Modules.Wares
 {
     public partial class WaresList
     {
         MudDataGrid<ItemDTO> _itemsDataGrid;
-        string? _searchString = null;
 
         bool _isBusy = false;
 
@@ -27,7 +28,15 @@ namespace MagFlow.Web.Pages.Modules.Wares
                 sortBy = column?.Tag?.ToString();
             }
             sortBy = sortBy ?? nameof(ItemDTO.Id);
-            var response = await ItemService.GetItems(state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
+            var queryOptions = new MagFlow.Shared.Models.QueryOptions<MagFlow.Domain.CompanyScope.Item>()
+            {
+                PageNumber = state.Page,
+                PageSize = state.PageSize,
+                SortBy = sortBy,
+                Descending = sortDefinition?.Descending == true
+            };
+            queryOptions.ApplyFilters(state.FilterDefinitions);
+            var response = await ItemService.GetItems(queryOptions);
 
             return new GridData<ItemDTO>
             {

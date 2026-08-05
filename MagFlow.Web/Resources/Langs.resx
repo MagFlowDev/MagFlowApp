@@ -1714,4 +1714,7 @@ i uprawnieniami użytkowników</value>
   <data name="WarehouseExample" xml:space="preserve">
     <value>Np. Magazyn A</value>
   </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filtr</value>
+  </data>
 </root>

@@ -4,13 +4,11 @@ using MudBlazor;
 
 namespace MagFlow.Web.Components.DataGrid
 {
-    public class MagFlowCodeColumn<T> : MagFlowTemplateColumn<T> where T : ICodeDTO
+    public class MagFlowCodeColumn<T> : MagFlowTemplateColumn<T, string> where T : ICodeDTO
     {
         protected override void OnInitialized()
         {
-            if (string.IsNullOrEmpty(CellClass)) CellClass = "text-nowrap";
-            Sortable = true;
-            SortBy = item => item.Code;
+            PropertyExpression = item => item.Code;
 
             CellTemplate = context => (builder) =>
             {
