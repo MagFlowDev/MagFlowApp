@@ -315,3 +315,15 @@ h1:focus {
 .mud-data-grid .mud-table-cell.filter-header-cell {
     padding: 8px 8px !important;
 }
+
+.mud-table-sticky-header .mud-table-head {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--mud-palette-background);
+}
+
+.mud-table-head tr.mud-table-row:nth-of-type(2) th,
+.mud-table-head tr.mud-table-row:nth-of-type(2) td {
+    box-shadow: inset 0 1px 0 var(--mud-palette-divider);
+}
