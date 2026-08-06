@@ -9,7 +9,7 @@ namespace MagFlow.EF.Seeds.CompanyScope
     {
         int Step { get; }
 
-        void Seed(CompanyDbContext context);
-        Task SeedAsync(CompanyDbContext context, CancellationToken cancellationToken);
+        void Seed(CompanyDbContext context, string companyName);
+        Task SeedAsync(CompanyDbContext context, string companyName, CancellationToken cancellationToken);
     }
 }

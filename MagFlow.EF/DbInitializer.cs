@@ -41,7 +41,7 @@ namespace MagFlow.EF
                     using (var companyDbContext = new CompanyDbContext(company.ConnectionString, company.CompanyNumber))
                     {
                         await companyDbContext.Database.MigrateAsync();
-                        await CompanyDbSeeder.SeedAsync(companyDbContext, CancellationToken.None);
+                        await CompanyDbSeeder.SeedAsync(companyDbContext, company.Name, CancellationToken.None);
                     }
                 }
                 catch (Exception ex)

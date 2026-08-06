@@ -227,7 +227,7 @@ namespace MagFlow.EF
 
             if(!addedEntries.Any())
             {
-                return await base.SaveChangesAsync(cancellationToken);
+                return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
             }
 
             using var transaction = await Database.BeginTransactionAsync(cancellationToken);

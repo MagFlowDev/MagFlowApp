@@ -311,3 +311,7 @@ h1:focus {
     opacity: 1 !important;
     pointer-events: auto !important;
 }
+
+.mud-data-grid .mud-table-cell.filter-header-cell {
+    padding: 8px 8px !important;
+}

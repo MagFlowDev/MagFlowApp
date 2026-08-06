@@ -44,7 +44,7 @@
         <SelectColumn T="ItemDTO" HeaderStyle="width: 1%" />
         <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" Tag="@($"{nameof(ItemDTO.Product)}.{nameof(ItemDTO.Product.Name)}")" />
         <MagFlowCodeColumn T="ItemDTO" MagFlowSortable="true" Title="@Localizer[Langs.Code]" Tag="@($"{nameof(ItemDTO.Code)}")" />
-        <MagFlowTemplateColumn T="ItemDTO" TFilter="string" Title="@Localizer[Langs.Status]" Tag="@($"{nameof(ItemDTO.Status)}")">
+        <MagFlowTemplateColumn T="ItemDTO" TFilter="Enums.EntityStatus" Title="@Localizer[Langs.Status]" Tag="@($"{nameof(ItemDTO.Status)}")" IncludedEnumValues="@(new[] { Enums.EntityStatus.Available, Enums.EntityStatus.Blocked })">
             <CellTemplate>
                 <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
             </CellTemplate>

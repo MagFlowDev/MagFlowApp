@@ -62,7 +62,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
                 using (var companyDbContext = new CompanyDbContext(entity.ConnectionString, entity.CompanyNumber))
                 {
                     await companyDbContext.Database.MigrateAsync();
-                    await CompanyDbSeeder.SeedAsync(companyDbContext, CancellationToken.None);
+                    await CompanyDbSeeder.SeedAsync(companyDbContext, entity.Name, CancellationToken.None);
                 }
                 return Enums.Result.Success;
             }

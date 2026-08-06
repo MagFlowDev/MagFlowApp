@@ -2,23 +2,30 @@
 @typeparam TProperty
 @typeparam TFilter
 @using MagFlow.Shared.Models
+@using MagFlow.BLL.Helpers
 @using MudBlazor
 
-<div class="d-flex align-center gap-1 w-100" style="min-width: 140px;">
+<div class="d-flex align-center w-100" style="min-width: 100px; gap: 16px; min-width: 0;">
     @if (ShouldShowValueField() && Context.FilterDefinition != null)
     {
         @if (typeof(TFilter).IsEnum)
         {
-            <MudSelect Value="@((TFilter?)Context.FilterDefinition.Value)"
-                       ValueChanged="@OnValueChanged"
-                       MultiSelection="false" 
+            <MudSelect T="object"
+                       Value="@GetEnumObjectValue()"
+                       ValueChanged="@OnEnumObjectChanged"
                        Clearable="true"
-                       T="TFilter" 
-                       OuterClass="w-100" 
-                       Variant="Variant.Outlined">
-                @foreach (TFilter item in Enum.GetValues(typeof(TFilter)))
+                       Placeholder="@Localizer[Langs.Filter]"
+                       OuterClass="w-100 m-0 p-0"
+                       Style="min-width: 0"
+                       Variant="Variant.Text">
+                @foreach (TFilter item in GetEnumValues())
                 {
-                    <MudSelectItem T="TFilter" Value="@item">@item.ToString()</MudSelectItem>
+                    if (item != null)
+                    {
+                        <MudSelectItem T="object" Value="@item">
+                            @EnumsHelper.GetDisplayName((Enum)(object)item, Localizer)
+                        </MudSelectItem>
+                    }
                 }
             </MudSelect>
         }
@@ -30,21 +37,23 @@
                           Margin="Margin.Dense"
                           Placeholder="@Localizer[Langs.Filter]"
                           Clearable="true"
-                          OnClearButtonClick="@(() => Context.Actions.ClearFilterAsync(Context.FilterDefinition))"
-                          Class="flex-grow-1" />
+                          OnClearButtonClick="@ClearValue"
+                          Class="w-100"
+                          Style="min-width: 0"/>
         }
-    }
-    else if (Context.FilterDefinition != null)
-    {
-        <MudIconButton Icon="@Icons.Material.Filled.Clear"
-                       Size="Size.Small"
-                       Color="Color.Error"
-                       OnClick="@(() => Context.Actions.ClearFilterAsync(Context.FilterDefinition))" />
+        <div class="d-flex align-items-center" style="padding: 0 4px; gap: 10px"><div style="@($"width: 1px; height: 32px; background: {Colors.Gray.Lighten1}")"></div></div>
     }
 </div>
 
 @code {
     [Parameter] public FilterContext<T> Context { get; set; } = null!;
+
+    [Parameter]
+    public IEnumerable<TFilter>? IncludedEnumValues { get; set; }
+
+    [Parameter]
+    public IEnumerable<TFilter>? ExcludedEnumValues { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,6 +95,22 @@
         await Context.Actions.ApplyFilterAsync(Context.FilterDefinition);
     }
 
+
+    private bool ShouldShowValueField()
+    {
+        var op = GetSelectedOperator();
+        return op != Shared.Models.FilterOperator.IsEmpty && op != Shared.Models.FilterOperator.IsNotEmpty;
+    }
+
+    private async Task ClearValue()
+    {
+        if (Context.FilterDefinition == null)
+            return;
+
+        Context.FilterDefinition.Value = null;
+        await Context.Actions.ApplyFilterAsync(Context.FilterDefinition);
+    }
+
     private async Task OnValueChanged(TFilter? value)
     {
         if (Context.FilterDefinition == null)
@@ -95,9 +120,50 @@
         await Context.Actions.ApplyFilterAsync(Context.FilterDefinition);
     }
 
-    private bool ShouldShowValueField()
+    private async Task OnEnumObjectChanged(object? value)
     {
-        var op = GetSelectedOperator();
-        return op != Shared.Models.FilterOperator.IsEmpty && op != Shared.Models.FilterOperator.IsNotEmpty;
+        if (Context.FilterDefinition == null)
+            return;
+
+        Context.FilterDefinition.Value = value;
+
+        await Context.Actions.ApplyFilterAsync(Context.FilterDefinition);
+    }
+
+    private object? GetEnumObjectValue()
+    {
+        if (Context.FilterDefinition?.Value == null)
+            return null;
+
+        if (Context.FilterDefinition.Value is TFilter value)
+            return value;
+
+        if (Enum.TryParse(
+                typeof(TFilter),
+                Context.FilterDefinition.Value.ToString(),
+                true,
+                out var result))
+        {
+            return result;
+        }
+
+        return null;
+    }
+
+    private IEnumerable<TFilter> GetEnumValues()
+    {
+        var values = Enum.GetValues(typeof(TFilter)).Cast<TFilter>();
+
+        if (IncludedEnumValues != null)
+        {
+            values = values.Where(x => IncludedEnumValues.Contains(x!));
+        }
+
+        if (ExcludedEnumValues != null)
+        {
+            values = values.Where(x => !ExcludedEnumValues.Contains(x!));
+        }
+
+        return values;
     }
 }

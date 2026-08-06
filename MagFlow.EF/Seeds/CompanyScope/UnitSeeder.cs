@@ -12,12 +12,12 @@ namespace MagFlow.EF.Seeds.CompanyScope
     {
         public int Step => 1;
 
-        public void Seed(CompanyDbContext context)
+        public void Seed(CompanyDbContext context, string companyName)
         {
-            Task.Run(async () => await SeedAsync(context, CancellationToken.None));
+            Task.Run(async () => await SeedAsync(context, companyName, CancellationToken.None));
         }
 
-        public async Task SeedAsync(CompanyDbContext context, CancellationToken cancellationToken)
+        public async Task SeedAsync(CompanyDbContext context, string companyName, CancellationToken cancellationToken)
         {
             bool seed = false;
 
@@ -49,7 +49,11 @@ namespace MagFlow.EF.Seeds.CompanyScope
             {
                 new Unit { Symbol = "ml", Name = "mililitr", ParentUnitConversionRate = 1000 },
             }},
-            new Unit { Symbol = "szt", Name = "sztuka" }
+            new Unit { Symbol = "szt", Name = "sztuka" },
+            new Unit { Symbol = "m", Name = "metr", RelatedUnits = new List<Unit>()
+            {
+                new Unit { Symbol = "cm", Name = "centymetr", ParentUnitConversionRate = 100 },
+            }},
         };
     }
 }

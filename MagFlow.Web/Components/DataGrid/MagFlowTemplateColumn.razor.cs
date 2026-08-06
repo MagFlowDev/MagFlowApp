@@ -12,6 +12,12 @@ namespace MagFlow.Web.Components.DataGrid
         [Parameter]
         public bool MagFlowSortable { get; set; } = false;
 
+        [Parameter]
+        public IEnumerable<TFilter>? IncludedEnumValues { get; set; }
+
+        [Parameter]
+        public IEnumerable<TFilter>? ExcludedEnumValues { get; set; }
+
         protected override void OnInitialized()
         {
             Filterable = true;
@@ -20,6 +26,8 @@ namespace MagFlow.Web.Components.DataGrid
             {
                 builder.OpenComponent<MagFlowColumnFilter<T, string, TFilter>>(0);
                 builder.AddAttribute(1, "Context", context);
+                builder.AddAttribute(2, "IncludedEnumValues", IncludedEnumValues);
+                builder.AddAttribute(3, "ExcludedEnumValues", ExcludedEnumValues);
                 builder.CloseComponent();
             };
 

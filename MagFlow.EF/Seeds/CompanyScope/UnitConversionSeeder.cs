@@ -12,12 +12,12 @@ namespace MagFlow.EF.Seeds.CompanyScope
     {
         public int Step => 2;
 
-        public void Seed(CompanyDbContext context)
+        public void Seed(CompanyDbContext context, string companyName)
         {
-            Task.Run(async () => await SeedAsync(context, CancellationToken.None));
+            Task.Run(async () => await SeedAsync(context, companyName, CancellationToken.None));
         }
 
-        public async Task SeedAsync(CompanyDbContext context, CancellationToken cancellationToken)
+        public async Task SeedAsync(CompanyDbContext context, string companyName, CancellationToken cancellationToken)
         {
             // for now it is replaced with parent unit conversion rate
             return;
