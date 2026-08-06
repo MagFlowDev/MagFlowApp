@@ -1,3 +1,4 @@
+using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Models;
 using System.Linq.Expressions;
 
@@ -118,6 +119,17 @@ namespace MagFlow.DAL.Helpers
                             propertyAccess,
                             typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!,
                             finalConstant),
+
+                        FilterOperator.Contains when targetType.IsNumericType() =>
+                            Expression.Call(
+                                Expression.Call(
+                                    typeof(Convert),
+                                    nameof(Convert.ToString),
+                                    null,
+                                    propertyAccess),
+                                typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!,
+                                Expression.Constant(filter.Value?.ToString() ?? string.Empty)
+                            ),
 
                         FilterOperator.StartsWith when targetType == typeof(string) => Expression.Call(
                             propertyAccess,

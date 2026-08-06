@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.Domain.CoreScope;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +9,7 @@ namespace MagFlow.EF.Seeds.CompanyScope
 {
     public static class CompanyDbSeeder
     {
-        public static void Seed(CompanyDbContext context)
+        public static async Task Seed(CompanyDbContext context, string companyName)
         {
             try
             {
@@ -34,7 +36,7 @@ namespace MagFlow.EF.Seeds.CompanyScope
                 {
                     try
                     {
-                        seeder?.Seed(context);
+                        seeder?.Seed(context, companyName);
                     }
                     catch(Exception ex)
                     {
@@ -48,7 +50,7 @@ namespace MagFlow.EF.Seeds.CompanyScope
             }
         }
 
-        public static async Task SeedAsync(CompanyDbContext context, CancellationToken cancellationToken)
+        public static async Task SeedAsync(CompanyDbContext context, string companyName, CancellationToken cancellationToken)
         {
             try
             {
@@ -76,7 +78,7 @@ namespace MagFlow.EF.Seeds.CompanyScope
                     try
                     {
                         if (seeder != null)
-                            await seeder.SeedAsync(context, cancellationToken);
+                            await seeder.SeedAsync(context, companyName, cancellationToken);
                     }
                     catch (Exception ex)
                     {

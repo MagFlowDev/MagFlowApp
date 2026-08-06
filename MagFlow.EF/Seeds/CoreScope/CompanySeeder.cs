@@ -25,7 +25,7 @@ namespace MagFlow.EF.Seeds.CoreScope
 
         public async Task SeedAsync(CoreDbContext context, CancellationToken cancellationToken)
         {
-            List<KeyValuePair<string, int>> seededDbs = new List<KeyValuePair<string, int>>();
+            List<DbSeed> seededDbs = new List<DbSeed>();
             bool seed = false;
 
             var now = DateTime.UtcNow;
@@ -59,7 +59,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                     await context.CompanyUsers.AddAsync(companyUser);
                 }
                 seed = true;
-                seededDbs.Add(new KeyValuePair<string, int>(testCompany.ConnectionString, testCompany.CompanyNumber));
+                seededDbs.Add(new DbSeed() { ConnectionString = testCompany.ConnectionString, CompanyName = testCompany.Name, CompanyNumber = testCompany.CompanyNumber });
             }
             else
             {
@@ -107,7 +107,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                     }
                 }
                 seed = true;
-                seededDbs.Add(new KeyValuePair<string, int>(demoCompany.ConnectionString, demoCompany.CompanyNumber));
+                seededDbs.Add(new DbSeed() { ConnectionString = demoCompany.ConnectionString, CompanyName = demoCompany.Name, CompanyNumber = demoCompany.CompanyNumber });
             }
             else
             {
@@ -144,8 +144,9 @@ namespace MagFlow.EF.Seeds.CoreScope
                 {
                     try
                     {
-                        var connectionString = seededDb.Key;
-                        var companyNumber = seededDb.Value;
+                        var connectionString = seededDb.ConnectionString;
+                        var companyNumber = seededDb.CompanyNumber;
+                        var companyName = seededDb.CompanyName;
                         using (var companyDbContext = new CompanyDbContext(connectionString, companyNumber))
                         {
                             await companyDbContext.Database.MigrateAsync();
@@ -166,7 +167,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                                     await companyDbContext.SaveChangesAsync();
                                 }
                             }
-                            await CompanyDbSeeder.SeedAsync(companyDbContext, CancellationToken.None);
+                            await CompanyDbSeeder.SeedAsync(companyDbContext, companyName, CancellationToken.None);
                         }
                     }
                     catch (Exception ex)
@@ -176,5 +177,12 @@ namespace MagFlow.EF.Seeds.CoreScope
                 }
             }
         }
+    }
+
+    public class DbSeed
+    {
+        public string ConnectionString { get; set; }
+        public string CompanyName { get; set; }
+        public int CompanyNumber { get; set; }
     }
 }

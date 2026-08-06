@@ -222,6 +222,64 @@ namespace MagFlow.EF.Seeds.CoreScope
                     }
                 }
             }
+
+            var testUser = await context.ApplicationUsers.FirstOrDefaultAsync(u => u.NormalizedEmail == $"TEST@MAGFLOW.COM");
+            if (testUser == null)
+            {
+                var testCompany = await context.Companies.FirstOrDefaultAsync(u => u.NormalizedName == company);
+                var password = new PasswordHasher<ApplicationUser>();
+                testUser = new ApplicationUser
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "Test",
+                    LastName = "Magflow",
+                    CreatedAt = now,
+                    LastLogin = now,
+                    DefaultCompanyId = testCompany?.Id,
+                    IsActive = true,
+                    UserName = $"test@magflow.com",
+                    NormalizedUserName = $"TEST@MAGFLOW.COM",
+                    Email = $"test@magflow.com",
+                    NormalizedEmail = $"TEST@MAGFLOW.COM",
+                    EmailConfirmed = true,
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    UserSettings = new ApplicationUserSettings
+                    {
+                        Language = Shared.Models.Enums.Language.Polish,
+                        ThemeMode = Shared.Models.Enums.ThemeMode.LightMode,
+                        DecimalSeparator = Shared.Models.Enums.DecimalSeparator.Comma,
+                        DateFormat = Shared.Models.Enums.DateFormat.DD_MM_RRRR_DOTS,
+                        TimeFormat = Shared.Models.Enums.TimeFormat.HH_MM_24H,
+                        TimeZone = Shared.Models.Enums.TimeZone.Europe_Warsaw
+                    }
+                };
+                testUser.PasswordHash = password.HashPassword(testUser, "Password1!");
+
+                await context.ApplicationUsers.AddAsync(testUser);
+                var foremanRole = await context.ApplicationRoles.FirstOrDefaultAsync(r => r.NormalizedName == "FOREMAN");
+                if (foremanRole != null)
+                {
+                    ApplicationUserRole foreman = new ApplicationUserRole { RoleId = foremanRole.Id, UserId = testUser.Id };
+                    await context.UserRoles.AddAsync(foreman);
+                }
+                if (testCompany != null)
+                {
+                    CompanyUser companyUser = new CompanyUser() { CompanyId = testCompany.Id, UserId = testUser.Id, AssignedAt = now };
+                    await context.CompanyUsers.AddAsync(companyUser);
+                    using (var companyContext = new CompanyDbContext(testCompany.ConnectionString, testCompany.CompanyNumber))
+                    {
+                        var tempUser = new Domain.CompanyScope.User()
+                        {
+                            Id = testUser.Id,
+                            FirstName = testUser.FirstName,
+                            LastName = testUser.LastName,
+                            Email = testUser.Email
+                        };
+                        companyContext.Users.Add(tempUser);
+                        companyContext.SaveChanges();
+                    }
+                }
+            }
         }
     }
 }

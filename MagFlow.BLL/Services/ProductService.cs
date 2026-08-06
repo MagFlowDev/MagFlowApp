@@ -182,7 +182,7 @@ namespace MagFlow.BLL.Services
                 PageSize = pageSize,
                 ColumnFilters = new List<ColumnFilter>()
                 {
-                    { ColumnFilter.Create(nameof(Unit.ParentUnitId), FilterOperator.Equals, null) }
+                    { ColumnFilter.Create(nameof(Unit.ParentUnitId), FilterOperator.IsEmpty, null) }
                 },
                 Search = search,
                 SortBy = sortBy,
