@@ -13,7 +13,7 @@
 @inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100 h-100">
-    <MagFlowDataGrid @ref="_companiesDataGrid" T="CompanyDTO" ServerData="ServerReloadCompanies" Filterable="false" OnRowClicked="OpenCompanyDetails">
+    <MagFlowDataGrid @ref="_companiesDataGrid" T="CompanyDTO" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.ADMIN_COMPANIES" ServerData="ServerReloadCompanies" OnRowClicked="OpenCompanyDetails">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                             AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 maxw-400px"></MudTextField>

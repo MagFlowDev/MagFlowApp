@@ -15,7 +15,7 @@
 @inject NavigationManager NavigationManager
 @inherits AuthComponentBase
 
-<MagFlowDataGrid @ref="_itemsDataGrid" T="ItemDTO" ServerData="ServerReloadItems" Filterable="false" OnRowClicked="OpenItemDetails" MultiSelection="true">
+<MagFlowDataGrid @ref="_itemsDataGrid" T="ItemDTO" ServerData="ServerReloadItems" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.WARES_ARCHIVE" OnRowClicked="OpenItemDetails" MultiSelection="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer[Langs.Archive]</MudText>
         <MudSpacer />

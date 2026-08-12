@@ -14,7 +14,7 @@
 @inject NavigationManager NavigationManager
 @inherits AuthComponentBase
 
-<MagFlowDataGrid @ref="_categoriesDataGrid" T="ProductCategoryDTO" ServerData="ServerReloadProducts" Filterable="false" OnRowClicked="OpenCategoryDetails" MultiSelection="true">
+<MagFlowDataGrid @ref="_categoriesDataGrid" T="ProductCategoryDTO" ServerData="ServerReloadProducts" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.WARES_CATEGORIES_LIST" OnRowClicked="OpenCategoryDetails" MultiSelection="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer[Langs.ProductCategoriesList]</MudText>
         <MudSpacer />

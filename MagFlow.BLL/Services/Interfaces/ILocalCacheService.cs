@@ -1,5 +1,7 @@
-﻿using MagFlow.Shared.DTOs.CoreScope;
+﻿using MagFlow.Shared.DTOs;
+using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,9 @@ namespace MagFlow.BLL.Services.Interfaces
 
         Task<Enums.Result> SetCurrentModuleSection(Guid sessionId, Guid moduleId, Enum section);
         Task<Enum?> GetCurrentModuleSection(Guid sessionId, Guid moduleId);
+
+        Task<Enums.Result> SetTableFilters<T>(Guid sessionId, string tableId, bool filtersDisplayed, List<IFilterDefinition<T>> filters);
+        Task<(List<IFilterDefinition<T>>? filters, bool filtersDisplayed)> GetTableFilters<T>(Guid sessionId, string tableId, MudDataGrid<T> dataGrid);
 
         Task<Enums.Result> SetCurrentUser(UserDTO userDTO);
         Task<UserDTO?> GetCurrentUser();

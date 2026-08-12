@@ -1,16 +1,20 @@
 ﻿using Blazored.LocalStorage;
+using MagFlow.BLL.Helpers;
+using MagFlow.BLL.Mappers;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.Constants.Identificators;
+using MagFlow.Shared.DTOs;
 using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Metadata;
-using MagFlow.BLL.Helpers;
 
 namespace MagFlow.BLL.Services
 {
@@ -307,6 +311,88 @@ namespace MagFlow.BLL.Services
                 return null;
             }
         }
+
+        public async Task<Enums.Result> SetTableFilters<T>(Guid sessionId, string tableId, bool filtersDisplayed, List<IFilterDefinition<T>> filters)
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return Enums.Result.Error;
+                var cache = await GetCache<List<SessionTableFilters>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_TABLE_FILTERS);
+                if (cache == null)
+                {
+                    await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_TABLE_FILTERS, new List<SessionTableFilters>());
+                    cache = await GetCache<List<SessionTableFilters>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_TABLE_FILTERS);
+                    if (cache == null)
+                        return Enums.Result.Error;
+                }
+
+                var sessionCache = new SessionTableFilters()
+                {
+                    SessionId = sessionId,
+                    TableId = tableId,
+                    Filters = filters.ToDTO(),
+                    FiltersDisplayed = filtersDisplayed,
+                    LastUpdateDate = DateTime.UtcNow,
+                };
+                if (cache.Any(x => x.SessionId == sessionId && x.TableId == tableId))
+                {
+                    var oldSessionCache = cache.FirstOrDefault(x => x.SessionId == sessionId && x.TableId == tableId)!;
+                    cache.Remove(oldSessionCache);
+                }
+                cache.Add(sessionCache);
+
+                if (cache.Count > 20)
+                {
+                    var oldSessionCache = cache.OrderByDescending(x => x.LastUpdateDate).Skip(20).ToList();
+                    foreach (var toRemove in oldSessionCache)
+                        cache.Remove(toRemove);
+                }
+                await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_TABLE_FILTERS, cache);
+
+                return Enums.Result.Success;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while saving session table filters in local storage");
+                return Enums.Result.Error;
+            }
+        }
+
+        public async Task<(List<IFilterDefinition<T>>? filters, bool filtersDisplayed)> GetTableFilters<T>(Guid sessionId, string tableId, MudDataGrid<T> dataGrid)
+        {
+            try
+            {
+                var userId = _networkService.GetUserId();
+                if (!userId.HasValue)
+                    return (null, false);
+
+                var cache = await GetCache<List<SessionTableFilters>>(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_TABLE_FILTERS);
+                if (cache == null)
+                    return (null, false);
+
+                var sessionCache = cache.FirstOrDefault(x => x.SessionId == sessionId && x.TableId == tableId);
+                if (sessionCache != null)
+                {
+                    sessionCache.LastUpdateDate = DateTime.UtcNow;
+                    await AddOrUpdateCache(userId.Value, Shared.Constants.LocalStorageKeys.SESSION_TABLE_FILTERS, cache);
+                }
+
+                if (sessionCache == null)
+                    return (null, false);
+
+                var filtersDTOs = sessionCache.Filters;
+                var filters = filtersDTOs?.ToEntity(dataGrid).Where(x => x != null).Select(x => x!).ToList();
+                return (filters, sessionCache.FiltersDisplayed);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while getting session table filters from local storage");
+                return (null, false);
+            }
+        }
+
 
         public async Task<Enums.Result> Copy(object obj)
         {
