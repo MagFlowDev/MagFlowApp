@@ -153,7 +153,14 @@ namespace MagFlow.Web.Components.DataGrid
             if (column.DataGrid == null)
                 return;
 
-            column.DataGrid.Filterable = enable;
+            if (column.DataGrid is MagFlowDataGrid<T> magFlowDataGrid)
+            {
+                magFlowDataGrid.SetFilterableImperatively(enable);
+            }
+            else
+            {
+                column.DataGrid.Filterable = enable;
+            }
             ForceTableStateUpdate(column);
         }
 

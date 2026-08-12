@@ -12,7 +12,7 @@
 
 <MudDialog Class="mud-dialog-width-xxl">
     <DialogContent>
-        <MagFlowDataGrid @ref="_itemsDataGrid" T="ItemDTO" ServerData="ServerReloadItems" Filterable="false" MultiSelection="false" Style="min-height: 200px">
+        <MagFlowDataGrid @ref="_itemsDataGrid" T="ItemDTO" ServerData="ServerReloadItems" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.WARES_WARE_COMPONENTS" Filterable="false" MultiSelection="false" Style="min-height: 200px">
             <Columns>
                 <TemplateColumn T="ItemDTO" Style="width: 1%; white-space: nowrap;">
                     <CellTemplate>

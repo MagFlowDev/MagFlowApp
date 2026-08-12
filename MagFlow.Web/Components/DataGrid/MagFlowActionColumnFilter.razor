@@ -1,0 +1,18 @@
+﻿@typeparam T
+@using MudBlazor
+
+<div class="d-flex align-center w-100" style="min-width: 100px; gap: 16px; min-width: 0;">
+    <MudButton Variant="Variant.Text" OnClick="ClearValue" Color="Color.Primary">@Localizer[Langs.Clear]</MudButton>
+</div>
+
+@code {
+    [Parameter] public FilterContext<T> Context { get; set; } = null!;
+
+    private async Task ClearValue()
+    {
+        if (Context.FilterDefinitions == null)
+            return;
+
+        await Context.Actions.ClearFiltersAsync(Context.FilterDefinitions);
+    }
+}

@@ -11,6 +11,7 @@ namespace MagFlow.Shared.Constants
         public const string SESSION_ORDER = "SESSION_ORDER";
         public const string SESSION_CURRENT_MODULE = "SESSION_CURRENT_MODULE";
         public const string SESSION_MODULE_SECTION = "SESSION_MODULE_SECTION";
+        public const string SESSION_TABLE_FILTERS = "SESSION_TABLE_FILTERS";
         public const string CURRENT_USER = "CURRENT_USER";
 
         public const string CLIPBOARD = "CLIPBOARD";

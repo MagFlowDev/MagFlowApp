@@ -1,9 +1,11 @@
-﻿using System;
+﻿using MagFlow.Shared.DTOs;
+using MudBlazor;
+using Org.BouncyCastle.Asn1;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Org.BouncyCastle.Asn1;
 
 namespace MagFlow.Shared.Models
 {
@@ -27,6 +29,15 @@ namespace MagFlow.Shared.Models
         public Guid ModuleId { get; set; }
         public string Section { get; set; }
         public string SectionType { get; set; }
+        public DateTime LastUpdateDate { get; set; }
+    }
+
+    public class SessionTableFilters
+    {
+        public Guid SessionId { get; set; }
+        public string TableId { get; set; }
+        public bool FiltersDisplayed { get; set; }
+        public List<FilterDefinitionDTO> Filters { get; set; }
         public DateTime LastUpdateDate { get; set; }
     }
 }
