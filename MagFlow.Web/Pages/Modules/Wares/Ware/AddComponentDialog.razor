@@ -5,7 +5,9 @@
 @using MagFlow.BLL.Mappers.Domain.CompanyScope
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
 @using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Helpers
 @using MudBlazor
 
 @inject IItemService ItemService
@@ -21,21 +23,21 @@
                         </MudRadioGroup>
                     </CellTemplate>
                 </TemplateColumn>
-                <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" />
-                <MagFlowCodeColumn T="ItemDTO" Sortable="true" Title="@Localizer[Langs.Code]" />
-                <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
+                <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" Tag="@($"{nameof(ItemDTO.Product)}.{nameof(ItemDTO.Product.Name)}")" />
+                <MagFlowCodeColumn T="ItemDTO" MagFlowSortable="true" Title="@Localizer[Langs.Code]" Tag="@($"{nameof(ItemDTO.Code)}")" />
+                <MagFlowTemplateColumn T="ItemDTO" TFilter="Enums.EntityStatus" Title="@Localizer[Langs.Status]" Tag="@($"{nameof(ItemDTO.Status)}")" IncludedEnumValues="@(new[] { Enums.EntityStatus.Available, Enums.EntityStatus.Blocked })">
                     <CellTemplate>
                         <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
                     </CellTemplate>
-                </TemplateColumn>
-                <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Type != null ? item.Product.Type.Name : string.Empty)" />
-                <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Category]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Category != null ? item.Product.Category.Name : string.Empty)" />
-                <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.StockQuantity]" Sortable="false" CellClass="text-nowrap">
+                </MagFlowTemplateColumn>
+                <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Type]" Property="item => (item.Product != null && item.Product.Type != null ? item.Product.Type.Name : string.Empty)" Tag="@($"{nameof(ItemDTO.Product)}.{nameof(ItemDTO.Product.Type)}.{nameof(ItemDTO.Product.Type.Name)}")" />
+                <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Category]" Property="item => (item.Product != null && item.Product.Category != null ? item.Product.Category.Name : string.Empty)" Tag="@($"{nameof(ItemDTO.Product)}.{nameof(ItemDTO.Product.Category)}.{nameof(ItemDTO.Product.Category.Name)}")" />
+                <MagFlowTemplateColumn T="ItemDTO" TFilter="string" Title="@Localizer[Langs.StockQuantity]" Tag="@($"{nameof(ItemDTO.Quantity)}")">
                     <CellTemplate>
                         @($"{context.Item.Quantity:0.##} {context.Item.Unit?.Symbol}")
                     </CellTemplate>
-                </TemplateColumn>
-                <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Location]" Sortable="false" CellClass="text-nowrap" Property="item => item.Location" />
+                </MagFlowTemplateColumn>
+                <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Location]" Property="item => item.Location" Tag="@($"{nameof(ItemDTO.Location)}")" />
             </Columns>
         </MagFlowDataGrid>
     </DialogContent>
@@ -134,6 +136,7 @@
             queryOptions.Exludes = new List<KeyValuePair<string, object>>();
             AlreadyAdded.ForEach(x => queryOptions.Exludes.Add(new KeyValuePair<string, object>(nameof(MagFlow.Domain.CompanyScope.Item.Id), x)));
         }
+        queryOptions.ApplyFilters(state.FilterDefinitions);
         var response = await ItemService.GetItems(queryOptions);
 
         return new GridData<ItemDTO>

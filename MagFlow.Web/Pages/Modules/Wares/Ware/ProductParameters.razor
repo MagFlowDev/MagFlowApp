@@ -197,7 +197,12 @@
     private async Task<IEnumerable<ParameterDTO>> SearchForProductParameter(string value, CancellationToken token)
     {
         _parameterSearchString = value;
-        var response = await ProductService.GetParameters(0, _pageSize, _parameterSearchString);
+        var response = await ProductService.GetParameters(new MagFlow.Shared.Models.QueryOptions<Domain.CompanyScope.CustomParameter>()
+        {
+            PageNumber = 0,
+            PageSize = _pageSize,
+            Search = _parameterSearchString
+        });
         var alreadySelected = _parameters.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
         var ids = alreadySelected.Select(x => x.ParameterId);
         _parameters = response.Elements;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using MagFlow.BLL.Helpers;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using System.Linq.Expressions;
@@ -66,6 +67,10 @@ namespace MagFlow.Web.Components.DataGrid
                         builder.CloseComponent();
                     }
                 }
+                else if (column.DataGrid is MagFlowDataGrid<T> mfDataGrid && mfDataGrid.DisableFiltering)
+                {
+
+                }
                 else if(column.DataGrid?.Filterable == false)
                 {
                     if(column.FilterContext.FilterDefinition?.Value != null)
@@ -98,11 +103,13 @@ namespace MagFlow.Web.Components.DataGrid
             string sortKey = !string.IsNullOrEmpty(column.PropertyName) ? column.PropertyName : (!string.IsNullOrEmpty(column.Title) ? column.Title : typeof(T).Name);
 
             var parameter = Expression.Parameter(typeof(T), "x");
-            var propertyAccess = Expression.Invoke(property, parameter);
+            var lambdaProperty = (LambdaExpression)property;
+            var propertyAccess = new ParameterReplacer(lambdaProperty.Parameters[0], parameter).Visit(lambdaProperty.Body);
             var castToObject = Expression.Convert(propertyAccess, typeof(object));
             var sortByExpression = Expression.Lambda<Func<T, object>>(castToObject, parameter);
 
             Func<T, object?> sortByFunc = sortByExpression.Compile();
+            
 
             SortDirection currentDir = SortDirection.None;
             if (column.UserAttributes.TryGetValue("MagFlowSortDirection", out var dirObj) && dirObj is SortDirection existingDir)

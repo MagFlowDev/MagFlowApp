@@ -1,6 +1,7 @@
 ﻿using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
+using MagFlow.Web.Helpers;
 using MudBlazor;
 
 namespace MagFlow.Web.Pages.Modules.Warehouses
@@ -22,18 +23,15 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
                 sortBy = column?.Tag?.ToString();
             }
             sortBy = sortBy ?? nameof(WarehouseDTO.Id);
-            var response = await WarehouseService.GetManyAsync(new QueryOptions<Domain.CompanyScope.Warehouse>()
+            var queryOptions = new MagFlow.Shared.Models.QueryOptions<MagFlow.Domain.CompanyScope.Warehouse>()
             {
                 PageNumber = state.Page,
                 PageSize = state.PageSize,
-                Search = _searchString,
-                SearchColumns = new System.Linq.Expressions.Expression<Func<Domain.CompanyScope.Warehouse, string?>>[]
-                {
-                    u => u.Name
-                },
                 SortBy = sortBy,
                 Descending = sortDefinition?.Descending == true
-            });
+            };
+            queryOptions.ApplyFilters(state.FilterDefinitions);
+            var response = await WarehouseService.GetManyAsync(queryOptions);
 
             return new GridData<WarehouseDTO>
             {

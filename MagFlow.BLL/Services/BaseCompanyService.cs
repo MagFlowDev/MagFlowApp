@@ -52,6 +52,21 @@ namespace MagFlow.BLL.Services
             };
         }
 
+        public virtual async Task<QueryResponse<EntityHistoryDTO>> GetEntityHistory(int id, Enums.HistoryEntityType entityType, QueryOptions<IEntityHistory> options)
+        {
+            var queryOptions = options;
+            var queryResponse = await _baseRepository.GetHistoryAsync(queryOptions, entityType, id);
+            return new QueryResponse<EntityHistoryDTO>()
+            {
+                Elements = queryResponse?.Elements.Select(x =>
+                {
+                    var dto = x.ToDTO();
+                    return dto;
+                }).ToList() ?? new List<EntityHistoryDTO>(),
+                TotalCount = queryResponse?.TotalCount ?? 0
+            };
+        }
+
         public virtual async Task<TDTO?> GetEntityAsync(int id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null)
         {
             var entity = await _baseRepository.GetByIdAsync(id, includes);

@@ -123,6 +123,26 @@ namespace MagFlow.BLL.Services
             };
         }
 
+        public async Task<QueryResponse<ItemDTO>> GetArchive(QueryOptions<Item> options)
+        {
+            var queryResponse = await _itemRepository.GetAsync(options, include: items => items
+                .Include(x => x.Product).ThenInclude(y => y.Type).ThenInclude(z => z.Category)
+                .Include(x => x.Product).ThenInclude(y => y.Category)
+                .Include(x => x.Product).ThenInclude(y => y.Unit)
+                .Include(x => x.DefaultUnit)
+                .Include(x => x.CreatedBy)
+                .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit), archive: true);
+            return new QueryResponse<ItemDTO>()
+            {
+                Elements = queryResponse?.Elements.Select(x =>
+                {
+                    var dto = x.ToDTO();
+                    return dto;
+                }).ToList() ?? new List<ItemDTO>(),
+                TotalCount = queryResponse?.TotalCount ?? 0
+            };
+        }
+
 
 
 

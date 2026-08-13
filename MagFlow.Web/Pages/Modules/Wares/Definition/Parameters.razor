@@ -1,6 +1,7 @@
 ﻿@using MagFlow.BLL.Helpers
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
 @using MagFlow.Web.Helpers
@@ -33,11 +34,11 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="ParameterDTO" HeaderStyle="width: 1%" />
-        <PropertyColumn T="ParameterDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="parameter => parameter.Name" />
-        <PropertyColumn T="ParameterDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="parameter => parameter.Code" />
-        <PropertyColumn T="ParameterDTO" TProperty="string" Title="@Localizer[Langs.ValueType]" Sortable="true" CellClass="text-nowrap" Property="parameter => parameter.ValueType.GetDisplayName(Localizer)" />
-        <PropertyColumn T="ParameterDTO" TProperty="string" Title="@Localizer[Langs.Unit]" Sortable="true" CellClass="text-nowrap" Property="parameter => (parameter.Unit != null ? parameter.Unit.Symbol : string.Empty)" />
-        <TemplateColumn T="ParameterDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+        <MagFlowPropertyColumn T="ParameterDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="parameter => parameter.Name" Tag="@($"{nameof(ParameterDTO.Name)}")" />
+        <MagFlowPropertyColumn T="ParameterDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Code]" MagFlowSortable="true" Property="parameter => parameter.Code" Tag="@($"{nameof(ParameterDTO.Code)}")" />
+        <MagFlowPropertyColumn T="ParameterDTO" TFilter="Enums.ValueType" TProperty="string" Title="@Localizer[Langs.ValueType]" MagFlowSortable="true" Property="parameter => parameter.ValueType.GetDisplayName(Localizer)" Tag="@($"{nameof(ParameterDTO.ValueType)}")" />
+        <MagFlowPropertyColumn T="ParameterDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Unit]" MagFlowSortable="true" Property="parameter => (parameter.Unit != null ? parameter.Unit.Symbol : string.Empty)" Tag="@($"{nameof(ParameterDTO.Unit)}.{nameof(ParameterDTO.Unit.Symbol)}")" />
+        <MagFlowActionColumn T="ParameterDTO" Title="@Localizer[Langs.Actions]">
             <CellTemplate>
                 <MudTooltip Text="@Localizer[Langs.Edit]" Delay="@Constants.Tooltip.DELAY">
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="() => OpenParameterDetails(context.Item)" />
@@ -50,6 +51,6 @@
                     </Authorized>
                 </AuthorizeView>
             </CellTemplate>
-        </TemplateColumn>
+        </MagFlowActionColumn>
     </Columns>
 </MagFlowDataGrid>

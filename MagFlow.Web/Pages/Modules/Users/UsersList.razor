@@ -16,7 +16,7 @@
 @inject NavigationManager NavigationManager
 @inherits AuthComponentBase
 
-<MagFlowDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.USERS_LIST" OnRowClicked="OpenUserDetails" MultiSelection="true">
+<MagFlowDataGrid @ref="_usersDataGrid" T="UserDTO" ServerData="ServerReloadUsers" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.USERS_LIST" OnRowClicked="OpenUserDetails" MultiSelection="true" DisableFiltering="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer[Langs.UsersList]</MudText>
         <MudSpacer />
@@ -40,29 +40,29 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="UserDTO" HeaderStyle="width: 1%" />
-        <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
+        <MagFlowTemplateColumn T="UserDTO" TFilter="string" Title="@Localizer[Langs.Status]">
             <CellTemplate>
                 <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive? Color.Success: Color.Error)">@(context.Item.IsActive? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
             </CellTemplate>
-        </TemplateColumn>
-        <PropertyColumn T="UserDTO" TProperty="string" Title="@Localizer[Langs.FirstName]" Property="x => x.FirstName" Sortable="true" CellClass="text-nowrap" />
-        <PropertyColumn T="UserDTO" TProperty="string" Title="@Localizer[Langs.LastName]" Property="x => x.LastName" Sortable="true" CellClass="text-nowrap" />
-        <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Email]" Sortable="true" Tag="@($"{nameof(UserDTO.Email)}")" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowPropertyColumn T="UserDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.FirstName]" Property="x => x.FirstName" MagFlowSortable="true" />
+        <MagFlowPropertyColumn T="UserDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.LastName]" Property="x => x.LastName" MagFlowSortable="true" />
+        <MagFlowTemplateColumn T="UserDTO" TFilter="string" Title="@Localizer[Langs.Email]" MagFlowSortable="true" Tag="@($"{nameof(UserDTO.Email)}")" PropertyExpression="x => x.Email">
             <CellTemplate>
                 <MudLink Color="Color.Primary" OnClick="@(() => OpenUserDetails(context.Item))">@context.Item.Email</MudLink>
             </CellTemplate>
-        </TemplateColumn>
-        <TemplateColumn T="UserDTO" Title="@Localizer[Langs.RoleSingle]" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowTemplateColumn T="UserDTO" TFilter="string" Title="@Localizer[Langs.RoleSingle]">
             <CellTemplate>
                 <MudText>@context.Item.Roles.FirstOrDefault()?.DisplayRole(Localizer)</MudText>
             </CellTemplate>
-        </TemplateColumn>
-        <TemplateColumn T="UserDTO" Title="@Localizer[Langs.LastLogin]" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowTemplateColumn T="UserDTO" TFilter="string" Title="@Localizer[Langs.LastLogin]">
             <CellTemplate>
                 <MudText>@context.Item.LastLogin?.ToLocalTime().ToString()</MudText>
             </CellTemplate>
-        </TemplateColumn>
-        <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowActionColumn T="UserDTO" Title="@Localizer[Langs.Actions]">
             <CellTemplate>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.USERS_READ">
                     <Authorized Context="authorizedContext">
@@ -95,6 +95,6 @@
                     </Authorized>
                 </AuthorizeView>
             </CellTemplate>
-        </TemplateColumn>
+        </MagFlowActionColumn>
     </Columns>
 </MagFlowDataGrid>

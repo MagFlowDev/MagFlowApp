@@ -59,20 +59,9 @@ namespace MagFlow.BLL.Services
             return dto;
         }
 
-        public async Task<QueryResponse<ProductDTO>> GetProducts(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<ProductDTO>> GetProducts(QueryOptions<Product> options)
         {
-            var queryResponse = await _productRepository.GetAsync(new QueryOptions<Product>()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Search = search,
-                SearchColumns = new Expression<Func<Product, string?>>[]
-                {
-                    u => u.Name
-                },
-                SortBy = sortBy,
-                Descending = descending
-            }, products => products
+            var queryResponse = await _productRepository.GetAsync(options, products => products
                 .Include(x => x.Category)
                 .Include(x => x.Type).ThenInclude(y => y.Category)
                 .Include(x => x.Unit).ThenInclude(y => y.RelatedUnits)
@@ -91,20 +80,9 @@ namespace MagFlow.BLL.Services
             };
         }
 
-        public async Task<QueryResponse<ProductTypeDTO>> GetTypes(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false, ProductCategoryDTO? productCategory = null)
+        public async Task<QueryResponse<ProductTypeDTO>> GetTypes(QueryOptions<ProductType> options, ProductCategoryDTO? productCategory = null)
         {
-            var queryOptions = new QueryOptions<ProductType>()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Search = search,
-                SearchColumns = new Expression<Func<ProductType, string?>>[]
-                {
-                    u => u.Name
-                },
-                SortBy = sortBy,
-                Descending = descending
-            };
+            var queryOptions = options;
             if (productCategory != null)
             {
                 queryOptions.ColumnFilters = new List<ColumnFilter>()
@@ -124,20 +102,9 @@ namespace MagFlow.BLL.Services
             };
         }
 
-        public async Task<QueryResponse<ProductCategoryDTO>> GetCategories(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<ProductCategoryDTO>> GetCategories(QueryOptions<ProductCategory> options)
         {
-            var queryResponse = await _categoryRepository.GetAsync(new QueryOptions<ProductCategory>()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Search = search,
-                SearchColumns = new Expression<Func<ProductCategory, string?>>[]
-                {
-                    u => u.Name
-                },
-                SortBy = sortBy,
-                Descending = descending
-            });
+            var queryResponse = await _categoryRepository.GetAsync(options);
             return new QueryResponse<ProductCategoryDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -149,20 +116,9 @@ namespace MagFlow.BLL.Services
             };
         }
 
-        public async Task<QueryResponse<ParameterDTO>> GetParameters(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)
+        public async Task<QueryResponse<ParameterDTO>> GetParameters(QueryOptions<CustomParameter> options)
         {
-            var queryResponse = await _parameterRepository.GetAsync(new QueryOptions<CustomParameter>()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Search = search,
-                SearchColumns = new Expression<Func<CustomParameter, string?>>[]
-                {
-                    u => u.Name
-                },
-                SortBy = sortBy,
-                Descending = descending
-            }, parameters => parameters.Include(x => x.Unit));
+            var queryResponse = await _parameterRepository.GetAsync(options, parameters => parameters.Include(x => x.Unit));
             return new QueryResponse<ParameterDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -174,25 +130,14 @@ namespace MagFlow.BLL.Services
             };
         }
 
-        public async Task<QueryResponse<UnitDTO>> GetUnits(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false, bool searchRelated = false)
+        public async Task<QueryResponse<UnitDTO>> GetUnits(QueryOptions<Unit> options, bool searchRelated = false)
         {
-            var queryOptions = new QueryOptions<Unit>()
-            {
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                ColumnFilters = new List<ColumnFilter>()
-                {
-                    { ColumnFilter.Create(nameof(Unit.ParentUnitId), FilterOperator.IsEmpty, null) }
-                },
-                Search = search,
-                SortBy = sortBy,
-                Descending = descending
-            };
+            var queryOptions = options;
             if (searchRelated)
                 queryOptions.SearchColumns = new Expression<Func<Unit, string?>>[]
                 {
                     x => x.Name,
-                    x => x.RelatedUnits.Any(y => y.Name.Contains(search ?? string.Empty)) ? search : null
+                    x => x.RelatedUnits.Any(y => y.Name.Contains(options.Search ?? string.Empty)) ? options.Search : null
                 };
             else
                 queryOptions.SearchColumns = new Expression<Func<Unit, string?>>[]

@@ -21,7 +21,7 @@
 <div class="d-flex flex-column align-items-start w-100" style="max-width: 800px; min-height: 0; gap: 16px; padding-right: 40px; margin-top: 24px;">
     @if (_product != null)
     {
-        <MagFlowDataGrid @ref="_conversionsDataGrid" T="UnitConversionDTO" Items="_product.UnitConversions" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.WARES_PRODUCT_CONVERSIONS" Filterable="false" MultiSelection="true" OnRowClicked="OpenConversionDetails" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager striped-grid overflow-x-auto my-2 shadow-none">
+        <MagFlowDataGrid @ref="_conversionsDataGrid" T="UnitConversionDTO" Items="_product.UnitConversions" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.WARES_PRODUCT_CONVERSIONS" Filterable="false" DisableFiltering="true" MultiSelection="true" OnRowClicked="OpenConversionDetails" Class="align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager striped-grid overflow-x-auto my-2 shadow-none">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">@Localizer[Langs.UnitConversions]</MudText>
                 <MudSpacer />
@@ -34,10 +34,10 @@
             </ToolBarContent>
             <Columns>
                 <SelectColumn T="UnitConversionDTO" HeaderStyle="width: 1%" />
-                <PropertyColumn T="UnitConversionDTO" TProperty="string" Title="@Localizer[Langs.FromUnit]" CellClass="text-nowrap" Property="unit => (unit.FromUnit != null ? unit.FromUnit.Name : string.Empty)" />
-                <PropertyColumn T="UnitConversionDTO" TProperty="string" Title="@Localizer[Langs.ToUnit]" CellClass="text-nowrap" Property="unit => (unit.ToUnit != null ? unit.ToUnit.Name : string.Empty)" />
-                <PropertyColumn T="UnitConversionDTO" TProperty="decimal" Format="0.##" Title="@Localizer[Langs.Conversion]" CellClass="text-nowrap" Property="unit => unit.ConversionRate" />
-                <PropertyColumn T="UnitConversionDTO" TProperty="string" Title="@Localizer[Langs.Description]" CellClass="text-nowrap" Property="unit => unit.Note" />
+                <MagFlowPropertyColumn T="UnitConversionDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.FromUnit]"Property="unit => (unit.FromUnit != null ? unit.FromUnit.Name : string.Empty)" />
+                <MagFlowPropertyColumn T="UnitConversionDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.ToUnit]" Property="unit => (unit.ToUnit != null ? unit.ToUnit.Name : string.Empty)" />
+                <MagFlowPropertyColumn T="UnitConversionDTO" TFilter="string" TProperty="decimal" Format="0.##" Title="@Localizer[Langs.Conversion]" Property="unit => unit.ConversionRate" />
+                <MagFlowPropertyColumn T="UnitConversionDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Description]" Property="unit => unit.Note" />
             </Columns>
         </MagFlowDataGrid>
     }

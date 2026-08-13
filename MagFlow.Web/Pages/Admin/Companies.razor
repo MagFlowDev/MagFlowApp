@@ -13,7 +13,7 @@
 @inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column align-items-start w-100 h-100">
-    <MagFlowDataGrid @ref="_companiesDataGrid" T="CompanyDTO" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.ADMIN_COMPANIES" ServerData="ServerReloadCompanies" OnRowClicked="OpenCompanyDetails">
+    <MagFlowDataGrid @ref="_companiesDataGrid" T="CompanyDTO" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.ADMIN_COMPANIES" ServerData="ServerReloadCompanies" OnRowClicked="OpenCompanyDetails" DisableFiltering="true">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                             AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 maxw-400px"></MudTextField>
@@ -22,12 +22,12 @@
             <MudIconButton Color="Color.Primary" OnClick="_companiesDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh"/>
         </ToolBarContent>
         <Columns>
-            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Name]" Sortable="true" Tag="@($"{nameof(CompanyDTO.Name)}")" CellClass="text-nowrap">
+            <MagFlowTemplateColumn T="CompanyDTO" TFilter="string" Title="@Localizer[Langs.Name]" PropertyExpression="x => x.Name" MagFlowSortable="true" Tag="@($"{nameof(CompanyDTO.Name)}")" CellClass="text-nowrap">
                 <CellTemplate>
                     <MudLink Color="Color.Primary" Href="@($"/admin/company/{context.Item.Id ?? Guid.Empty}")">@context.Item.Name</MudLink>
                 </CellTemplate>
-            </TemplateColumn>
-            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Address]" Sortable="false" Tag="@($"{nameof(CompanyDTO.Address)}")" CellClass="text-nowrap">
+            </MagFlowTemplateColumn>
+            <MagFlowTemplateColumn T="CompanyDTO" TFilter="string" Title="@Localizer[Langs.Address]" PropertyExpression="x => x.Address != null ? x.Address.Line1 : null" Tag="@($"{nameof(CompanyDTO.Address)}")" CellClass="text-nowrap">
                 <CellTemplate>
                     @if(context.Item.Address != null)
                     {
@@ -48,24 +48,24 @@
                         <MudText></MudText>
                     }
                 </CellTemplate>
-            </TemplateColumn>
-            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.TaxNumber]" Property="x => x.TaxNumber" Sortable="false" CellClass="text-nowrap" />
-            <PropertyColumn T="CompanyDTO" TProperty="string" Title="@Localizer[Langs.CreationDate]" Property="x => x.CreatedAt.ToLocalTime().ToShortDateString()" Sortable="false" CellClass="text-nowrap" />
-            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.ActiveModules]" CellClass="text-nowrap">
+            </MagFlowTemplateColumn>
+            <MagFlowPropertyColumn T="CompanyDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.TaxNumber]" Property="x => x.TaxNumber" />
+            <MagFlowPropertyColumn T="CompanyDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.CreationDate]" Property="x => x.CreatedAt.ToLocalTime().ToShortDateString()" />
+            <MagFlowTemplateColumn T="CompanyDTO" TFilter="string" Title="@Localizer[Langs.ActiveModules]">
                 <CellTemplate>
                     <MudText>@context.Item.CompanyModules?.Where(x => x.IsActive && x.EnabledTo >= DateTime.UtcNow).Count()</MudText>
                 </CellTemplate>
-            </TemplateColumn>
-            <TemplateColumn T="CompanyDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
+            </MagFlowTemplateColumn>
+            <MagFlowTemplateColumn T="CompanyDTO" TFilter="string" Title="@Localizer[Langs.Status]">
                 <CellTemplate>
                     <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive? Color.Success: Color.Error)">@(context.Item.IsActive? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
                 </CellTemplate>
-            </TemplateColumn>
-            <TemplateColumn T="CompanyDTO" Title="" Sortable="false" CellClass="text-nowrap">
+            </MagFlowTemplateColumn>
+            <MagFlowActionColumn T="CompanyDTO" Title="" >
                 <CellTemplate>
                     <LoadingButton Loading="_loading" Disabled="_user?.CurrentCompanyId == context.Item.Id" Color="Color.Secondary" Variant="Variant.Filled" OnClick="@(() => SelectCompany(context.Item))">@Localizer[Langs.Select]</LoadingButton>
                 </CellTemplate>
-            </TemplateColumn>
+            </MagFlowActionColumn>
         </Columns>
     </MagFlowDataGrid>
 </div>

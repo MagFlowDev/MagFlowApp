@@ -5,6 +5,7 @@ using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Web.Components.Dialogs;
+using MagFlow.Web.Helpers;
 using MagFlow.Web.Resources;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -28,7 +29,15 @@ namespace MagFlow.Web.Pages.Modules.Wares
                 sortBy = column?.Tag?.ToString();
             }
             sortBy = sortBy ?? nameof(ProductDTO.Id);
-            var response = await ProductService.GetProducts(state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
+            var queryOptions = new MagFlow.Shared.Models.QueryOptions<MagFlow.Domain.CompanyScope.Product>()
+            {
+                PageNumber = state.Page,
+                PageSize = state.PageSize,
+                SortBy = sortBy,
+                Descending = sortDefinition?.Descending == true
+            };
+            queryOptions.ApplyFilters(state.FilterDefinitions);
+            var response = await ProductService.GetProducts(queryOptions);
 
             return new GridData<ProductDTO>
             {

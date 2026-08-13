@@ -220,7 +220,12 @@
             _productTypes = new List<ProductTypeDTO>();
             return _productTypes;
         }
-        var response = await ProductService.GetTypes(0, _pageSize, _typeSearchString, productCategory: _product?.Category);
+        var response = await ProductService.GetTypes(new MagFlow.Shared.Models.QueryOptions<Domain.CompanyScope.ProductType>()
+        {
+            PageNumber = 0,
+            PageSize = _pageSize,
+            Search = _typeSearchString
+        }, productCategory: _product?.Category);
         _productTypes = response.Elements;
         return _productTypes;
     }
@@ -228,7 +233,12 @@
     private async Task<IEnumerable<ProductCategoryDTO>> SearchForProductCategory(string value, CancellationToken token)
     {
         _categorySearchString = value;
-        var response = await ProductService.GetCategories(0, _pageSize, _categorySearchString);
+        var response = await ProductService.GetCategories(new MagFlow.Shared.Models.QueryOptions<Domain.CompanyScope.ProductCategory>()
+        {
+            PageNumber = 0,
+            PageSize = _pageSize,
+            Search = _categorySearchString
+        });
         _productCategories = response.Elements;
         return _productCategories;
     }
@@ -236,7 +246,12 @@
     private async Task<IEnumerable<UnitDTO>> SearchForUnit(string value, CancellationToken token)
     {
         _unitSearchString = value;
-        var response = await ProductService.GetUnits(0, _pageSize, _unitSearchString);
+        var response = await ProductService.GetUnits(new MagFlow.Shared.Models.QueryOptions<Domain.CompanyScope.Unit>()
+        {
+            PageNumber = 0,
+            PageSize = _pageSize,
+            Search = _unitSearchString
+        });
         _units = response.Elements;
         return _units;
     }

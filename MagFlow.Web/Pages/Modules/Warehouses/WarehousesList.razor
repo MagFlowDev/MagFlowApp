@@ -41,19 +41,19 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="WarehouseDTO" HeaderStyle="width: 1%" />
-        <PropertyColumn T="WarehouseDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="warehouse => warehouse.Name" />
-        <PropertyColumn T="WarehouseDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="warehouse => warehouse.Code" />
-        <TemplateColumn T="WarehouseDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
+        <MagFlowPropertyColumn T="WarehouseDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="warehouse => warehouse.Name" />
+        <MagFlowPropertyColumn T="WarehouseDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Code]" MagFlowSortable="true" Property="warehouse => warehouse.Code" />
+        <MagFlowTemplateColumn T="WarehouseDTO" TFilter="string" Title="@Localizer[Langs.Status]">
             <CellTemplate>
                 <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
             </CellTemplate>
-        </TemplateColumn>
-        <PropertyColumn T="WarehouseDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="false" CellClass="text-nowrap" Property="warehouse => warehouse.Type.GetDisplayName(Localizer)" />
-        <TemplateColumn T="WarehouseDTO" Title="Obłożenie" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowPropertyColumn T="WarehouseDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Type]" Property="warehouse => warehouse.Type.GetDisplayName(Localizer)" />
+        <MagFlowTemplateColumn T="WarehouseDTO" Title="Obłożenie" TFilter="string">
             <CellTemplate>
             </CellTemplate>
-        </TemplateColumn>
-        <TemplateColumn T="WarehouseDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowActionColumn T="WarehouseDTO" Title="@Localizer[Langs.Actions]" >
             <CellTemplate>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_READ">
                     <Authorized Context="authorizedContext">
@@ -77,6 +77,6 @@
                     </Authorized>
                 </AuthorizeView>
             </CellTemplate>
-        </TemplateColumn>
+        </MagFlowActionColumn>
     </Columns>
 </MagFlowDataGrid>

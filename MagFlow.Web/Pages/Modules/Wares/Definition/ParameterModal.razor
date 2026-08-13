@@ -173,7 +173,12 @@
     private async Task<IEnumerable<UnitDTO>> SearchForUnit(string value, CancellationToken token)
     {
         _searchString = value;
-        var response = await ProductService.GetUnits(0, _pageSize, _searchString, searchRelated: true);
+        var response = await ProductService.GetUnits(new MagFlow.Shared.Models.QueryOptions<Domain.CompanyScope.Unit>()
+        {
+            PageNumber = 0,
+            PageSize = _pageSize,
+            Search = _searchString
+        }, searchRelated: true);
         var flatList = response.Elements.SelectMany(baseUnit =>
         {
             var items = new List<UnitDTO> { baseUnit };
