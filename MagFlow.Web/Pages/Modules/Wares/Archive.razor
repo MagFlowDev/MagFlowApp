@@ -1,6 +1,7 @@
 ﻿@using MagFlow.BLL.Helpers
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
 @using MagFlow.Web.Helpers
@@ -28,23 +29,23 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="ItemDTO" HeaderStyle="width: 1%" />
-        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" />
-        <MagFlowCodeColumn T="ItemDTO" Sortable="true" Title="@Localizer[Langs.Code]"/>
-        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
+        <MagFlowPropertyColumn T="ItemDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="item => (item.Product != null ? item.Product.Name : string.Empty)" Tag="@($"{nameof(ItemDTO.Product)}.{nameof(ItemDTO.Product.Name)}")" />
+        <MagFlowCodeColumn T="ItemDTO" MagFlowSortable="true" Title="@Localizer[Langs.Code]" Tag="@($"{nameof(ItemDTO.Code)}")" />
+        <MagFlowTemplateColumn T="ItemDTO" TFilter="Enums.EntityStatus" Title="@Localizer[Langs.Status]" Tag="@($"{nameof(ItemDTO.Status)}")" IncludedEnumValues="@(new[] { Enums.EntityStatus.Deleted, Enums.EntityStatus.Used, Enums.EntityStatus.Released })">
             <CellTemplate>
                 <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
             </CellTemplate>
-        </TemplateColumn>
-        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Type != null ? item.Product.Type.Name : string.Empty)" />
-        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.Category]" Sortable="false" CellClass="text-nowrap" Property="item => (item.Product != null && item.Product.Category != null ? item.Product.Category.Name : string.Empty)" />
-        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Quantity]" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Type]" Property="item => (item.Product != null && item.Product.Type != null ? item.Product.Type.Name : string.Empty)" Tag="@($"{nameof(ItemDTO.Product)}.{nameof(ItemDTO.Product.Type)}.{nameof(ItemDTO.Product.Type.Name)}")" />
+        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Category]" Property="item => (item.Product != null && item.Product.Category != null ? item.Product.Category.Name : string.Empty)" Tag="@($"{nameof(ItemDTO.Product)}.{nameof(ItemDTO.Product.Category)}.{nameof(ItemDTO.Product.Category.Name)}")" />
+        <MagFlowTemplateColumn T="ItemDTO" TFilter="string" Title="@Localizer[Langs.Quantity]" Tag="@($"{nameof(ItemDTO.Quantity)}")">
             <CellTemplate>
                 @($"{context.Item.Quantity:0.##} {context.Item.Unit?.Symbol}")
             </CellTemplate>
-        </TemplateColumn>
-        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.CreationDate]" Sortable="false" CellClass="text-nowrap" Property="item => (item.CreatedAt.HasValue ? item.CreatedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" />
-        <PropertyColumn T="ItemDTO" TProperty="string" Title="@Localizer[Langs.StockRemovalDate]" Sortable="false" CellClass="text-nowrap" Property="item => (item.RemovedAt.HasValue ? item.RemovedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" />
-        <TemplateColumn T="ItemDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.CreationDate]" Property="item => (item.CreatedAt.HasValue ? item.CreatedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" Tag="@($"{nameof(ItemDTO.CreatedAt)}")" />
+        <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.StockRemovalDate]" Property="item => (item.RemovedAt.HasValue ? item.RemovedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" Tag="@($"{nameof(ItemDTO.RemovedAt)}")" />
+        <MagFlowActionColumn T="ItemDTO" Title="@Localizer[Langs.Actions]">
             <CellTemplate>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE">
                     <Authorized Context="authorizedContext">
@@ -54,6 +55,6 @@
                     </Authorized>
                 </AuthorizeView>
             </CellTemplate>
-        </TemplateColumn>
+        </MagFlowActionColumn>
     </Columns>
 </MagFlowDataGrid>

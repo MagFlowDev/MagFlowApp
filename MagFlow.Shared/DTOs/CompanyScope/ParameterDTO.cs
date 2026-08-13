@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MagFlow.Shared.DTOs.CompanyScope
 {
-    public class ParameterDTO : ICodeDTO
+    public class ParameterDTO : IBaseDTO, ICodeDTO
     {
         public int ParameterId { get; set; }
         public int EntityTableId { get; set; }
@@ -19,5 +19,10 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public string DropZoneSelector { get; set; } = MagFlow.Shared.Constants.Identificators.DropZoneID.AVAILABLE_SELECTOR;
         public bool DropZoneHidden { get; set; }
         public int DropZoneOrder { get; set; }
+
+        /// <summary>
+        /// Do not use!! Interface requirement
+        /// </summary>
+        public int Id { get; set; }
     }
 }

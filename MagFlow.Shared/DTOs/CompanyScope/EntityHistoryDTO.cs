@@ -1,11 +1,12 @@
 ﻿using MagFlow.Shared.DTOs.CoreScope;
+using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace MagFlow.Shared.DTOs.CompanyScope
 {
-    public class EntityHistoryDTO
+    public class EntityHistoryDTO : IBaseDTO
     {
         public int Id { get; set; }
         public string? EventType { get; set; }

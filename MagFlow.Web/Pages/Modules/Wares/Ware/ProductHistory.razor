@@ -3,6 +3,7 @@
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 
@@ -19,9 +20,9 @@
                 <MudIconButton Color="Color.Primary" OnClick="_historyDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
             </ToolBarContent>
             <Columns>
-                <PropertyColumn T="EntityHistoryDTO" TProperty="string" Title="@Localizer[Langs.Date]" CellClass="text-nowrap" Property="history => history.OccurredAt.ToLocalTime().ToShortDateString()" />
-                <PropertyColumn T="EntityHistoryDTO" TProperty="string" Title="@Localizer[Langs.Description]" CellClass="text-nowrap" Property="history => history.EventType" />
-                <PropertyColumn T="EntityHistoryDTO" TProperty="string" Title="@Localizer[Langs.User]" CellClass="text-nowrap" Property="@(history => (history.User != null ? $"{history.User.FirstName} {history.User.LastName}" : string.Empty))" />
+                <MagFlowPropertyColumn T="EntityHistoryDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Date]" MagFlowSortable="true" Property="history => history.OccurredAt.ToLocalTime().ToShortDateString()" Tag="@($"{nameof(EntityHistoryDTO.OccurredAt)}")" />
+                <MagFlowPropertyColumn T="EntityHistoryDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Description]" Property="history => history.EventType" Tag="@($"{nameof(EntityHistoryDTO.EventType)}")" />
+                <MagFlowPropertyColumn T="EntityHistoryDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.User]" Property="@(history => (history.User != null ? $"{history.User.FirstName} {history.User.LastName}" : string.Empty))" Tag="@($"{nameof(EntityHistoryDTO.User)}.{nameof(EntityHistoryDTO.User.LastName)}")" />
             </Columns>
         </MagFlowDataGrid>
     }
@@ -54,7 +55,16 @@
             sortBy = column?.Tag?.ToString();
         }
         sortBy = sortBy ?? nameof(EntityHistoryDTO.Id);
-        var response = await ProductService.GetEntityHistory(_product.Id, Enums.HistoryEntityType.Product, state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
+        var queryOptions = new QueryOptions<MagFlow.Shared.Models.Interfaces.IEntityHistory>()
+        {
+            PageNumber = state.Page,
+            PageSize = state.PageSize,
+            Search = _searchString,
+            SortBy = sortBy,
+            Descending = sortDefinition?.Descending == true
+        };
+        queryOptions.ApplyFilters(state.FilterDefinitions);
+        var response = await ProductService.GetEntityHistory(_product.Id, Enums.HistoryEntityType.Product, queryOptions);
         return new GridData<EntityHistoryDTO>
         {
             Items = response.Elements,

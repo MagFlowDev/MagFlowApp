@@ -200,7 +200,12 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private async Task<IEnumerable<ProductDTO>> SearchForProduct(string value, CancellationToken token)
         {
             _productSearchString = value;
-            var response = await ProductService.GetProducts(0, _pageSize, _productSearchString);
+            var response = await ProductService.GetProducts(new MagFlow.Shared.Models.QueryOptions<Domain.CompanyScope.Product>()
+            {
+                PageNumber = 0,
+                PageSize = _pageSize,
+                Search = _productSearchString
+            });
             _products = response.Elements;
             return _products;
         }

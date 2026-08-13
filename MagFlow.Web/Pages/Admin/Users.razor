@@ -13,7 +13,7 @@
 @attribute [Authorize(Roles = $"{nameof(AppRole.SysAdmin)},{nameof(AppRole.SuperAdmin)}")]
 
 <div class="d-flex flex-column align-items-start w-100 h-100 overflow-hidden">
-    <MagFlowDataGrid @ref="_usersDataGrid" T="UserDTO" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.ADMIN_USERS" ServerData="ServerReloadUsers" OnRowClicked="OpenUserDetails">
+    <MagFlowDataGrid @ref="_usersDataGrid" T="UserDTO" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.ADMIN_USERS" ServerData="ServerReloadUsers" OnRowClicked="OpenUserDetails" DisableFiltering="true">
         <ToolBarContent>
             <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0" Style="max-width: 400px"></MudTextField>
@@ -21,13 +21,13 @@
             <MudIconButton Color="Color.Primary" OnClick="_usersDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
         </ToolBarContent>
         <Columns>
-            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Name]" Sortable="true" Tag="@($"{nameof(UserDTO.LastName)}")" CellClass="text-nowrap">
+            <MagFlowTemplateColumn T="UserDTO" TFilter="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" PropertyExpression="x => x.LastName" Tag="@($"{nameof(UserDTO.LastName)}")">
                 <CellTemplate>
                     <MudLink Color="Color.Primary" Href="@($"/admin/user/{context.Item.Id}")">@string.Concat(context.Item.FirstName, " ", context.Item.LastName)</MudLink>
                 </CellTemplate>
-            </TemplateColumn>
-            <PropertyColumn T="UserDTO" TProperty="string" Title="@Localizer[Langs.Email]" Property="x => x.Email" Sortable="true" CellClass="text-nowrap" />
-            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Companies]" Sortable="false" CellClass="text-nowrap">
+            </MagFlowTemplateColumn>
+            <MagFlowPropertyColumn T="UserDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Email]" Property="x => x.Email" MagFlowSortable="true" />
+            <MagFlowTemplateColumn T="UserDTO" TFilter="string" Title="@Localizer[Langs.Companies]">
                 <CellTemplate>
                     <div class="d-flex align-items-center justify-content-start" style="gap: 4px">
                         @if(context.Item.Companies != null && context.Item.Companies.Count <= 3)
@@ -39,22 +39,22 @@
                         }
                     </div>
                 </CellTemplate>
-            </TemplateColumn>
-            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.RoleSingle]" Sortable="false" CellClass="text-nowrap">
+            </MagFlowTemplateColumn>
+            <MagFlowTemplateColumn T="UserDTO" TFilter="string" Title="@Localizer[Langs.RoleSingle]">
                 <CellTemplate>
                     <MudText>@context.Item.Roles.FirstOrDefault()?.DisplayRole(Localizer)</MudText>
                 </CellTemplate>
-            </TemplateColumn>
-            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.LastLogin]" Sortable="false" CellClass="text-nowrap">
+            </MagFlowTemplateColumn>
+            <MagFlowTemplateColumn T="UserDTO" TFilter="string" Title="@Localizer[Langs.LastLogin]">
                 <CellTemplate>
                     <MudText>@context.Item.LastLogin?.ToLocalTime().ToString()</MudText>
                 </CellTemplate>
-            </TemplateColumn>
-            <TemplateColumn T="UserDTO" Title="@Localizer[Langs.Status]" Sortable="false" CellClass="text-nowrap">
+            </MagFlowTemplateColumn>
+            <MagFlowTemplateColumn T="UserDTO" TFilter="string" Title="@Localizer[Langs.Status]">
                 <CellTemplate>
                     <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@(context.Item.IsActive ? Color.Success : Color.Error)">@(context.Item.IsActive ? Localizer[Langs.Active] : Localizer[Langs.Inactive])</MudChip>
                 </CellTemplate>
-            </TemplateColumn>
+            </MagFlowTemplateColumn>
         </Columns>
     </MagFlowDataGrid>
 </div>

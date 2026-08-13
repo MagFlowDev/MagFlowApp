@@ -12,11 +12,11 @@ namespace MagFlow.BLL.Services.Interfaces
     {
         Task<ProductDTO?> GetProduct(int id);
 
-        Task<QueryResponse<ProductDTO>> GetProducts(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
-        Task<QueryResponse<ProductTypeDTO>> GetTypes(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false, ProductCategoryDTO? productCategory = null);
-        Task<QueryResponse<ProductCategoryDTO>> GetCategories(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
-        Task<QueryResponse<ParameterDTO>> GetParameters(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false);
-        Task<QueryResponse<UnitDTO>> GetUnits(int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false, bool searchRelated = false);
+        Task<QueryResponse<ProductDTO>> GetProducts(QueryOptions<Product> options);
+        Task<QueryResponse<ProductTypeDTO>> GetTypes(QueryOptions<ProductType> options, ProductCategoryDTO? productCategory = null);
+        Task<QueryResponse<ProductCategoryDTO>> GetCategories(QueryOptions<ProductCategory> options);
+        Task<QueryResponse<ParameterDTO>> GetParameters(QueryOptions<CustomParameter> options);
+        Task<QueryResponse<UnitDTO>> GetUnits(QueryOptions<Unit> options, bool searchRelated = false);
 
         Task<Enums.Result> AddProduct(ProductFormModel model);
         Task<Enums.Result> AddProductUnitConversion(ProductDTO productDTO, UnitConversionDTO unitConversionDTO);

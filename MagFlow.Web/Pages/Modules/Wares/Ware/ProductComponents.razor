@@ -221,7 +221,12 @@
     private async Task<IEnumerable<ComponentDTO>> SearchForProductComponent(string value, CancellationToken token)
     {
         _productSearchString = value;
-        var response = await ProductService.GetProducts(0, _pageSize, _productSearchString);
+        var response = await ProductService.GetProducts(new MagFlow.Shared.Models.QueryOptions<Domain.CompanyScope.Product>()
+        {
+            PageNumber = 0,
+            PageSize = _pageSize,
+            Search = _productSearchString
+        });
         var alreadySelected = _components.Where(x => x.DropZoneSelector == MagFlow.Shared.Constants.Identificators.DropZoneID.SELECTED_SELECTOR).ToList();
         var ids = alreadySelected.Select(x => x.Product.Id);
         var products = response.Elements;

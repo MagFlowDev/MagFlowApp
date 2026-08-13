@@ -149,7 +149,12 @@
     private async Task<IEnumerable<ProductCategoryDTO>> SearchForProductCategory(string value, CancellationToken token)
     {
         _searchString = value;
-        var response = await ProductService.GetCategories(0, _pageSize, _searchString);
+        var response = await ProductService.GetCategories(new MagFlow.Shared.Models.QueryOptions<Domain.CompanyScope.ProductCategory>()
+        {
+            PageNumber = 0,
+            PageSize = _pageSize,
+            Search = _searchString
+        });
         _productCategories = response.Elements;
         return _productCategories;
     }

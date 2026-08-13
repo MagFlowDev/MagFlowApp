@@ -32,9 +32,9 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="ProductCategoryDTO" HeaderStyle="width: 1%" />
-        <PropertyColumn T="ProductCategoryDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="category => category.Name" />
-        <PropertyColumn T="ProductCategoryDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="category => category.Code" />
-        <TemplateColumn T="ProductCategoryDTO" Title="@Localizer[Langs.Basic]" Sortable="false" CellClass="text-nowrap">
+        <MagFlowPropertyColumn T="ProductCategoryDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="category => category.Name" Tag="@($"{nameof(ProductCategoryDTO.Name)}")" />
+        <MagFlowPropertyColumn T="ProductCategoryDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Code]" MagFlowSortable="true" Property="category => category.Code" Tag="@($"{nameof(ProductCategoryDTO.Code)}")" />
+        <MagFlowTemplateColumn T="ProductCategoryDTO" TFilter="string" Title="@Localizer[Langs.Basic]" Tag="@($"{nameof(ProductCategoryDTO.IsBasic)}")">
             <CellTemplate>
                 <div class="d-flex align-items-center" style="gap: 8px">
                     @if (context.Item.IsBasic)
@@ -49,8 +49,8 @@
                     }
                 </div>
             </CellTemplate>
-        </TemplateColumn>
-        <TemplateColumn T="ProductCategoryDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowActionColumn T="ProductCategoryDTO" Title="@Localizer[Langs.Actions]">
             <CellTemplate>
                 <MudTooltip Text="@Localizer[Langs.Edit]" Delay="@Constants.Tooltip.DELAY">
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="async () => await OpenCategoryDetails(context.Item)" />
@@ -63,6 +63,6 @@
                     </Authorized>
                 </AuthorizeView>
             </CellTemplate>
-        </TemplateColumn>
+        </MagFlowActionColumn>
     </Columns>
 </MagFlowDataGrid>

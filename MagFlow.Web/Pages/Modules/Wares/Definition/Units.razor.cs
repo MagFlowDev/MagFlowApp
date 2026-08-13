@@ -5,6 +5,7 @@ using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Web.Components.Dialogs;
+using MagFlow.Web.Helpers;
 using MagFlow.Web.Resources;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using MudBlazor;
@@ -33,7 +34,20 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                 sortBy = column?.Tag?.ToString();
             }
             sortBy = sortBy ?? nameof(UnitDTO.Id);
-            var response = await ProductService.GetUnits(state.Page, state.PageSize, _searchString, sortBy, sortDefinition?.Descending == true);
+            var queryOptions = new MagFlow.Shared.Models.QueryOptions<MagFlow.Domain.CompanyScope.Unit>()
+            {
+                PageNumber = state.Page,
+                PageSize = state.PageSize,
+                SortBy = sortBy,
+                Descending = sortDefinition?.Descending == true,
+                Search = _searchString,
+                ColumnFilters = new List<ColumnFilter>()
+                {
+                    { ColumnFilter.Create(nameof(MagFlow.Domain.CompanyScope.Unit.ParentUnitId), MagFlow.Shared.Models.FilterOperator.IsEmpty, null) }
+                },
+            };
+            queryOptions.ApplyFilters(state.FilterDefinitions);
+            var response = await ProductService.GetUnits(queryOptions);
 
             _loadedRoots = response?.Elements?.ToList() ?? new List<UnitDTO>();
             return new GridData<UnitDTO>

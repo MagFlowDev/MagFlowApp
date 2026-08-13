@@ -34,27 +34,27 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="ProductDTO" HeaderStyle="width: 1%" />
-        <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="product => product.Name" />
-        <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.Code]" Sortable="true" CellClass="text-nowrap" Property="product => product.Code" />
-        <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.Category]" Sortable="false" CellClass="text-nowrap" Property="@(product => (product.Category != null ? product.Category.Name : string.Empty))" />
-        <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.Type]" Sortable="false" CellClass="text-nowrap" Property="@(product => (product.Type != null ? product.Type.Name : string.Empty))" />
-        <PropertyColumn T="ProductDTO" TProperty="string" Title="@Localizer[Langs.UnitShort]" Sortable="false" CellClass="text-nowrap" Property="@(product => (product.Unit != null ? product.Unit.Name : string.Empty))" />
-        <TemplateColumn T="ProductDTO" Title="@Localizer[Langs.PurchasePrice]" Sortable="false" CellClass="text-nowrap">
+        <MagFlowPropertyColumn T="ProductDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="product => product.Name" Tag="@($"{nameof(ProductDTO.Name)}")" />
+        <MagFlowPropertyColumn T="ProductDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Code]" MagFlowSortable="true" Property="product => product.Code" Tag="@($"{nameof(ProductDTO.Code)}")" />
+        <MagFlowPropertyColumn T="ProductDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Category]" Property="@(product => (product.Category != null ? product.Category.Name : string.Empty))" Tag="@($"{nameof(ProductDTO.Category)}.{nameof(ProductDTO.Category.Name)}")" />
+        <MagFlowPropertyColumn T="ProductDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Type]" Property="@(product => (product.Type != null ? product.Type.Name : string.Empty))" Tag="@($"{nameof(ProductDTO.Type)}.{nameof(ProductDTO.Type.Name)}")" />
+        <MagFlowPropertyColumn T="ProductDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.UnitShort]" Property="@(product => (product.Unit != null ? product.Unit.Name : string.Empty))" Tag="@($"{nameof(ProductDTO.Unit)}.{nameof(ProductDTO.Unit.Name)}")" />
+        <MagFlowTemplateColumn T="ProductDTO" TFilter="string" Title="@Localizer[Langs.PurchasePrice]" Tag="@($"{nameof(ProductDTO.PurchasePrice)}")">
             <CellTemplate>
                 @($"{context.Item.PurchasePrice:N2} {context.Item.Currency.GetDisplayName(Localizer)}")
             </CellTemplate>
-        </TemplateColumn>
-        <TemplateColumn T="ProductDTO" Title="@Localizer[Langs.SellingPrice]" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowTemplateColumn T="ProductDTO" TFilter="string" Title="@Localizer[Langs.SellingPrice]" Tag="@($"{nameof(ProductDTO.SellingPrice)}")">
             <CellTemplate>
                 @($"{context.Item.SellingPrice:N2} {context.Item.Currency.GetDisplayName(Localizer)}")
             </CellTemplate>
-        </TemplateColumn>
-        <TemplateColumn T="ProductDTO" Title="@Localizer[Langs.TaxRate]" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowTemplateColumn T="ProductDTO" TFilter="string" Title="@Localizer[Langs.TaxRate]" Tag="@($"{nameof(ProductDTO.TaxRate)}")">
             <CellTemplate>
                 @(context.Item.TaxRate.HasValue ? $"{context.Item.TaxRate?.ToDecimal():0.##}%" : string.Empty)
             </CellTemplate>
-        </TemplateColumn>
-        <TemplateColumn T="ProductDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+        </MagFlowTemplateColumn>
+        <MagFlowActionColumn T="ProductDTO" Title="@Localizer[Langs.Actions]">
             <CellTemplate>
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_READ">
                     <Authorized Context="authorizedContext">
@@ -78,6 +78,6 @@
                     </Authorized>
                 </AuthorizeView>
             </CellTemplate>
-        </TemplateColumn>
+        </MagFlowActionColumn>
     </Columns>
 </MagFlowDataGrid>

@@ -40,9 +40,9 @@
                 <MudCheckBox T="bool" Value="@IsSelected(ctx.Item)" ValueChanged="@(v => ToggleSelection(ctx.Item, v))"/>
             </CellTemplate>
         </TemplateColumn>
-        <PropertyColumn T="UnitDTO" TProperty="string" Title="@Localizer[Langs.Name]" Sortable="true" CellClass="text-nowrap" Property="unit => unit.Name"/>
-        <PropertyColumn T="UnitDTO" TProperty="string" Title="@Localizer[Langs.Symbol]" Sortable="true" CellClass="text-nowrap" Property="unit => unit.Symbol"/>
-        <TemplateColumn T="UnitDTO" Title="@Localizer[Langs.Actions]" Sortable="false" CellClass="text-nowrap">
+        <MagFlowPropertyColumn T="UnitDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="unit => unit.Name" Tag="@($"{nameof(UnitDTO.Name)}")" />
+        <MagFlowPropertyColumn T="UnitDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Symbol]" MagFlowSortable="true" Property="unit => unit.Symbol" Tag="@($"{nameof(UnitDTO.Symbol)}")" />
+        <MagFlowActionColumn T="UnitDTO" Title="@Localizer[Langs.Actions]">
             <CellTemplate>
                 <MudTooltip Text="@Localizer[Langs.Edit]" Delay="@Constants.Tooltip.DELAY">
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="async () => await OpenUnitDetails(context.Item)"/>
@@ -55,7 +55,7 @@
                     </Authorized>
                 </AuthorizeView>
             </CellTemplate>
-        </TemplateColumn>
+        </MagFlowActionColumn>
     </Columns>
     <ChildRowRenderer>
         @foreach (var child in context.Item.RelatedUnits)
