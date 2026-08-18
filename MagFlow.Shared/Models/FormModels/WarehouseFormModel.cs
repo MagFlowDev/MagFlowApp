@@ -19,6 +19,12 @@ namespace MagFlow.Shared.Models.FormModels
     public class WarehouseFormGeneralInformation
     {
         public string Name { get; set; }
+        public Enums.WarehouseType Type { get; set; }
+
+        public WarehouseFormGeneralInformation()
+        {
+            Type = Enums.WarehouseType.Main;
+        }
     }
 
     public class WarehouseFormSector

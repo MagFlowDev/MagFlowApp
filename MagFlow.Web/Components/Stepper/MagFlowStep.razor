@@ -1,0 +1,33 @@
+﻿@using MudBlazor
+
+@inherits MudComponentBase
+
+<MudStep Title="@Title" Style="min-height: 0; height: 100%">
+    <div class="d-flex flex-column align-items-center pt-3"
+         style="overflow-y: auto; flex-grow: 1; min-height: 0;">
+
+        <div class="@($"d-flex flex-column align-items-start w-100 {InnerClass}")"
+             style="@($"gap: 24px; max-width: {MaxWidth}px; {InnerStyle}")">
+
+            @ChildContent
+
+        </div>
+    </div>
+</MudStep>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public int MaxWidth { get; set; } = 550;
+
+    [Parameter]
+    public string InnerClass { get; set; }
+
+    [Parameter]
+    public string InnerStyle { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

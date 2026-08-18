@@ -21,6 +21,7 @@ namespace MagFlow.Shared.Validators.Company
         public WarehouseGeneralInformationValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
+            RuleFor(x => x.Type).NotNull().WithMessage(localizer[Validations.TypeRequired]);
         }
     }
 

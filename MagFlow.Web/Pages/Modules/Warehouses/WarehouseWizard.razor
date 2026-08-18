@@ -5,6 +5,9 @@
 @using MagFlow.BLL.Services.Interfaces
 @using MudBlazor
 @using Microsoft.AspNetCore.Authorization
+@using MagFlow.Shared.Models
+@using MagFlow.BLL.Helpers
+@using MagFlow.Web.Components.TreeViews
 
 @layout MainLayout
 @inherits StepperWizardBase<WarehouseFormModel>
@@ -26,7 +29,42 @@
                         OnSave="@(async () => await Save())">
             <ChildContent>
                 <MagFlowStep Title="@Localizer[Langs.GeneralInformation]">
-                    <MudTextField Label="@Localizer[Langs.Name]" Placeholder="@Localizer[Langs.WarehouseExample]" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.Name" For="(() => _model.GeneralInformation.Name)" Class="w-100 my-0"></MudTextField>
+                    <MudTextField Label="@Localizer[Langs.Name]" Placeholder="@Localizer[Langs.WarehouseExample]" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.Name" For="(() => _model.GeneralInformation.Name)" Class="w-100 mt-0"></MudTextField>
+                    <MudSelect T="Enums.WarehouseType" Label="@Localizer[Langs.Type]" FullWidth="true" OuterClass="mt-0" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.Type" For="@(() => _model.GeneralInformation.Type)">
+                        @foreach (var warehouseType in Enum.GetValues<Enums.WarehouseType>().Where(x => x != Enums.WarehouseType.Unknown))
+                        {
+                            <MudSelectItem T="Enums.WarehouseType" Value="@warehouseType">@warehouseType.GetDisplayName(Localizer)</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MagFlowStep>
+                <MagFlowStep Title="@Localizer[Langs.WarehouseSectors]" InnerClass="flex-grow-1" InnerStyle="min-height: 0">
+                    <div class="d-flex justify-content-between w-100 align-items-center">
+                        <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.WarehouseSectors]</MudText>
+                        <div class="d-flex h-100" style="gap: 9px">
+                            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add">@Localizer[Langs.AddSector]</MudButton>
+                            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.TableRows">@Localizer[Langs.DefineRows]</MudButton>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column w-100 h-100 align-items-start justify-content-start" style="min-height: 0; overflow-y: auto;">
+                        @if(_warehouseTreeItems.Count > 0)
+                        {
+                            <MudTreeView Items="_warehouseTreeItems" SelectionMode="SelectionMode.MultiSelection" @bind-SelectedValues="_selectedValues" Class="w-100">
+                                <ItemTemplate>
+                                    @{
+                                        var presenter = context as WarehouseTreeViewTempItem;
+                                    }
+                                    <MudTreeViewItem @bind-Expanded="@context.Expanded" Items="@context.Children" Value="@context.Value" Icon="@context.Icon" Text="@context.Text"/>
+                                </ItemTemplate>
+                            </MudTreeView>
+                        }
+                        else
+                        {
+                            <div class="d-flex w-100 mud-height-full align-items-center justify-content-center" style="gap: 16px">
+                                <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Medium" Style="color: var(--mud-palette-text-disabled)" />
+                                <MudText Typo="Typo.h6" Style="font-weight: 600; color: var(--mud-palette-text-disabled)">@Localizer[Langs.NoSectorsAdded]</MudText>
+                            </div>
+                        }
+                    </div>
                 </MagFlowStep>
             </ChildContent>
         </MagFlowStepper>
