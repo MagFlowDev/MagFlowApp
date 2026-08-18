@@ -3,6 +3,7 @@ using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
+using MagFlow.Web.Components.TreeViews;
 using MagFlow.Web.Components.Wizards;
 using MagFlow.Web.Resources;
 using Microsoft.AspNetCore.Components;
@@ -19,6 +20,9 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
         [Inject] public IJSRuntime JS { get; set; } = default!;
         [Inject] public ISnackbar Snackbar { get; set; } = default!;
         [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
+        private List<TreeItemData<string>> _warehouseTreeItems { get; set; } = new();
+        private IReadOnlyCollection<string> _selectedValues { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -44,6 +48,23 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
                 }
             }
             catch { }
+
+            _warehouseTreeItems.Add(new WarehouseTreeViewTempItem("test1"));
+            _warehouseTreeItems.Add(new WarehouseTreeViewTempItem("test2"));
+            _warehouseTreeItems.Add(new WarehouseTreeViewTempItem("test3")
+            {
+                Children = [
+                    new WarehouseTreeViewTempItem("test3-1"),
+                    new WarehouseTreeViewTempItem("test3-2"),
+                    new WarehouseTreeViewTempItem("test3-3"){
+                        Children = [
+                            new WarehouseTreeViewTempItem("test3-3-1"),
+                            new WarehouseTreeViewTempItem("test3-3-2"),
+                            new WarehouseTreeViewTempItem("test3-3-3"),
+                            ]
+                    },
+                    ]
+            });
         }
 
         private void CreateCopy(WarehouseDTO dto)
@@ -104,5 +125,6 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
                 _loading = false;
             }
         }
+
     }
 }

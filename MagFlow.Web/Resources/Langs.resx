@@ -1717,4 +1717,16 @@ i uprawnieniami użytkowników</value>
   <data name="Filter" xml:space="preserve">
     <value>Filtr</value>
   </data>
+  <data name="WarehouseSectors" xml:space="preserve">
+    <value>Sektory magazynowe</value>
+  </data>
+  <data name="AddSector" xml:space="preserve">
+    <value>Dodaj sektor</value>
+  </data>
+  <data name="DefineRows" xml:space="preserve">
+    <value>Zdefiniuj rzędy</value>
+  </data>
+  <data name="NoSectorsAdded" xml:space="preserve">
+    <value>Żadne sektory nie zostały dodane</value>
+  </data>
 </root>

@@ -1716,4 +1716,16 @@
   <data name="Filter" xml:space="preserve">
     <value>Filter</value>
   </data>
+  <data name="WarehouseSectors" xml:space="preserve">
+    <value>Warehouse sectors</value>
+  </data>
+  <data name="AddSector" xml:space="preserve">
+    <value>Add sector</value>
+  </data>
+  <data name="DefineRows" xml:space="preserve">
+    <value>Define rows</value>
+  </data>
+  <data name="NoSectorsAdded" xml:space="preserve">
+    <value>No sectors have been added</value>
+  </data>
 </root>
