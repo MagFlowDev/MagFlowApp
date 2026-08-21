@@ -1729,4 +1729,34 @@ i uprawnieniami użytkowników</value>
   <data name="NoSectorsAdded" xml:space="preserve">
     <value>Żadne sektory nie zostały dodane</value>
   </data>
+  <data name="Sector" xml:space="preserve">
+    <value>Sektor</value>
+  </data>
+  <data name="Row" xml:space="preserve">
+    <value>Rząd</value>
+  </data>
+  <data name="Slot" xml:space="preserve">
+    <value>Miejsce</value>
+  </data>
+  <data name="AddRow" xml:space="preserve">
+    <value>Dodaj rząd</value>
+  </data>
+  <data name="AddSlot" xml:space="preserve">
+    <value>Dodaj miejsce</value>
+  </data>
+  <data name="NumberOfRows" xml:space="preserve">
+    <value>Liczba rzędów</value>
+  </data>
+  <data name="ListOfSectors" xml:space="preserve">
+    <value>Lista sektorów</value>
+  </data>
+  <data name="NumberOfSlots" xml:space="preserve">
+    <value>Liczba miejsc</value>
+  </data>
+  <data name="ListOfRows" xml:space="preserve">
+    <value>Lista rzędów</value>
+  </data>
+  <data name="DefineSlots" xml:space="preserve">
+    <value>Zdefiniuj miejsca</value>
+  </data>
 </root>

@@ -1,0 +1,58 @@
+﻿@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models
+@using MudBlazor
+
+<MudDialog Style="min-width: 400px;">
+    <DialogContent>
+        <div class="w-100 h-100 d-flex flex-column align-items-start flex-grow-1" style="gap: 24px; overflow: hidden; min-height: 0; max-height: 450px;">
+            <MudNumericField @bind-Value="_slotsNumber" Label="@Localizer[Langs.NumberOfSlots]" Variant="Variant.Outlined" Step="1" Class="w-100" Min="0" Max="1000" />
+            <div class="w-100 d-flex flex-column align-items-start overflow-hidden" style="gap: 16px; min-height: 0">
+                <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.ListOfRows]</MudText>
+                <div class="w-100 d-flex flex-column align-items-start overflow-y-auto" style="gap: 16px; min-height: 0;">
+                    <MudList T="Guid" @bind-SelectedValues="_selectedRowsIds" SelectionMode="SelectionMode.MultiSelection" Class="w-100">
+                        @foreach(var row in Rows)
+                        {
+                            <MudListItem Value="@row.Key" Text="@row.Value" Class="pl-0"/>
+                        }
+                    </MudList>
+                </div>
+            </div>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@Localizer[Langs.Cancel]</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@Localizer[Langs.Save]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public Dictionary<Guid, string> Rows { get; set; } = [];
+
+    private IReadOnlyCollection<Guid> _selectedRowsIds { get; set; } = [];
+    private int _slotsNumber { get; set; }
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(new Tuple<IReadOnlyCollection<Guid>, int>(_selectedRowsIds, _slotsNumber)));
+
+    private void Cancel() => MudDialog.Cancel();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await this.MudDialog.SetOptionsAsync(new DialogOptions()
+        {
+            CloseButton = true,
+            Position = DialogPosition.Center
+        });
+
+        StateHasChanged();
+    }
+
+}
