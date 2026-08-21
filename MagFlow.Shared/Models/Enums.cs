@@ -8,7 +8,12 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
-        
+        public enum WarehouseStorageType
+        {
+            Sector = 0,
+            Row = 1,
+            Slot = 2
+        }
 
         public enum WarehouseType
         {

@@ -3,6 +3,7 @@ using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
+using MagFlow.Web.Components.Dialogs;
 using MagFlow.Web.Components.TreeViews;
 using MagFlow.Web.Components.Wizards;
 using MagFlow.Web.Resources;
@@ -48,23 +49,6 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
                 }
             }
             catch { }
-
-            _warehouseTreeItems.Add(new WarehouseTreeViewTempItem("test1"));
-            _warehouseTreeItems.Add(new WarehouseTreeViewTempItem("test2"));
-            _warehouseTreeItems.Add(new WarehouseTreeViewTempItem("test3")
-            {
-                Children = [
-                    new WarehouseTreeViewTempItem("test3-1"),
-                    new WarehouseTreeViewTempItem("test3-2"),
-                    new WarehouseTreeViewTempItem("test3-3"){
-                        Children = [
-                            new WarehouseTreeViewTempItem("test3-3-1"),
-                            new WarehouseTreeViewTempItem("test3-3-2"),
-                            new WarehouseTreeViewTempItem("test3-3-3"),
-                            ]
-                    },
-                    ]
-            });
         }
 
         private void CreateCopy(WarehouseDTO dto)
@@ -126,5 +110,176 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
             }
         }
 
+        private void AddSector()
+        {
+            var sectorBaseName = Localizer[Langs.Sector];
+            var sectorNumber = _warehouseTreeItems.Count + 1;
+            while(_warehouseTreeItems.Any(x => x.Text == $"{sectorBaseName} {sectorNumber}"))
+            {
+                sectorNumber++;
+                if (sectorNumber > 1000)
+                    break;
+            }
+
+            _warehouseTreeItems.Add(new WarehouseTreeViewTempItem($"{sectorBaseName} {sectorNumber}", Enums.WarehouseStorageType.Sector));
+        }
+
+        private void AddRow(WarehouseTreeViewTempItem sector)
+        {
+            var rowBaseName = Localizer[Langs.Row];
+            var rowNumber = (sector.Children?.Count ?? 0) + 1;
+            while(sector.Children?.Any(x => x.Text == $"{rowBaseName} {rowNumber}") == true)
+            {
+                rowNumber++;
+                if (rowNumber > 1000)
+                    break;
+            }
+            
+            sector.Children ??= new List<WarehouseTreeViewTempItem>();
+            sector.AddChildren(new WarehouseTreeViewTempItem($"{rowBaseName} {rowNumber}", Enums.WarehouseStorageType.Row, sector.TempId));
+            sector.Expanded = true;
+        }
+
+        private void AddSlot(WarehouseTreeViewTempItem row)
+        {
+            var slotBaseName = Localizer[Langs.Slot];
+            var slotNumber = (row.Children?.Count ?? 0) + 1;
+            while (row.Children?.Any(x => x.Text == $"{slotBaseName} {slotNumber}") == true)
+            {
+                slotNumber++;
+                if (slotNumber > 1000)
+                    break;
+            }
+
+            row.Children ??= new List<WarehouseTreeViewTempItem>();
+            row.AddChildren(new WarehouseTreeViewTempItem($"{slotBaseName} {slotNumber}", Enums.WarehouseStorageType.Slot, row.TempId));
+            row.Expanded = true;
+        }
+
+
+        private void RemoveStorage(WarehouseTreeViewTempItem? storage)
+        {
+            if (storage == null)
+                return;
+
+            if (storage.StorageType == Enums.WarehouseStorageType.Sector)
+            {
+                _warehouseTreeItems.Remove(storage);
+            }
+            else if (storage.StorageType == Enums.WarehouseStorageType.Row)
+            {
+                var parent = _warehouseTreeItems.FirstOrDefault(x => ((WarehouseTreeViewTempItem)x) != null && ((WarehouseTreeViewTempItem)x).TempId == storage.ParentId) as WarehouseTreeViewTempItem;
+                if (parent == null)
+                    return;
+                parent.RemoveChildren(storage);
+            }
+            else if (storage.StorageType == Enums.WarehouseStorageType.Slot)
+            {
+                WarehouseTreeViewTempItem? parent = null;
+                foreach (var sector in _warehouseTreeItems)
+                {
+                    parent = sector.Children?.FirstOrDefault(x => ((WarehouseTreeViewTempItem)x) != null && ((WarehouseTreeViewTempItem)x).TempId == storage.ParentId) as WarehouseTreeViewTempItem;
+                    if (parent != null)
+                        break;
+                }
+                if (parent == null)
+                    return;
+                parent.RemoveChildren(storage);
+            }
+        }
+
+        private async Task DefineRows()
+        {
+            if (_isBusy || _loading)
+                return;
+
+            try
+            {
+                _isBusy = true;
+                _loading = true;
+
+                var sectors = _warehouseTreeItems.ToDictionary(x => ((WarehouseTreeViewTempItem)x).TempId, x => x.Text ?? "sector");
+                if(sectors == null || sectors.Count == 0) 
+                    return;
+
+                var parameters = new DialogParameters<DefineRowsDialog> { { x => x.Sectors, sectors } };
+                var dialog = await DialogService.ShowAsync<DefineRowsDialog>(Localizer[Langs.DefineRows], parameters);
+                var confirmation = await dialog.Result;
+
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    if (confirmation.Data is Tuple<IReadOnlyCollection<Guid>, int> data)
+                    {
+                        var sectorGuids = data.Item1.ToList();
+                        var rowNumber = data.Item2;
+                        if (rowNumber <= 0)
+                            return;
+                        
+                        foreach(var sectorGuid in sectorGuids)
+                        {
+                            var sector = _warehouseTreeItems.FirstOrDefault(x => ((WarehouseTreeViewTempItem)x)?.TempId == sectorGuid) as WarehouseTreeViewTempItem;
+                            if (sector == null)
+                                continue;
+
+                            sector.Children = new List<ITreeItemData<string>>();
+                            for(int i=0; i<rowNumber;i++)
+                                AddRow(sector);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                _loading = false;
+                _isBusy = false;
+            }
+        }
+
+        private async Task DefineSlots(WarehouseTreeViewTempItem sector)
+        {
+            if (_isBusy || _loading)
+                return;
+
+            try
+            {
+                _isBusy = true;
+                _loading = true;
+
+                var rows = sector?.Children?.ToDictionary(x => ((WarehouseTreeViewTempItem)x).TempId, x => x.Text ?? "row");
+                if (rows == null || rows.Count == 0)
+                    return;
+
+                var parameters = new DialogParameters<DefineSlotsDialog> { { x => x.Rows, rows } };
+                var dialog = await DialogService.ShowAsync<DefineSlotsDialog>(Localizer[Langs.DefineSlots], parameters);
+                var confirmation = await dialog.Result;
+
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    if (confirmation.Data is Tuple<IReadOnlyCollection<Guid>, int> data)
+                    {
+                        var rowGuids = data.Item1.ToList();
+                        var slotNumber = data.Item2;
+                        if (slotNumber <= 0)
+                            return;
+
+                        foreach (var rowGuid in rowGuids)
+                        {
+                            var row = sector?.Children?.FirstOrDefault(x => ((WarehouseTreeViewTempItem)x)?.TempId == rowGuid) as WarehouseTreeViewTempItem;
+                            if (row == null)
+                                continue;
+
+                            row.Children = new List<ITreeItemData<string>>();
+                            for (int i = 0; i < slotNumber; i++)
+                                AddSlot(row);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                _loading = false;
+                _isBusy = false;
+            }
+        }
     }
 }

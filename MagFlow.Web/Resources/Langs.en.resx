@@ -1728,4 +1728,34 @@
   <data name="NoSectorsAdded" xml:space="preserve">
     <value>No sectors have been added</value>
   </data>
+  <data name="Sector" xml:space="preserve">
+    <value>Sector</value>
+  </data>
+  <data name="Row" xml:space="preserve">
+    <value>Row</value>
+  </data>
+  <data name="Slot" xml:space="preserve">
+    <value>Slot</value>
+  </data>
+  <data name="AddRow" xml:space="preserve">
+    <value>Add row</value>
+  </data>
+  <data name="AddSlot" xml:space="preserve">
+    <value>Add slot</value>
+  </data>
+  <data name="NumberOfRows" xml:space="preserve">
+    <value>Number of rows</value>
+  </data>
+  <data name="ListOfSectors" xml:space="preserve">
+    <value>List of sectors</value>
+  </data>
+  <data name="NumberOfSlots" xml:space="preserve">
+    <value>Number of slots</value>
+  </data>
+  <data name="ListOfRows" xml:space="preserve">
+    <value>List of rows</value>
+  </data>
+  <data name="DefineSlots" xml:space="preserve">
+    <value>Define slots</value>
+  </data>
 </root>
