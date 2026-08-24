@@ -2,6 +2,7 @@
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Web.Helpers;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 
 namespace MagFlow.Web.Pages.Modules.Warehouses
@@ -28,7 +29,9 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
                 PageNumber = state.Page,
                 PageSize = state.PageSize,
                 SortBy = sortBy,
-                Descending = sortDefinition?.Descending == true
+                Descending = sortDefinition?.Descending == true,
+                Includes = warehouse => warehouse
+                    .Include(x => x.Sectors).ThenInclude(y => y.Rows).ThenInclude(z => z.Slots)
             };
             queryOptions.ApplyFilters(state.FilterDefinitions);
             var response = await WarehouseService.GetManyAsync(queryOptions);

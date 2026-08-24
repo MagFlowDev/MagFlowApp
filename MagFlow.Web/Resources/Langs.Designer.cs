@@ -799,6 +799,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lista kontrahentów.
+        /// </summary>
+        public static string ContractorsList {
+            get {
+                return ResourceManager.GetString("ContractorsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kontrahenci.
         /// </summary>
         public static string ContractorsModule {
@@ -4801,6 +4810,15 @@ namespace MagFlow.Web.Resources {
         public static string WarehouseMovementsList {
             get {
                 return ResourceManager.GetString("WarehouseMovementsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Historia ruchów magazynowych.
+        /// </summary>
+        public static string WarehouseMovementsList2 {
+            get {
+                return ResourceManager.GetString("WarehouseMovementsList2", resourceCulture);
             }
         }
         

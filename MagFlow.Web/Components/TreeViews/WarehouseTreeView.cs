@@ -1,4 +1,5 @@
-﻿using MagFlow.Shared.Models;
+﻿using MagFlow.Shared.DTOs.CompanyScope;
+using MagFlow.Shared.Models;
 using MudBlazor;
 
 namespace MagFlow.Web.Components.TreeViews
@@ -49,6 +50,59 @@ namespace MagFlow.Web.Components.TreeViews
             currentChildren.Remove(existingChild);
 
             this.Children = currentChildren;
+        }
+
+        public SectorDTO? GetSectorDTO()
+        {
+            if (this.StorageType != Enums.WarehouseStorageType.Sector)
+                return null;
+
+            var currentChildren = this.Children != null
+                ? this.Children.Cast<WarehouseTreeViewTempItem>().ToList()
+                : new List<WarehouseTreeViewTempItem>();
+
+            var rows = currentChildren?
+                .Where(x => x != null).Select(x => x!.GetRowDTO())
+                .Where(x => x != null).Select(x => x!)
+                .ToList() ?? new List<RowDTO>();
+
+            return new SectorDTO()
+            {
+                Name = Text,
+                Rows = rows
+            };
+        }
+
+        public RowDTO? GetRowDTO()
+        {
+            if (this.StorageType != Enums.WarehouseStorageType.Row)
+                return null;
+
+            var currentChildren = this.Children != null
+                ? this.Children.Cast<WarehouseTreeViewTempItem>().ToList()
+                : new List<WarehouseTreeViewTempItem>();
+
+            var slots = currentChildren?
+                .Where(x => x != null).Select(x => x!.GetSlotDTO())
+                .Where(x => x != null).Select(x => x!)
+                .ToList() ?? new List<SlotDTO>();
+
+            return new RowDTO()
+            {
+                Name = Text,
+                Slots = slots
+            };
+        }
+
+        public SlotDTO? GetSlotDTO()
+        {
+            if (this.StorageType != Enums.WarehouseStorageType.Slot)
+                return null;
+
+            return new SlotDTO()
+            {
+                Name = Text,
+            };
         }
     }
 

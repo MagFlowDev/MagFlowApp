@@ -1758,4 +1758,10 @@
   <data name="DefineSlots" xml:space="preserve">
     <value>Define slots</value>
   </data>
+  <data name="ContractorsList" xml:space="preserve">
+    <value>Contractors list</value>
+  </data>
+  <data name="WarehouseMovementsList2" xml:space="preserve">
+    <value>History of warehouse movements</value>
+  </data>
 </root>

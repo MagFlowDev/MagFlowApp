@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Reactive;
 using System.Text;
 
 namespace MagFlow.BLL.Services
@@ -37,7 +38,12 @@ namespace MagFlow.BLL.Services
 
         public async Task<Enums.Result> AddWarehouse(WarehouseFormModel model)
         {
-            return Enums.Result.Error;
+            var userId = _networkService.GetUserId();
+            if (!userId.HasValue)
+                return Enums.Result.Error;
+            var entity = model.ToEntity(userId.Value);
+            var result = await _warehouseRepository.AddAsync(entity);
+            return result;
         }
     }
 }

@@ -37,6 +37,7 @@ namespace MagFlow.Shared.Models
             Product = 2,
             Item = 3,
             Warehouse = 4,
+            Contractor = 5
         }
 
         public enum TaxRate
@@ -278,6 +279,19 @@ namespace MagFlow.Shared.Models
 
     public static class SectionsEnums
     {
+        public enum ContractorsModuleSection
+        {
+            ContractorsList,
+            Archive
+        }
+
+        public enum WarehouseDetailsSection
+        {
+            GeneralInformation,
+            Inventories,
+            MovementsList,
+        }
+
         public enum WarehousesModuleSection
         {
             WarehousesList,

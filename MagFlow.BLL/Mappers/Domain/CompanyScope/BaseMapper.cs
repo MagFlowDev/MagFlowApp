@@ -32,6 +32,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                         return (TDTO)(object)WarehouseMapper.ToDTO((WarehouseSectorRow)(object)entity);
                     case nameof(WarehouseSectorRowSlot):
                         return (TDTO)(object)WarehouseMapper.ToDTO((WarehouseSectorRowSlot)(object)entity);
+                    case nameof(Contractor):
+                        return (TDTO)(object)ContractorMapper.ToDTO((Contractor)(object)entity);
                     default:
                         return default(TDTO);
                 }
@@ -49,13 +51,14 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
 
 
-        public static TEntity ToEntity<TEntity, TDTO>(this TDTO dto)
+        public static TEntity ToEntity<TEntity, TDTO>(this TDTO dto, Guid? createdById = null)
         {
             if (dto == null)
                 return default(TEntity);
 
             try
             {
+                createdById ??= Guid.Empty;
                 var dtoType = typeof(TDTO);
                 switch (dtoType.Name)
                 {
@@ -64,13 +67,15 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                     case nameof(ItemDTO):
                         return (TEntity)(object)ItemMapper.ToEntity((ItemDTO)(object)dto);
                     case nameof(WarehouseDTO):
-                        return (TEntity)(object)WarehouseMapper.ToEntity((WarehouseDTO)(object)dto);
+                        return (TEntity)(object)WarehouseMapper.ToEntity((WarehouseDTO)(object)dto, createdById.Value);
                     case nameof(SectorDTO):
-                        return (TEntity)(object)WarehouseMapper.ToEntity((SectorDTO)(object)dto);
+                        return (TEntity)(object)WarehouseMapper.ToEntity((SectorDTO)(object)dto, createdById.Value);
                     case nameof(RowDTO):
-                        return (TEntity)(object)WarehouseMapper.ToEntity((RowDTO)(object)dto);
+                        return (TEntity)(object)WarehouseMapper.ToEntity((RowDTO)(object)dto, createdById.Value);
                     case nameof(SlotDTO):
-                        return (TEntity)(object)WarehouseMapper.ToEntity((SlotDTO)(object)dto);
+                        return (TEntity)(object)WarehouseMapper.ToEntity((SlotDTO)(object)dto, createdById.Value);
+                    case nameof(ContractorDTO):
+                        return (TEntity)(object)ContractorMapper.ToEntity((ContractorDTO)(object)dto);
                     default:
                         return default(TEntity);
                 }
