@@ -1,0 +1,93 @@
+﻿@page "/warehouse/{WarehouseId}"
+
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.BLL.Helpers
+@using MagFlow.Web.Components.Buttons
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+@using Microsoft.AspNetCore.Authorization
+@using MagFlow.Web.Helpers
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Extensions.Enum
+@using MagFlow.Shared.DTOs.CompanyScope
+
+@inject IWarehouseService WarehouseService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+@layout TabsLayout
+@inherits AuthComponentBase
+@attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_READ)]
+
+<div class="d-flex flex-column w-100 flex-grow-1 overflow-visible" style="min-height: 0;" >
+    <div class="d-flex align-items-center align-self-stretch justify-content-between w-100 overflow-visible" style="padding: 0; margin-bottom: 8px; position: relative;">
+        <ReturnFab OnClick="@(() => NavigationManager.NavigateTo("/"))" />
+        @* Header *@
+        <div class="d-flex align-self-stretch align-items-center mud-height-full w-100" style="min-height: 64px; height: 64px; border-radius: 4px; background: var(--mud-palette-primary-text); ">
+            <div class="d-flex align-self-stretch align-items-center justify-content-between w-100 px-4" style="margin-left: 48px;">
+                <div class="d-flex align-items-center justify-content-start" style="gap: 24px">
+                    <MudText Typo="Typo.h6" Style="font-weight: 500">@_warehouse?.Name</MudText>
+                    @if(_warehouse != null)
+                    {
+                        <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@_warehouse.Status.ToColor()">@_warehouse.Status.GetDisplayName(Localizer)</MudChip>
+                    }
+                </div>
+                <div class="d-flex align-items-center align-self-stretch justify-content-end" style="gap: 16px;">
+                    <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE" Context="authorizedContext">
+                        <Authorized>
+                            <LoadingButton Loading="_loadingDelete" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" OnClick="DeleteProduct">@Localizer[Langs.Delete]</LoadingButton>
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex w-100" style="flex: 1 1 0; min-height: 0">
+        <MudPaper Height="100%" Style="overflow:hidden; position:relative; background-color: transparent" Class="w-100" Elevation="0">
+            <MudDrawerContainer Class="mud-height-full">
+                <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" Breakpoint="Breakpoint.None">
+                    <MudNavMenu>
+                        <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
+                        <MudTooltip Text="@Localizer[Langs.GeneralInformation]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Label" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehouseDetailsSection.GeneralInformation))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehouseDetailsSection.GeneralInformation)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehouseDetailsSection.GeneralInformation)">@Localizer[Langs.GeneralInformation]</MudNavLink>
+                        </MudTooltip>
+                        <MudTooltip Text="@Localizer[Langs.Inventories]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Assignment" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehouseDetailsSection.Inventories))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehouseDetailsSection.Inventories)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehouseDetailsSection.Inventories)">@Localizer[Langs.Inventories]</MudNavLink>
+                        </MudTooltip>
+                        <MudTooltip Text="@Localizer[Langs.WarehouseMovementsList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.History" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehouseDetailsSection.MovementsList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehouseDetailsSection.MovementsList)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehouseDetailsSection.MovementsList)">@Localizer[Langs.WarehouseMovementsList]</MudNavLink>
+                        </MudTooltip>
+                    </MudNavMenu>
+                </MudDrawer>
+                <div class="d-flex flex-grow-1 justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
+                    <CascadingValue Value="@_warehouse" TValue="WarehouseDTO" Name="Warehouse">
+                        @switch (_currentSection)
+                        {
+                            case SectionsEnums.WarehouseDetailsSection.GeneralInformation:
+                                <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
+                                    <WarehouseGeneralInformation/>
+                                </div>
+                                break;
+                            case SectionsEnums.WarehouseDetailsSection.Inventories:
+                                <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
+                                    <WarehouseInventories/>
+                                </div>
+                                break;
+                            case SectionsEnums.WarehouseDetailsSection.MovementsList:
+                                <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
+                                    <WarehouseMovementsList />
+                                </div>
+                                break;
+                            default: break;
+                        }
+                    </CascadingValue>
+                </div>
+            </MudDrawerContainer>
+        </MudPaper>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string WarehouseId { get; set; }
+}

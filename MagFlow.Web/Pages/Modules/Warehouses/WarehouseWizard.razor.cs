@@ -55,24 +55,21 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
         {
             _model.GeneralInformation.Name = dto.Name;
 
-            _model.Sectors = new List<WarehouseFormSector>();
+            _model.Sectors = new List<SectorDTO>();
             dto.Sectors?.ForEach(sector =>
             {
-                var newSector = new WarehouseFormSector();
-                newSector.Name = sector.Name;
+                var newSector = new WarehouseTreeViewTempItem(sector.Name, Enums.WarehouseStorageType.Sector);
                 sector.Rows?.ForEach(row =>
                 {
-                    var newRow = new WarehouseFormSectorRow();
-                    newRow.Name = row.Name;
+                    var newRow = new WarehouseTreeViewTempItem(row.Name, Enums.WarehouseStorageType.Row, newSector.TempId);
                     row.Slots?.ForEach(slot =>
                     {
-                        var newSlot = new WarehouseFormSectorRowSlot();
-                        newSlot.Name = slot.Name;
-                        newRow.Slots.Add(newSlot);
+                        var newSlot = new WarehouseTreeViewTempItem(slot.Name, Enums.WarehouseStorageType.Slot, newRow.TempId);
+                        newRow.AddChildren(newSlot);
                     });
-                    newSector.Rows.Add(newRow);
+                    newSector.AddChildren(newRow);
                 });
-                _model.Sectors.Add(newSector);
+                _warehouseTreeItems.Add(newSector);
             });
         }
 
@@ -80,6 +77,12 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
         {
             if (_isBusy)
                 return;
+
+            var sectors = _warehouseTreeItems
+                .Select(x => ((WarehouseTreeViewTempItem)x).GetSectorDTO())
+                .Where(x => x != null).Select(x => x!)
+                .ToList();
+            _model.Sectors = sectors;
 
             var step = _stepper.Steps[_step];
             if (step == null || !await ValidateStep(_step))

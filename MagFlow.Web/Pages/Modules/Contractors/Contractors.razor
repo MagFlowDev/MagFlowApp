@@ -1,8 +1,59 @@
 ﻿@using MagFlow.Shared.Models.Interfaces
+@using MagFlow.Web.Components.Status
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+@using MagFlow.Web.Helpers;
+@using MagFlow.Shared.Models;
+@using MagFlow.Shared.Extensions.Enum;
+
 @implements IModule
 @inherits BaseModuleComponent
 
-<h3>Contractors</h3>
+<AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.CONTRACTORS_READ">
+    <Authorized>
+        <div class="d-flex flex-column w-100 flex-grow-1" style="min-height: 0">
+            <div class="d-flex w-100" style="flex: 1 1 0; min-height: 0">
+                <MudPaper Height="100%" Style="overflow:hidden; position:relative; background-color: transparent" Class="w-100" Elevation="0">
+                    <MudDrawerContainer Class="mud-height-full">
+                        <MudDrawer @bind-Open="@_isMenuOpened" Fixed="true" Elevation="0" Variant="@DrawerVariant.Mini" Breakpoint="Breakpoint.None">
+                            <MudNavMenu>
+                                <MudNavLink Icon="@(_isMenuOpened ? Icons.Material.Outlined.ChevronLeft : Icons.Material.Outlined.ChevronRight)" OnClick="@(() => { _isMenuOpened = !_isMenuOpened; })" Ripple="false" />
+                                <MudTooltip Text="@Localizer[Langs.ContractorsList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Apartment" OnClick="@(() => OnSectionChanged(SectionsEnums.ContractorsModuleSection.ContractorsList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.ContractorsModuleSection.ContractorsList)" Class="@_currentSection.GetNavClass(SectionsEnums.ContractorsModuleSection.ContractorsList)">@Localizer[Langs.ContractorsList]</MudNavLink>
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer[Langs.Archive]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Archive" OnClick="@(() => OnSectionChanged(SectionsEnums.ContractorsModuleSection.Archive))" IconColor="@_currentSection.GetIconColor(SectionsEnums.ContractorsModuleSection.Archive)" Class="@_currentSection.GetNavClass(SectionsEnums.ContractorsModuleSection.Archive)">@Localizer[Langs.Archive]</MudNavLink>
+                                </MudTooltip>
+                            </MudNavMenu>
+                        </MudDrawer>
+                        <div class="d-flex justify-center align-center mud-height-full" style="padding-left: 8px; min-height: 0">
+                            @if(Initialized)
+                            {
+                                @switch (_currentSection)
+                                {
+                                    case SectionsEnums.ContractorsModuleSection.ContractorsList:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-hidden" style="">
+                                            <ContractorsList/>
+                                        </div>
+                                        break;
+                                    case SectionsEnums.ContractorsModuleSection.Archive:
+                                        <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto" style="">
+                                            <Archive/>
+                                        </div>
+                                        break;
+                                    default: break;
+                                }
+                            }
+                        </div>
+                    </MudDrawerContainer>
+                </MudPaper>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <Denied/>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     public string TabTitle => "Contractors";

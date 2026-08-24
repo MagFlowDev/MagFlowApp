@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models.FormModels;
 using MagFlow.Shared.Validators.Resources;
 using Microsoft.Extensions.Localization;
@@ -25,7 +26,7 @@ namespace MagFlow.Shared.Validators.Company
         }
     }
 
-    public class WarehouseSectorValidator : AbstractValidator<WarehouseFormSector>
+    public class WarehouseSectorValidator : AbstractValidator<SectorDTO>
     {
         public WarehouseSectorValidator(IStringLocalizer<Validations> localizer)
         {
@@ -33,7 +34,7 @@ namespace MagFlow.Shared.Validators.Company
         }
     }
 
-    public class WarehouseSectorRowValidator : AbstractValidator<WarehouseFormSectorRow>
+    public class WarehouseSectorRowValidator : AbstractValidator<RowDTO>
     {
         public WarehouseSectorRowValidator(IStringLocalizer<Validations> localizer)
         {
@@ -41,7 +42,7 @@ namespace MagFlow.Shared.Validators.Company
         }
     }
 
-    public class WarehouseSectorRowSlotValidator : AbstractValidator<WarehouseFormSectorRowSlot>
+    public class WarehouseSectorRowSlotValidator : AbstractValidator<SlotDTO>
     {
         public WarehouseSectorRowSlotValidator(IStringLocalizer<Validations> localizer)
         {

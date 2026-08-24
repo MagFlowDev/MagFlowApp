@@ -1,4 +1,5 @@
-﻿using MagFlow.Shared.Models.Interfaces;
+﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Contractor : IBaseEntity, ICodeEntity, ISoftDeletable
+    public class Contractor : StatusEntity, IBaseEntity, ICodeEntity, ISoftDeletable, IHistoryEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -28,8 +29,6 @@ namespace MagFlow.Domain.CompanyScope
         public DateTime CreatedAt { get; set; }
         [Required]
         public Guid CreatedById { get; set; }
-        [Required]
-        public bool IsActive { get; set; }
         
         [ForeignKey(nameof(CreatedById))]
         public User? CreatedBy { get; set; }
@@ -38,5 +37,21 @@ namespace MagFlow.Domain.CompanyScope
         public ICollection<Document> Documents { get; set; }
 
         public DateTime? RemovedAt { get; set; }
+
+        [NotMapped]
+        public Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Contractor;
+
+        [NotMapped]
+        public ICollection<IEntityHistory> History { get; set; } = [];
+
+
+        private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()
+        {
+            Enums.EntityStatus.Unknown,
+            Enums.EntityStatus.Active,
+            Enums.EntityStatus.Deleted,
+        };
+
+        public Contractor() : base(_allowedStatuses) { }
     }
 }

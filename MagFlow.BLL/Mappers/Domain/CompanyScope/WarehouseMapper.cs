@@ -1,5 +1,6 @@
 ﻿using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.DTOs.CompanyScope;
+using MagFlow.Shared.Models.FormModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -39,10 +40,12 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
 
 
-        public static Warehouse ToEntity(this WarehouseDTO warehouseDTO)
+        public static Warehouse ToEntity(this WarehouseDTO warehouseDTO, Guid createdById)
         {
             if (warehouseDTO == null)
                 return null;
+
+            var sectors = warehouseDTO.Sectors.ToEntity(createdById);
             return new Warehouse
             {
                 Id = warehouseDTO.Id,
@@ -52,14 +55,34 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Type = warehouseDTO.Type,
                 Status = warehouseDTO.Status,
                 CreatedAt = warehouseDTO.CreatedAt ?? DateTime.UtcNow,
+                CreatedById = createdById,
                 RemovedAt = warehouseDTO.RemovedAt,
                 Items = warehouseDTO.Items?.ToEntity() ?? new List<Item>(),
+                Sectors = sectors
             };
         }
 
-        public static List<Warehouse> ToEntity(this ICollection<WarehouseDTO> warehouseDTOs)
+        public static List<Warehouse> ToEntity(this ICollection<WarehouseDTO> warehouseDTOs, Guid createdById)
         {
-            return warehouseDTOs.Select(x => x.ToEntity()).ToList();
+            return warehouseDTOs.Select(x => x.ToEntity(createdById)).ToList();
+        }
+
+        public static Warehouse ToEntity(this WarehouseFormModel model, Guid createdById)
+        {
+            if (model == null)
+                return null;
+            var now = DateTime.UtcNow;
+
+            var sectors = model.Sectors.ToEntity(createdById);
+            return new Warehouse()
+            {
+                Name = model.GeneralInformation.Name,
+                Type = model.GeneralInformation.Type,
+                CreatedAt = now,
+                CreatedById = createdById,
+                Status = Shared.Models.Enums.EntityStatus.Active,
+                Sectors = sectors
+            };
         }
 
         #endregion
@@ -93,7 +116,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
 
 
-        public static WarehouseSector ToEntity(this SectorDTO sectorDTO)
+        public static WarehouseSector ToEntity(this SectorDTO sectorDTO, Guid createdById)
         {
             if (sectorDTO == null)
                 return null;
@@ -105,12 +128,14 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Status = sectorDTO.Status,
                 CreatedAt = sectorDTO.CreatedAt ?? DateTime.UtcNow,
                 RemovedAt = sectorDTO.RemovedAt,
+                CreatedById = createdById,
+                Rows = sectorDTO.Rows.ToEntity(createdById)
             };
         }
 
-        public static List<WarehouseSector> ToEntity(this ICollection<SectorDTO> sectorDTOs)
+        public static List<WarehouseSector> ToEntity(this ICollection<SectorDTO> sectorDTOs, Guid createdById)
         {
-            return sectorDTOs.Select(x => x.ToEntity()).ToList();
+            return sectorDTOs.Select(x => x.ToEntity(createdById)).ToList();
         }
 
         #endregion
@@ -144,7 +169,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
 
 
-        public static WarehouseSectorRow ToEntity(this RowDTO rowDTO)
+        public static WarehouseSectorRow ToEntity(this RowDTO rowDTO, Guid createdById)
         {
             if (rowDTO == null)
                 return null;
@@ -156,12 +181,14 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Status = rowDTO.Status,
                 CreatedAt = rowDTO.CreatedAt ?? DateTime.UtcNow,
                 RemovedAt = rowDTO.RemovedAt,
+                CreatedById = createdById,
+                Slots = rowDTO.Slots.ToEntity(createdById)
             };
         }
 
-        public static List<WarehouseSectorRow> ToEntity(this ICollection<RowDTO> rowDTOs)
+        public static List<WarehouseSectorRow> ToEntity(this ICollection<RowDTO> rowDTOs, Guid createdById)
         {
-            return rowDTOs.Select(x => x.ToEntity()).ToList();
+            return rowDTOs.Select(x => x.ToEntity(createdById)).ToList();
         }
 
         #endregion
@@ -194,7 +221,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
 
 
-        public static WarehouseSectorRowSlot ToEntity(this SlotDTO slotDTO)
+        public static WarehouseSectorRowSlot ToEntity(this SlotDTO slotDTO, Guid createdById)
         {
             if (slotDTO == null)
                 return null;
@@ -206,12 +233,13 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Status = slotDTO.Status,
                 CreatedAt = slotDTO.CreatedAt ?? DateTime.UtcNow,
                 RemovedAt = slotDTO.RemovedAt,
+                CreatedById = createdById,
             };
         }
 
-        public static List<WarehouseSectorRowSlot> ToEntity(this ICollection<SlotDTO> slotDTOs)
+        public static List<WarehouseSectorRowSlot> ToEntity(this ICollection<SlotDTO> slotDTOs, Guid createdById)
         {
-            return slotDTOs.Select(x => x.ToEntity()).ToList();
+            return slotDTOs.Select(x => x.ToEntity(createdById)).ToList();
         }
 
         #endregion

@@ -1759,4 +1759,10 @@ i uprawnieniami użytkowników</value>
   <data name="DefineSlots" xml:space="preserve">
     <value>Zdefiniuj miejsca</value>
   </data>
+  <data name="ContractorsList" xml:space="preserve">
+    <value>Lista kontrahentów</value>
+  </data>
+  <data name="WarehouseMovementsList2" xml:space="preserve">
+    <value>Historia ruchów magazynowych</value>
+  </data>
 </root>
