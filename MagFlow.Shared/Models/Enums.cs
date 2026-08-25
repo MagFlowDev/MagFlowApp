@@ -288,6 +288,7 @@ namespace MagFlow.Shared.Models
         public enum WarehouseDetailsSection
         {
             GeneralInformation,
+            Locations,
             Inventories,
             MovementsList,
         }

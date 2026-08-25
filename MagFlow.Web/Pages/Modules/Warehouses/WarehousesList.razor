@@ -41,15 +41,15 @@
     </ToolBarContent>
     <Columns>
         <SelectColumn T="WarehouseDTO" HeaderStyle="width: 1%" />
-        <MagFlowPropertyColumn T="WarehouseDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="warehouse => warehouse.Name" />
-        <MagFlowPropertyColumn T="WarehouseDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Code]" MagFlowSortable="true" Property="warehouse => warehouse.Code" />
-        <MagFlowTemplateColumn T="WarehouseDTO" TFilter="string" Title="@Localizer[Langs.Status]">
+        <MagFlowPropertyColumn T="WarehouseDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Name]" MagFlowSortable="true" Property="warehouse => warehouse.Name" Tag="@($"{nameof(WarehouseDTO.Name)}")" />
+        <MagFlowPropertyColumn T="WarehouseDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Code]" MagFlowSortable="true" Property="warehouse => warehouse.Code" Tag="@($"{nameof(WarehouseDTO.Code)}")" />
+        <MagFlowTemplateColumn T="WarehouseDTO" TFilter="Enums.EntityStatus" Title="@Localizer[Langs.Status]" Tag="@($"{nameof(WarehouseDTO.Status)}")" IncludedEnumValues="@(new[] { Enums.EntityStatus.Active })">
             <CellTemplate>
                 <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
             </CellTemplate>
         </MagFlowTemplateColumn>
-        <MagFlowPropertyColumn T="WarehouseDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Type]" Property="warehouse => warehouse.Type.GetDisplayName(Localizer)" />
-        <MagFlowTemplateColumn T="WarehouseDTO" Title="Obłożenie" TFilter="string">
+        <MagFlowPropertyColumn T="WarehouseDTO" TProperty="string" TFilter="Enums.WarehouseType" Title="@Localizer[Langs.Type]" Property="warehouse => warehouse.Type.GetDisplayName(Localizer)" Tag="@($"{nameof(WarehouseDTO.Type)}")" ExcludedEnumValues="@(new[] { Enums.WarehouseType.Unknown })" />
+        <MagFlowTemplateColumn T="WarehouseDTO" Title="Obłożenie" TFilter="string" Filterable="false">
             <CellTemplate>
             </CellTemplate>
         </MagFlowTemplateColumn>

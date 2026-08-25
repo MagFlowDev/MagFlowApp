@@ -15,6 +15,7 @@ namespace MagFlow.Web.Pages.Modules.Warehouses.Warehouse
         private SectionsEnums.WarehouseDetailsSection _currentSection = SectionsEnums.WarehouseDetailsSection.GeneralInformation;
         private bool _isMenuOpened = false;
 
+        bool _loadingChangeStatus = false;
         bool _loadingDelete = false;
         bool _loadingSave = false;
         bool _isBusy = false;
@@ -103,6 +104,11 @@ namespace MagFlow.Web.Pages.Modules.Warehouses.Warehouse
                 return;
             _currentSection = section;
             StateHasChanged();
+        }
+
+        private async Task ChangeStatus()
+        {
+
         }
     }
 }

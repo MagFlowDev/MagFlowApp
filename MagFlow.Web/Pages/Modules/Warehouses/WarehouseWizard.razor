@@ -49,12 +49,12 @@
                     <div class="d-flex flex-column w-100 h-100 align-items-start justify-content-start" style="min-height: 0; overflow-y: auto;">
                         @if(_warehouseTreeItems.Count > 0)
                         {
-                            <MudTreeView Items="_warehouseTreeItems" SelectionMode="SelectionMode.MultiSelection" @bind-SelectedValues="_selectedValues" Class="w-100">
+                            <MudTreeView Items="_warehouseTreeItems" ReadOnly Class="w-100">
                                 <ItemTemplate Context="item">
                                     @{
                                         var presenter = item as WarehouseTreeViewTempItem;
                                     }
-                                    <MudTreeViewItem @bind-Expanded="@item.Expanded" Items="@item.Children" Value="@item.Value" Icon="@item.Icon">
+                                    <MudTreeViewItem @bind-Expanded="@item.Expanded" Items="@item.Children" Value="@item.Value" Icon="@item.Icon" ReadOnly>
                                         <BodyContent>
                                             <div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
                                                 <MudTextField Variant="Variant.Outlined" Label="@Localizer[Langs.Name]" Margin="Margin.Dense" @bind-Value="item.Text"/>

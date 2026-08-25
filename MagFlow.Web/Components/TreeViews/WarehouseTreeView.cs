@@ -110,9 +110,15 @@ namespace MagFlow.Web.Components.TreeViews
     {
         public int SubItemsCount => this.Children?.Count ?? 0;
 
-        public WarehouseTreeViewItem(int id, string text) : base(id)
+        public Enums.WarehouseStorageType StorageType { get; set; }
+
+        public int? ParentId { get; set; }
+
+        public WarehouseTreeViewItem(int id, string text, Enums.WarehouseStorageType storageType, int? parentId = null) : base(id)
         {
             Text = text;
+            StorageType = storageType;
+            ParentId = parentId;
         }
 
         public void AddChildren(WarehouseTreeViewItem child)
@@ -124,6 +130,77 @@ namespace MagFlow.Web.Components.TreeViews
             currentChildren.Add(child);
 
             this.Children = currentChildren;
+        }
+
+        public void RemoveChildren(WarehouseTreeViewItem child)
+        {
+            var currentChildren = this.Children != null
+                ? this.Children.Cast<ITreeItemData<int>>().ToList()
+                : new List<ITreeItemData<int>>();
+
+            var existingChild = currentChildren.FirstOrDefault(x => ((WarehouseTreeViewItem)x) != null && ((WarehouseTreeViewItem)x).Value == child.Value);
+            if (existingChild == null)
+                return;
+
+            currentChildren.Remove(existingChild);
+
+            this.Children = currentChildren;
+        }
+
+        public SectorDTO? GetSectorDTO()
+        {
+            if (this.StorageType != Enums.WarehouseStorageType.Sector)
+                return null;
+
+            var currentChildren = this.Children != null
+                ? this.Children.Cast<WarehouseTreeViewItem>().ToList()
+                : new List<WarehouseTreeViewItem>();
+
+            var rows = currentChildren?
+                .Where(x => x != null).Select(x => x!.GetRowDTO())
+                .Where(x => x != null).Select(x => x!)
+                .ToList() ?? new List<RowDTO>();
+
+            return new SectorDTO()
+            {
+                Id = Value,
+                Name = Text,
+                Rows = rows
+            };
+        }
+
+        public RowDTO? GetRowDTO()
+        {
+            if (this.StorageType != Enums.WarehouseStorageType.Row)
+                return null;
+
+            var currentChildren = this.Children != null
+                ? this.Children.Cast<WarehouseTreeViewItem>().ToList()
+                : new List<WarehouseTreeViewItem>();
+
+            var slots = currentChildren?
+                .Where(x => x != null).Select(x => x!.GetSlotDTO())
+                .Where(x => x != null).Select(x => x!)
+                .ToList() ?? new List<SlotDTO>();
+
+            return new RowDTO()
+            {
+                Id = Value,
+                Name = Text,
+                Slots = slots
+            };
+        }
+
+        public SlotDTO? GetSlotDTO()
+        {
+            if (this.StorageType != Enums.WarehouseStorageType.Slot)
+                return null;
+
+            return new SlotDTO()
+            {
+                Id = Value,
+                Name = Text,
+            };
         }
     }
 }

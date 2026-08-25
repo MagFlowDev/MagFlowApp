@@ -33,7 +33,8 @@ namespace MagFlow.BLL.Services
         public async Task<WarehouseDTO?> GetWarehouse(int id)
         {
             return await base.GetEntityAsync(id, warehouse => warehouse
-                .Include(x => x.Items.Where(i => i.SectorId == null)));
+                .Include(x => x.Items.Where(i => i.SectorId == null))
+                .Include(x => x.Sectors).ThenInclude(y => y.Rows).ThenInclude(z => z.Slots));
         }
 
         public async Task<Enums.Result> AddWarehouse(WarehouseFormModel model)
