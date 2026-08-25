@@ -205,8 +205,8 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
                 if(sectors == null || sectors.Count == 0) 
                     return;
 
-                var parameters = new DialogParameters<DefineRowsDialog> { { x => x.Sectors, sectors } };
-                var dialog = await DialogService.ShowAsync<DefineRowsDialog>(Localizer[Langs.DefineRows], parameters);
+                var parameters = new DialogParameters<DefineRowsDialog<Guid>> { { x => x.Sectors, sectors } };
+                var dialog = await DialogService.ShowAsync<DefineRowsDialog<Guid>>(Localizer[Langs.DefineRows], parameters);
                 var confirmation = await dialog.Result;
 
                 if (confirmation != null && !confirmation.Canceled)
@@ -252,8 +252,8 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
                 if (rows == null || rows.Count == 0)
                     return;
 
-                var parameters = new DialogParameters<DefineSlotsDialog> { { x => x.Rows, rows } };
-                var dialog = await DialogService.ShowAsync<DefineSlotsDialog>(Localizer[Langs.DefineSlots], parameters);
+                var parameters = new DialogParameters<DefineSlotsDialog<Guid>> { { x => x.Rows, rows } };
+                var dialog = await DialogService.ShowAsync<DefineSlotsDialog<Guid>>(Localizer[Langs.DefineSlots], parameters);
                 var confirmation = await dialog.Result;
 
                 if (confirmation != null && !confirmation.Canceled)

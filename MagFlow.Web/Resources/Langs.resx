@@ -1765,4 +1765,7 @@ i uprawnieniami użytkowników</value>
   <data name="WarehouseMovementsList2" xml:space="preserve">
     <value>Historia ruchów magazynowych</value>
   </data>
+  <data name="WarehouseLocations" xml:space="preserve">
+    <value>Lokalizacje magazynowe</value>
+  </data>
 </root>

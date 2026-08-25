@@ -1,5 +1,106 @@
-﻿<h3>WarehouseGeneralInformation</h3>
+﻿@using FluentValidation
+@using MagFlow.BLL.Helpers
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Validators.Company
+@using MagFlow.Shared.Validators.Resources
+@using MagFlow.Web.Components.Buttons
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject IStringLocalizer<Validations> Validations
+@inherits AuthComponentBase
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 24px; padding-right: 40px; margin-top: 24px;">
+    <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.GeneralInformation]</MudText>
+    @if (_warehouse != null)
+    {
+        <EditForm EditContext="@_context" class="align-self-stretch d-flex flex-column align-items-start" style="gap: 16px; padding-bottom: 24px;">
+            <div class="d-flex flex-column align-items-start align-self-stretch" style="gap: 24px;">
+                <MudTextField Label="@Localizer[Langs.Name]" Placeholder="@Localizer[Langs.WarehouseExample]" Variant="Variant.Outlined" T="string" @bind-Value="_warehouse.Name" For="@(() => _model.GeneralInformation.Name)" Class="w-100 my-0"></MudTextField>
+                <div class="d-flex w-100 my-0 align-items-stretch">
+                    <MudSelect T="Enums.WarehouseType" Label="@Localizer[Langs.Type]" FullWidth="true" Variant="Variant.Outlined" @bind-Value="_warehouse.Type" For="@(() => _model.GeneralInformation.Type)">
+                        @foreach (var type in Enum.GetValues<Enums.WarehouseType>().Where(x => x != Enums.WarehouseType.Unknown))
+                        {
+                            <MudSelectItem T="Enums.WarehouseType" Value="@type">@type.GetDisplayName(Localizer)</MudSelectItem>
+                        }
+                    </MudSelect>
+                </div>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_EDIT" Context="authorizedContext">
+                    <Authorized>
+                        <LoadingButton Loading="Submitting" Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@Localizer[Langs.Save]</LoadingButton>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+        </EditForm>
+    }
+</div>
 
 @code {
+    [CascadingParameter(Name = "Warehouse")]
+    WarehouseDTO? _warehouse { get; set; }
 
+    [Parameter]
+    public EventCallback OnWarehouseUpdated { get; set; }
+
+    [Parameter]
+    public bool Submitting { get; set; }
+
+    [Parameter]
+    public bool IsBusy { get; set; }
+
+    private IValidator _validator;
+    private WarehouseFormModel _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _model = new WarehouseFormModel();
+        _context = new EditContext(_model);
+        _validator = new WarehouseFormValidator(Validations);
+        _messageStore = new ValidationMessageStore(_context);
+    }
+
+    private async Task Submit()
+    {
+        if (IsBusy || _warehouse == null)
+            return;
+
+        if (!HasModulePermission("Warehouses", PermissionFlags.Edit))
+            return;
+
+        try
+        {
+            IsBusy = true;
+            Submitting = true;
+
+            FillModel();
+            var isValid = await _messageStore.IsFormValid(_validator, _model);
+            _context.NotifyValidationStateChanged();
+
+            if (!isValid)
+                return;
+
+            await OnWarehouseUpdated.InvokeAsync();
+        }
+        finally
+        {
+            IsBusy = false;
+            Submitting = false;
+        }
+    }
+
+    private void FillModel()
+    {
+        if (_warehouse == null)
+            return;
+
+        _model.GeneralInformation.Name = _warehouse.Name;
+        _model.GeneralInformation.Type = _warehouse.Type;
+    }
 }

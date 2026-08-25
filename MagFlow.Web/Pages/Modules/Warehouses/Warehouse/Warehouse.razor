@@ -32,7 +32,12 @@
                         <MudChip T="string" Class="m-0" Variant="Variant.Filled" Color="@_warehouse.Status.ToColor()">@_warehouse.Status.GetDisplayName(Localizer)</MudChip>
                     }
                 </div>
-                <div class="d-flex align-items-center align-self-stretch justify-content-end" style="gap: 16px;">
+                <div class="d-flex align-items-center align-self-stretch justify-content-end" style="gap: 8px;">
+                    <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_EDIT">
+                        <Authorized>
+                            <LoadingButton Loading="_loadingChangeStatus" Color="Color.Secondary" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.MoveUp" OnClick="ChangeStatus">@Localizer[Langs.ChangeStatus]</LoadingButton>
+                        </Authorized>
+                    </AuthorizeView>
                     <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE" Context="authorizedContext">
                         <Authorized>
                             <LoadingButton Loading="_loadingDelete" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" OnClick="DeleteProduct">@Localizer[Langs.Delete]</LoadingButton>
@@ -51,6 +56,9 @@
                         <MudTooltip Text="@Localizer[Langs.GeneralInformation]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
                             <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Label" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehouseDetailsSection.GeneralInformation))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehouseDetailsSection.GeneralInformation)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehouseDetailsSection.GeneralInformation)">@Localizer[Langs.GeneralInformation]</MudNavLink>
                         </MudTooltip>
+                        <MudTooltip Text="@Localizer[Langs.WarehouseLocations]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Place" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehouseDetailsSection.Locations))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehouseDetailsSection.Locations)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehouseDetailsSection.Locations)">@Localizer[Langs.WarehouseLocations]</MudNavLink>
+                        </MudTooltip>
                         <MudTooltip Text="@Localizer[Langs.Inventories]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
                             <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Assignment" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehouseDetailsSection.Inventories))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehouseDetailsSection.Inventories)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehouseDetailsSection.Inventories)">@Localizer[Langs.Inventories]</MudNavLink>
                         </MudTooltip>
@@ -65,7 +73,12 @@
                         {
                             case SectionsEnums.WarehouseDetailsSection.GeneralInformation:
                                 <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
-                                    <WarehouseGeneralInformation/>
+                                    <WarehouseGeneralInformation OnWarehouseUpdated="SaveChanges" IsBusy="_isBusy" Submitting="_loadingSave" />
+                                </div>
+                                break;
+                            case SectionsEnums.WarehouseDetailsSection.Locations:
+                                <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
+                                    <WarehouseLocations OnWarehouseUpdated="SaveChanges" IsBusy="_isBusy" Submitting="_loadingSave" />
                                 </div>
                                 break;
                             case SectionsEnums.WarehouseDetailsSection.Inventories:

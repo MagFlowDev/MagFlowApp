@@ -1,4 +1,6 @@
-﻿@using MagFlow.BLL.Helpers
+﻿@typeparam T
+
+@using MagFlow.BLL.Helpers
 @using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CoreScope
 @using MagFlow.Shared.Models
@@ -11,7 +13,7 @@
             <div class="w-100 d-flex flex-column align-items-start overflow-hidden" style="gap: 16px; min-height: 0">
                 <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.ListOfRows]</MudText>
                 <div class="w-100 d-flex flex-column align-items-start overflow-y-auto" style="gap: 16px; min-height: 0;">
-                    <MudList T="Guid" @bind-SelectedValues="_selectedRowsIds" SelectionMode="SelectionMode.MultiSelection" Class="w-100">
+                    <MudList T="T" @bind-SelectedValues="_selectedRowsIds" SelectionMode="SelectionMode.MultiSelection" Class="w-100">
                         @foreach(var row in Rows)
                         {
                             <MudListItem Value="@row.Key" Text="@row.Value" Class="pl-0"/>
@@ -32,12 +34,12 @@
     private IMudDialogInstance MudDialog { get; set; }
 
     [Parameter]
-    public Dictionary<Guid, string> Rows { get; set; } = [];
+    public Dictionary<T, string> Rows { get; set; } = [];
 
-    private IReadOnlyCollection<Guid> _selectedRowsIds { get; set; } = [];
+    private IReadOnlyCollection<T> _selectedRowsIds { get; set; } = [];
     private int _slotsNumber { get; set; }
 
-    private void Submit() => MudDialog.Close(DialogResult.Ok(new Tuple<IReadOnlyCollection<Guid>, int>(_selectedRowsIds, _slotsNumber)));
+    private void Submit() => MudDialog.Close(DialogResult.Ok(new Tuple<IReadOnlyCollection<T>, int>(_selectedRowsIds, _slotsNumber)));
 
     private void Cancel() => MudDialog.Cancel();
 

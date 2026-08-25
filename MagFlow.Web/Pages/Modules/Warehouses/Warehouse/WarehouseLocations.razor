@@ -1,0 +1,348 @@
+﻿@using FluentValidation
+@using MagFlow.BLL.Helpers
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Shared.Validators.Company
+@using MagFlow.Shared.Validators.Resources
+@using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Components.TreeViews
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject IDialogService DialogService
+@inject IStringLocalizer<Validations> Validations
+@inherits AuthComponentBase
+
+<div class="d-flex flex-column align-items-start w-100" style="max-width: 590px; min-height: 0; gap: 24px; padding-right: 40px; margin-top: 24px;">
+    <div class="d-flex justify-content-between w-100 align-items-center">
+        <MudText Typo="Typo.subtitle1" Style="font-weight: 500">@Localizer[Langs.WarehouseSectors]</MudText>
+        <div class="d-flex h-100" style="gap: 9px">
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="AddSector">@Localizer[Langs.AddSector]</MudButton>
+            <LoadingButton Variant="Variant.Outlined" Loading="_loading" StartIcon="@Icons.Material.Outlined.TableRows" OnClick="@(async () => await DefineRows())">@Localizer[Langs.DefineRows]</LoadingButton>
+        </div>
+    </div>
+    <div class="d-flex flex-column w-100 h-100 align-items-start justify-content-start" style="min-height: 0; overflow-y: auto;">
+        @if (_warehouseTreeItems.Count > 0)
+        {
+            <MudTreeView Items="_warehouseTreeItems" @bind-SelectedValues="_selectedValues" ReadOnly Class="w-100">
+                <ItemTemplate Context="item">
+                    @{
+                        var presenter = item as WarehouseTreeViewItem;
+                    }
+                    <MudTreeViewItem @bind-Expanded="@item.Expanded" Items="@item.Children" Value="@item.Value" Icon="@item.Icon" ReadOnly>
+                        <BodyContent>
+                            <div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
+                                <MudTextField Variant="Variant.Outlined" Label="@Localizer[Langs.Name]" Margin="Margin.Dense" @bind-Value="item.Text" />
+                                <div style="justify-self: end;">
+                                    <MudIconButton Icon="@Icons.Material.Outlined.RemoveCircleOutline" Color="Color.Error" OnClick="@(() => RemoveStorage(presenter))" />
+                                </div>
+                            </div>
+                        </BodyContent>
+                    </MudTreeViewItem>
+                    @if (presenter?.StorageType == Enums.WarehouseStorageType.Sector && (presenter.Children == null || presenter.Children.Count == 0 || presenter.Expanded == true))
+                    {
+                        <div class="w-100 d-flex align-items-center justify-content-start" style="gap: 8px">
+                            <MudButton Size="Size.Small" Variant="Variant.Outlined" Class="ml-12" StartIcon="@Icons.Material.Outlined.Add" OnClick="() => AddRow(presenter)">@Localizer[Langs.AddRow]</MudButton>
+                            <MudButton Size="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.TableRows" OnClick="() => DefineSlots(presenter)">@Localizer[Langs.DefineSlots]</MudButton>
+                        </div>
+                    }
+                    else if (presenter?.StorageType == Enums.WarehouseStorageType.Row && (presenter.Children == null || presenter.Children.Count == 0 || presenter.Expanded == true))
+                    {
+                        <div class="w-100 d-flex align-items-center justify-content-end">
+                            <MudButton Size="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="() => AddSlot(presenter)">@Localizer[Langs.AddSlot]</MudButton>
+                        </div>
+                    }
+                </ItemTemplate>
+            </MudTreeView>
+        }
+        else
+        {
+            <div class="d-flex w-100 mud-height-full align-items-center justify-content-center" style="gap: 16px">
+                <MudIcon Icon="@Icons.Material.Outlined.Info" Size="Size.Medium" Style="color: var(--mud-palette-text-disabled)" />
+                <MudText Typo="Typo.h6" Style="font-weight: 600; color: var(--mud-palette-text-disabled)">@Localizer[Langs.NoSectorsAdded]</MudText>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [CascadingParameter(Name = "Warehouse")]
+    WarehouseDTO? _warehouse { get; set; }
+
+    [Parameter]
+    public EventCallback OnWarehouseUpdated { get; set; }
+
+    [Parameter]
+    public bool Submitting { get; set; }
+
+    [Parameter]
+    public bool IsBusy { get; set; }
+
+    private IValidator _validator;
+    private WarehouseFormModel _model;
+    private EditContext _context;
+    private ValidationMessageStore _messageStore;
+    private bool _loading;
+
+    private List<TreeItemData<int>> _warehouseTreeItems { get; set; } = new();
+    private IReadOnlyCollection<int> _selectedValues { get; set; }
+
+    private List<int> _removedSectors = [];
+    private List<int> _removedRows = [];
+    private List<int> _removedSlots = [];
+
+    private int tempId = -1;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _model = new WarehouseFormModel();
+        _context = new EditContext(_model);
+        _validator = new WarehouseFormValidator(Validations);
+        _messageStore = new ValidationMessageStore(_context);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (_warehouse != null && _warehouseTreeItems.Count == 0)
+        {
+            _warehouse.Sectors?.ForEach(sector =>
+             {
+                 var newSector = new WarehouseTreeViewItem(sector.Id, sector.Name, Enums.WarehouseStorageType.Sector);
+                 sector.Rows?.ForEach(row =>
+                 {
+                     var newRow = new WarehouseTreeViewItem(row.Id, row.Name, Enums.WarehouseStorageType.Row, newSector.Value);
+                     row.Slots?.ForEach(slot =>
+                     {
+                         var newSlot = new WarehouseTreeViewItem(slot.Id, slot.Name, Enums.WarehouseStorageType.Slot, newRow.Value);
+                         newRow.AddChildren(newSlot);
+                     });
+                     newSector.AddChildren(newRow);
+                 });
+                 _warehouseTreeItems.Add(newSector);
+             });
+        }
+    }
+
+    private async Task Submit()
+    {
+        if (IsBusy || _warehouse == null)
+            return;
+
+        if (!HasModulePermission("Warehouses", PermissionFlags.Edit))
+            return;
+
+        try
+        {
+            IsBusy = true;
+            Submitting = true;
+
+            FillModel();
+            var isValid = await _messageStore.IsFormValid(_validator, _model);
+            _context.NotifyValidationStateChanged();
+
+            if (!isValid)
+                return;
+
+            await OnWarehouseUpdated.InvokeAsync();
+        }
+        finally
+        {
+            IsBusy = false;
+            Submitting = false;
+        }
+    }
+
+    private void FillModel()
+    {
+        if (_warehouse == null)
+            return;
+
+        _model.GeneralInformation.Name = _warehouse.Name;
+        _model.GeneralInformation.Type = _warehouse.Type;
+
+        var sectors = _warehouseTreeItems
+               .Select(x => ((WarehouseTreeViewItem)x).GetSectorDTO())
+               .Where(x => x != null).Select(x => x!)
+               .ToList();
+        _model.Sectors = sectors;
+    }
+
+
+    private void AddSector()
+    {
+        var sectorBaseName = Localizer[Langs.Sector];
+        var sectorNumber = _warehouseTreeItems.Count + 1;
+        while (_warehouseTreeItems.Any(x => x.Text == $"{sectorBaseName} {sectorNumber}"))
+        {
+            sectorNumber++;
+            if (sectorNumber > 1000)
+                break;
+        }
+
+        _warehouseTreeItems.Add(new WarehouseTreeViewItem(tempId--, $"{sectorBaseName} {sectorNumber}", Enums.WarehouseStorageType.Sector));
+    }
+
+    private void AddRow(WarehouseTreeViewItem sector)
+    {
+        var rowBaseName = Localizer[Langs.Row];
+        var rowNumber = (sector.Children?.Count ?? 0) + 1;
+        while (sector.Children?.Any(x => x.Text == $"{rowBaseName} {rowNumber}") == true)
+        {
+            rowNumber++;
+            if (rowNumber > 1000)
+                break;
+        }
+
+        sector.Children ??= new List<WarehouseTreeViewItem>();
+        sector.AddChildren(new WarehouseTreeViewItem(tempId--, $"{rowBaseName} {rowNumber}", Enums.WarehouseStorageType.Row, sector.Value));
+        sector.Expanded = true;
+    }
+
+    private void AddSlot(WarehouseTreeViewItem row)
+    {
+        var slotBaseName = Localizer[Langs.Slot];
+        var slotNumber = (row.Children?.Count ?? 0) + 1;
+        while (row.Children?.Any(x => x.Text == $"{slotBaseName} {slotNumber}") == true)
+        {
+            slotNumber++;
+            if (slotNumber > 1000)
+                break;
+        }
+
+        row.Children ??= new List<WarehouseTreeViewItem>();
+        row.AddChildren(new WarehouseTreeViewItem(tempId--, $"{slotBaseName} {slotNumber}", Enums.WarehouseStorageType.Slot, row.Value));
+        row.Expanded = true;
+    }
+
+
+    private void RemoveStorage(WarehouseTreeViewItem? storage)
+    {
+        if (storage == null)
+            return;
+
+        if (storage.StorageType == Enums.WarehouseStorageType.Sector)
+        {
+            _warehouseTreeItems.Remove(storage);
+        }
+        else if (storage.StorageType == Enums.WarehouseStorageType.Row)
+        {
+            var parent = _warehouseTreeItems.FirstOrDefault(x => ((WarehouseTreeViewItem)x) != null && ((WarehouseTreeViewItem)x).Value == storage.ParentId) as WarehouseTreeViewItem;
+            if (parent == null)
+                return;
+            parent.RemoveChildren(storage);
+        }
+        else if (storage.StorageType == Enums.WarehouseStorageType.Slot)
+        {
+            WarehouseTreeViewItem? parent = null;
+            foreach (var sector in _warehouseTreeItems)
+            {
+                parent = sector.Children?.FirstOrDefault(x => ((WarehouseTreeViewItem)x) != null && ((WarehouseTreeViewItem)x).Value == storage.ParentId) as WarehouseTreeViewItem;
+                if (parent != null)
+                    break;
+            }
+            if (parent == null)
+                return;
+            parent.RemoveChildren(storage);
+        }
+    }
+
+    private async Task DefineRows()
+    {
+        if (IsBusy || Submitting || _loading)
+            return;
+
+        try
+        {
+            IsBusy = true;
+            _loading = true;
+
+            var sectors = _warehouseTreeItems.ToDictionary(x => ((WarehouseTreeViewItem)x).Value, x => x.Text ?? "sector");
+            if (sectors == null || sectors.Count == 0)
+                return;
+
+            var parameters = new DialogParameters<DefineRowsDialog<int>> { { x => x.Sectors, sectors } };
+            var dialog = await DialogService.ShowAsync<DefineRowsDialog<int>>(Localizer[Langs.DefineRows], parameters);
+            var confirmation = await dialog.Result;
+
+            if (confirmation != null && !confirmation.Canceled)
+            {
+                if (confirmation.Data is Tuple<IReadOnlyCollection<int>, int> data)
+                {
+                    var sectorIds = data.Item1.ToList();
+                    var rowNumber = data.Item2;
+                    if (rowNumber <= 0)
+                        return;
+
+                    foreach (var sectorId in sectorIds)
+                    {
+                        var sector = _warehouseTreeItems.FirstOrDefault(x => ((WarehouseTreeViewItem)x)?.Value == sectorId) as WarehouseTreeViewItem;
+                        if (sector == null)
+                            continue;
+
+                        sector.Children = new List<ITreeItemData<int>>();
+                        for (int i = 0; i < rowNumber; i++)
+                            AddRow(sector);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            _loading = false;
+            IsBusy = false;
+        }
+    }
+
+    private async Task DefineSlots(WarehouseTreeViewItem sector)
+    {
+        if (IsBusy || Submitting || _loading)
+            return;
+
+        try
+        {
+            IsBusy = true;
+            _loading = true;
+
+            var rows = sector?.Children?.ToDictionary(x => ((WarehouseTreeViewItem)x).Value, x => x.Text ?? "row");
+            if (rows == null || rows.Count == 0)
+                return;
+
+            var parameters = new DialogParameters<DefineSlotsDialog<int>> { { x => x.Rows, rows } };
+            var dialog = await DialogService.ShowAsync<DefineSlotsDialog<int>>(Localizer[Langs.DefineSlots], parameters);
+            var confirmation = await dialog.Result;
+
+            if (confirmation != null && !confirmation.Canceled)
+            {
+                if (confirmation.Data is Tuple<IReadOnlyCollection<int>, int> data)
+                {
+                    var rowIds = data.Item1.ToList();
+                    var slotNumber = data.Item2;
+                    if (slotNumber <= 0)
+                        return;
+
+                    foreach (var rowId in rowIds)
+                    {
+                        var row = sector?.Children?.FirstOrDefault(x => ((WarehouseTreeViewItem)x)?.Value == rowId) as WarehouseTreeViewItem;
+                        if (row == null)
+                            continue;
+
+                        row.Children = new List<ITreeItemData<int>>();
+                        for (int i = 0; i < slotNumber; i++)
+                            AddSlot(row);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            _loading = false;
+            IsBusy = false;
+        }
+    }
+}

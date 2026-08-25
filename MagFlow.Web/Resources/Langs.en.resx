@@ -1764,4 +1764,7 @@
   <data name="WarehouseMovementsList2" xml:space="preserve">
     <value>History of warehouse movements</value>
   </data>
+  <data name="WarehouseLocations" xml:space="preserve">
+    <value>Warehouse locations</value>
+  </data>
 </root>
