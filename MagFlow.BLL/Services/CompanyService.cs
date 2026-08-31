@@ -13,6 +13,7 @@ using MagFlow.Shared.DTOs.CoreScope;
 using MagFlow.Shared.Extensions;
 using MagFlow.Shared.Generators.EmailGenerators;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Shared.Models.FormModels;
 using MagFlow.Shared.Models.Settings;

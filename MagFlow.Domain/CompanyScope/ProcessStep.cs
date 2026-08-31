@@ -9,7 +9,7 @@ namespace MagFlow.Domain.CompanyScope
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public override int Id { get; set; }
         [Required]
         public int ProcessId { get; set; }
         [Required]
@@ -31,6 +31,9 @@ namespace MagFlow.Domain.CompanyScope
         public Machine? Machine { get; set; }
         [ForeignKey(nameof(MachineFunctionId))]
         public MachineFunction? MachineFunction { get; set; }
+
+        [NotMapped]
+        public override Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.ProcessStep;
 
         public ICollection<ProcessStepIO> StepIO { get; set; }
         public ICollection<ProcessStepParameter> Parameters { get; set; }

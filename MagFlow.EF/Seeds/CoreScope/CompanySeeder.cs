@@ -155,7 +155,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                                 var companyAdmin = await companyDbContext.Users.FirstOrDefaultAsync(x => x.Id == adminUser.Id);
                                 if(companyAdmin == null)
                                 {
-                                    companyAdmin = new Domain.CompanyScope.User()
+                                    companyAdmin = new Shared.Models.Domain.CompanyScope.User()
                                     {
                                         Id = adminUser.Id,
                                         FirstName = adminUser.FirstName,

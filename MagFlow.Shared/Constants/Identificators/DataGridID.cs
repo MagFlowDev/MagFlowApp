@@ -14,6 +14,7 @@ namespace MagFlow.Shared.Constants.Identificators
         public const string USER_EVENTS = "USER_EVENTS";
 
         public const string WAREHOUSES_LIST = "WAREHOUSES_LIST";
+        public const string WAREHOUSES_ARCHIVE = "WAREHOUSES_ARCHIVE";
 
         public const string WARES_LIST = "WARES_LIST";
         public const string WARES_ARCHIVE = "WARES_ARCHIVE";

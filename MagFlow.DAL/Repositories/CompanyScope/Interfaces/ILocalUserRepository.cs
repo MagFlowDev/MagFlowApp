@@ -1,5 +1,6 @@
 ﻿using MagFlow.Domain.CompanyScope;
 using MagFlow.EF;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using System;
 using System.Collections.Generic;
 using System.Linq;

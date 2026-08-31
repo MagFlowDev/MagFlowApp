@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MagFlow.Shared.Models
 {
-    public abstract class StatusEntity : IStatusEntity
+    public abstract class StatusEntity : HistoryEntity, IStatusEntity
     {
         protected Enums.EntityStatus _status;
 

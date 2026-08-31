@@ -6,6 +6,7 @@ using MagFlow.Domain.CompanyScope;
 using MagFlow.EF;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.FormModels;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -76,9 +77,9 @@ namespace MagFlow.BLL.Services
             return dto;
         }
 
-        public virtual async Task<QueryResponse<TDTO>> GetManyAsync(QueryOptions<TEntity> options)
+        public virtual async Task<QueryResponse<TDTO>> GetManyAsync(QueryOptions<TEntity> options, bool archive = false)
         {
-            var queryResponse = await _baseRepository.GetAsync(options, include: options.Includes);
+            var queryResponse = await _baseRepository.GetAsync(options, include: options.Includes, archive: archive);
             return new QueryResponse<TDTO>()
             {
                 Elements = queryResponse?.Elements.Select(x =>
@@ -171,6 +172,7 @@ namespace MagFlow.BLL.Services
                 if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
                     ((IStatusEntity)originalEntity).ChangeStatus(Enums.EntityStatus.Available);
                 var result = await _baseRepository.UpdateAsync(originalEntity);
+                return result;
             }
             return Enums.Result.Error;
         }

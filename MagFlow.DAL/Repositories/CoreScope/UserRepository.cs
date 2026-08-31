@@ -5,6 +5,7 @@ using MagFlow.Domain.CoreScope;
 using MagFlow.EF;
 using MagFlow.Shared.Constants.Identificators;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;

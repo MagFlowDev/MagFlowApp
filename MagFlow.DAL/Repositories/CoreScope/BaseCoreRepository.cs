@@ -32,7 +32,7 @@ namespace MagFlow.DAL.Repositories.CoreScope
         }
 
 
-        public virtual async Task<(CoreDbContext context, IDbContextTransaction transaction)> BeingTransaction()
+        public virtual async Task<(CoreDbContext? context, IDbContextTransaction? transaction)> BeingTransaction()
         {
             CoreDbContext? context = null;
             IDbContextTransaction? transaction = null;

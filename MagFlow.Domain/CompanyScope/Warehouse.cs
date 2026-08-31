@@ -1,4 +1,5 @@
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ namespace MagFlow.Domain.CompanyScope
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public override int Id { get; set; }
         [Required]
         public string Name { get; set; }
         public string Code { get; private set; }
@@ -34,10 +35,7 @@ namespace MagFlow.Domain.CompanyScope
         public User? RemovedBy { get; set; }
 
         [NotMapped]
-        public Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Warehouse;
-
-        [NotMapped]
-        public ICollection<IEntityHistory> History { get; set; } = [];
+        public override Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Warehouse;
 
 
         private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()

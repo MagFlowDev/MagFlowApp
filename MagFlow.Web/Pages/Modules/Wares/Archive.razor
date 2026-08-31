@@ -47,7 +47,7 @@
         <MagFlowPropertyColumn T="ItemDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.StockRemovalDate]" Property="item => (item.RemovedAt.HasValue ? item.RemovedAt.Value.ToLocalTime().ToShortDateString() : string.Empty)" Tag="@($"{nameof(ItemDTO.RemovedAt)}")" />
         <MagFlowActionColumn T="ItemDTO" Title="@Localizer[Langs.Actions]">
             <CellTemplate>
-                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE">
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_EDIT">
                     <Authorized Context="authorizedContext">
                         <MudTooltip Text="@Localizer[Langs.Restore]" Delay="@Constants.Tooltip.DELAY">
                             <LoadingIconButton Loading="LoadingRestore(context.Item.Id)" Size="@Size.Small" Icon="@Icons.Material.Outlined.RestartAlt" OnClick="() => RestoreItem(context.Item)" />

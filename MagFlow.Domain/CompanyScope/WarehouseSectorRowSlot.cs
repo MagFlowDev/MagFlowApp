@@ -12,7 +12,7 @@ namespace MagFlow.Domain.CompanyScope
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public override int Id { get; set; }
         [Required]
         public int RowId { get; set; }
         public string Code { get; private set; }
@@ -29,6 +29,9 @@ namespace MagFlow.Domain.CompanyScope
 
         [ForeignKey(nameof(RowId))]
         public WarehouseSectorRow? Row { get; set; }
+
+        [NotMapped]
+        public override Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.WarehouseSectorRowSlot;
 
 
         private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()

@@ -1,4 +1,5 @@
 ﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;

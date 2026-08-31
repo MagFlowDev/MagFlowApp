@@ -1,6 +1,7 @@
 ﻿using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
 using MagFlow.Domain.CompanyScope;
 using MagFlow.EF;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

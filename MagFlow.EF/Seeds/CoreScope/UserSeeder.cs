@@ -74,7 +74,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                             var existingUser = await companyContext.Users.FirstOrDefaultAsync(u => u.Id == adminUser.Id);
                             if (existingUser == null)
                             {
-                                existingUser = new Domain.CompanyScope.User()
+                                existingUser = new Shared.Models.Domain.CompanyScope.User()
                                 {
                                     Id = adminUser.Id,
                                     FirstName = adminUser.FirstName,
@@ -106,7 +106,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                             var existingUser = await companyContext.Users.FirstOrDefaultAsync(u => u.Id == adminUser.Id);
                             if (existingUser == null)
                             {
-                                existingUser = new Domain.CompanyScope.User()
+                                existingUser = new Shared.Models.Domain.CompanyScope.User()
                                 {
                                     Id = adminUser.Id,
                                     FirstName = adminUser.FirstName,
@@ -135,7 +135,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                             var existingUser = await companyContext.Users.FirstOrDefaultAsync(u => u.Id == adminUser.Id);
                             if (existingUser == null)
                             {
-                                existingUser = new Domain.CompanyScope.User()
+                                existingUser = new Shared.Models.Domain.CompanyScope.User()
                                 {
                                     Id = adminUser.Id,
                                     FirstName = adminUser.FirstName,
@@ -209,7 +209,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                         await context.CompanyUsers.AddAsync(companyUser);
                         using (var companyContext = new CompanyDbContext(testCompany.ConnectionString, testCompany.CompanyNumber))
                         {
-                            var tempUser = new Domain.CompanyScope.User()
+                            var tempUser = new Shared.Models.Domain.CompanyScope.User()
                             {
                                 Id = user.Id,
                                 FirstName = user.FirstName,
@@ -268,7 +268,7 @@ namespace MagFlow.EF.Seeds.CoreScope
                     await context.CompanyUsers.AddAsync(companyUser);
                     using (var companyContext = new CompanyDbContext(testCompany.ConnectionString, testCompany.CompanyNumber))
                     {
-                        var tempUser = new Domain.CompanyScope.User()
+                        var tempUser = new Shared.Models.Domain.CompanyScope.User()
                         {
                             Id = testUser.Id,
                             FirstName = testUser.FirstName,

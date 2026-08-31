@@ -1615,7 +1615,7 @@
     <value>Are you sure you want to restore {0} wares?</value>
   </data>
   <data name="RestoreWareConfirmation_One" xml:space="preserve">
-    <value>Are you sure you want to restore {0} wares?</value>
+    <value>Are you sure you want to restore ware '{0}'?</value>
   </data>
   <data name="RestoreSuccess" xml:space="preserve">
     <value>The resource has been restored</value>
@@ -1766,5 +1766,29 @@
   </data>
   <data name="WarehouseLocations" xml:space="preserve">
     <value>Warehouse locations</value>
+  </data>
+  <data name="DeleteWarehouseConfirmation" xml:space="preserve">
+    <value>Confirm warehouse deletion</value>
+  </data>
+  <data name="DeleteWarehouseConfirmation_Few" xml:space="preserve">
+    <value>Are you sure you want to delete {0} warehouses?</value>
+  </data>
+  <data name="DeleteWarehouseConfirmation_Many" xml:space="preserve">
+    <value>Are you sure you want to delete {0} warehouses?</value>
+  </data>
+  <data name="DeleteWarehouseConfirmation_One" xml:space="preserve">
+    <value>Are you sure you want to delete warehouse '{0}'?</value>
+  </data>
+  <data name="RestoreWarehouseConfirmation" xml:space="preserve">
+    <value>Confirm warehouse restore</value>
+  </data>
+  <data name="RestoreWarehouseConfirmation_Few" xml:space="preserve">
+    <value>Are you sure you want to restore {0} warehouses?</value>
+  </data>
+  <data name="RestoreWarehouseConfirmation_Many" xml:space="preserve">
+    <value>Are you sure you want to restore {0} warehouses?</value>
+  </data>
+  <data name="RestoreWarehouseConfirmation_One" xml:space="preserve">
+    <value>Are you sure you want to restore warehouse '{0}'?</value>
   </data>
 </root>

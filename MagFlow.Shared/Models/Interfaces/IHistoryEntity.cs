@@ -6,6 +6,17 @@ using System.Text;
 
 namespace MagFlow.Shared.Models.Interfaces
 {
+    public interface IHistoryEntity
+    {
+        int Id { get; }
+        Enums.HistoryEntityType EntityType { get; }
+
+        [NotMapped]
+        ICollection<IEntityHistory> History { get; set; }
+
+        void AddHistory<TEntity>(IEntityHistory entity, Guid userId);
+    }
+
     public interface IEntityHistory
     {
         int Id { get; set; }
@@ -18,14 +29,5 @@ namespace MagFlow.Shared.Models.Interfaces
         Guid? UserId { get; set; }
 
         IUser? User { get; }
-    }
-
-    public interface IHistoryEntity
-    {
-        int Id { get; }
-        Enums.HistoryEntityType EntityType { get; }
-
-        [NotMapped]
-        ICollection<IEntityHistory> History { get; set; }
     }
 }

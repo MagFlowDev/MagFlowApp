@@ -110,17 +110,7 @@ namespace MagFlow.BLL.Helpers
 
         public static Enums.HistoryEntityType ToHistoryEntityType(Type entityType)
         {
-            switch(entityType.Name)
-            {
-                case nameof(Product):
-                    return Enums.HistoryEntityType.Product;
-                case nameof(Item):
-                    return Enums.HistoryEntityType.Item;
-                case nameof(Warehouse):
-                    return Enums.HistoryEntityType.Warehouse;
-                default:
-                    return Enums.HistoryEntityType.Unknown;
-            }
+            return MagFlow.Shared.Models.HistoryEntity.ToHistoryEntityType(entityType);
         }
     }
 }
