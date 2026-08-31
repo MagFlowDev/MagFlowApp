@@ -4,6 +4,7 @@ using MagFlow.Domain.CoreScope;
 using MagFlow.EF;
 using MagFlow.EF.Seeds.CompanyScope;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Settings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;

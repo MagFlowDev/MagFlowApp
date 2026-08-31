@@ -1,4 +1,5 @@
 ﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace MagFlow.Domain.CompanyScope
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public string Code { get; private set; }
         [Required]
         public int ContractorId { get; set; }
@@ -41,6 +42,9 @@ namespace MagFlow.Domain.CompanyScope
         public User? CreatedBy { get; set; }
         [ForeignKey(nameof(ConfirmedById))]
         public User? ConfirmedBy { get; set; }
+
+        [NotMapped]
+        public override Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Order;
 
         public ICollection<OrderDelivery> Deliveries { get; set; }
         public ICollection<OrderDocument> Documents { get; set; }

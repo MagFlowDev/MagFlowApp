@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace MagFlow.Domain.CompanyScope
+namespace MagFlow.Shared.Models.Domain.CompanyScope
 {
     public class EntityHistory : IBaseEntity, IEntityHistory
     {

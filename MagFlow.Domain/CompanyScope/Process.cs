@@ -1,4 +1,5 @@
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ namespace MagFlow.Domain.CompanyScope
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public string Code { get; private set; }
         public string? Description { get; set; }
         [Required]
@@ -29,6 +30,9 @@ namespace MagFlow.Domain.CompanyScope
         public User? CreatedBy { get; set; }
         [ForeignKey(nameof(ClosedById))]
         public User? ClosedBy { get; set; }
+
+        [NotMapped]
+        public override Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Process;
 
         public ICollection<ProcessDocument> Documents { get; set; }
         public ICollection<ProcessStep> Steps { get; set; }

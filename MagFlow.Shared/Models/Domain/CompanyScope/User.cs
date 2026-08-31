@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MagFlow.Shared.Models.Interfaces;
 
-namespace MagFlow.Domain.CompanyScope
+namespace MagFlow.Shared.Models.Domain.CompanyScope
 {
     public class User : IUser, ISoftDeletable
     {

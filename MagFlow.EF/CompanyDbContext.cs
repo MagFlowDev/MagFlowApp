@@ -1,4 +1,5 @@
 ﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Interfaces;
 using MagFlow.Shared.Models.Settings;
 using Microsoft.EntityFrameworkCore;

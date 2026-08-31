@@ -1,4 +1,5 @@
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,7 @@ namespace MagFlow.Domain.CompanyScope
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public string Code { get; private set; }
         public string? ExternalId { get; set; }
         [Required]
@@ -72,10 +73,7 @@ namespace MagFlow.Domain.CompanyScope
         public ICollection<ItemComponent> Components { get; set; } = [];
 
         [NotMapped]
-        public Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Item;
-
-        [NotMapped]
-        public ICollection<IEntityHistory> History { get; set; } = [];
+        public override Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Item;
 
 
         private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()

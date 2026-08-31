@@ -2,6 +2,7 @@
 using MagFlow.EF;
 using MagFlow.EF.MultiTenancy;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -32,7 +33,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             _logger = logger;
         }
 
-        public virtual async Task<(CompanyDbContext context, IDbContextTransaction transaction)> BeingTransaction()
+        public virtual async Task<(CompanyDbContext? context, IDbContextTransaction? transaction)> BeingTransaction()
         {
             CompanyDbContext? context = null;
             IDbContextTransaction? transaction = null;
@@ -302,6 +303,10 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                             var isActiveProperty = entity.GetType().GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                             if (isActiveProperty != null)
                                 isActiveProperty.SetValue(entity, false);
+
+                            if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                                ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
+
                             context.Set<TEntity>().Update(entity);
                         }
                         else
@@ -319,6 +324,10 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                         var isActiveProperty = entity.GetType().GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                         if (isActiveProperty != null)
                             isActiveProperty.SetValue(entity, false);
+
+                        if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                            ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
+
                         context.Set<TEntity>().Update(entity);
                     }
                     else
@@ -353,7 +362,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
 
                             if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
                                 ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
-
+                            
                             context.Set<TEntity>().Update(entity);
                         }
                         else
@@ -411,6 +420,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                 var isActiveProperty = entity.GetType().GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                                 if (isActiveProperty != null)
                                     isActiveProperty.SetValue(entity, false);
+                                if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                                    ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
                             }
                             context.Set<TEntity>().UpdateRange(entities);
                         }
@@ -434,6 +445,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                             var isActiveProperty = entity.GetType().GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                             if (isActiveProperty != null)
                                 isActiveProperty.SetValue(entity, false);
+                            if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                                ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
                         }
                         context.Set<TEntity>().UpdateRange(entities);
                     }
@@ -469,6 +482,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                     .GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                                 if (isActiveProperty != null)
                                     isActiveProperty.SetValue(entity, false);
+                                if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                                    ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
                                 context.Set<TEntity>().Update(entity);
                             }
                             else
@@ -490,6 +505,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                 .GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                             if (isActiveProperty != null)
                                 isActiveProperty.SetValue(entity, false);
+                            if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                                ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
                             context.Set<TEntity>().Update(entity);
                         }
                         else
@@ -527,6 +544,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                 var isActiveProperty = entity.GetType().GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                                 if (isActiveProperty != null)
                                     isActiveProperty.SetValue(entity, false);
+                                if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                                    ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
                             }
                             context.Set<TEntity>().UpdateRange(entities);
                         }
@@ -550,6 +569,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                             var isActiveProperty = entity.GetType().GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                             if (isActiveProperty != null)
                                 isActiveProperty.SetValue(entity, false);
+                            if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                                ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
                         }
                         context.Set<TEntity>().UpdateRange(entities);
                     }
@@ -585,6 +606,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                     .GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                                 if (isActiveProperty != null)
                                     isActiveProperty.SetValue(entity, false);
+                                if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                                    ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
                                 context.Set<TEntity>().Update(entity);
                             }
                             else
@@ -606,6 +629,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                 .GetProperty(MagFlow.Shared.Constants.DatabaseConstants.ISACTIVE_PROPERTY);
                             if (isActiveProperty != null)
                                 isActiveProperty.SetValue(entity, false);
+                            if (typeof(IStatusEntity).IsAssignableFrom(typeof(TEntity)))
+                                ((IStatusEntity)entity).ChangeStatus(Enums.EntityStatus.Deleted);
                             context.Set<TEntity>().Update(entity);
                         }
                         else
@@ -1111,7 +1136,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                             .AsQueryable();
                         query = query.ApplyColumnFilters(options.ColumnFilters);
                         query = query.ExcludeColumnFilters(options.Exludes);
-                        query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
+                        query = (IQueryable<EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                         query = query.ApplySorting(options.SortBy, options.Descending);
                         var count = await query.CountAsync();
                         var entities = await query.Paginate(options.PageNumber, options.PageSize).ToListAsync();
@@ -1146,7 +1171,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                 .AsQueryable();
                             query = query.ApplyColumnFilters(options.ColumnFilters);
                             query = query.ExcludeColumnFilters(options.Exludes);
-                            query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
+                            query = (IQueryable<EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                             query = query.ApplySorting(options.SortBy, options.Descending);
                             var count = await query.CountAsync();
                             var entities = await query.Paginate(options.PageNumber, options.PageSize).ToListAsync();
@@ -1178,7 +1203,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                                 .AsQueryable();
                     query = query.ApplyColumnFilters(options.ColumnFilters);
                     query = query.ExcludeColumnFilters(options.Exludes);
-                    query = (IQueryable<Domain.CompanyScope.EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
+                    query = (IQueryable<EntityHistory>)query.ApplyMultiColumnSearch(options.Search, options.SearchColumns);
                     query = query.ApplySorting(options.SortBy, options.Descending);
                     var count = await query.CountAsync();
                     var entities = await query.Paginate(options.PageNumber, options.PageSize).Cast<IEntityHistory>().ToListAsync();

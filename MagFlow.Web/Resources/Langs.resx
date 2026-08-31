@@ -1768,4 +1768,28 @@ i uprawnieniami użytkowników</value>
   <data name="WarehouseLocations" xml:space="preserve">
     <value>Lokalizacje magazynowe</value>
   </data>
+  <data name="DeleteWarehouseConfirmation" xml:space="preserve">
+    <value>Potwierdź usunięcie magazynu</value>
+  </data>
+  <data name="DeleteWarehouseConfirmation_Few" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} magazyny?</value>
+  </data>
+  <data name="DeleteWarehouseConfirmation_Many" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} magazynów?</value>
+  </data>
+  <data name="DeleteWarehouseConfirmation_One" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć magazyn '{0}'?</value>
+  </data>
+  <data name="RestoreWarehouseConfirmation" xml:space="preserve">
+    <value>Potwierdź przywrócenie magazynu</value>
+  </data>
+  <data name="RestoreWarehouseConfirmation_Few" xml:space="preserve">
+    <value>Czy na pewno chcesz przywrócić {0} magazyny?</value>
+  </data>
+  <data name="RestoreWarehouseConfirmation_Many" xml:space="preserve">
+    <value>Czy na pewno chcesz przywrócić {0} magazynów?</value>
+  </data>
+  <data name="RestoreWarehouseConfirmation_One" xml:space="preserve">
+    <value>Czy na pewno chcesz przywrócić magazyn '{0}'?</value>
+  </data>
 </root>

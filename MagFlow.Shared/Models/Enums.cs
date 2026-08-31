@@ -37,7 +37,14 @@ namespace MagFlow.Shared.Models
             Product = 2,
             Item = 3,
             Warehouse = 4,
-            Contractor = 5
+            Contractor = 5,
+            WarehouseSector = 6,
+            WarehouseSectorRow = 7,
+            WarehouseSectorRowSlot = 8,
+            Document = 9,
+            Order = 10,
+            Process = 11,
+            ProcessStep = 12,
         }
 
         public enum TaxRate

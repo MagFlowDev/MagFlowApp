@@ -1,6 +1,7 @@
 ﻿using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.DTOs.CoreScope;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Interfaces;
 using System;
 using System.Collections.Generic;
