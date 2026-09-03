@@ -250,6 +250,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dodaj lokalizacje.
+        /// </summary>
+        public static string AddLocation {
+            get {
+                return ResourceManager.GetString("AddLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dodaj miarę.
         /// </summary>
         public static string AddMeasurement {
@@ -2271,6 +2280,15 @@ namespace MagFlow.Web.Resources {
         public static string Location {
             get {
                 return ResourceManager.GetString("Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lokalizacja w magazynie.
+        /// </summary>
+        public static string LocationInWarehouse {
+            get {
+                return ResourceManager.GetString("LocationInWarehouse", resourceCulture);
             }
         }
         

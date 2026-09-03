@@ -15,6 +15,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public decimal Quantity { get; set; }
         public decimal? TempQuantity { get; set; }
         public string? Location { get; set; }
+        public WarehouseLocationDTO? WarehouseLocation { get; set; }
         public ProductDTO? Product { get; set; }
         public UnitDTO? Unit { get; set; }
         public DateTime? CreatedAt { get; set; }

@@ -1791,4 +1791,10 @@
   <data name="RestoreWarehouseConfirmation_One" xml:space="preserve">
     <value>Are you sure you want to restore warehouse '{0}'?</value>
   </data>
+  <data name="LocationInWarehouse" xml:space="preserve">
+    <value>Location in warehouse</value>
+  </data>
+  <data name="AddLocation" xml:space="preserve">
+    <value>Add location</value>
+  </data>
 </root>

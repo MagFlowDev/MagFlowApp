@@ -76,9 +76,17 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
             _model.GeneralInformation.Product = dto.Product;
             _model.GeneralInformation.ProductType = dto.Product?.Type;
             _model.GeneralInformation.ProductCategory = dto.Product?.Category;
-            _model.GeneralInformation.Location = dto.Location;
             _model.GeneralInformation.Quantity = dto.Quantity;
             _model.GeneralInformation.Unit = dto.Unit;
+
+            if(dto.WarehouseLocation != null)
+            {
+                _model.GeneralInformation.Location = new ItemFormLocation();
+                _model.GeneralInformation.Location.Warehouse = dto.WarehouseLocation.Warehouse;
+                _model.GeneralInformation.Location.Sector = dto.WarehouseLocation.Sector;
+                _model.GeneralInformation.Location.Row = dto.WarehouseLocation.Row;
+                _model.GeneralInformation.Location.Slot = dto.WarehouseLocation.Slot;
+            }
 
             _model.ParameterValues.Parameters = new List<ItemFormParameterValue>();
             dto.Parameters?.ForEach(parameter =>

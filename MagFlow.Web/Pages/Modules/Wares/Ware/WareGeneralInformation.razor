@@ -75,7 +75,17 @@
                         </div>
                         <MudTextField Disabled Label="@Localizer[Langs.Type]" Placeholder="@Localizer[Langs.TypeExample]" Variant="Variant.Outlined" @bind-Value="@_item.Product?.Type?.Name" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)"></MudTextField>
                         <MudTextField Disabled Label="@Localizer[Langs.Category]" Placeholder="@Localizer[Langs.CategoryExample]" Variant="Variant.Outlined" @bind-Value="@_item.Product?.Category?.Name" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)"></MudTextField>
-                        <MudTextField Label="@Localizer[Langs.LocationOptional]" Variant="Variant.Outlined" T="string" @bind-Value="@_item.Location" For="@(() => _model.GeneralInformation.Location)" Class="w-100 my-0"></MudTextField>
+                        @if (_model.GeneralInformation.Location?.Warehouse == null)
+                        {
+                            <div class="d-flex flex-column" style="gap: 8px">
+                                <MudText Typo="Typo.caption">@Localizer[Langs.LocationInWarehouse]</MudText>
+                                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add">@Localizer[Langs.AddLocation]</MudButton>
+                            </div>
+                        }
+                        else
+                        {
+
+                        }
                     </div>
                 </div>
                 <div class="d-flex flex-column align-items-start align-self-stretch w-50">
@@ -182,8 +192,16 @@
         _model.GeneralInformation.ProductCategory = _item.Product?.Category;
         _model.GeneralInformation.ProductType = _item.Product?.Type;
         _model.GeneralInformation.Unit = _item.Unit;
-        _model.GeneralInformation.Location = _item.Location;
         _model.GeneralInformation.Quantity = _item.Quantity;
+
+        if(_item.WarehouseLocation != null)
+        {
+            _model.GeneralInformation.Location = new ItemFormLocation();
+            _model.GeneralInformation.Location.Warehouse = _item.WarehouseLocation.Warehouse;
+            _model.GeneralInformation.Location.Sector = _item.WarehouseLocation.Sector;
+            _model.GeneralInformation.Location.Row = _item.WarehouseLocation.Row;
+            _model.GeneralInformation.Location.Slot = _item.WarehouseLocation.Slot;
+        }
 
         _model.ParameterValues.Parameters = new List<ItemFormParameterValue>();
         foreach(var parameter in _item.Parameters)
