@@ -80,7 +80,17 @@
                                         </div>
                                         <MudTextField Disabled Label="@Localizer[Langs.Type]" Placeholder="@Localizer[Langs.TypeExample]" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.ProductType?.Name" Class="w-100 my-0"></MudTextField>
                                         <MudTextField Disabled Label="@Localizer[Langs.Category]" Placeholder="@Localizer[Langs.CategoryExample]" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.ProductCategory?.Name" Class="w-100 my-0"></MudTextField>
-                                        <MudTextField Label="@Localizer[Langs.LocationOptional]" Variant="Variant.Outlined" T="string" @bind-Value="@_model.GeneralInformation.Location" For="@(() => _model.GeneralInformation.Location)" Class="w-100 my-0"></MudTextField>
+                                        @if (_model.GeneralInformation.Location?.Warehouse == null)
+                                        {
+                                            <div class="d-flex flex-column" style="gap: 8px">
+                                                <MudText Typo="Typo.caption">@Localizer[Langs.LocationInWarehouse]</MudText>
+                                                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add">@Localizer[Langs.AddLocation]</MudButton>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            
+                                        }
                                     </div>
                                 </div>
                             </MudStep>

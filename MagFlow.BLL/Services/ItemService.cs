@@ -84,6 +84,7 @@ namespace MagFlow.BLL.Services
                 .Include(x => x.DefaultUnit)
                 .Include(x => x.CreatedBy)
                 .Include(x => x.Parameters).ThenInclude(y => y.Parameter).ThenInclude(z => z.Unit)
+                .Include(x => x.Warehouse).Include(y => y.Sector).Include(z => z.Row).Include(a => a.Slot)
                 .Include(x => x.Components));
             return new QueryResponse<ItemDTO>()
             {

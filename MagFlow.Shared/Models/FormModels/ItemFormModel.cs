@@ -1,4 +1,5 @@
 ﻿using MagFlow.Shared.DTOs.CompanyScope;
+using MimeKit.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,9 +25,17 @@ namespace MagFlow.Shared.Models.FormModels
         public ProductDTO? Product { get; set; }
         public ProductTypeDTO? ProductType { get; set; }
         public ProductCategoryDTO? ProductCategory { get; set; }
-        public string? Location { get; set; }
+        public ItemFormLocation? Location { get; set; }
         public decimal? Quantity { get; set; }
         public UnitDTO? Unit { get; set; }
+    }
+
+    public class ItemFormLocation
+    {
+        public WarehouseDTO? Warehouse { get; set; }
+        public SectorDTO? Sector { get; set; }
+        public RowDTO? Row { get; set; }
+        public SlotDTO? Slot { get; set; }
     }
 
     public class ItemFormParameterValues

@@ -52,7 +52,14 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Product = item.Product?.ToDTO(),
                 Location = item.Location,
                 Parameters = parameters,
-                Components = components
+                Components = components,
+                WarehouseLocation = new WarehouseLocationDTO()
+                {
+                    Warehouse = item.Warehouse?.ToDTO(),
+                    Sector = item.Sector?.ToDTO(),
+                    Row = item.Row?.ToDTO(),
+                    Slot = item.Slot?.ToDTO(),
+                }
             };
         }
 
@@ -100,6 +107,11 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Condition = Shared.Models.Enums.Condition.Unknown,
                 Status = item.Status,
                 DefaultUnitId = item.Unit?.Id ?? 0,
+
+                WarehouseId = item.WarehouseLocation?.Warehouse?.Id,
+                SectorId = item.WarehouseLocation?.Sector?.Id,
+                RowId = item.WarehouseLocation?.Row?.Id,
+                SlotId = item.WarehouseLocation?.Slot?.Id,
                 
                 PurchasePrice = item.Product?.PurchasePrice,
                 SellPrice = item.Product?.SellingPrice,
@@ -146,13 +158,17 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
             return new Item()
             {
                 ProductId = model.GeneralInformation.Product?.Id ?? 0,
-                Location = model.GeneralInformation.Location,
                 CreatedAt = DateTime.UtcNow,
                 Quantity = model.GeneralInformation.Quantity ?? 0,
                 CreatedById = userId,
                 Condition = Shared.Models.Enums.Condition.Unknown,
                 Status = Shared.Models.Enums.EntityStatus.Available,
                 DefaultUnitId = model.GeneralInformation.Unit?.Id ?? 0,
+
+                WarehouseId = model.GeneralInformation.Location?.Warehouse?.Id,
+                SectorId = model.GeneralInformation.Location?.Sector?.Id,
+                RowId = model.GeneralInformation.Location?.Row?.Id,
+                SlotId = model.GeneralInformation.Location?.Slot?.Id,
 
                 PurchasePrice = model.GeneralInformation.Product?.PurchasePrice,
                 SellPrice = model.GeneralInformation.Product?.SellingPrice,

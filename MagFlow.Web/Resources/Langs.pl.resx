@@ -1792,4 +1792,10 @@ i uprawnieniami użytkowników</value>
   <data name="RestoreWarehouseConfirmation_One" xml:space="preserve">
     <value>Czy na pewno chcesz przywrócić magazyn '{0}'?</value>
   </data>
+  <data name="LocationInWarehouse" xml:space="preserve">
+    <value>Lokalizacja w magazynie</value>
+  </data>
+  <data name="AddLocation" xml:space="preserve">
+    <value>Dodaj lokalizacje</value>
+  </data>
 </root>
