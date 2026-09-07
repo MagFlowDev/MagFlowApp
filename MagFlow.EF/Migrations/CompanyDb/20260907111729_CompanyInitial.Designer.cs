@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MagFlow.EF.Migrations.CompanyDb
 {
     [DbContext(typeof(CompanyDbContext))]
-    [Migration("20260728151405_Update23")]
-    partial class Update23
+    [Migration("20260907111729_CompanyInitial")]
+    partial class CompanyInitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactEmail")
@@ -80,9 +79,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -95,6 +91,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
                     b.Property<DateTime?>("RemovedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("TaxNumber")
                         .HasColumnType("nvarchar(max)");
@@ -115,7 +114,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -173,6 +171,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ConfirmedAt")
                         .HasColumnType("datetime2");
@@ -314,7 +315,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Direction")
@@ -335,45 +335,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.ToTable("DocumentTypes");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.CompanyScope.EntityHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EntityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EntityType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("EventType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NewValuesJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("OccurredAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OldValuesJson")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("EntityType", "EntityId");
-
-                    b.ToTable("EntitiesHistory");
-                });
-
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.FunctionParameter", b =>
                 {
                     b.Property<int>("Id")
@@ -383,7 +344,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -413,6 +373,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Condition")
                         .HasColumnType("int");
@@ -600,7 +563,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -648,7 +610,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -766,7 +727,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -863,7 +823,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -931,6 +890,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClientOrderNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ConfirmedAt")
@@ -1139,7 +1101,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ContractorType")
@@ -1180,7 +1141,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1351,7 +1311,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1419,7 +1378,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -1517,7 +1475,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -1599,6 +1556,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1654,32 +1614,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.ToTable("UnitConversions");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.CompanyScope.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("RemovedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Warehouse", b =>
                 {
                     b.Property<int>("Id")
@@ -1689,7 +1623,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1738,7 +1671,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1779,7 +1711,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1820,7 +1751,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1883,9 +1813,74 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.ToTable("WorkDays");
                 });
 
+            modelBuilder.Entity("MagFlow.Shared.Models.Domain.CompanyScope.EntityHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EventType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewValuesJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OccurredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OldValuesJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("EntityType", "EntityId");
+
+                    b.ToTable("EntitiesHistory");
+                });
+
+            modelBuilder.Entity("MagFlow.Shared.Models.Domain.CompanyScope.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RemovedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Contractor", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1906,7 +1901,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Document", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "ConfirmedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "ConfirmedBy")
                         .WithMany()
                         .HasForeignKey("ConfirmedById")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -1915,7 +1910,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .WithMany("Documents")
                         .HasForeignKey("ContractorId");
 
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -1993,15 +1988,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Navigation("Warehouse");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.CompanyScope.EntityHistory", b =>
-                {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.FunctionParameter", b =>
                 {
                     b.HasOne("MagFlow.Domain.CompanyScope.Unit", "Unit")
@@ -2015,7 +2001,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Item", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2033,7 +2019,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "RemovedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "RemovedBy")
                         .WithMany()
                         .HasForeignKey("RemovedById")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -2131,7 +2117,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Machine", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2154,7 +2140,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.MachineFunction", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2211,7 +2197,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.MachineModel", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2302,7 +2288,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Order", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "ConfirmedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "ConfirmedBy")
                         .WithMany()
                         .HasForeignKey("ConfirmedById")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -2317,7 +2303,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .WithMany("Orders")
                         .HasForeignKey("ContractorId1");
 
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2340,7 +2326,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.OrderDelivery", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2444,7 +2430,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.OrderType", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2455,11 +2441,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Process", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "ClosedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "ClosedBy")
                         .WithMany()
                         .HasForeignKey("ClosedById");
 
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2568,7 +2554,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .WithMany()
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -2712,13 +2698,13 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Warehouse", b =>
                 {
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "CreatedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MagFlow.Domain.CompanyScope.User", "RemovedBy")
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "RemovedBy")
                         .WithMany()
                         .HasForeignKey("RemovedById");
 
@@ -2758,6 +2744,15 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .IsRequired();
 
                     b.Navigation("Row");
+                });
+
+            modelBuilder.Entity("MagFlow.Shared.Models.Domain.CompanyScope.EntityHistory", b =>
+                {
+                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Contractor", b =>

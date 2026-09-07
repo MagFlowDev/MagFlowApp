@@ -1798,4 +1798,7 @@ i uprawnieniami użytkowników</value>
   <data name="AddLocation" xml:space="preserve">
     <value>Dodaj lokalizacje</value>
   </data>
+  <data name="ChangeLocation" xml:space="preserve">
+    <value>Zmień lokalizacje</value>
+  </data>
 </root>

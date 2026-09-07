@@ -8,6 +8,7 @@
 @using MagFlow.Shared.Validators.Company
 @using MagFlow.Shared.Validators.Resources
 @using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Components.Dialogs
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 
@@ -15,6 +16,7 @@
 @inject IProductService ProductService
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<Validations> Validations
+@inject IDialogService DialogService
 @inherits AuthComponentBase
 
 <div class="d-flex flex-column align-items-start w-100 h-100" style="max-width: 1000px; min-height: 0; gap: 24px; margin-left: 16px; margin-right: 16px; padding-top: 24px;">
@@ -75,17 +77,23 @@
                         </div>
                         <MudTextField Disabled Label="@Localizer[Langs.Type]" Placeholder="@Localizer[Langs.TypeExample]" Variant="Variant.Outlined" @bind-Value="@_item.Product?.Type?.Name" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)"></MudTextField>
                         <MudTextField Disabled Label="@Localizer[Langs.Category]" Placeholder="@Localizer[Langs.CategoryExample]" Variant="Variant.Outlined" @bind-Value="@_item.Product?.Category?.Name" Class="w-100 gray-label my-0" Style="color: var(--mud-palette-text-primary)"></MudTextField>
-                        @if (_model.GeneralInformation.Location?.Warehouse == null)
-                        {
-                            <div class="d-flex flex-column" style="gap: 8px">
+                        <div class="d-flex flex-column align-items-start" style="gap: 8px">
+                            @if (_model.GeneralInformation.Location?.Warehouse == null)
+                            {
                                 <MudText Typo="Typo.caption">@Localizer[Langs.LocationInWarehouse]</MudText>
-                                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add">@Localizer[Langs.AddLocation]</MudButton>
-                            </div>
-                        }
-                        else
-                        {
-
-                        }
+                                <LoadingButton Loading="_loading" Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="(async () => await AddLocation())" Class="mx-0 px-3">@Localizer[Langs.AddLocation]</LoadingButton>
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.caption">@Localizer[Langs.LocationInWarehouse]</MudText>
+                                <LoadingButton Loading="_loading" Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Edit" OnClick="(async () => await AddLocation())" Class="mx-0 px-3">@Localizer[Langs.ChangeLocation]</LoadingButton>
+                                <MudBreadcrumbs Items="LocationNavigation" Class="my-0 py-0">
+                                    <ItemTemplate Context="item">
+                                        <MudText Typo="Typo.body1">@item.Text</MudText>
+                                    </ItemTemplate>
+                                </MudBreadcrumbs>
+                            }
+                        </div>
                     </div>
                 </div>
                 <div class="d-flex flex-column align-items-start align-self-stretch w-50">
@@ -132,6 +140,8 @@
     [Parameter]
     public bool IsBusy { get; set; }
 
+    private bool _loading = false;
+
     private IValidator _validator;
     private ItemFormModel _model;
     private EditContext _context;
@@ -144,6 +154,22 @@
     private List<ProductDTO> _products = new List<ProductDTO>();
     private List<UnitDTO> _units = new List<UnitDTO>();
 
+    private List<BreadcrumbItem> LocationNavigation =>
+        (_model.GeneralInformation.Location == null || _model.GeneralInformation.Location.Warehouse == null) ? new List<BreadcrumbItem>() :
+            _model.GeneralInformation.Location.Sector == null ?
+                [new(_model.GeneralInformation.Location.Warehouse.Name, href: null)] :
+            _model.GeneralInformation.Location.Row == null ?
+                [ new(_model.GeneralInformation.Location.Warehouse.Name, href: null),
+                new(_model.GeneralInformation.Location.Sector.Name, href: null)] :
+            _model.GeneralInformation.Location.Slot == null ?
+                [ new(_model.GeneralInformation.Location.Warehouse.Name, href: null),
+                new(_model.GeneralInformation.Location.Sector.Name, href: null),
+                new(_model.GeneralInformation.Location.Row.Name, href: null)] :
+                    [ new(_model.GeneralInformation.Location.Warehouse.Name, href: null),
+                    new(_model.GeneralInformation.Location.Sector.Name, href: null),
+                    new(_model.GeneralInformation.Location.Row.Name, href: null),
+                    new(_model.GeneralInformation.Location.Slot.Name, href: null)];
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -152,6 +178,20 @@
         _context = new EditContext(_model);
         _validator = new ItemFormValidator(Validations);
         _messageStore = new ValidationMessageStore(_context);
+    }
+
+    protected override void OnParametersSet()
+    {
+        if(_item != null && _item.WarehouseLocation != null)
+        {
+            _model.GeneralInformation.Location = new ItemFormLocation()
+            {
+                Warehouse = _item.WarehouseLocation.Warehouse,
+                Sector = _item.WarehouseLocation.Sector,
+                Row = _item.WarehouseLocation.Row,
+                Slot = _item.WarehouseLocation.Slot,
+            };
+        }
     }
 
     private async Task Submit()
@@ -194,13 +234,13 @@
         _model.GeneralInformation.Unit = _item.Unit;
         _model.GeneralInformation.Quantity = _item.Quantity;
 
-        if(_item.WarehouseLocation != null)
+        if(_model.GeneralInformation.Location?.Warehouse != null)
         {
-            _model.GeneralInformation.Location = new ItemFormLocation();
-            _model.GeneralInformation.Location.Warehouse = _item.WarehouseLocation.Warehouse;
-            _model.GeneralInformation.Location.Sector = _item.WarehouseLocation.Sector;
-            _model.GeneralInformation.Location.Row = _item.WarehouseLocation.Row;
-            _model.GeneralInformation.Location.Slot = _item.WarehouseLocation.Slot;
+            _item.WarehouseLocation = new WarehouseLocationDTO();
+            _item.WarehouseLocation.Warehouse = _model.GeneralInformation.Location.Warehouse;
+            _item.WarehouseLocation.Sector = _model.GeneralInformation.Location.Sector;
+            _item.WarehouseLocation.Row = _model.GeneralInformation.Location.Row;
+            _item.WarehouseLocation.Slot = _model.GeneralInformation.Location.Slot;
         }
 
         _model.ParameterValues.Parameters = new List<ItemFormParameterValue>();
@@ -243,5 +283,39 @@
         });
         _products = response.Elements;
         return _products;
+    }
+
+    private async Task AddLocation()
+    {
+        if (IsBusy || Submitting || _loading)
+            return;
+
+        try
+        {
+            IsBusy = true;
+            _loading = true;
+
+            var dialog = await DialogService.ShowAsync<SelectLocationDialog>(Localizer[Langs.AddLocation]);
+            var confirmation = await dialog.Result;
+            if (confirmation != null && !confirmation.Canceled)
+            {
+                if (confirmation.Data is WarehouseLocationDTO location)
+                {
+                    _model.GeneralInformation.Location = new ItemFormLocation()
+                    {
+                        Warehouse = location.Warehouse,
+                        Sector = location.Sector,
+                        Row = location.Row,
+                        Slot = location.Slot
+                    };
+                    StateHasChanged();
+                }
+            }
+        }
+        finally
+        {
+            IsBusy = false;
+            _loading = false;
+        }
     }
 }

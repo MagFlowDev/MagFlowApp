@@ -1797,4 +1797,7 @@
   <data name="AddLocation" xml:space="preserve">
     <value>Add location</value>
   </data>
+  <data name="ChangeLocation" xml:space="preserve">
+    <value>Change location</value>
+  </data>
 </root>

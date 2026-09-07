@@ -1,0 +1,227 @@
+﻿@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.DTOs.CoreScope
+@using MagFlow.Shared.Models
+@using MagFlow.Web.Components.TreeViews
+@using MagFlow.Web.Helpers
+@using Microsoft.EntityFrameworkCore
+@using MudBlazor
+
+@inject IWarehouseService WarehouseService
+
+<MudDialog Style="min-width: 386px">
+    <DialogContent>
+        <div class="w-100 h-100 align-self-stretch d-flex flex-column align-items-start" style="gap: 24px;">
+            @if (_warehouseTreeItems == null)
+            {
+                <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+            }
+            else
+            {
+                <MudRadioGroup Value="_selectedItem" T="WarehouseTreeViewTempItem" ValueChanged="SelectedItemChanged" Class="w-100" InputClass="w-100">
+                    <MudTreeView Items="_warehouseTreeItems" ReadOnly Class="w-100">
+                        <ItemTemplate Context="item">
+                            @{
+                                var presenter = item as WarehouseTreeViewTempItem;
+                            }
+                            <MudTreeViewItem @bind-Expanded="@item.Expanded" Items="@item.Children" Value="@item.Value" Icon="@item.Icon" ReadOnly>
+                                <BodyContent>
+                                    <div style="display: grid; grid-template-columns: 1fr auto; align-items: center; width: 100%">
+                                        <MudText Typo="Typo.body2">@item.Text</MudText>
+                                        <div style="justify-self: end;">
+                                            <MudRadio Value="@presenter" Color="Color.Dark" Dense T="WarehouseTreeViewTempItem"></MudRadio>
+                                        </div>
+                                    </div>
+                                </BodyContent>
+                            </MudTreeViewItem>
+                        </ItemTemplate>
+                    </MudTreeView>
+                </MudRadioGroup>
+            }
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@Localizer[Langs.Cancel]</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit">@(!string.IsNullOrEmpty(ButtonText) ? ButtonText : Localizer[Langs.Save])</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+    private List<WarehouseDTO> _warehouses { get; set; } = new();
+
+    private List<TreeItemData<string>>? _warehouseTreeItems { get; set; } = null;
+    private WarehouseTreeViewTempItem _selectedItem { get; set; }
+
+    private void SelectedItemChanged(WarehouseTreeViewTempItem value)
+    {
+        _selectedItem = value;
+        if (_warehouseTreeItems == null)
+            return;
+
+        if(value.StorageType == Enums.WarehouseStorageType.Warehouse)
+        {
+            var warehouse = _warehouses.FirstOrDefault(x => x.Id == value.DbId);
+            if (warehouse == null)
+                return;
+
+            _selectedSlot = null;
+            _selectedRow = null;
+            _selectedSector = null;
+            _selectedWarehouse = warehouse;
+        }
+        else if(value.StorageType == Enums.WarehouseStorageType.Sector)
+        {
+            var sectors = _warehouses.SelectMany(x => x.Sectors);
+            var sector = sectors.FirstOrDefault(x => x.Id == value.DbId);
+            if (sector == null)
+                return;
+            var warehouse = _warehouses.FirstOrDefault(x => x.Id == sector.WarehouseId);
+            if (warehouse == null)
+                return;
+
+            _selectedSlot = null;
+            _selectedRow = null;
+            _selectedSector = sector;
+            _selectedWarehouse = warehouse;
+        }
+        else if(value.StorageType == Enums.WarehouseStorageType.Row)
+        {
+            var sectors = _warehouses.SelectMany(x => x.Sectors);
+            var rows = sectors.SelectMany(x => x.Rows);
+            var row = rows.FirstOrDefault(x => x.Id == value.DbId);
+            if (row == null)
+                return;
+            var sector = sectors.FirstOrDefault(x => x.Id == row.SectorId);
+            if (sector == null)
+                return;
+            var warehouse = _warehouses.FirstOrDefault(x => x.Id == sector.WarehouseId);
+            if (warehouse == null)
+                return;
+
+            _selectedSlot = null;
+            _selectedRow = row;
+            _selectedSector = sector;
+            _selectedWarehouse = warehouse;
+        }
+        else if(value.StorageType == Enums.WarehouseStorageType.Slot)
+        {
+            var sectors = _warehouses.SelectMany(x => x.Sectors);
+            var rows = sectors.SelectMany(x => x.Rows);
+            var slots = rows.SelectMany(x => x.Slots);
+            var slot = slots.FirstOrDefault(x => x.Id == value.DbId);
+            if (slot == null)
+                return;
+            var row = rows.FirstOrDefault(x => x.Id == slot.RowId);
+            if (row == null)
+                return;
+            var sector = sectors.FirstOrDefault(x => x.Id == row.SectorId);
+            if (sector == null)
+                return;
+            var warehouse = _warehouses.FirstOrDefault(x => x.Id == sector.WarehouseId);
+            if (warehouse == null)
+                return;
+
+            _selectedSlot = slot;
+            _selectedRow = row;
+            _selectedSector = sector;
+            _selectedWarehouse = warehouse;
+        }
+        else
+        {
+            _selectedSlot = null;
+            _selectedRow = null;
+            _selectedSector = null;
+            _selectedWarehouse = null;
+        }
+    }
+
+    WarehouseDTO? _selectedWarehouse = null;
+    SectorDTO? _selectedSector = null;
+    RowDTO? _selectedRow = null;
+    SlotDTO? _selectedSlot = null;
+
+    private void Submit()
+    {
+        var location = new WarehouseLocationDTO()
+        {
+            Warehouse = _selectedWarehouse,
+            Sector = _selectedSector,
+            Row = _selectedRow,
+            Slot = _selectedSlot
+        };
+
+        MudDialog.Close(DialogResult.Ok(location));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await this.MudDialog.SetOptionsAsync(new DialogOptions()
+        {
+            CloseButton = true,
+            Position = DialogPosition.Center
+        });
+
+        StateHasChanged();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await LoadWarehouses();
+    }
+
+    private async Task LoadWarehouses()
+    {
+        _warehouseTreeItems = null;
+        StateHasChanged();
+
+        var queryOptions = new MagFlow.Shared.Models.QueryOptions<MagFlow.Domain.CompanyScope.Warehouse>()
+        {
+            PageNumber = 0,
+            PageSize = 100,
+            SortBy = nameof(MagFlow.Domain.CompanyScope.Warehouse.Name),
+            Descending = false,
+            Includes = warehouse => warehouse
+                .Include(x => x.Sectors).ThenInclude(y => y.Rows).ThenInclude(z => z.Slots)
+        };
+        //queryOptions.ApplyFilters(state.FilterDefinitions);
+        var response = await WarehouseService.GetManyAsync(queryOptions);
+        if(response != null)
+        {
+            _warehouses = response.Elements;
+            _warehouseTreeItems = new List<TreeItemData<string>>();
+            foreach (var warehouse in _warehouses)
+            {
+                var newWarehouse = new WarehouseTreeViewTempItem(warehouse.Name, Enums.WarehouseStorageType.Warehouse, dbId: warehouse.Id);
+                warehouse.Sectors?.ForEach(sector =>
+                {
+                    var newSector = new WarehouseTreeViewTempItem(sector.Name, Enums.WarehouseStorageType.Sector, newWarehouse.TempId, sector.Id);
+                    sector.Rows?.ForEach(row =>
+                    {
+                        var newRow = new WarehouseTreeViewTempItem(row.Name, Enums.WarehouseStorageType.Row, newSector.TempId, row.Id);
+                        row.Slots?.ForEach(slot =>
+                        {
+                            var newSlot = new WarehouseTreeViewTempItem(slot.Name, Enums.WarehouseStorageType.Slot, newRow.TempId, slot.Id);
+                            newRow.AddChildren(newSlot);
+                        });
+                        newSector.AddChildren(newRow);
+                    });
+                    newWarehouse.AddChildren(newSector);
+                });
+                _warehouseTreeItems.Add(newWarehouse);
+            }
+        }
+        StateHasChanged();
+    }
+}

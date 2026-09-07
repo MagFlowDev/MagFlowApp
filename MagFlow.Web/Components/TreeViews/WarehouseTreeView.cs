@@ -18,12 +18,15 @@ namespace MagFlow.Web.Components.TreeViews
 
         public Guid? ParentId { get; set; }
 
-        public WarehouseTreeViewTempItem(string text, Enums.WarehouseStorageType storageType, Guid? parentId = null) : base(text)
+        public int? DbId { get; set; }
+
+        public WarehouseTreeViewTempItem(string text, Enums.WarehouseStorageType storageType, Guid? parentId = null, int? dbId = null) : base(text)
         {
             TempId = Guid.NewGuid();
             Text = text;
             StorageType = storageType;
             ParentId = parentId;
+            DbId = dbId;
         }
 
         public void AddChildren(WarehouseTreeViewTempItem child)
