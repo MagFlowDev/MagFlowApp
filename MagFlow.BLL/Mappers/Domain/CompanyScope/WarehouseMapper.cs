@@ -11,7 +11,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
     {
         #region Warehouse
 
-        public static WarehouseDTO ToDTO(this Warehouse warehouse)
+        public static WarehouseDTO ToDTO(this Warehouse warehouse, bool mapItems = false)
         {
             if (warehouse == null)
                 return null;
@@ -26,14 +26,14 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Status = warehouse.Status,
                 CreatedAt = warehouse.CreatedAt,
                 RemovedAt = warehouse.RemovedAt,
-                Items = warehouse.Items?.ToDTO() ?? new List<ItemDTO>(),
-                Sectors = warehouse.Sectors?.ToDTO() ?? new List<SectorDTO>(),
+                Items = mapItems ? warehouse.Items?.ToDTO() ?? new List<ItemDTO>() : new List<ItemDTO>(),
+                Sectors = warehouse.Sectors?.ToDTO(mapItems) ?? new List<SectorDTO>(),
             };
         }
 
-        public static List<WarehouseDTO> ToDTO(this ICollection<Warehouse> warehouses)
+        public static List<WarehouseDTO> ToDTO(this ICollection<Warehouse> warehouses, bool mapItems = false)
         {
-            return warehouses.Select(x => x.ToDTO()).ToList();
+            return warehouses.Select(x => x.ToDTO(mapItems)).ToList();
         }
 
 
@@ -90,26 +90,27 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
         #region Sector
 
-        public static SectorDTO ToDTO(this WarehouseSector sector)
+        public static SectorDTO ToDTO(this WarehouseSector sector, bool mapItems = false)
         {
             if (sector == null)
                 return null;
             return new SectorDTO
             {
                 Id = sector.Id,
+                WarehouseId = sector.WarehouseId,
                 Name = sector.Name,
                 Code = sector.Code,
                 Status = sector.Status,
                 CreatedAt = sector.CreatedAt,
                 RemovedAt = sector.RemovedAt,
-                Items = sector.Items?.ToDTO() ?? new List<ItemDTO>(),
-                Rows = sector.Rows?.ToDTO() ?? new List<RowDTO>(),
+                Items = mapItems ? sector.Items?.ToDTO() ?? new List<ItemDTO>() : new List<ItemDTO>(),
+                Rows = sector.Rows?.ToDTO(mapItems) ?? new List<RowDTO>(),
             };
         }
 
-        public static List<SectorDTO> ToDTO(this ICollection<WarehouseSector> sectors)
+        public static List<SectorDTO> ToDTO(this ICollection<WarehouseSector> sectors, bool mapItems = false)
         {
-            return sectors.Select(x => x.ToDTO()).ToList();
+            return sectors.Select(x => x.ToDTO(mapItems)).ToList();
         }
 
 
@@ -143,26 +144,27 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
         #region Row
 
-        public static RowDTO ToDTO(this WarehouseSectorRow row)
+        public static RowDTO ToDTO(this WarehouseSectorRow row, bool mapItems = false)
         {
             if (row == null)
                 return null;
             return new RowDTO
             {
                 Id = row.Id,
+                SectorId = row.SectorId,
                 Name = row.Name,
                 Code = row.Code,
                 Status = row.Status,
                 CreatedAt = row.CreatedAt,
                 RemovedAt = row.RemovedAt,
-                Items = row.Items?.ToDTO() ?? new List<ItemDTO>(),
-                Slots = row.Slots?.ToDTO() ?? new List<SlotDTO>(),
+                Items = mapItems ? row.Items?.ToDTO() ?? new List<ItemDTO>() : new List<ItemDTO>(),
+                Slots = row.Slots?.ToDTO(mapItems) ?? new List<SlotDTO>(),
             };
         }
 
-        public static List<RowDTO> ToDTO(this ICollection<WarehouseSectorRow> rows)
+        public static List<RowDTO> ToDTO(this ICollection<WarehouseSectorRow> rows, bool mapItems = false)
         {
-            return rows.Select(x => x.ToDTO()).ToList();
+            return rows.Select(x => x.ToDTO(mapItems)).ToList();
         }
 
 
@@ -196,25 +198,26 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 
         #region Slot
 
-        public static SlotDTO ToDTO(this WarehouseSectorRowSlot slot)
+        public static SlotDTO ToDTO(this WarehouseSectorRowSlot slot, bool mapItems = false)
         {
             if (slot == null)
                 return null;
             return new SlotDTO
             {
                 Id = slot.Id,
+                RowId = slot.RowId,
                 Name = slot.Name,
                 Code = slot.Code,
                 Status = slot.Status,
                 CreatedAt = slot.CreatedAt,
                 RemovedAt = slot.RemovedAt,
-                Items = slot.Items?.ToDTO() ?? new List<ItemDTO>(),
+                Items = mapItems ? slot.Items?.ToDTO() ?? new List<ItemDTO>() : new List<ItemDTO>(),
             };
         }
 
-        public static List<SlotDTO> ToDTO(this ICollection<WarehouseSectorRowSlot> slots)
+        public static List<SlotDTO> ToDTO(this ICollection<WarehouseSectorRowSlot> slots, bool mapItems = false)
         {
-            return slots.Select(x => x.ToDTO()).ToList();
+            return slots.Select(x => x.ToDTO(mapItems)).ToList();
         }
 
 

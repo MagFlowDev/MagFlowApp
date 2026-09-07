@@ -1,4 +1,5 @@
 ﻿using MagFlow.BLL.Helpers;
+using MagFlow.BLL.Helpers.Localization;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.DTOs.CompanyScope;
@@ -6,6 +7,7 @@ using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
 using MagFlow.Web.Components.Dialogs;
 using MagFlow.Web.Components.Wizards;
+using MagFlow.Web.Pages.Modules.Warehouses.Warehouse;
 using MagFlow.Web.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -27,6 +29,23 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private int _pageSize = 25;
 
         private List<ProductDTO> _products = new List<ProductDTO>();
+
+        private List<BreadcrumbItem> LocationNavigation =>
+            (_model.GeneralInformation.Location == null || _model.GeneralInformation.Location.Warehouse == null) ? new List<BreadcrumbItem>() : 
+                _model.GeneralInformation.Location.Sector == null ? 
+                    [ new(_model.GeneralInformation.Location.Warehouse.Name, href: null)] : 
+                _model.GeneralInformation.Location.Row == null ? 
+                    [ new(_model.GeneralInformation.Location.Warehouse.Name, href: null),
+                    new(_model.GeneralInformation.Location.Sector.Name, href: null)] : 
+                _model.GeneralInformation.Location.Slot == null ? 
+                    [ new(_model.GeneralInformation.Location.Warehouse.Name, href: null),
+                    new(_model.GeneralInformation.Location.Sector.Name, href: null),
+                    new(_model.GeneralInformation.Location.Row.Name, href: null)] : 
+                        [ new(_model.GeneralInformation.Location.Warehouse.Name, href: null),
+                        new(_model.GeneralInformation.Location.Sector.Name, href: null),
+                        new(_model.GeneralInformation.Location.Row.Name, href: null),
+                        new(_model.GeneralInformation.Location.Slot.Name, href: null)];
+        
 
         private string _stepperKey => $"{ShowComponentsStep}";
 
@@ -286,6 +305,40 @@ namespace MagFlow.Web.Pages.Modules.Wares.Ware
         private double ActualProgress(ItemFormComponent component)
         {
             return (double)component.Components.Select(x => x.Quantity).Sum();
+        }
+
+        private async Task AddLocation()
+        {
+            if (_isBusy || _loading)
+                return;
+
+            try
+            {
+                _isBusy = true;
+                _loading = true;
+
+                var dialog = await DialogService.ShowAsync<SelectLocationDialog>(Localizer[Langs.AddLocation]);
+                var confirmation = await dialog.Result;
+                if (confirmation != null && !confirmation.Canceled)
+                {
+                    if(confirmation.Data is WarehouseLocationDTO location)
+                    {
+                        _model.GeneralInformation.Location = new ItemFormLocation()
+                        {
+                            Warehouse = location.Warehouse,
+                            Sector = location.Sector,
+                            Row = location.Row,
+                            Slot = location.Slot
+                        };
+                        StateHasChanged();
+                    }
+                }
+            }
+            finally
+            {
+                _isBusy = false;
+                _loading = false;
+            }
         }
     }
 }

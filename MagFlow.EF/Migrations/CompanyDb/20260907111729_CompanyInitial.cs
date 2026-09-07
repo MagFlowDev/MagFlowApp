@@ -12,12 +12,41 @@ namespace MagFlow.EF.Migrations.CompanyDb
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Claims",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Policy = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Claims", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DefaultWorkingHours",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DayOfWeek = table.Column<int>(type: "int", nullable: false),
+                    OpenTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    CloseTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    IsClosed = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DefaultWorkingHours", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DocumentTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Direction = table.Column<int>(type: "int", nullable: false),
                     IsFinancial = table.Column<bool>(type: "bit", nullable: false),
@@ -29,19 +58,20 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductTypes",
+                name: "ProductCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsBasic = table.Column<bool>(type: "bit", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductTypes", x => x.Id);
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,11 +79,22 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Symbol = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentUnitId = table.Column<int>(type: "int", nullable: true),
+                    ParentUnitConversionRate = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Units", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Units_Units_ParentUnitId",
+                        column: x => x.ParentUnitId,
+                        principalTable: "Units",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -63,7 +104,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -71,19 +113,61 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 });
 
             migrationBuilder.CreateTable(
-                name: "Warehouses",
+                name: "WorkDays",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OpenTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    CloseTime = table.Column<TimeSpan>(type: "time", nullable: true),
+                    IsClosed = table.Column<bool>(type: "bit", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Warehouses", x => x.Id);
+                    table.PrimaryKey("PK_WorkDays", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoleClaims",
+                columns: table => new
+                {
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClaimId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleClaims", x => new { x.RoleId, x.ClaimId });
+                    table.ForeignKey(
+                        name: "FK_RoleClaims_Claims_ClaimId",
+                        column: x => x.ClaimId,
+                        principalTable: "Claims",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductTypes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductTypes_ProductCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "ProductCategories",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -93,9 +177,10 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ValueType = table.Column<int>(type: "int", nullable: false),
-                    UnitId = table.Column<int>(type: "int", nullable: false)
+                    UnitId = table.Column<int>(type: "int", nullable: true),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -114,7 +199,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ValueType = table.Column<int>(type: "int", nullable: false),
                     UnitId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -136,7 +221,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ValueType = table.Column<int>(type: "int", nullable: false),
                     UnitId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -152,14 +237,40 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "UnitConversions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FromUnitId = table.Column<int>(type: "int", nullable: false),
+                    ToUnitId = table.Column<int>(type: "int", nullable: false),
+                    ConversionRate = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UnitConversions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UnitConversions_Units_FromUnitId",
+                        column: x => x.FromUnitId,
+                        principalTable: "Units",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_UnitConversions_Units_ToUnitId",
+                        column: x => x.ToUnitId,
+                        principalTable: "Units",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Contractors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NIP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TaxNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -170,7 +281,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -183,13 +295,37 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "EntitiesHistory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EntityId = table.Column<int>(type: "int", nullable: false),
+                    EntityType = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EventType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OccurredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OldValuesJson = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NewValuesJson = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EntitiesHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EntitiesHistory_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MachineFunctions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -212,7 +348,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Manufacturer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -235,7 +371,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ContractorType = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -253,27 +389,68 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "Warehouses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RemovedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Warehouses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Warehouses_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Warehouses_Users_RemovedById",
+                        column: x => x.RemovedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TypeId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
                     UnitId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DefaultPurchasePrice = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
-                    DefaultSellPrice = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
-                    DefaultVatRate = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
-                    Currency = table.Column<int>(type: "int", nullable: true)
+                    DefaultPurchasePrice = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    DefaultSellPrice = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    DefaultVatRate = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    Currency = table.Column<int>(type: "int", nullable: true),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Products_ProductCategories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "ProductCategories",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Products_ProductTypes_TypeId",
                         column: x => x.TypeId,
@@ -289,28 +466,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         column: x => x.CreatedById,
                         principalTable: "Users",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WarehouseStorages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    WarehouseId = table.Column<int>(type: "int", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WarehouseStorages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WarehouseStorages_Warehouses_WarehouseId",
-                        column: x => x.WarehouseId,
-                        principalTable: "Warehouses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -415,7 +570,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MachineModelId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InstallationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -449,18 +604,19 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ContractorId = table.Column<int>(type: "int", nullable: false),
                     OrderTypeId = table.Column<int>(type: "int", nullable: false),
                     OrderNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClientOrderNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ConfirmedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ConfirmedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ContractorId1 = table.Column<int>(type: "int", nullable: true)
+                    ContractorId1 = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -493,6 +649,32 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "WarehouseSectors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    WarehouseId = table.Column<int>(type: "int", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RemovedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WarehouseSectors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WarehouseSectors_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductComponents",
                 columns: table => new
                 {
@@ -500,10 +682,10 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     ComponentId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsRequired = table.Column<bool>(type: "bit", nullable: false),
-                    ProductId1 = table.Column<int>(type: "int", nullable: true)
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -518,11 +700,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_ProductComponents_Products_ProductId1",
-                        column: x => x.ProductId1,
-                        principalTable: "Products",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -533,7 +710,8 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     ParameterId = table.Column<int>(type: "int", nullable: false),
-                    IsRequired = table.Column<bool>(type: "bit", nullable: false)
+                    IsRequired = table.Column<bool>(type: "bit", nullable: false),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -561,7 +739,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     FromUnitId = table.Column<int>(type: "int", nullable: false),
                     ToUnitId = table.Column<int>(type: "int", nullable: false),
-                    ConversionRate = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
+                    ConversionRate = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -582,71 +760,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         name: "FK_ProductUnitConversions_Units_ToUnitId",
                         column: x => x.ToUnitId,
                         principalTable: "Units",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Items",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    WarehouseId = table.Column<int>(type: "int", nullable: false),
-                    StorageId = table.Column<int>(type: "int", nullable: true),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Quantity = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ReceivedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    RemovedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    RemovalReason = table.Column<int>(type: "int", nullable: true),
-                    ProductionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ConsumptionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsBlocked = table.Column<bool>(type: "bit", nullable: false),
-                    Condition = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PurchasePrice = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
-                    SellPrice = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
-                    VatRate = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
-                    Currency = table.Column<int>(type: "int", nullable: true),
-                    WarehouseId1 = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Items", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Items_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Items_Users_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Items_Users_RemovedById",
-                        column: x => x.RemovedById,
-                        principalTable: "Users",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Items_WarehouseStorages_StorageId",
-                        column: x => x.StorageId,
-                        principalTable: "WarehouseStorages",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Items_Warehouses_WarehouseId",
-                        column: x => x.WarehouseId,
-                        principalTable: "Warehouses",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Items_Warehouses_WarehouseId1",
-                        column: x => x.WarehouseId1,
-                        principalTable: "Warehouses",
                         principalColumn: "Id");
                 });
 
@@ -725,6 +838,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InternalNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExternalNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OrderId = table.Column<int>(type: "int", nullable: true),
@@ -735,12 +849,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     DocumentTypeId = table.Column<int>(type: "int", nullable: false),
                     DocumentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ConfirmedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ConfirmedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -795,9 +909,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
-                    VatRate = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    VatRate = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
                     Currency = table.Column<int>(type: "int", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OrderId1 = table.Column<int>(type: "int", nullable: true)
@@ -829,15 +943,15 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OriginType = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ClosedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ClosedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ClosedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -861,28 +975,27 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 });
 
             migrationBuilder.CreateTable(
-                name: "ItemParameters",
+                name: "WarehouseSectorRows",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemId = table.Column<int>(type: "int", nullable: false),
-                    ParameterId = table.Column<int>(type: "int", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    SectorId = table.Column<int>(type: "int", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RemovedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ItemParameters", x => x.Id);
+                    table.PrimaryKey("PK_WarehouseSectorRows", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ItemParameters_CustomParameters_ParameterId",
-                        column: x => x.ParameterId,
-                        principalTable: "CustomParameters",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ItemParameters_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalTable: "Items",
+                        name: "FK_WarehouseSectorRows_WarehouseSectors_SectorId",
+                        column: x => x.SectorId,
+                        principalTable: "WarehouseSectors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -898,12 +1011,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     WarehouseId = table.Column<int>(type: "int", nullable: false),
                     StorageId = table.Column<int>(type: "int", nullable: true),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Quantity = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
                     Condition = table.Column<int>(type: "int", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PurchasePrice = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
-                    SellPrice = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
-                    VatRate = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: true),
+                    PurchasePrice = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    SellPrice = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    VatRate = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
                     Currency = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -922,9 +1035,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DocumentItems_WarehouseStorages_StorageId",
+                        name: "FK_DocumentItems_WarehouseSectors_StorageId",
                         column: x => x.StorageId,
-                        principalTable: "WarehouseStorages",
+                        principalTable: "WarehouseSectors",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_DocumentItems_Warehouses_WarehouseId",
@@ -1072,6 +1185,32 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 });
 
             migrationBuilder.CreateTable(
+                name: "WarehouseSectorRowSlots",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowId = table.Column<int>(type: "int", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RemovedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WarehouseSectorRowSlots", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WarehouseSectorRowSlots_WarehouseSectorRows_RowId",
+                        column: x => x.RowId,
+                        principalTable: "WarehouseSectorRows",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderDeliveryItems",
                 columns: table => new
                 {
@@ -1079,7 +1218,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OrderDeliveryId = table.Column<int>(type: "int", nullable: false),
                     OrderItemId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
                     OrderDeliveryId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -1104,34 +1243,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProcessStepIO",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProcessStepId = table.Column<int>(type: "int", nullable: false),
-                    ItemId = table.Column<int>(type: "int", nullable: false),
-                    Direction = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProcessStepIO", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProcessStepIO_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalTable: "Items",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProcessStepIO_ProcessSteps_ProcessStepId",
-                        column: x => x.ProcessStepId,
-                        principalTable: "ProcessSteps",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProcessStepParameters",
                 columns: table => new
                 {
@@ -1139,7 +1250,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProcessStepId = table.Column<int>(type: "int", nullable: false),
                     FunctionParameterId = table.Column<int>(type: "int", nullable: false),
-                    Value = table.Column<decimal>(type: "decimal(8,2)", precision: 8, scale: 2, nullable: false)
+                    Value = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1158,6 +1269,190 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Items",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExternalId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    WarehouseId = table.Column<int>(type: "int", nullable: true),
+                    SectorId = table.Column<int>(type: "int", nullable: true),
+                    RowId = table.Column<int>(type: "int", nullable: true),
+                    SlotId = table.Column<int>(type: "int", nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Quantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ReceivedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RemovedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    RemovalReason = table.Column<int>(type: "int", nullable: true),
+                    ProductionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ConsumptionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Condition = table.Column<int>(type: "int", nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PurchasePrice = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    SellPrice = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    TaxRate = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: true),
+                    DefaultUnitId = table.Column<int>(type: "int", nullable: false),
+                    Currency = table.Column<int>(type: "int", nullable: true),
+                    WarehouseId1 = table.Column<int>(type: "int", nullable: true),
+                    WarehouseSectorId = table.Column<int>(type: "int", nullable: true),
+                    WarehouseSectorRowId = table.Column<int>(type: "int", nullable: true),
+                    WarehouseSectorRowSlotId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Items_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_Units_DefaultUnitId",
+                        column: x => x.DefaultUnitId,
+                        principalTable: "Units",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Items_Users_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_Users_RemovedById",
+                        column: x => x.RemovedById,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_WarehouseSectorRowSlots_SlotId",
+                        column: x => x.SlotId,
+                        principalTable: "WarehouseSectorRowSlots",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_WarehouseSectorRowSlots_WarehouseSectorRowSlotId",
+                        column: x => x.WarehouseSectorRowSlotId,
+                        principalTable: "WarehouseSectorRowSlots",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_WarehouseSectorRows_RowId",
+                        column: x => x.RowId,
+                        principalTable: "WarehouseSectorRows",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_WarehouseSectorRows_WarehouseSectorRowId",
+                        column: x => x.WarehouseSectorRowId,
+                        principalTable: "WarehouseSectorRows",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_WarehouseSectors_SectorId",
+                        column: x => x.SectorId,
+                        principalTable: "WarehouseSectors",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_WarehouseSectors_WarehouseSectorId",
+                        column: x => x.WarehouseSectorId,
+                        principalTable: "WarehouseSectors",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
+                        principalTable: "Warehouses",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Items_Warehouses_WarehouseId1",
+                        column: x => x.WarehouseId1,
+                        principalTable: "Warehouses",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ItemComponents",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ParentId = table.Column<int>(type: "int", nullable: false),
+                    ComponentId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RemovedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemComponents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ItemComponents_Items_ComponentId",
+                        column: x => x.ComponentId,
+                        principalTable: "Items",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ItemComponents_Items_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Items",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ItemParameters",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    ParameterId = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemParameters", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ItemParameters_CustomParameters_ParameterId",
+                        column: x => x.ParameterId,
+                        principalTable: "CustomParameters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ItemParameters_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProcessStepIO",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProcessStepId = table.Column<int>(type: "int", nullable: false),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    Direction = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProcessStepIO", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProcessStepIO_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProcessStepIO_ProcessSteps_ProcessStepId",
+                        column: x => x.ProcessStepId,
+                        principalTable: "ProcessSteps",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Contractors_CreatedById",
                 table: "Contractors",
@@ -1167,6 +1462,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "IX_CustomParameters_UnitId",
                 table: "CustomParameters",
                 column: "UnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DefaultWorkingHours_DayOfWeek",
+                table: "DefaultWorkingHours",
+                column: "DayOfWeek",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DocumentItems_DocumentHeaderId",
@@ -1229,9 +1530,29 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "WarehouseToId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EntitiesHistory_EntityType_EntityId",
+                table: "EntitiesHistory",
+                columns: new[] { "EntityType", "EntityId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EntitiesHistory_UserId",
+                table: "EntitiesHistory",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FunctionParameters_UnitId",
                 table: "FunctionParameters",
                 column: "UnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ItemComponents_ComponentId",
+                table: "ItemComponents",
+                column: "ComponentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ItemComponents_ParentId",
+                table: "ItemComponents",
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ItemParameters_ItemId",
@@ -1249,6 +1570,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Items_DefaultUnitId",
+                table: "Items",
+                column: "DefaultUnitId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Items_ProductId",
                 table: "Items",
                 column: "ProductId");
@@ -1259,9 +1585,19 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "RemovedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_StorageId",
+                name: "IX_Items_RowId",
                 table: "Items",
-                column: "StorageId");
+                column: "RowId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_SectorId",
+                table: "Items",
+                column: "SectorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_SlotId",
+                table: "Items",
+                column: "SlotId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_WarehouseId",
@@ -1272,6 +1608,21 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "IX_Items_WarehouseId1",
                 table: "Items",
                 column: "WarehouseId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_WarehouseSectorId",
+                table: "Items",
+                column: "WarehouseSectorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_WarehouseSectorRowId",
+                table: "Items",
+                column: "WarehouseSectorRowId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_WarehouseSectorRowSlotId",
+                table: "Items",
+                column: "WarehouseSectorRowSlotId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MachineFunctionParameters_FunctionParameterId",
@@ -1534,11 +1885,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductComponents_ProductId1",
-                table: "ProductComponents",
-                column: "ProductId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProductParameters_ParameterId",
                 table: "ProductParameters",
                 column: "ParameterId");
@@ -1547,6 +1893,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "IX_ProductParameters_ProductId",
                 table: "ProductParameters",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_CategoryId",
+                table: "Products",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CreatedById",
@@ -1564,6 +1915,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "UnitId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductTypes_CategoryId",
+                table: "ProductTypes",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductUnitConversions_FromUnitId",
                 table: "ProductUnitConversions",
                 column: "FromUnitId");
@@ -1579,16 +1935,71 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 column: "ToUnitId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WarehouseStorages_WarehouseId",
-                table: "WarehouseStorages",
+                name: "IX_RoleClaims_ClaimId",
+                table: "RoleClaims",
+                column: "ClaimId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnitConversions_FromUnitId",
+                table: "UnitConversions",
+                column: "FromUnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UnitConversions_ToUnitId",
+                table: "UnitConversions",
+                column: "ToUnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Units_ParentUnitId",
+                table: "Units",
+                column: "ParentUnitId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Warehouses_CreatedById",
+                table: "Warehouses",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Warehouses_RemovedById",
+                table: "Warehouses",
+                column: "RemovedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarehouseSectorRows_SectorId",
+                table: "WarehouseSectorRows",
+                column: "SectorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarehouseSectorRowSlots_RowId",
+                table: "WarehouseSectorRowSlots",
+                column: "RowId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WarehouseSectors_WarehouseId",
+                table: "WarehouseSectors",
                 column: "WarehouseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkDays_Date",
+                table: "WorkDays",
+                column: "Date",
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "DefaultWorkingHours");
+
+            migrationBuilder.DropTable(
                 name: "DocumentItems");
+
+            migrationBuilder.DropTable(
+                name: "EntitiesHistory");
+
+            migrationBuilder.DropTable(
+                name: "ItemComponents");
 
             migrationBuilder.DropTable(
                 name: "ItemParameters");
@@ -1630,6 +2041,15 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "ProductUnitConversions");
 
             migrationBuilder.DropTable(
+                name: "RoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "UnitConversions");
+
+            migrationBuilder.DropTable(
+                name: "WorkDays");
+
+            migrationBuilder.DropTable(
                 name: "MachineModelFunctions");
 
             migrationBuilder.DropTable(
@@ -1654,13 +2074,16 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "CustomParameters");
 
             migrationBuilder.DropTable(
+                name: "Claims");
+
+            migrationBuilder.DropTable(
                 name: "Documents");
 
             migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "WarehouseStorages");
+                name: "WarehouseSectorRowSlots");
 
             migrationBuilder.DropTable(
                 name: "MachineFunctions");
@@ -1681,7 +2104,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "Units");
 
             migrationBuilder.DropTable(
-                name: "Warehouses");
+                name: "WarehouseSectorRows");
 
             migrationBuilder.DropTable(
                 name: "MachineModels");
@@ -1690,10 +2113,19 @@ namespace MagFlow.EF.Migrations.CompanyDb
                 name: "Orders");
 
             migrationBuilder.DropTable(
+                name: "ProductCategories");
+
+            migrationBuilder.DropTable(
+                name: "WarehouseSectors");
+
+            migrationBuilder.DropTable(
                 name: "Contractors");
 
             migrationBuilder.DropTable(
                 name: "OrderTypes");
+
+            migrationBuilder.DropTable(
+                name: "Warehouses");
 
             migrationBuilder.DropTable(
                 name: "Users");

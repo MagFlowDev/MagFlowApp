@@ -41,12 +41,10 @@ namespace MagFlow.Web.Pages.Modules.Wares.Definition
                 SortBy = sortBy,
                 Descending = sortDefinition?.Descending == true,
                 Search = _searchString,
-                ColumnFilters = new List<ColumnFilter>()
-                {
-                    { ColumnFilter.Create(nameof(MagFlow.Domain.CompanyScope.Unit.ParentUnitId), MagFlow.Shared.Models.FilterOperator.IsEmpty, null) }
-                },
             };
             queryOptions.ApplyFilters(state.FilterDefinitions);
+            queryOptions.ColumnFilters ??= new List<ColumnFilter>();
+            queryOptions.ColumnFilters.Add(ColumnFilter.Create(nameof(MagFlow.Domain.CompanyScope.Unit.ParentUnitId), MagFlow.Shared.Models.FilterOperator.IsEmpty, null));
             var response = await ProductService.GetUnits(queryOptions);
 
             _loadedRoots = response?.Elements?.ToList() ?? new List<UnitDTO>();

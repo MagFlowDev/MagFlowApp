@@ -67,7 +67,7 @@ namespace MagFlow.EF.Seeds.CompanyScope
                 Name = "Ryza Gloss V1", 
                 IsActive = true, 
                 Status = Enums.EntityStatus.Active, 
-                Unit = new Unit(){ Name = "sztuka" }, 
+                Unit = new Unit(){ Name = "kilogram" }, 
                 Category = new ProductCategory(){ Name = "Ryza" },  
                 Type = new ProductType(){ Name = "Gloss" }
             }

@@ -450,18 +450,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Property<int?>("WarehouseId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WarehouseId1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WarehouseSectorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WarehouseSectorRowId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WarehouseSectorRowSlotId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
@@ -479,14 +467,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.HasIndex("SlotId");
 
                     b.HasIndex("WarehouseId");
-
-                    b.HasIndex("WarehouseId1");
-
-                    b.HasIndex("WarehouseSectorId");
-
-                    b.HasIndex("WarehouseSectorRowId");
-
-                    b.HasIndex("WarehouseSectorRowSlotId");
 
                     b.ToTable("Items");
                 });
@@ -2022,40 +2002,24 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MagFlow.Domain.CompanyScope.WarehouseSectorRow", "Row")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("RowId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MagFlow.Domain.CompanyScope.WarehouseSector", "Sector")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("SectorId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MagFlow.Domain.CompanyScope.WarehouseSectorRowSlot", "Slot")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("SlotId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MagFlow.Domain.CompanyScope.Warehouse", "Warehouse")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.Warehouse", null)
-                        .WithMany("Items")
-                        .HasForeignKey("WarehouseId1");
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.WarehouseSector", null)
-                        .WithMany("Items")
-                        .HasForeignKey("WarehouseSectorId");
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.WarehouseSectorRow", null)
-                        .WithMany("Items")
-                        .HasForeignKey("WarehouseSectorRowId");
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.WarehouseSectorRowSlot", null)
-                        .WithMany("Items")
-                        .HasForeignKey("WarehouseSectorRowSlotId");
 
                     b.Navigation("CreatedBy");
 

@@ -80,17 +80,23 @@
                                         </div>
                                         <MudTextField Disabled Label="@Localizer[Langs.Type]" Placeholder="@Localizer[Langs.TypeExample]" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.ProductType?.Name" Class="w-100 my-0"></MudTextField>
                                         <MudTextField Disabled Label="@Localizer[Langs.Category]" Placeholder="@Localizer[Langs.CategoryExample]" Variant="Variant.Outlined" @bind-Value="@_model.GeneralInformation.ProductCategory?.Name" Class="w-100 my-0"></MudTextField>
-                                        @if (_model.GeneralInformation.Location?.Warehouse == null)
-                                        {
-                                            <div class="d-flex flex-column" style="gap: 8px">
+                                        <div class="d-flex flex-column align-items-start" style="gap: 8px">
+                                            @if (_model.GeneralInformation.Location?.Warehouse == null)
+                                            {
                                                 <MudText Typo="Typo.caption">@Localizer[Langs.LocationInWarehouse]</MudText>
-                                                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add">@Localizer[Langs.AddLocation]</MudButton>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            
-                                        }
+                                                <LoadingButton Loading="_loading" Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Add" OnClick="(async () => await AddLocation())" Class="mx-0 px-3">@Localizer[Langs.AddLocation]</LoadingButton>
+                                            }
+                                            else
+                                            {
+                                                <MudText Typo="Typo.caption">@Localizer[Langs.LocationInWarehouse]</MudText>
+                                                <LoadingButton Loading="_loading" Variant="Variant.Outlined" StartIcon="@Icons.Material.Outlined.Edit" OnClick="(async () => await AddLocation())" Class="mx-0 px-3">@Localizer[Langs.ChangeLocation]</LoadingButton>
+                                                <MudBreadcrumbs Items="LocationNavigation" Class="my-0 py-0">
+                                                    <ItemTemplate Context="item">
+                                                        <MudText Typo="Typo.body1">@item.Text</MudText>
+                                                    </ItemTemplate>
+                                                </MudBreadcrumbs>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </MudStep>

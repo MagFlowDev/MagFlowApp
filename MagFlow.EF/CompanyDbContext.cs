@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Text;
 
 namespace MagFlow.EF
@@ -162,10 +163,10 @@ namespace MagFlow.EF
             builder.Entity<Product>().HasOne(x => x.Type).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<ProductType>().HasOne(x => x.Category).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.Product).WithMany().OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Item>().HasOne(x => x.Warehouse).WithMany().OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Item>().HasOne(x => x.Sector).WithMany().OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Item>().HasOne(x => x.Row).WithMany().OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Item>().HasOne(x => x.Slot).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.Warehouse).WithMany(x => x.Items).OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.Sector).WithMany(x => x.Items).OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.Row).WithMany(x => x.Items).OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Item>().HasOne(x => x.Slot).WithMany(x => x.Items).OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.RemovedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<ItemComponent>().HasOne(x => x.Parent).WithMany(x => x.Components).HasForeignKey(p => p.ParentId).OnDelete(DeleteBehavior.NoAction);
@@ -200,6 +201,7 @@ namespace MagFlow.EF
                     if(property != null)
                     {
                         builder.Entity(entityType.ClrType).Property(property.Name).IsRequired(false);
+                        //builder.Entity(entityType.ClrType).Property(property.Name).Metadata.SetAfterSaveBehavior(Microsoft.EntityFrameworkCore.Metadata.PropertySaveBehavior.Ignore);
                     }
                 }
             }
@@ -222,6 +224,19 @@ namespace MagFlow.EF
 
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
+            var modifiedEntries = ChangeTracker.Entries<ICodeEntity>()
+                .Where(e => e.State == EntityState.Modified);
+
+            foreach (var entry in modifiedEntries)
+            {
+                var codeProperty = entry.Property(nameof(ICodeEntity.Code));
+                if (string.IsNullOrWhiteSpace(codeProperty.CurrentValue?.ToString()))
+                {
+                    codeProperty.CurrentValue = codeProperty.OriginalValue;
+                    codeProperty.IsModified = false;
+                }
+            }
+
             var addedEntries = ChangeTracker.Entries<ICodeEntity>()
                 .Where(e => e.State == EntityState.Added)
                 .ToList();

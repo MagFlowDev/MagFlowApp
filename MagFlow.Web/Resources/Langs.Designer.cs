@@ -628,6 +628,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zmień lokalizacje.
+        /// </summary>
+        public static string ChangeLocation {
+            get {
+                return ResourceManager.GetString("ChangeLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zmień ekran na większy, żeby wyświetlić treść..
         /// </summary>
         public static string ChangeScreenToLarger {
