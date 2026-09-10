@@ -27,6 +27,9 @@ namespace MagFlow.DAL.Repositories
         TEntity? GetById(object id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
         Task<TEntity?> GetByIdAsync(object id, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null);
 
+        TEntity? GetAsNoTracking(object id);
+        Task<TEntity?> GetAsNoTrackingAsync(object id);
+
         TEntity? Get(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool archive = false);
         Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IQueryable<TEntity>>? include = null, bool archive = false);
 

@@ -53,95 +53,42 @@ namespace MagFlow.DAL.Helpers
                 if (string.IsNullOrEmpty(filter.PropertyName))
                     continue;
 
-                Expression propertyAccess = parameter;
-                foreach(var member in filter.PropertyName.Split('.'))
-                {
-                    propertyAccess = Expression.PropertyOrField(propertyAccess, member);
-                }
-
-                var targetType = propertyAccess.Type;
-                var underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
-
                 Expression filterExpression;
-
-                if(filter.Operator == FilterOperator.IsEmpty)
+                if (filter.PropertyName.Contains('|'))
                 {
-                    var nullConstant = Expression.Constant(null, targetType);
-                    filterExpression = Expression.Equal(propertyAccess, nullConstant);
+                    var properties = filter.PropertyName.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                    Expression? innerOrExpression = null;
 
-                    if (targetType == typeof(string))
+                    foreach (var prop in properties)
                     {
-                        var emptyConstant = Expression.Constant(string.Empty, typeof(string));
-                        var isEmptyString = Expression.Equal(propertyAccess, emptyConstant);
-                        filterExpression = Expression.OrElse(filterExpression, isEmptyString);
-                    }
-                }
-                else if(filter.Operator == FilterOperator.IsNotEmpty)
-                {
-                    var nullConstant = Expression.Constant(null, targetType);
-                    filterExpression = Expression.NotEqual(propertyAccess, nullConstant);
+                        Expression propertyAccess = parameter;
+                        foreach (var member in prop.Trim().Split('.'))
+                        {
+                            propertyAccess = Expression.PropertyOrField(propertyAccess, member);
+                        }
 
-                    if (targetType == typeof(string))
-                    {
-                        var emptyConstant = Expression.Constant(string.Empty, typeof(string));
-                        var isNotEmptyString = Expression.NotEqual(propertyAccess, emptyConstant);
-                        filterExpression = Expression.AndAlso(filterExpression, isNotEmptyString);
+                        var singlePropExpression = BuildSinglePropertyExpression(propertyAccess, filter);
+                        if (singlePropExpression == null) continue;
+
+                        innerOrExpression = innerOrExpression == null
+                            ? singlePropExpression
+                            : Expression.OrElse(innerOrExpression, singlePropExpression);
                     }
+
+                    if (innerOrExpression == null) continue;
+                    filterExpression = innerOrExpression;
                 }
                 else
                 {
-                    if (filter.Value == null || string.IsNullOrWhiteSpace(filter.Value.ToString()))
-                        continue;
-
-                    object? convertedValue;
-                    try
+                    Expression propertyAccess = parameter;
+                    foreach (var member in filter.PropertyName.Split('.'))
                     {
-                        if (underlyingType.IsEnum)
-                            convertedValue = Enum.Parse(underlyingType, filter.Value.ToString()!);
-                        else
-                            convertedValue = Convert.ChangeType(filter.Value, underlyingType);
-                    }
-                    catch
-                    {
-                        continue;
+                        propertyAccess = Expression.PropertyOrField(propertyAccess, member);
                     }
 
-                    var constant = Expression.Constant(convertedValue, underlyingType);
-                    Expression finalConstant = targetType != underlyingType
-                        ? Expression.Convert(constant, targetType)
-                        : constant;
-
-                    filterExpression = filter.Operator switch
-                    {
-                        FilterOperator.Equals => Expression.Equal(propertyAccess, finalConstant),
-
-                        FilterOperator.Contains when targetType == typeof(string) => Expression.Call(
-                            propertyAccess,
-                            typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!,
-                            finalConstant),
-
-                        FilterOperator.Contains when targetType.IsNumericType() =>
-                            Expression.Call(
-                                Expression.Call(
-                                    typeof(Convert),
-                                    nameof(Convert.ToString),
-                                    null,
-                                    propertyAccess),
-                                typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!,
-                                Expression.Constant(filter.Value?.ToString() ?? string.Empty)
-                            ),
-
-                        FilterOperator.StartsWith when targetType == typeof(string) => Expression.Call(
-                            propertyAccess,
-                            typeof(string).GetMethod(nameof(string.StartsWith), new[] { typeof(string) })!,
-                            finalConstant),
-
-                        FilterOperator.GreaterThan => Expression.GreaterThan(propertyAccess, finalConstant),
-                        FilterOperator.LessThan => Expression.LessThan(propertyAccess, finalConstant),
-                        FilterOperator.GreaterThanOrEqual => Expression.GreaterThanOrEqual(propertyAccess, finalConstant),
-                        FilterOperator.LessThanOrEqual => Expression.LessThanOrEqual(propertyAccess, finalConstant),
-                        _ => Expression.Equal(propertyAccess, finalConstant)
-                    };
+                    var singlePropExpression = BuildSinglePropertyExpression(propertyAccess, filter);
+                    if (singlePropExpression == null) continue;
+                    filterExpression = singlePropExpression;
                 }
 
                 combinedExpression = combinedExpression == null
@@ -325,6 +272,141 @@ namespace MagFlow.DAL.Helpers
                 currentExpression = Expression.Condition(testExpression, ifTrueExpression, currentExpression);
             }
             return Expression.Lambda<Func<TEntity, TProperty>>(currentExpression, parameter);
+        }
+
+
+        public static Expression? BuildSinglePropertyExpression(Expression propertyAccess, ColumnFilter filter)
+        {
+            var targetType = propertyAccess.Type;
+            var underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+
+            if (filter.Operator == FilterOperator.IsEmpty)
+            {
+                var nullConstant = Expression.Constant(null, targetType);
+                var filterExpression = Expression.Equal(propertyAccess, nullConstant);
+
+                if (targetType == typeof(string))
+                {
+                    var emptyConstant = Expression.Constant(string.Empty, typeof(string));
+                    var isEmptyString = Expression.Equal(propertyAccess, emptyConstant);
+                    filterExpression = Expression.OrElse(filterExpression, isEmptyString);
+                }
+                return filterExpression;
+            }
+            else if (filter.Operator == FilterOperator.IsNotEmpty)
+            {
+                var nullConstant = Expression.Constant(null, targetType);
+                var filterExpression = Expression.NotEqual(propertyAccess, nullConstant);
+
+                if (targetType == typeof(string))
+                {
+                    var emptyConstant = Expression.Constant(string.Empty, typeof(string));
+                    var isNotEmptyString = Expression.NotEqual(propertyAccess, emptyConstant);
+                    filterExpression = Expression.AndAlso(filterExpression, isNotEmptyString);
+                }
+                return filterExpression;
+            }
+            else if (filter.Operator == FilterOperator.In)
+            {
+                return BuildInExpression(propertyAccess, filter.Value);
+            }
+            else
+            {
+                if (filter.Value == null || string.IsNullOrWhiteSpace(filter.Value.ToString()))
+                    return null;
+
+                object? convertedValue;
+                try
+                {
+                    if (underlyingType.IsEnum)
+                        convertedValue = Enum.Parse(underlyingType, filter.Value.ToString()!);
+                    else
+                        convertedValue = Convert.ChangeType(filter.Value, underlyingType);
+                }
+                catch
+                {
+                    return null;
+                }
+
+                var constant = Expression.Constant(convertedValue, underlyingType);
+                Expression finalConstant = targetType != underlyingType
+                    ? Expression.Convert(constant, targetType)
+                    : constant;
+
+                return filter.Operator switch
+                {
+                    FilterOperator.Equals => Expression.Equal(propertyAccess, finalConstant),
+
+                    FilterOperator.Contains when targetType == typeof(string) => Expression.Call(
+                        propertyAccess,
+                        typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!,
+                        finalConstant),
+
+                    FilterOperator.Contains when targetType.IsNumericType() =>
+                        Expression.Call(
+                            Expression.Call(
+                                typeof(Convert),
+                                nameof(Convert.ToString),
+                                null,
+                                propertyAccess),
+                            typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) })!,
+                            Expression.Constant(filter.Value?.ToString() ?? string.Empty)
+                        ),
+
+                    FilterOperator.StartsWith when targetType == typeof(string) => Expression.Call(
+                        propertyAccess,
+                        typeof(string).GetMethod(nameof(string.StartsWith), new[] { typeof(string) })!,
+                        finalConstant),
+
+                    FilterOperator.GreaterThan => Expression.GreaterThan(propertyAccess, finalConstant),
+                    FilterOperator.LessThan => Expression.LessThan(propertyAccess, finalConstant),
+                    FilterOperator.GreaterThanOrEqual => Expression.GreaterThanOrEqual(propertyAccess, finalConstant),
+                    FilterOperator.LessThanOrEqual => Expression.LessThanOrEqual(propertyAccess, finalConstant),
+                    _ => Expression.Equal(propertyAccess, finalConstant)
+                };
+            }
+        }
+
+        public static Expression BuildInExpression(Expression propertyAccess, object? value)
+        {
+            if (value == null)
+                return Expression.Constant(false);
+
+            var targetType = propertyAccess.Type;
+            var underlyingType = Nullable.GetUnderlyingType(targetType) ?? targetType;
+
+            var stringValues = value.ToString()?.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                       ?? Array.Empty<string>();
+
+            Expression? combinedOrExpression = null;
+            foreach (var stringVal in stringValues)
+            {
+                object? convertedValue;
+                try
+                {
+                    if (underlyingType.IsEnum)
+                        convertedValue = Enum.Parse(underlyingType, stringVal.Trim());
+                    else
+                        convertedValue = Convert.ChangeType(stringVal.Trim(), underlyingType);
+                }
+                catch
+                {
+                    continue;
+                }
+
+                var constant = Expression.Constant(convertedValue, underlyingType);
+                Expression finalConstant = targetType != underlyingType
+                    ? Expression.Convert(constant, targetType)
+                    : constant;
+
+                var equalsExpression = Expression.Equal(propertyAccess, finalConstant);
+
+                combinedOrExpression = combinedOrExpression == null
+                    ? equalsExpression
+                    : Expression.OrElse(combinedOrExpression, equalsExpression);
+            }
+
+            return combinedOrExpression ?? Expression.Constant(false);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.Mappers.Domain.CompanyScope;
+﻿using MagFlow.BLL.Helpers;
+using MagFlow.BLL.Mappers.Domain.CompanyScope;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.CompanyScope;
 using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
@@ -198,6 +199,12 @@ namespace MagFlow.BLL.Services
         public async Task<Enums.Result> UpdateItem(ItemDTO itemDTO)
         {
             var item = itemDTO.ToEntity();
+            var originalItem = await _itemRepository.GetAsNoTrackingAsync(item.Id);
+            if (originalItem != null)
+            {
+                var userId = _networkService.GetUserId() ?? Guid.Empty;
+                item.TryAddLocationChangeMovement(originalItem, userId, Enums.StockMovementType.InventoryAdjustment);
+            }
             var result = await _itemRepository.UpdateAsync(item);
             return result;
         }

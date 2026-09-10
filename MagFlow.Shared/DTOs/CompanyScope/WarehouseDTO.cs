@@ -19,6 +19,7 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public DateTime? RemovedAt { get; set; }
         public List<ItemDTO> Items { get; set; } = new List<ItemDTO>();
         public List<SectorDTO> Sectors { get; set; } = new List<SectorDTO>();
+        public List<StockMovementDTO> StockMovements { get; set; } = new List<StockMovementDTO>();
     }
 
     public class SectorDTO : IBaseDTO, ICodeDTO

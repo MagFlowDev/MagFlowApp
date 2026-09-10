@@ -870,6 +870,72 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
+        public virtual TEntity? GetAsNoTracking(object id)
+        {
+            try
+            {
+                TEntity? entity = null;
+                using (var context = _companyContextFactory.CreateDbContext())
+                {
+                    var query = context.Set<TEntity>().AsQueryable();
+
+                    var entityType = context.Model.FindEntityType(typeof(TEntity));
+                    var keyProperty = entityType?.FindPrimaryKey()?.Properties.Single();
+
+                    if (keyProperty == null)
+                        throw new InvalidOperationException("Entity has no primary key.");
+
+                    var parameter = Expression.Parameter(typeof(TEntity), "e");
+                    var property = Expression.Property(parameter, keyProperty.Name);
+                    var constant = Expression.Constant(id);
+                    var equality = Expression.Equal(property, Expression.Convert(constant, property.Type));
+
+                    var lambda = Expression.Lambda<Func<TEntity, bool>>(equality, parameter);
+
+                    entity = query.AsNoTracking().FirstOrDefault(lambda);
+                }
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
+        public virtual async Task<TEntity?> GetAsNoTrackingAsync(object id)
+        {
+            try
+            {
+                TEntity? entity = null;
+                using (var context = _companyContextFactory.CreateDbContext())
+                {
+                    var query = context.Set<TEntity>().AsQueryable();
+
+                    var entityType = context.Model.FindEntityType(typeof(TEntity));
+                    var keyProperty = entityType?.FindPrimaryKey()?.Properties.Single();
+
+                    if (keyProperty == null)
+                        throw new InvalidOperationException("Entity has no primary key.");
+
+                    var parameter = Expression.Parameter(typeof(TEntity), "e");
+                    var property = Expression.Property(parameter, keyProperty.Name);
+                    var constant = Expression.Constant(id);
+                    var equality = Expression.Equal(property, Expression.Convert(constant, property.Type));
+
+                    var lambda = Expression.Lambda<Func<TEntity, bool>>(equality, parameter);
+
+                    entity = await query.AsNoTracking().FirstOrDefaultAsync(lambda);
+                }
+                return entity;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return null;
+            }
+        }
+
         public virtual Enums.Result Update(TEntity entity, CompanyDbContext? context = default)
         {
             try

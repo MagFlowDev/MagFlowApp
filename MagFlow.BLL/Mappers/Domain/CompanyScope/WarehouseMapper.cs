@@ -28,6 +28,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 RemovedAt = warehouse.RemovedAt,
                 Items = mapItems ? warehouse.Items?.ToDTO() ?? new List<ItemDTO>() : new List<ItemDTO>(),
                 Sectors = warehouse.Sectors?.ToDTO(mapItems) ?? new List<SectorDTO>(),
+                StockMovements = warehouse.StockMovements.ToDTO(),
             };
         }
 

@@ -6,6 +6,7 @@ using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,90 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             ILogger<ItemRepository> logger) : base(coreContextFactory, companyContextFactory, logger)
         {
         }
+
+        public override Enums.Result Add(Item entity, CompanyDbContext? context = null)
+        {
+            if(entity.WarehouseId != null && !entity.StockMovements.Any(x => x.MovementType == Enums.StockMovementType.Create))
+            {
+                entity.StockMovements.Add(new StockMovement()
+                {
+                    CreatedAt = entity.CreatedAt,
+                    CreatedById = entity.CreatedById,
+                    MovementType = Enums.StockMovementType.Create,
+                    Quantity = entity.Quantity,
+                    TargetWarehouseId = entity.WarehouseId,
+                    TargetSectorId = entity.SectorId,
+                    TargetRowId = entity.RowId,
+                    TargetSlotId = entity.SlotId,
+                });
+            }
+            return base.Add(entity, context);
+        }
+
+        public override async Task<Enums.Result> AddAsync(Item entity, CompanyDbContext? context = null)
+        {
+            if (entity.WarehouseId != null && !entity.StockMovements.Any(x => x.MovementType == Enums.StockMovementType.Create))
+            {
+                entity.StockMovements.Add(new StockMovement()
+                {
+                    CreatedAt = entity.CreatedAt,
+                    CreatedById = entity.CreatedById,
+                    MovementType = Enums.StockMovementType.Create,
+                    Quantity = entity.Quantity,
+                    TargetWarehouseId = entity.WarehouseId,
+                    TargetSectorId = entity.SectorId,
+                    TargetRowId = entity.RowId,
+                    TargetSlotId = entity.SlotId,
+                });
+            }
+            return await base.AddAsync(entity, context);
+        }
+
+        public override Enums.Result AddMany(IEnumerable<Item> entities, CompanyDbContext? context = null)
+        {
+            foreach(var entity in entities)
+            {
+                if (entity.WarehouseId != null && !entity.StockMovements.Any(x => x.MovementType == Enums.StockMovementType.Create))
+                {
+                    entity.StockMovements.Add(new StockMovement()
+                    {
+                        CreatedAt = entity.CreatedAt,
+                        CreatedById = entity.CreatedById,
+                        MovementType = Enums.StockMovementType.Create,
+                        Quantity = entity.Quantity,
+                        TargetWarehouseId = entity.WarehouseId,
+                        TargetSectorId = entity.SectorId,
+                        TargetRowId = entity.RowId,
+                        TargetSlotId = entity.SlotId,
+                    });
+                }
+            }
+            return base.AddMany(entities, context);
+        }
+
+        public override async Task<Enums.Result> AddManyAsync(IEnumerable<Item> entities, CompanyDbContext? context = null)
+        {
+            foreach (var entity in entities)
+            {
+                if (entity.WarehouseId != null && !entity.StockMovements.Any(x => x.MovementType == Enums.StockMovementType.Create))
+                {
+                    entity.StockMovements.Add(new StockMovement()
+                    {
+                        CreatedAt = entity.CreatedAt,
+                        CreatedById = entity.CreatedById,
+                        MovementType = Enums.StockMovementType.Create,
+                        Quantity = entity.Quantity,
+                        TargetWarehouseId = entity.WarehouseId,
+                        TargetSectorId = entity.SectorId,
+                        TargetRowId = entity.RowId,
+                        TargetSlotId = entity.SlotId,
+                    });
+                }
+            }
+            return await base.AddManyAsync(entities, context);
+        }
+
+
 
         public async Task<Enums.Result> UpdateItemQuantity(Dictionary<int, decimal> itemsQuantity, Enums.EntityStatus removalReason, CompanyDbContext? context = null)
         {

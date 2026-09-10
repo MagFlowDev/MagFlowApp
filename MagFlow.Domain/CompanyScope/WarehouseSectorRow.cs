@@ -27,6 +27,7 @@ namespace MagFlow.Domain.CompanyScope
 
         public ICollection<Item> Items { get; set; }
         public ICollection<WarehouseSectorRowSlot> Slots { get; set; }
+        public ICollection<StockMovement> StockMovements { get; set; } = [];
 
         [ForeignKey(nameof(SectorId))]
         public WarehouseSector? Sector { get; set; }

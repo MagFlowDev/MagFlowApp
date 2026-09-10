@@ -26,6 +26,7 @@ namespace MagFlow.Domain.CompanyScope
         public Guid? RemovedById { get; set; }
 
         public ICollection<Item> Items { get; set; }
+        public ICollection<StockMovement> StockMovements { get; set; } = [];
 
         [ForeignKey(nameof(RowId))]
         public WarehouseSectorRow? Row { get; set; }

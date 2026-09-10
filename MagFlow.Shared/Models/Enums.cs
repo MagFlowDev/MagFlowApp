@@ -8,6 +8,18 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum StockMovementType
+        {
+            Unknown = 0,
+            Create = 1,
+            ExternalReceive = 2,
+            InternalMove = 3,
+            ExternalRelease = 4,
+            ProductionRelease = 5,
+            ProductionReceive = 6,
+            InventoryAdjustment = 7
+        }
+
         public enum WarehouseStorageType
         {
             Warehouse = 0,
