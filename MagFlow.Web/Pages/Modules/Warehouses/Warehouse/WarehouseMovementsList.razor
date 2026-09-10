@@ -1,5 +1,78 @@
-﻿<h3>MovementsList</h3>
+﻿@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
+@using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Helpers
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.EntityFrameworkCore
+@using MudBlazor
+
+@inject IStockMovementService StockMovementService
+@inherits AuthComponentBase
+
+<MagFlowDataGrid @ref="_stockMovementsDataGrid" T="StockMovementDTO" ServerData="ServerReloadStockMovements" DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.WAREHOUSE_STOCK_MOVEMENTS_LIST">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">@Localizer[Langs.WarehouseMovementsList]</MudText>
+        <MudSpacer />
+        <MudIconButton Color="Color.Primary" OnClick="_stockMovementsDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
+    </ToolBarContent>
+    <Columns>
+        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="SourceWarehouse" MagFlowSortable="true"
+                               Property="@(warehouse => (warehouse.SourceLocation == null || warehouse.SourceLocation.Warehouse == null ? "-" : warehouse.SourceLocation.Warehouse.Name))"
+                               Tag="@($"{nameof(StockMovementDTO.SourceLocation)}.{nameof(StockMovementDTO.SourceLocation.Warehouse)}.{nameof(StockMovementDTO.SourceLocation.Warehouse.Name)}")" />
+        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="TargetWarehouse" MagFlowSortable="true"
+                               Property="@(warehouse => (warehouse.TargetLocation == null || warehouse.TargetLocation.Warehouse == null ? "-" : warehouse.TargetLocation.Warehouse.Name))"
+                               Tag="@($"{nameof(StockMovementDTO.TargetLocation)}.{nameof(StockMovementDTO.TargetLocation.Warehouse)}.{nameof(StockMovementDTO.TargetLocation.Warehouse.Name)}")" />
+    </Columns>
+</MagFlowDataGrid>
 
 @code {
+    [CascadingParameter(Name = "Warehouse")]
+    WarehouseDTO? _warehouse { get; set; }
 
+    MudDataGrid<StockMovementDTO> _stockMovementsDataGrid;
+
+    private async Task<GridData<StockMovementDTO>> ServerReloadStockMovements(GridState<StockMovementDTO> state, CancellationToken token)
+    {
+        if(_warehouse == null)
+        {
+            return new GridData<StockMovementDTO>()
+                {
+                    Items = [],
+                    TotalItems = 0
+                };
+        }
+
+        var sortDefinition = state.SortDefinitions.FirstOrDefault();
+        string? sortBy = sortDefinition?.SortBy;
+        if (Guid.TryParse(sortBy, out _))
+        {
+            var column = _stockMovementsDataGrid.RenderedColumns.FirstOrDefault(c => c.PropertyName == sortBy);
+            sortBy = column?.Tag?.ToString();
+        }
+        sortBy = sortBy ?? nameof(StockMovementDTO.Id);
+        var queryOptions = new MagFlow.Shared.Models.QueryOptions<MagFlow.Domain.CompanyScope.StockMovement>()
+        {
+            PageNumber = state.Page,
+            PageSize = state.PageSize,
+            SortBy = sortBy,
+            Descending = sortDefinition?.Descending == true,
+            Includes = stock => stock
+                .Include(x => x.SourceWarehouse).Include(x => x.SourceSector).Include(x => x.SourceRow).Include(x => x.SourceSlot)
+                .Include(x => x.TargetWarehouse).Include(x => x.TargetSector).Include(x => x.TargetRow).Include(x => x.TargetSlot)
+        };
+        queryOptions.ApplyFilters(state.FilterDefinitions);
+        queryOptions.ColumnFilters ??= new List<ColumnFilter>();
+        queryOptions.ColumnFilters.Add(ColumnFilter.Create(
+            $"{nameof(MagFlow.Domain.CompanyScope.StockMovement.SourceWarehouseId)} | {nameof(MagFlow.Domain.CompanyScope.StockMovement.TargetWarehouseId)}",
+            MagFlow.Shared.Models.FilterOperator.Equals, _warehouse.Id));
+        var response = await StockMovementService.GetManyAsync(queryOptions);
+
+        return new GridData<StockMovementDTO>
+        {
+            Items = response.Elements,
+            TotalItems = response.TotalCount,
+        };
+    }
 }

@@ -28,6 +28,7 @@ namespace MagFlow.Domain.CompanyScope
 
         public ICollection<Item> Items { get; set; }
         public ICollection<WarehouseSector> Sectors { get; set; }
+        public ICollection<StockMovement> StockMovements { get; set; } = [];
 
         [ForeignKey(nameof(CreatedById))]
         public User? CreatedBy { get; set; }

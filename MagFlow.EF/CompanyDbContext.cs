@@ -62,6 +62,7 @@ namespace MagFlow.EF
         public DbSet<DefaultWorkingHour> DefaultWorkingHours { get; set; }
         public DbSet<WorkDay> WorkDays { get; set; }
         public DbSet<EntityHistory> EntitiesHistory { get; set; }
+        public DbSet<StockMovement> StockMovements { get; set; }
 
         public CompanyDbContext(string connectionString, int companyNumber) : base(BuildOptions(connectionString))
         {
@@ -114,6 +115,7 @@ namespace MagFlow.EF
             builder.Entity<Document>().HasMany(d => d.Items).WithOne(i => i.DocumentHeader);
             builder.Entity<Document>().HasMany(d => d.Processes).WithOne(p => p.Document);
             builder.Entity<Item>().HasMany(i => i.Parameters).WithOne(p => p.Item);
+            builder.Entity<Item>().HasMany(i => i.StockMovements).WithOne(s => s.Item);
             builder.Entity<MachineFunction>().HasMany(m => m.Impacts).WithOne(i => i.MachineFunction);
             builder.Entity<MachineModel>().HasMany(m => m.Machines).WithOne(x => x.MachineModel);
             builder.Entity<MachineModel>().HasMany(m => m.Functions).WithOne(f => f.MachineModel);
@@ -183,6 +185,14 @@ namespace MagFlow.EF
             builder.Entity<Product>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Document>().HasOne(x => x.ConfirmedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Order>().HasOne(x => x.ConfirmedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StockMovement>().HasOne(x => x.SourceWarehouse).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StockMovement>().HasOne(x => x.SourceSector).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StockMovement>().HasOne(x => x.SourceRow).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StockMovement>().HasOne(x => x.SourceSlot).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StockMovement>().HasOne(x => x.TargetWarehouse).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StockMovement>().HasOne(x => x.TargetSector).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StockMovement>().HasOne(x => x.TargetRow).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StockMovement>().HasOne(x => x.TargetSlot).WithMany().OnDelete(DeleteBehavior.NoAction);
 
             builder.Ignore<Shared.Models.StatusEntity>();
             foreach(var entityType in builder.Model.GetEntityTypes())

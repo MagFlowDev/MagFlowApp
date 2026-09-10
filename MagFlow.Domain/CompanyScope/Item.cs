@@ -71,6 +71,7 @@ namespace MagFlow.Domain.CompanyScope
 
         public ICollection<ItemParameter> Parameters { get; set; } = [];
         public ICollection<ItemComponent> Components { get; set; } = [];
+        public ICollection<StockMovement> StockMovements { get; set; } = [];
 
         [NotMapped]
         public override Enums.HistoryEntityType EntityType => Enums.HistoryEntityType.Item;

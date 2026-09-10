@@ -51,6 +51,7 @@ namespace MagFlow.Shared.Models
         GreaterThanOrEqual,
         LessThanOrEqual,
         IsEmpty,
-        IsNotEmpty
+        IsNotEmpty,
+        In
     }
 }

@@ -209,6 +209,7 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IWarehouseService, WarehouseService>();
             services.AddScoped<IContractorService, ContractorService>();
+            services.AddScoped<IStockMovementService, StockMovementService>();
 
             services.RegisterCommonServices();
         }
@@ -231,10 +232,13 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<ItemService>();
             services.AddScoped<ProductService>();
             services.AddScoped<WarehouseService>();
+            services.AddScoped<ContractorService>();
+            services.AddScoped<StockMovementService>();
             services.AddScoped<IItemService>(sp => sp.GetRequiredService<ItemService>().WithProxy<IItemService>(sp));
             services.AddScoped<IProductService>(sp => sp.GetRequiredService<ProductService>().WithProxy<IProductService>(sp));
             services.AddScoped<IWarehouseService>(sp => sp.GetRequiredService<WarehouseService>().WithProxy<IWarehouseService>(sp));
             services.AddScoped<IContractorService>(sp => sp.GetRequiredService<ContractorService>().WithProxy<IContractorService>(sp));
+            services.AddScoped<IStockMovementService>(sp => sp.GetRequiredService<StockMovementService>().WithProxy<IStockMovementService>(sp));
 
             services.RegisterCommonServices();
         }
@@ -276,6 +280,7 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IWarehouseRepository, WarehouseRepository>();
             services.AddScoped<IWorkingHourRepository, WorkingHourRepository>();
             services.AddScoped<IWorkDayRepository, WorkDayRepository>();
+            services.AddScoped<IStockMovementRepository, StockMovementRepository>();
         }
 
         private static void ConfigureOpenTelemetry(this IServiceCollection services)
