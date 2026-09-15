@@ -1,5 +1,8 @@
-﻿using MagFlow.Domain.CompanyScope;
+﻿using MagFlow.BLL.Mappers.Domain.CoreScope;
+using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.DTOs.CompanyScope;
+using MagFlow.Shared.DTOs.CoreScope;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +15,12 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
         {
             return new StockMovementDTO()
             {
+                Id = stockMovement.Id,
+                Date = stockMovement.CreatedAt,
+                User = stockMovement.CreatedBy?.ToDTO(),
+                Quantity = stockMovement.Quantity,
+                MovementType = stockMovement.MovementType,
+                Item = stockMovement.Item?.ToDTO(),
                 SourceLocation = new WarehouseLocationDTO()
                 {
                     Warehouse = stockMovement.SourceWarehouse == null ? null : new WarehouseDTO()

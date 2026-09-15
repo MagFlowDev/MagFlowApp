@@ -1,5 +1,7 @@
 ﻿using MagFlow.Domain.CoreScope;
 using MagFlow.Shared.DTOs.CoreScope;
+using MagFlow.Shared.Extensions;
+using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Shared.Models.FormModels;
 using System;
@@ -8,7 +10,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using MagFlow.Shared.Extensions;
 
 namespace MagFlow.BLL.Mappers.Domain.CoreScope
 {
@@ -245,6 +246,24 @@ namespace MagFlow.BLL.Mappers.Domain.CoreScope
         public static List<UserSessionDTO> ToDTO(this IEnumerable<UserSession> userSessions, ClaimsPrincipal? claimsPrincipal = null)
         {
             return userSessions.Select(x => x.ToDTO(claimsPrincipal)).ToList();
+        }
+
+
+
+        public static UserDTO ToDTO(this User user)
+        {
+            return new UserDTO()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email
+            };
+        }
+
+        public static List<UserDTO> ToDTO(this IEnumerable<User> users)
+        {
+            return users.Select(x => x.ToDTO()).ToList();
         }
     }
 }

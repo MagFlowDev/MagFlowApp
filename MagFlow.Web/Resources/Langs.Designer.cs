@@ -817,6 +817,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kontrahent.
+        /// </summary>
+        public static string Contractor {
+            get {
+                return ResourceManager.GetString("Contractor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lista kontrahentów.
         /// </summary>
         public static string ContractorsList {
@@ -2041,6 +2050,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Z magazynu.
+        /// </summary>
+        public static string FromWarehouse {
+            get {
+                return ResourceManager.GetString("FromWarehouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Informacje ogólne.
         /// </summary>
         public static string GeneralInformation {
@@ -2937,6 +2955,15 @@ namespace MagFlow.Web.Resources {
         public static string Month {
             get {
                 return ResourceManager.GetString("Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Typ ruchu.
+        /// </summary>
+        public static string MovementType {
+            get {
+                return ResourceManager.GetString("MovementType", resourceCulture);
             }
         }
         
@@ -4417,6 +4444,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do magazynu.
+        /// </summary>
+        public static string ToWarehouse {
+            get {
+                return ResourceManager.GetString("ToWarehouse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Okres próbny.
         /// </summary>
         public static string TrialPeriod {
@@ -4891,6 +4927,15 @@ namespace MagFlow.Web.Resources {
         public static string WareAddedWithoutComponents {
             get {
                 return ResourceManager.GetString("WareAddedWithoutComponents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kod towaru.
+        /// </summary>
+        public static string WareCode {
+            get {
+                return ResourceManager.GetString("WareCode", resourceCulture);
             }
         }
         

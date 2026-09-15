@@ -1801,4 +1801,19 @@ i uprawnieniami użytkowników</value>
   <data name="ChangeLocation" xml:space="preserve">
     <value>Zmień lokalizacje</value>
   </data>
+  <data name="MovementType" xml:space="preserve">
+    <value>Typ ruchu</value>
+  </data>
+  <data name="FromWarehouse" xml:space="preserve">
+    <value>Z magazynu</value>
+  </data>
+  <data name="ToWarehouse" xml:space="preserve">
+    <value>Do magazynu</value>
+  </data>
+  <data name="Contractor" xml:space="preserve">
+    <value>Kontrahent</value>
+  </data>
+  <data name="WareCode" xml:space="preserve">
+    <value>Kod towaru</value>
+  </data>
 </root>

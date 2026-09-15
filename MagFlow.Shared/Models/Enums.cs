@@ -311,6 +311,7 @@ namespace MagFlow.Shared.Models
             Locations,
             Inventories,
             MovementsList,
+            History
         }
 
         public enum WarehousesModuleSection

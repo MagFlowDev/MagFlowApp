@@ -108,6 +108,17 @@ namespace MagFlow.BLL.Helpers
             };
         }
 
+        public static string ToColor(this Enums.StockMovementType movementType)
+        {
+            return movementType switch
+            {
+                Enums.StockMovementType.InternalMove => Colors.Indigo.Accent4,
+                Enums.StockMovementType.ExternalReceive => Colors.LightBlue.Darken1,
+                Enums.StockMovementType.ExternalRelease => Colors.Cyan.Darken3,
+                _ => Colors.Gray.Default
+            };
+        }
+
         public static Enums.HistoryEntityType ToHistoryEntityType(Type entityType)
         {
             return MagFlow.Shared.Models.HistoryEntity.ToHistoryEntityType(entityType);

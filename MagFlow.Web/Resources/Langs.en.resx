@@ -1800,4 +1800,19 @@
   <data name="ChangeLocation" xml:space="preserve">
     <value>Change location</value>
   </data>
+  <data name="MovementType" xml:space="preserve">
+    <value>Movement type</value>
+  </data>
+  <data name="FromWarehouse" xml:space="preserve">
+    <value>From warehouse</value>
+  </data>
+  <data name="ToWarehouse" xml:space="preserve">
+    <value>To warehouse</value>
+  </data>
+  <data name="Contractor" xml:space="preserve">
+    <value>Contractor</value>
+  </data>
+  <data name="WareCode" xml:space="preserve">
+    <value>Ware code</value>
+  </data>
 </root>
