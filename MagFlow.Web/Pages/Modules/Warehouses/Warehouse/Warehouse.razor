@@ -63,7 +63,10 @@
                             <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Assignment" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehouseDetailsSection.Inventories))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehouseDetailsSection.Inventories)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehouseDetailsSection.Inventories)">@Localizer[Langs.Inventories]</MudNavLink>
                         </MudTooltip>
                         <MudTooltip Text="@Localizer[Langs.WarehouseMovementsList]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
-                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.History" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehouseDetailsSection.MovementsList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehouseDetailsSection.MovementsList)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehouseDetailsSection.MovementsList)">@Localizer[Langs.WarehouseMovementsList]</MudNavLink>
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.SwapHorizontalCircle" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehouseDetailsSection.MovementsList))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehouseDetailsSection.MovementsList)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehouseDetailsSection.MovementsList)">@Localizer[Langs.WarehouseMovementsList]</MudNavLink>
+                        </MudTooltip>
+                        <MudTooltip Text="@Localizer[Langs.History]" Disabled="@_isMenuOpened" Delay="@Constants.Tooltip.DELAY" RootClass="w-100">
+                            <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.History" OnClick="@(() => OnSectionChanged(SectionsEnums.WarehouseDetailsSection.History))" IconColor="@_currentSection.GetIconColor(SectionsEnums.WarehouseDetailsSection.History)" Class="@_currentSection.GetNavClass(SectionsEnums.WarehouseDetailsSection.History)">@Localizer[Langs.History]</MudNavLink>
                         </MudTooltip>
                     </MudNavMenu>
                 </MudDrawer>
@@ -89,6 +92,11 @@
                             case SectionsEnums.WarehouseDetailsSection.MovementsList:
                                 <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
                                     <WarehouseMovementsList />
+                                </div>
+                                break;
+                            case SectionsEnums.WarehouseDetailsSection.History:
+                                <div class="d-flex align-self-stretch w-100 mud-height-full overflow-auto justify-content-center" style="min-height: 0; background: var(--mud-palette-primary-text);">
+                                    <WarehouseHistory />
                                 </div>
                                 break;
                             default: break;

@@ -1,4 +1,5 @@
-﻿@using MagFlow.BLL.Services.Interfaces
+﻿@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CompanyScope
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
@@ -18,12 +19,54 @@
         <MudIconButton Color="Color.Primary" OnClick="_stockMovementsDataGrid.ReloadServerData" Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" />
     </ToolBarContent>
     <Columns>
-        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="SourceWarehouse" MagFlowSortable="true"
+        @* Movement type *@
+        <MagFlowTemplateColumn T="StockMovementDTO" TFilter="Enums.StockMovementType" Title="@Localizer[Langs.MovementType]" Tag="@($"{nameof(StockMovementDTO.MovementType)}")" ExcludedEnumValues="@(new[] { Enums.StockMovementType.Unknown })">
+            <CellTemplate>
+                <MudChip T="string" Class="m-0" Variant="Variant.Filled" Style="@($"{context.Item.MovementType.ToColor()}")">@context.Item.MovementType.GetDisplayName(Localizer)</MudChip>
+            </CellTemplate>
+        </MagFlowTemplateColumn>
+
+        @* From location *@
+        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.FromWarehouse]" MagFlowSortable="true"
                                Property="@(warehouse => (warehouse.SourceLocation == null || warehouse.SourceLocation.Warehouse == null ? "-" : warehouse.SourceLocation.Warehouse.Name))"
                                Tag="@($"{nameof(StockMovementDTO.SourceLocation)}.{nameof(StockMovementDTO.SourceLocation.Warehouse)}.{nameof(StockMovementDTO.SourceLocation.Warehouse.Name)}")" />
-        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="TargetWarehouse" MagFlowSortable="true"
+        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Location]" MagFlowSortable="true"
+                               Property="@(warehouse => (warehouse.SourceLocation == null || warehouse.SourceLocation.Sector == null ? "-" : 
+                               $"{warehouse.SourceLocation.Sector.Name}{(warehouse.SourceLocation.Row == null ? "" : $"-{warehouse.SourceLocation.Row.Name}")}{(warehouse.SourceLocation.Slot == null ? "" : $"-{warehouse.SourceLocation.Slot.Name}")}"))"
+                               Tag="@($"{nameof(StockMovementDTO.SourceLocation)}.{nameof(StockMovementDTO.SourceLocation.Sector)}.{nameof(StockMovementDTO.SourceLocation.Sector.Name)}")" />
+
+        @* To location *@
+        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.ToWarehouse]" MagFlowSortable="true"
                                Property="@(warehouse => (warehouse.TargetLocation == null || warehouse.TargetLocation.Warehouse == null ? "-" : warehouse.TargetLocation.Warehouse.Name))"
                                Tag="@($"{nameof(StockMovementDTO.TargetLocation)}.{nameof(StockMovementDTO.TargetLocation.Warehouse)}.{nameof(StockMovementDTO.TargetLocation.Warehouse.Name)}")" />
+        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Location]" MagFlowSortable="true"
+                               Property="@(warehouse => (warehouse.TargetLocation == null || warehouse.TargetLocation.Sector == null ? "-" :
+                               $"{warehouse.TargetLocation.Sector.Name}{(warehouse.TargetLocation.Row == null ? "" : $"-{warehouse.TargetLocation.Row.Name}")}{(warehouse.TargetLocation.Slot == null ? "" : $"-{warehouse.TargetLocation.Slot.Name}")}"))"
+                               Tag="@($"{nameof(StockMovementDTO.TargetLocation)}.{nameof(StockMovementDTO.TargetLocation.Sector)}.{nameof(StockMovementDTO.TargetLocation.Sector.Name)}")" />
+
+        @* Contractor *@
+        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.Contractor]" MagFlowSortable="true" Property="@(warehouse => (warehouse.Contractor != null ? warehouse.Contractor.Name : "-"))" Tag="@($"{nameof(StockMovementDTO.Contractor)}.{nameof(StockMovementDTO.Contractor.Name)}")" />
+
+        @* Item *@
+        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.ProductName]" MagFlowSortable="true" 
+                               Property="warehouse => (warehouse.Item != null && warehouse.Item.Product != null ? warehouse.Item.Product.Name : string.Empty)" 
+                               Tag="@($"{nameof(StockMovementDTO.Item)}.{nameof(StockMovementDTO.Item.Product)}.{nameof(StockMovementDTO.Item.Product.Name)}")" />
+        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.WareCode]" MagFlowSortable="true"
+                               Property="warehouse => (warehouse.Item != null ? warehouse.Item.Code : string.Empty)"
+                               Tag="@($"{nameof(StockMovementDTO.Item)}.{nameof(StockMovementDTO.Item.Code)}")" />
+        <MagFlowTemplateColumn T="StockMovementDTO" TFilter="string" Title="@Localizer[Langs.Quantity]" MagFlowSortable="true" Tag="@($"{nameof(StockMovementDTO.Quantity)}")">
+            <CellTemplate>
+                @($"{context.Item.Quantity:0.##} {context.Item.Item?.Unit?.Symbol}")
+            </CellTemplate>
+        </MagFlowTemplateColumn>
+
+        @* User *@
+        <MagFlowPropertyColumn T="StockMovementDTO" TProperty="string" TFilter="string" Title="@Localizer[Langs.User]" MagFlowSortable="true"
+                               Property="@(warehouse => (warehouse.User != null ? $"{warehouse.User.FirstName} {warehouse.User.LastName}" : "-"))"
+                               Tag="@($"{nameof(StockMovementDTO.User)}.{nameof(StockMovementDTO.User.FirstName)}")" />
+
+        <MagFlowPropertyColumn T="StockMovementDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Date]" Property="@(warehouse => warehouse.Date.ToLocalTime().ToShortDateString())" Tag="@($"{nameof(StockMovementDTO.Date)}")" />
+
     </Columns>
 </MagFlowDataGrid>
 
@@ -61,6 +104,9 @@
             Includes = stock => stock
                 .Include(x => x.SourceWarehouse).Include(x => x.SourceSector).Include(x => x.SourceRow).Include(x => x.SourceSlot)
                 .Include(x => x.TargetWarehouse).Include(x => x.TargetSector).Include(x => x.TargetRow).Include(x => x.TargetSlot)
+                .Include(x => x.Item).ThenInclude(y => y.Product)
+                .Include(x => x.Item).ThenInclude(y => y.DefaultUnit)
+                .Include(x => x.CreatedBy)
         };
         queryOptions.ApplyFilters(state.FilterDefinitions);
         queryOptions.ColumnFilters ??= new List<ColumnFilter>();
