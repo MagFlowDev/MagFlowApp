@@ -10,6 +10,7 @@ using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.FormModels;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -20,15 +21,18 @@ namespace MagFlow.BLL.Services
 {
     public class BaseCompanyService<TEntity, TDTO> : IBaseCompanyService<TEntity, TDTO> where TEntity : class, IBaseEntity where TDTO : IBaseDTO
     {
+        protected readonly ILogger<BaseCompanyService<TEntity, TDTO>> _logger;
         private readonly IRepository<TEntity, CompanyDbContext> _baseRepository;
 
         private readonly INetworkService _networkService;
 
         public BaseCompanyService(IRepository<TEntity, CompanyDbContext> repository,
-            INetworkService networkService)
+            INetworkService networkService,
+            ILogger<BaseCompanyService<TEntity,TDTO>> logger)
         {
             _baseRepository = repository;
             _networkService = networkService;
+            _logger = logger;
         }
 
         public virtual async Task<QueryResponse<EntityHistoryDTO>> GetEntityHistory(int id, Enums.HistoryEntityType entityType, int pageNumber = 0, int pageSize = 25, string? search = null, string? sortBy = null, bool descending = false)

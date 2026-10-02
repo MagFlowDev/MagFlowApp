@@ -1,4 +1,5 @@
-﻿using MagFlow.BLL.Mappers.Domain;
+﻿using Castle.Core.Logging;
+using MagFlow.BLL.Mappers.Domain;
 using MagFlow.BLL.Mappers.Domain.CompanyScope;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories.CompanyScope.Interfaces;
@@ -10,6 +11,7 @@ using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.FormModels;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -34,7 +36,8 @@ namespace MagFlow.BLL.Services
             IParameterRepository parameterRepository,
             IProductParameterRepository productParameterRepository,
             IUnitRepository unitRepository,
-            INetworkService networkService) : base(productRepository, networkService)
+            INetworkService networkService,
+            ILogger<ProductService> logger) : base(productRepository, networkService, logger)
         {
             _productRepository = productRepository;
             _categoryRepository = productCategoryRepository;
