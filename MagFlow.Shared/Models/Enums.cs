@@ -8,6 +8,16 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum StocktakeType
+        {
+            Audit, // kontrolna
+            Partial, // częściowa
+            Cycle, // cykliczna
+            Montly, // miesięczna
+            Quartal, // kwartalna
+            Annual // roczna
+        }
+
         public enum StockMovementType
         {
             Unknown = 0,
@@ -58,6 +68,7 @@ namespace MagFlow.Shared.Models
             Order = 10,
             Process = 11,
             ProcessStep = 12,
+            Stocktake = 13
         }
 
         public enum TaxRate
@@ -183,6 +194,12 @@ namespace MagFlow.Shared.Models
 
             [Display(Name = "Inactive")]
             Inactive = 7,
+
+            [Display(Name = "InProgress")]
+            InProgress = 8,
+
+            [Display(Name = "Confirmed")]
+            Confirmed = 9,
         }
 
         public enum OverallState

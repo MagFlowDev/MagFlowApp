@@ -4,6 +4,7 @@ using MagFlow.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MagFlow.EF.Migrations.CompanyDb
 {
     [DbContext(typeof(CompanyDbContext))]
-    partial class CompanyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20261002133727_Update3")]
+    partial class Update3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1671,115 +1674,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.ToTable("Stocktakes");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.CompanyScope.StocktakeItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Condition")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ConsumptionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("DefaultUnitId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ExternalId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ProductionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Quantity")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<DateTime?>("ReceivedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RowId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SectorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SlotId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StocktakeId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("WarehouseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("DefaultUnitId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("RowId");
-
-                    b.HasIndex("SectorId");
-
-                    b.HasIndex("SlotId");
-
-                    b.HasIndex("StocktakeId");
-
-                    b.HasIndex("WarehouseId");
-
-                    b.ToTable("StocktakeItems");
-                });
-
-            modelBuilder.Entity("MagFlow.Domain.CompanyScope.StocktakeItemParameter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ParameterId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
-
-                    b.HasIndex("ParameterId");
-
-                    b.ToTable("StocktakeItemParameters");
-                });
-
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Unit", b =>
                 {
                     b.Property<int>("Id")
@@ -3010,88 +2904,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Navigation("Warehouse");
                 });
 
-            modelBuilder.Entity("MagFlow.Domain.CompanyScope.StocktakeItem", b =>
-                {
-                    b.HasOne("MagFlow.Shared.Models.Domain.CompanyScope.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.Unit", "DefaultUnit")
-                        .WithMany()
-                        .HasForeignKey("DefaultUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.WarehouseSectorRow", "Row")
-                        .WithMany()
-                        .HasForeignKey("RowId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.WarehouseSector", "Sector")
-                        .WithMany()
-                        .HasForeignKey("SectorId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.WarehouseSectorRowSlot", "Slot")
-                        .WithMany()
-                        .HasForeignKey("SlotId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.Stocktake", "Stocktake")
-                        .WithMany()
-                        .HasForeignKey("StocktakeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.Warehouse", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("DefaultUnit");
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Row");
-
-                    b.Navigation("Sector");
-
-                    b.Navigation("Slot");
-
-                    b.Navigation("Stocktake");
-
-                    b.Navigation("Warehouse");
-                });
-
-            modelBuilder.Entity("MagFlow.Domain.CompanyScope.StocktakeItemParameter", b =>
-                {
-                    b.HasOne("MagFlow.Domain.CompanyScope.StocktakeItem", "Item")
-                        .WithMany("Parameters")
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MagFlow.Domain.CompanyScope.CustomParameter", "Parameter")
-                        .WithMany()
-                        .HasForeignKey("ParameterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-
-                    b.Navigation("Parameter");
-                });
-
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.Unit", b =>
                 {
                     b.HasOne("MagFlow.Domain.CompanyScope.Unit", "ParentUnit")
@@ -3264,11 +3076,6 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
                     b.Navigation("Conversions");
 
-                    b.Navigation("Parameters");
-                });
-
-            modelBuilder.Entity("MagFlow.Domain.CompanyScope.StocktakeItem", b =>
-                {
                     b.Navigation("Parameters");
                 });
 

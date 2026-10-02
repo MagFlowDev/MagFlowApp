@@ -63,6 +63,9 @@ namespace MagFlow.EF
         public DbSet<WorkDay> WorkDays { get; set; }
         public DbSet<EntityHistory> EntitiesHistory { get; set; }
         public DbSet<StockMovement> StockMovements { get; set; }
+        public DbSet<Stocktake> Stocktakes { get; set; }
+        public DbSet<StocktakeItem> StocktakeItems { get; set; }
+        public DbSet<StocktakeItemParameter> StocktakeItemParameters { get; set; }
 
         public CompanyDbContext(string connectionString, int companyNumber) : base(BuildOptions(connectionString))
         {
@@ -116,6 +119,7 @@ namespace MagFlow.EF
             builder.Entity<Document>().HasMany(d => d.Processes).WithOne(p => p.Document);
             builder.Entity<Item>().HasMany(i => i.Parameters).WithOne(p => p.Item);
             builder.Entity<Item>().HasMany(i => i.StockMovements).WithOne(s => s.Item);
+            builder.Entity<StocktakeItem>().HasMany(i => i.Parameters).WithOne(p => p.Item);
             builder.Entity<MachineFunction>().HasMany(m => m.Impacts).WithOne(i => i.MachineFunction);
             builder.Entity<MachineModel>().HasMany(m => m.Machines).WithOne(x => x.MachineModel);
             builder.Entity<MachineModel>().HasMany(m => m.Functions).WithOne(f => f.MachineModel);
@@ -171,6 +175,12 @@ namespace MagFlow.EF
             builder.Entity<Item>().HasOne(x => x.Slot).WithMany(x => x.Items).OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Item>().HasOne(x => x.RemovedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StocktakeItem>().HasOne(x => x.Product).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StocktakeItem>().HasOne(x => x.Warehouse).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StocktakeItem>().HasOne(x => x.Sector).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StocktakeItem>().HasOne(x => x.Row).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StocktakeItem>().HasOne(x => x.Slot).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<StocktakeItem>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<ItemComponent>().HasOne(x => x.Parent).WithMany(x => x.Components).HasForeignKey(p => p.ParentId).OnDelete(DeleteBehavior.NoAction);
             builder.Entity<ItemComponent>().HasOne(i => i.Component).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<Contractor>().HasOne(x => x.CreatedBy).WithMany().OnDelete(DeleteBehavior.NoAction);
@@ -193,6 +203,7 @@ namespace MagFlow.EF
             builder.Entity<StockMovement>().HasOne(x => x.TargetSector).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<StockMovement>().HasOne(x => x.TargetRow).WithMany().OnDelete(DeleteBehavior.NoAction);
             builder.Entity<StockMovement>().HasOne(x => x.TargetSlot).WithMany().OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<Stocktake>().HasOne(x => x.Warehouse).WithMany().OnDelete(DeleteBehavior.NoAction);
 
             builder.Ignore<Shared.Models.StatusEntity>();
             foreach(var entityType in builder.Model.GetEntityTypes())

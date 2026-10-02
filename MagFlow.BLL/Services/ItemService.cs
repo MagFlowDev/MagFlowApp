@@ -23,15 +23,12 @@ namespace MagFlow.BLL.Services
         private readonly IItemRepository _itemRepository;
         private readonly INetworkService _networkService;
 
-        private readonly ILogger<ItemService> _logger;
-
         public ItemService(IItemRepository itemRepository, 
             INetworkService networkService,
-            ILogger<ItemService> logger) : base(itemRepository, networkService)
+            ILogger<ItemService> logger) : base(itemRepository, networkService, logger)
         {
             _itemRepository = itemRepository;
             _networkService = networkService;
-            _logger = logger;
         }
 
         public async Task<ItemDTO?> GetItem(int id)

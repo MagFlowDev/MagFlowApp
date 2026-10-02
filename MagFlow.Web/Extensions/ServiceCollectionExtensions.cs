@@ -281,6 +281,7 @@ namespace MagFlow.Web.Extensions
             services.AddScoped<IWorkingHourRepository, WorkingHourRepository>();
             services.AddScoped<IWorkDayRepository, WorkDayRepository>();
             services.AddScoped<IStockMovementRepository, StockMovementRepository>();
+            services.AddScoped<IStocktakeRepository, StocktakeRepository>();
         }
 
         private static void ConfigureOpenTelemetry(this IServiceCollection services)
