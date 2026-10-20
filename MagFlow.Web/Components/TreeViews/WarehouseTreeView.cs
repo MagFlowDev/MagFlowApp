@@ -111,6 +111,10 @@ namespace MagFlow.Web.Components.TreeViews
 
     public class WarehouseTreeViewItem : TreeItemData<int>
     {
+        private SectorDTO? _sectorModel;
+        private RowDTO? _rowModel;
+        private SlotDTO? _slotModel;
+
         public int SubItemsCount => this.Children?.Count ?? 0;
 
         public Enums.WarehouseStorageType StorageType { get; set; }
@@ -164,12 +168,11 @@ namespace MagFlow.Web.Components.TreeViews
                 .Where(x => x != null).Select(x => x!)
                 .ToList() ?? new List<RowDTO>();
 
-            return new SectorDTO()
-            {
-                Id = Value,
-                Name = Text,
-                Rows = rows
-            };
+            _sectorModel ??= new SectorDTO();
+            _sectorModel.Id = Value;
+            _sectorModel.Name = Text;
+            _sectorModel.Rows = rows;
+            return _sectorModel;
         }
 
         public RowDTO? GetRowDTO()
@@ -186,12 +189,11 @@ namespace MagFlow.Web.Components.TreeViews
                 .Where(x => x != null).Select(x => x!)
                 .ToList() ?? new List<SlotDTO>();
 
-            return new RowDTO()
-            {
-                Id = Value,
-                Name = Text,
-                Slots = slots
-            };
+            _rowModel ??= new RowDTO();
+            _rowModel.Id = Value;
+            _rowModel.Name = Text;
+            _rowModel.Slots = slots;
+            return _rowModel;
         }
 
         public SlotDTO? GetSlotDTO()
@@ -199,11 +201,10 @@ namespace MagFlow.Web.Components.TreeViews
             if (this.StorageType != Enums.WarehouseStorageType.Slot)
                 return null;
 
-            return new SlotDTO()
-            {
-                Id = Value,
-                Name = Text,
-            };
+            _slotModel ??= new SlotDTO();
+            _slotModel.Id = Value;
+            _slotModel.Name = Text;
+            return _slotModel;
         }
     }
 }

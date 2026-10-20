@@ -98,6 +98,11 @@ namespace MagFlow.Web.Pages.Modules.Warehouses.Warehouse
             }
         }
 
+        private void ReloadWarehouse(WarehouseDTO warehouse)
+        {
+            _warehouse = warehouse;
+        }
+
         private void OnSectionChanged(SectionsEnums.WarehouseDetailsSection section)
         {
             if (_currentSection == section)

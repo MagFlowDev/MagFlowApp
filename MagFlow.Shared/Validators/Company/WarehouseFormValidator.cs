@@ -13,7 +13,7 @@ namespace MagFlow.Shared.Validators.Company
     {
         public WarehouseFormValidator(IStringLocalizer<Validations> localizer)
         {
-
+            RuleForEach(x => x.Sectors).SetValidator(new WarehouseSectorValidator(localizer));
         }
     }
 
@@ -31,6 +31,7 @@ namespace MagFlow.Shared.Validators.Company
         public WarehouseSectorValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
+            RuleForEach(x => x.Rows).SetValidator(new WarehouseSectorRowValidator(localizer));
         }
     }
 
@@ -39,6 +40,7 @@ namespace MagFlow.Shared.Validators.Company
         public WarehouseSectorRowValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
+            RuleForEach(x => x.Slots).SetValidator(new WarehouseSectorRowSlotValidator(localizer));
         }
     }
 

@@ -1816,4 +1816,10 @@ i uprawnieniami użytkowników</value>
   <data name="WareCode" xml:space="preserve">
     <value>Kod towaru</value>
   </data>
+  <data name="WarehouseLocationInUse" xml:space="preserve">
+    <value>Nie można usunąć lokalizacji z przypisanymi towarami. Najpierw przenieś towary.</value>
+  </data>
+  <data name="WarehouseLocationsReloadRequired" xml:space="preserve">
+    <value>Zmiany zapisano, ale nie udało się odświeżyć lokalizacji. Kliknij Zapisz, aby ponowić odczyt.</value>
+  </data>
 </root>
