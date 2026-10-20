@@ -19,38 +19,34 @@
 
 @code {
     [Parameter, EditorRequired]
-    public MudDataGrid<T> DataGrid { get; set; }
+    public MudDataGrid<T> DataGrid { get; set; } = default!;
 
-
-    public int RowsPerPage { get; set; } = 25;
-
-
+    public int RowsPerPage => DataGrid?.RowsPerPage ?? 25;
 
     private async Task ChangeRowsPerPage(int newValue)
     {
         if (DataGrid == null || RowsPerPage == newValue)
             return;
 
-        RowsPerPage = newValue;
-        await DataGrid.SetRowsPerPageAsync(newValue);
+        await DataGrid.SetRowsPerPageAsync(newValue, resetPage: true);
     }
 
-    private async Task OnPageChanged(int page)
+    private Task OnPageChanged(int page)
     {
-        if (DataGrid == null)
-            return;
+        if (DataGrid != null)
+            DataGrid.CurrentPage = Math.Clamp(page - 1, 0, GetPageCount() - 1);
 
-        DataGrid.CurrentPage = page - 1;
-        await DataGrid.ReloadServerData();
+        return Task.CompletedTask;
     }
 
     private int GetPageCount()
     {
-        if (DataGrid == null || DataGrid.ServerItems.Count() == 0)
+        if (DataGrid == null)
             return 1;
 
         var total = DataGrid.GetFilteredItemsCount();
-        return (int)Math.Ceiling((double)total / DataGrid.RowsPerPage);
+        var pageSize = Math.Max(1, DataGrid.RowsPerPage);
+        return Math.Max(1, (int)Math.Ceiling((double)total / pageSize));
     }
 
     private string GetRangeText()

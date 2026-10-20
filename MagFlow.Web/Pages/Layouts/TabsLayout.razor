@@ -153,11 +153,15 @@
 
     private int ActiveIndex
     {
-        get; set
+        get;
+        set
         {
-            if (_firstRendered)
-                UpdateCurrentModule();
             field = value;
+
+            if (_firstRendered)
+            {
+                _ = UpdateCurrentModule(value);
+            }
         }
     } = 0;
     private int? _nextIndex = null;
@@ -235,33 +239,40 @@
         await LocalCacheService.SetSessionOrder(UserSession.Id, orderedIds);
     }
 
-    private async Task UpdateCurrentModule()
+    private async Task UpdateCurrentModule(int index)
     {
-        var redirected = false;
+        if (UserSession == null || index < 0 || index >= _activeModules.Count)
+        {
+            return;
+        }
+
+        var moduleId = _activeModules[index].Id;
+
         try
         {
             _loadingTab = true;
-            var currentTabTag = _tabsRef?.ActivePanel?.Tag;
-            if (currentTabTag is not null && currentTabTag is Guid currentModuleId)
+            await LocalCacheService.SetCurrentModule(UserSession.Id, moduleId);
+
+            // The user may have selected another tab while the cache was being updated.
+            if (ActiveIndex < 0 || ActiveIndex >= _activeModules.Count ||
+                _activeModules[ActiveIndex].Id != moduleId)
             {
-                await LocalCacheService.SetCurrentModule(UserSession.Id, currentModuleId);
-                if (ModuleRoutes.ContainsKey(currentModuleId))
+                return;
+            }
+
+            if (ModuleRoutes.TryGetValue(moduleId, out var targetUri))
+            {
+                var currentUri = $"/{NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}";
+                if (!targetUri.Equals(currentUri, StringComparison.OrdinalIgnoreCase))
                 {
-                    var targetUri = ModuleRoutes[currentModuleId];
-                    var currentUri = $"/{NavigationManager.ToBaseRelativePath(NavigationManager.Uri)}";
-                    if (!targetUri.Equals(currentUri, StringComparison.OrdinalIgnoreCase))
-                    {
-                        NavigationManager.NavigateTo(ModuleRoutes[currentModuleId]);
-                        redirected = true;
-                    }
+                    NavigationManager.NavigateTo(targetUri);
                 }
             }
         }
         finally
         {
             _loadingTab = false;
-            if(!redirected)
-                StateHasChanged();
+            StateHasChanged();
         }
     }
 

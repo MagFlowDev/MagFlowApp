@@ -1821,4 +1821,55 @@
   <data name="WarehouseLocationsReloadRequired" xml:space="preserve">
     <value>Changes were saved, but locations could not be reloaded. Click Save to retry loading them.</value>
   </data>
+  <data name="HistoryEntityCreated" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="HistoryEntityUpdated" xml:space="preserve">
+    <value>Updated</value>
+  </data>
+  <data name="StockMovementUnknown" xml:space="preserve">
+    <value>Unspecified</value>
+  </data>
+  <data name="StockMovementCreate" xml:space="preserve">
+    <value>Addition</value>
+  </data>
+  <data name="StockMovementExternalReceive" xml:space="preserve">
+    <value>Receipt</value>
+  </data>
+  <data name="StockMovementInternalMove" xml:space="preserve">
+    <value>Transfer</value>
+  </data>
+  <data name="StockMovementExternalRelease" xml:space="preserve">
+    <value>Issue</value>
+  </data>
+  <data name="StockMovementProductionRelease" xml:space="preserve">
+    <value>To production</value>
+  </data>
+  <data name="StockMovementProductionReceive" xml:space="preserve">
+    <value>From production</value>
+  </data>
+  <data name="StockMovementInventoryAdjustment" xml:space="preserve">
+    <value>Adjustment</value>
+  </data>
+  <data name="WarehouseSelector" xml:space="preserve">
+    <value>Warehouse</value>
+  </data>
+  <data name="NoWarehousesAvailable" xml:space="preserve">
+    <value>No warehouses available.</value>
+  </data>
+  <data name="NoWarehouseRows" xml:space="preserve">
+    <value>No rows.</value>
+  </data>
+  <data name="Occupancy" xml:space="preserve">
+    <value>Occupancy</value>
+  </data>
+  <data name="EditWarehouseSector" xml:space="preserve">
+    <value>Edit sector</value>
+  </data>
+  <data name="WarehouseRowRemovalConfirmation" xml:space="preserve">
+    <value>Remove row “{0}” and its storage slots ({1})? The change will be saved when you click Save. Locations with assigned items cannot be removed.</value>
+  </data>
+  <data name="NoWarehouseSlots" xml:space="preserve">
+    <value>No storage slots.</value>
+  </data>
 </root>

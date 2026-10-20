@@ -1822,4 +1822,55 @@ i uprawnieniami użytkowników</value>
   <data name="WarehouseLocationsReloadRequired" xml:space="preserve">
     <value>Zmiany zapisano, ale nie udało się odświeżyć lokalizacji. Kliknij Zapisz, aby ponowić odczyt.</value>
   </data>
+  <data name="HistoryEntityCreated" xml:space="preserve">
+    <value>Utworzono</value>
+  </data>
+  <data name="HistoryEntityUpdated" xml:space="preserve">
+    <value>Zaktualizowano</value>
+  </data>
+  <data name="StockMovementUnknown" xml:space="preserve">
+    <value>Nieokreślony</value>
+  </data>
+  <data name="StockMovementCreate" xml:space="preserve">
+    <value>Dodanie</value>
+  </data>
+  <data name="StockMovementExternalReceive" xml:space="preserve">
+    <value>Przyjęcie</value>
+  </data>
+  <data name="StockMovementInternalMove" xml:space="preserve">
+    <value>Przesunięcie</value>
+  </data>
+  <data name="StockMovementExternalRelease" xml:space="preserve">
+    <value>Wydanie</value>
+  </data>
+  <data name="StockMovementProductionRelease" xml:space="preserve">
+    <value>Do produkcji</value>
+  </data>
+  <data name="StockMovementProductionReceive" xml:space="preserve">
+    <value>Z produkcji</value>
+  </data>
+  <data name="StockMovementInventoryAdjustment" xml:space="preserve">
+    <value>Korekta</value>
+  </data>
+  <data name="WarehouseSelector" xml:space="preserve">
+    <value>Magazyn</value>
+  </data>
+  <data name="NoWarehousesAvailable" xml:space="preserve">
+    <value>Brak dostępnych magazynów.</value>
+  </data>
+  <data name="NoWarehouseRows" xml:space="preserve">
+    <value>Brak rzędów.</value>
+  </data>
+  <data name="Occupancy" xml:space="preserve">
+    <value>Obłożenie</value>
+  </data>
+  <data name="EditWarehouseSector" xml:space="preserve">
+    <value>Edytuj sektor</value>
+  </data>
+  <data name="WarehouseRowRemovalConfirmation" xml:space="preserve">
+    <value>Usunąć rząd „{0}” wraz z jego miejscami ({1})? Zmiana zostanie zapisana po kliknięciu Zapisz. Usunięcie lokalizacji z przypisanymi towarami jest zablokowane.</value>
+  </data>
+  <data name="NoWarehouseSlots" xml:space="preserve">
+    <value>Brak miejsc.</value>
+  </data>
 </root>

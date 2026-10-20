@@ -58,7 +58,19 @@ namespace MagFlow.BLL.Services
             return result;
         }
 
-        public async Task<WarehouseLocationsSaveResult> UpdateLocations(int warehouseId, List<SectorDTO> sectors)
+        public Task<WarehouseLocationsSaveResult> UpdateLocations(int warehouseId, List<SectorDTO> sectors)
+            => SaveLocations(warehouseId, sectors, null);
+
+        public Task<WarehouseLocationsSaveResult> UpdateSector(int warehouseId, SectorDTO sector)
+        {
+            if (sector == null || sector.Id <= 0)
+                return Task.FromResult(WarehouseLocationsSaveResult.InvalidData);
+
+            return SaveLocations(warehouseId, [sector], sector.Id);
+        }
+
+        private async Task<WarehouseLocationsSaveResult> SaveLocations(
+            int warehouseId, List<SectorDTO> sectors, int? sectorId)
         {
             var principal = _networkService.GetUserPrincipal();
             var userId = _networkService.GetUserId();
@@ -77,7 +89,9 @@ namespace MagFlow.BLL.Services
                 slot == null || string.IsNullOrWhiteSpace(slot.Name)))))
                 return WarehouseLocationsSaveResult.InvalidData;
 
-            return await _warehouseRepository.UpdateLocations(warehouseId, sectors, userId.Value, companyId, isSuperAdmin);
+            return sectorId.HasValue
+                ? await _warehouseRepository.UpdateSector(warehouseId, sectors[0], userId.Value, companyId, isSuperAdmin)
+                : await _warehouseRepository.UpdateLocations(warehouseId, sectors, userId.Value, companyId, isSuperAdmin);
         }
 
         public async Task<Enums.Result> CreateStocktake(StocktakeFormModel model)

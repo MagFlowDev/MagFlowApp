@@ -1,0 +1,166 @@
+@using FluentValidation.Results
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Validators.Company
+@using MagFlow.Shared.Validators.Resources
+@using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Components.Dialogs
+@using MudBlazor
+
+@inject IWarehouseService WarehouseService
+@inject IStringLocalizer<Validations> Validations
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inherits AuthComponentBase
+
+<MudDialog>
+    <DialogContent>
+        <div class="d-flex flex-column" style="gap: 16px;">
+            <MudTextField T="string" @bind-Value="_draft.Name" Immediate="true"
+                          Label="@Localizer[Langs.Name]" Variant="Variant.Outlined" Disabled="ControlsDisabled"
+                          Error="@HasError(nameof(SectorDTO.Name))" ErrorText="@ErrorText(nameof(SectorDTO.Name))" />
+            <div class="d-flex align-center">
+                <MudText Typo="Typo.subtitle1">@Localizer[Langs.ListOfRows]</MudText>
+                <MudSpacer />
+                <MudButton StartIcon="@Icons.Material.Outlined.Add" OnClick="AddRow" Disabled="ControlsDisabled">
+                    @Localizer[Langs.AddRow]
+                </MudButton>
+            </div>
+            <div style="max-height: 360px; overflow-y: auto;">
+                @foreach (var row in _draft.Rows)
+                {
+                    var property = $"Rows[{_draft.Rows.IndexOf(row)}].Name";
+                    <div @key="row" class="d-flex align-center mb-2" style="gap: 8px;">
+                        <MudTextField T="string" @bind-Value="row.Name" Immediate="true" Class="flex-grow-1"
+                                      Label="@Localizer[Langs.Name]" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                      Disabled="ControlsDisabled" Error="@HasError(property)" ErrorText="@ErrorText(property)" />
+                        <MudTooltip Text="@Localizer[Langs.Delete]">
+                            <MudIconButton Icon="@Icons.Material.Outlined.RemoveCircleOutline" Color="Color.Error"
+                                           Disabled="ControlsDisabled" OnClick="@(() => RemoveRow(row))" />
+                        </MudTooltip>
+                    </div>
+                }
+                @if (_draft.Rows.Count == 0)
+                {
+                    <MudText>@Localizer["NoWarehouseRows"]</MudText>
+                }
+            </div>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Disabled="_saving">@Localizer[Langs.Cancel]</MudButton>
+        <LoadingButton Color="Color.Primary" Variant="Variant.Filled" Loading="_saving"
+                       Disabled="ControlsDisabled" OnClick="Save">@Localizer[Langs.Save]</LoadingButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public int WarehouseId { get; set; }
+    [Parameter, EditorRequired] public SectorDTO Sector { get; set; } = default!;
+
+    private SectorDTO _draft = new();
+    private WarehouseSectorValidator _validator = default!;
+    private ValidationResult _validation = new();
+    private bool _saving;
+    private int _nextRowId = -1;
+    private bool ControlsDisabled => _saving || !HasModulePermission("Warehouses", PermissionFlags.Edit);
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _validator = new WarehouseSectorValidator(Validations);
+        _draft = new SectorDTO
+        {
+            Id = Sector.Id, WarehouseId = WarehouseId, Name = Sector.Name, Code = Sector.Code,
+            Rows = Sector.Rows.Select(row => new RowDTO
+            {
+                Id = row.Id, SectorId = row.SectorId, Name = row.Name, Code = row.Code,
+                Slots = row.Slots.Select(slot => new SlotDTO
+                {
+                    Id = slot.Id, RowId = slot.RowId, Name = slot.Name, Code = slot.Code
+                }).ToList()
+            }).ToList()
+        };
+    }
+
+    private bool HasError(string property) => _validation.Errors.Any(x => x.PropertyName == property);
+    private string? ErrorText(string property) => _validation.Errors.FirstOrDefault(x => x.PropertyName == property)?.ErrorMessage;
+
+    private void AddRow()
+    {
+        if (ControlsDisabled)
+            return;
+
+        var rowNumber = _draft.Rows.Count + 1;
+        var name = $"{Localizer[Langs.Row]} {rowNumber}";
+        while (_draft.Rows.Any(x => x.Name == name))
+            name = $"{Localizer[Langs.Row]} {++rowNumber}";
+
+        _draft.Rows.Add(new RowDTO { Id = _nextRowId--, SectorId = _draft.Id, Name = name });
+        _validation = new();
+    }
+
+    private async Task RemoveRow(RowDTO row)
+    {
+        if (ControlsDisabled)
+            return;
+
+        if (row.Slots.Count > 0)
+        {
+            var parameters = new DialogParameters<ConfirmDeleteDialog>
+            {
+                { x => x.ContentText, string.Format(Localizer["WarehouseRowRemovalConfirmation"].Value, row.Name, row.Slots.Count) }
+            };
+            var dialog = await DialogService.ShowAsync<ConfirmDeleteDialog>(Localizer[Langs.Delete], parameters);
+            var result = await dialog.Result;
+            if (result == null || result.Canceled || ControlsDisabled)
+                return;
+        }
+
+        _draft.Rows.Remove(row);
+        _validation = new();
+    }
+
+    private async Task Save()
+    {
+        if (ControlsDisabled)
+            return;
+
+        _saving = true;
+        try
+        {
+            _validation = await _validator.ValidateAsync(_draft);
+            if (!_validation.IsValid)
+                return;
+
+            var result = await WarehouseService.UpdateSector(WarehouseId, _draft);
+            if (result == WarehouseLocationsSaveResult.Success)
+            {
+                MudDialog.Close(DialogResult.Ok(true));
+                return;
+            }
+
+            var message = result == WarehouseLocationsSaveResult.LocationInUse
+                ? Localizer["WarehouseLocationInUse"]
+                : Localizer[Langs.ErrorOccured];
+            Snackbar.Add(message, Severity.Error);
+        }
+        catch
+        {
+            Snackbar.Add(Localizer[Langs.ErrorOccured], Severity.Error);
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        if (!_saving)
+            MudDialog.Cancel();
+    }
+}
