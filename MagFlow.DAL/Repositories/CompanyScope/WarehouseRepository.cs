@@ -24,8 +24,21 @@ namespace MagFlow.DAL.Repositories.CompanyScope
         {
         }
 
-        public async Task<WarehouseLocationsSaveResult> UpdateLocations(
+        public Task<WarehouseLocationsSaveResult> UpdateLocations(
             int warehouseId, List<SectorDTO> sectors, Guid userId, Guid companyId, bool isSuperAdmin)
+            => UpdateLocationsCore(warehouseId, sectors, userId, companyId, isSuperAdmin, null);
+
+        public Task<WarehouseLocationsSaveResult> UpdateSector(
+            int warehouseId, SectorDTO sector, Guid userId, Guid companyId, bool isSuperAdmin)
+        {
+            if (sector == null || sector.Id <= 0)
+                return Task.FromResult(WarehouseLocationsSaveResult.InvalidData);
+
+            return UpdateLocationsCore(warehouseId, [sector], userId, companyId, isSuperAdmin, sector.Id);
+        }
+
+        private async Task<WarehouseLocationsSaveResult> UpdateLocationsCore(
+            int warehouseId, List<SectorDTO> sectors, Guid userId, Guid companyId, bool isSuperAdmin, int? sectorId)
         {
             try
             {
@@ -43,12 +56,15 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 if (warehouse == null)
                     return WarehouseLocationsSaveResult.InvalidData;
 
+                var scopedSectors = warehouse.Sectors
+                    .Where(x => !sectorId.HasValue || x.Id == sectorId.Value).ToList();
+
                 var sectorIds = new HashSet<int>();
                 var rowIds = new HashSet<int>();
                 var slotIds = new HashSet<int>();
                 foreach (var sector in sectors)
                 {
-                    var existingSector = warehouse.Sectors.FirstOrDefault(x => x.Id == sector.Id && x.RemovedAt == null);
+                    var existingSector = scopedSectors.FirstOrDefault(x => x.Id == sector.Id && x.RemovedAt == null);
                     if (sector.Id > 0 && (existingSector == null || !sectorIds.Add(sector.Id)))
                         return WarehouseLocationsSaveResult.InvalidData;
                     foreach (var row in sector.Rows)
@@ -56,6 +72,11 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                         var existingRow = existingSector?.Rows.FirstOrDefault(x => x.Id == row.Id && x.RemovedAt == null);
                         if (row.Id > 0 && (existingRow == null || !rowIds.Add(row.Id)))
                             return WarehouseLocationsSaveResult.InvalidData;
+                        // Sector editing changes rows, never the places of a retained row.
+                        // Read them in the same transaction so newly added places are preserved too.
+                        if (sectorId.HasValue)
+                            row.Slots = existingRow?.Slots.Where(x => x.RemovedAt == null)
+                                .Select(x => new SlotDTO { Id = x.Id, Name = x.Name }).ToList() ?? [];
                         foreach (var slot in row.Slots)
                             if (slot.Id > 0 && (existingRow?.Slots.Any(x => x.Id == slot.Id && x.RemovedAt == null) != true ||
                                 !slotIds.Add(slot.Id)))
@@ -63,10 +84,10 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                     }
                 }
 
-                var removedSectors = warehouse.Sectors.Where(x => x.RemovedAt == null && !sectorIds.Contains(x.Id)).ToList();
-                var removedRows = warehouse.Sectors.SelectMany(x => x.Rows)
+                var removedSectors = scopedSectors.Where(x => x.RemovedAt == null && !sectorIds.Contains(x.Id)).ToList();
+                var removedRows = scopedSectors.SelectMany(x => x.Rows)
                     .Where(x => x.RemovedAt == null && !rowIds.Contains(x.Id)).ToList();
-                var removedSlots = warehouse.Sectors.SelectMany(x => x.Rows).SelectMany(x => x.Slots)
+                var removedSlots = scopedSectors.SelectMany(x => x.Rows).SelectMany(x => x.Slots)
                     .Where(x => x.RemovedAt == null && !slotIds.Contains(x.Id)).ToList();
                 var removedSectorIds = removedSectors.Select(x => x.Id).ToList();
                 var removedRowIds = removedRows.Select(x => x.Id).ToList();

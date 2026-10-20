@@ -1,0 +1,45 @@
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MudBlazor
+
+<MudDataGrid T="RowDTO" Items="@Rows.OrderBy(row => row.Name)"
+             Class="w-100 striped-grid" Style="width: 100%;" Dense="true" Elevation="0"
+             Filterable="false" Virtualize="false" SortMode="SortMode.None" ReadOnly="true" ShowMenuIcon="false">
+    <Columns>
+        <HierarchyColumn T="RowDTO" HeaderStyle="width: 1%; white-space: nowrap;" />
+        <PropertyColumn T="RowDTO" TProperty="string"
+                        Title="@Localizer[Langs.Name]" Property="row => row.Name" Sortable="false" Filterable="false" />
+        <PropertyColumn T="RowDTO" TProperty="string"
+                        Title="@Localizer[Langs.Code]" Property="row => row.Code" Sortable="false" Filterable="false" />
+        <TemplateColumn T="RowDTO" Title="@Localizer["Occupancy"]" Sortable="false" Filterable="false">
+            <CellTemplate>—</CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <ChildRowContent Context="rowContext">
+        <div class="pa-3 pl-6 w-100" style="box-sizing: border-box;">
+            <MudDataGrid T="SlotDTO" Items="@rowContext.Item.Slots.OrderBy(slot => slot.Name)"
+                         Class="w-100 striped-grid" Style="width: 100%;" Dense="true" Elevation="0"
+                         Filterable="false" Virtualize="false" SortMode="SortMode.None" ReadOnly="true" ShowMenuIcon="false">
+                <Columns>
+                    <PropertyColumn T="SlotDTO" TProperty="string"
+                                    Title="@Localizer[Langs.Name]" Property="slot => slot.Name" Sortable="false" Filterable="false" />
+                    <PropertyColumn T="SlotDTO" TProperty="string"
+                                    Title="@Localizer[Langs.Code]" Property="slot => slot.Code" Sortable="false" Filterable="false" />
+                    <TemplateColumn T="SlotDTO" Title="@Localizer["Occupancy"]" Sortable="false" Filterable="false">
+                        <CellTemplate>—</CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+                <NoRecordsContent>
+                    <MudText Class="pa-3">@Localizer["NoWarehouseSlots"]</MudText>
+                </NoRecordsContent>
+            </MudDataGrid>
+        </div>
+    </ChildRowContent>
+    <NoRecordsContent>
+        <MudText Class="pa-3">@Localizer["NoWarehouseRows"]</MudText>
+    </NoRecordsContent>
+</MudDataGrid>
+
+@code {
+    [Parameter]
+    public List<RowDTO> Rows { get; set; } = [];
+}

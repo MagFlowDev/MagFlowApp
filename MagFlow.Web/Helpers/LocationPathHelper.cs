@@ -6,8 +6,8 @@
         {
             switch(moduleName)
             {
-                case "item": return "ware";
-                case "product": return "ware";
+                case "item": return "wares";
+                case "product": return "wares";
                 default: return moduleName;
             }
         }

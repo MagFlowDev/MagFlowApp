@@ -1,5 +1,71 @@
-﻿<h3>LocationList</h3>
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.Constants.Identificators
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Web.Components.DataGrid
+@using MudBlazor
 
-@code {
+@inject IWarehouseService WarehouseService
+@inherits AuthComponentBase
+@implements IDisposable
 
-}
+<div class="d-flex flex-column w-100 align-self-stretch pa-4" style="min-height: 0; background: var(--mud-palette-surface); gap: 16px;">
+    <div class="d-flex align-center" style="flex: 0 0 auto;">
+        <MudText Typo="Typo.h6">@Localizer[Langs.WarehouseLocations]</MudText>
+        <MudSpacer />
+        <MudTooltip Text="@Localizer[Langs.Refresh]">
+            <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Outlined.Refresh"
+                           Disabled="@(_refreshing || _loading)" OnClick="Refresh" />
+        </MudTooltip>
+    </div>
+
+    <div style="flex: 0 0 auto; width: 100%; max-width: 360px;">
+        <MudSelect T="int" Value="_warehouseId" ValueChanged="SelectWarehouse"
+                   Label="@Localizer["WarehouseSelector"]" Variant="Variant.Outlined" Clearable="false"
+                   Disabled="@(_refreshing || _warehouses.Count == 0)">
+            @foreach (var warehouse in _warehouses)
+            {
+                <MudSelectItem T="int" Value="@warehouse.Id">@warehouse.Name</MudSelectItem>
+            }
+        </MudSelect>
+    </div>
+
+    @if (_refreshing || _loading)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    }
+    else if (_loadFailed)
+    {
+        <MudAlert Severity="Severity.Error">@Localizer[Langs.ErrorOccured]</MudAlert>
+    }
+    else if (_warehouses.Count == 0)
+    {
+        <MudText>@Localizer["NoWarehousesAvailable"]</MudText>
+    }
+    else if (_warehouse != null)
+    {
+        <div class="d-flex overflow-hidden" style="flex: 1 1 0; min-height: 0;">
+            <MagFlowDataGrid @key="_warehouse" T="SectorDTO" Items="@_warehouse.Sectors"
+                             DataGridId="@DataGridID.WAREHOUSES_LOCATIONS_LIST" DisableFiltering="true"
+                             SortMode="SortMode.None" ReadOnly="true" ShowMenuIcon="false">
+                <Columns>
+                    <HierarchyColumn T="SectorDTO" HeaderStyle="width: 1%; white-space: nowrap;" />
+                    <PropertyColumn T="SectorDTO" TProperty="string"
+                                    Title="@Localizer[Langs.Name]" Property="sector => sector.Name" Sortable="false" Filterable="false" />
+                    <PropertyColumn T="SectorDTO" TProperty="string"
+                                    Title="@Localizer[Langs.Code]" Property="sector => sector.Code" Sortable="false" Filterable="false" />
+                    <TemplateColumn T="SectorDTO" Title="@Localizer["Occupancy"]" Sortable="false" Filterable="false">
+                        <CellTemplate>—</CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+                <ChildRowContent Context="sectorContext">
+                    <div class="pa-3 pl-6 w-100" style="box-sizing: border-box;">
+                        <WarehouseRowsTable Rows="@sectorContext.Item.Rows" />
+                    </div>
+                </ChildRowContent>
+                <NoRecordsContent>
+                    <MudText Class="pa-4">@Localizer[Langs.NoSectorsAdded]</MudText>
+                </NoRecordsContent>
+            </MagFlowDataGrid>
+        </div>
+    }
+</div>

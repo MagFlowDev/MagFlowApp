@@ -20,13 +20,28 @@ namespace MagFlow.Shared.Models
 
         public enum StockMovementType
         {
+            [Display(Name = "StockMovementUnknown")]
             Unknown = 0,
+
+            [Display(Name = "StockMovementCreate")]
             Create = 1,
+
+            [Display(Name = "StockMovementExternalReceive")]
             ExternalReceive = 2,
+
+            [Display(Name = "StockMovementInternalMove")]
             InternalMove = 3,
+
+            [Display(Name = "StockMovementExternalRelease")]
             ExternalRelease = 4,
+
+            [Display(Name = "StockMovementProductionRelease")]
             ProductionRelease = 5,
+
+            [Display(Name = "StockMovementProductionReceive")]
             ProductionReceive = 6,
+
+            [Display(Name = "StockMovementInventoryAdjustment")]
             InventoryAdjustment = 7
         }
 

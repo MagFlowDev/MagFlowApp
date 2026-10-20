@@ -1,5 +1,6 @@
 ﻿@using MagFlow.BLL.Services.Interfaces
 @using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.BLL.Helpers.Localization.Display
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Components.Buttons
 @using MagFlow.Web.Components.DataGrid
@@ -21,7 +22,7 @@
             </ToolBarContent>
             <Columns>
                 <MagFlowPropertyColumn T="EntityHistoryDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Date]" MagFlowSortable="true" Property="history => history.OccurredAt.ToLocalTime().ToShortDateString()" Tag="@($"{nameof(EntityHistoryDTO.OccurredAt)}")" />
-                <MagFlowPropertyColumn T="EntityHistoryDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Description]" Property="history => history.EventType" Tag="@($"{nameof(EntityHistoryDTO.EventType)}")" />
+                <MagFlowPropertyColumn T="EntityHistoryDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.Description]" Property="history => history.EventType.DisplayHistoryEvent(Localizer)" Tag="@($"{nameof(EntityHistoryDTO.EventType)}")" />
                 <MagFlowPropertyColumn T="EntityHistoryDTO" TFilter="string" TProperty="string" Title="@Localizer[Langs.User]" Property="@(history => (history.User != null ? $"{history.User.FirstName} {history.User.LastName}" : string.Empty))" Tag="@($"{nameof(EntityHistoryDTO.User)}.{nameof(EntityHistoryDTO.User.LastName)}")" />
             </Columns>
         </MagFlowDataGrid>
