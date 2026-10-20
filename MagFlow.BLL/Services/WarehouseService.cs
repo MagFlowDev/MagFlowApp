@@ -43,7 +43,9 @@ namespace MagFlow.BLL.Services
         {
             return await base.GetEntityAsync(id, warehouse => warehouse
                 .Include(x => x.Items.Where(i => i.SectorId == null))
-                .Include(x => x.Sectors).ThenInclude(y => y.Rows).ThenInclude(z => z.Slots));
+                .Include(x => x.Sectors.Where(s => s.RemovedAt == null))
+                .ThenInclude(y => y.Rows.Where(r => r.RemovedAt == null))
+                .ThenInclude(z => z.Slots.Where(s => s.RemovedAt == null)));
         }
 
         public async Task<Enums.Result> AddWarehouse(WarehouseFormModel model)
@@ -54,6 +56,28 @@ namespace MagFlow.BLL.Services
             var entity = model.ToEntity(userId.Value);
             var result = await _warehouseRepository.AddAsync(entity);
             return result;
+        }
+
+        public async Task<WarehouseLocationsSaveResult> UpdateLocations(int warehouseId, List<SectorDTO> sectors)
+        {
+            var principal = _networkService.GetUserPrincipal();
+            var userId = _networkService.GetUserId();
+            var isSuperAdmin = principal?.IsInRole("SuperAdmin") == true;
+            var permission = principal?.Claims.FirstOrDefault(x =>
+                string.Equals(x.Type, "perms:Warehouses", StringComparison.OrdinalIgnoreCase))?.Value;
+            var edit = (long)Shared.Models.Enumerators.PermissionFlags.Edit;
+            if (principal?.Identity?.IsAuthenticated != true || !userId.HasValue ||
+                (!isSuperAdmin && (!long.TryParse(permission, out var mask) || (mask & edit) != edit)) ||
+                !Guid.TryParse(principal.FindFirst(Shared.Models.Auth.Claims.CompanyClaim)?.Value, out var companyId))
+                return WarehouseLocationsSaveResult.Forbidden;
+
+            if (warehouseId <= 0 || sectors == null || sectors.Any(s => s == null ||
+                string.IsNullOrWhiteSpace(s.Name) || s.Rows == null || s.Rows.Any(r => r == null ||
+                string.IsNullOrWhiteSpace(r.Name) || r.Slots == null || r.Slots.Any(slot =>
+                slot == null || string.IsNullOrWhiteSpace(slot.Name)))))
+                return WarehouseLocationsSaveResult.InvalidData;
+
+            return await _warehouseRepository.UpdateLocations(warehouseId, sectors, userId.Value, companyId, isSuperAdmin);
         }
 
         public async Task<Enums.Result> CreateStocktake(StocktakeFormModel model)

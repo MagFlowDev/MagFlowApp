@@ -1,5 +1,7 @@
 ﻿using MagFlow.Domain.CompanyScope;
 using MagFlow.EF;
+using MagFlow.Shared.DTOs.CompanyScope;
+using MagFlow.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +12,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope.Interfaces
 {
     public interface IWarehouseRepository : IRepository<Warehouse, CompanyDbContext>
     {
+        Task<WarehouseLocationsSaveResult> UpdateLocations(
+            int warehouseId, List<SectorDTO> sectors,
+            Guid userId, Guid companyId, bool isSuperAdmin);
     }
 }

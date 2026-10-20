@@ -1815,4 +1815,10 @@
   <data name="WareCode" xml:space="preserve">
     <value>Ware code</value>
   </data>
+  <data name="WarehouseLocationInUse" xml:space="preserve">
+    <value>Locations with assigned items cannot be deleted. Move the items first.</value>
+  </data>
+  <data name="WarehouseLocationsReloadRequired" xml:space="preserve">
+    <value>Changes were saved, but locations could not be reloaded. Click Save to retry loading them.</value>
+  </data>
 </root>

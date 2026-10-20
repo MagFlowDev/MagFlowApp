@@ -267,7 +267,10 @@ namespace MagFlow.EF
                 return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
             }
 
-            using var transaction = await Database.BeginTransactionAsync(cancellationToken);
+            // The caller may own a transaction covering the graph and its history.
+            using var transaction = Database.CurrentTransaction == null
+                ? await Database.BeginTransactionAsync(cancellationToken)
+                : null;
             try
             {
                 var result = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
@@ -293,13 +296,15 @@ namespace MagFlow.EF
 
                 await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
 
-                await transaction.CommitAsync(cancellationToken);
+                if (transaction != null)
+                    await transaction.CommitAsync(cancellationToken);
 
                 return result;
             }
             catch(Exception)
             {
-                await transaction.RollbackAsync(cancellationToken);
+                if (transaction != null)
+                    await transaction.RollbackAsync(cancellationToken);
                 throw;
             }
         }

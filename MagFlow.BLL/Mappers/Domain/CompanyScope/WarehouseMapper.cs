@@ -27,7 +27,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 CreatedAt = warehouse.CreatedAt,
                 RemovedAt = warehouse.RemovedAt,
                 Items = mapItems ? warehouse.Items?.ToDTO() ?? new List<ItemDTO>() : new List<ItemDTO>(),
-                Sectors = warehouse.Sectors?.ToDTO(mapItems) ?? new List<SectorDTO>(),
+                Sectors = warehouse.Sectors?.Where(x => x.RemovedAt == null).ToList().ToDTO(mapItems) ?? new List<SectorDTO>(),
                 StockMovements = warehouse.StockMovements.ToDTO(),
             };
         }
@@ -105,7 +105,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 CreatedAt = sector.CreatedAt,
                 RemovedAt = sector.RemovedAt,
                 Items = mapItems ? sector.Items?.ToDTO() ?? new List<ItemDTO>() : new List<ItemDTO>(),
-                Rows = sector.Rows?.ToDTO(mapItems) ?? new List<RowDTO>(),
+                Rows = sector.Rows?.Where(x => x.RemovedAt == null).ToList().ToDTO(mapItems) ?? new List<RowDTO>(),
             };
         }
 
@@ -159,7 +159,7 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 CreatedAt = row.CreatedAt,
                 RemovedAt = row.RemovedAt,
                 Items = mapItems ? row.Items?.ToDTO() ?? new List<ItemDTO>() : new List<ItemDTO>(),
-                Slots = row.Slots?.ToDTO(mapItems) ?? new List<SlotDTO>(),
+                Slots = row.Slots?.Where(x => x.RemovedAt == null).ToList().ToDTO(mapItems) ?? new List<SlotDTO>(),
             };
         }
 
