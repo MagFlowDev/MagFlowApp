@@ -101,6 +101,7 @@ namespace MagFlow.BLL.Helpers
                 Enums.EntityStatus.Used => Color.Dark,
                 Enums.EntityStatus.Available => Color.Success,
                 Enums.EntityStatus.Active => Color.Success,
+                Enums.EntityStatus.Restricted => Color.Warning,
                 Enums.EntityStatus.Blocked => Color.Error,
                 Enums.EntityStatus.Inactive => Color.Error,
                 Enums.EntityStatus.Unknown => Color.Default,

@@ -1873,4 +1873,10 @@ i uprawnieniami użytkowników</value>
   <data name="NoWarehouseSlots" xml:space="preserve">
     <value>Brak miejsc.</value>
   </data>
+  <data name="Restricted" xml:space="preserve">
+    <value>Ograniczony</value>
+  </data>
+  <data name="WarehouseStatusChangeFailed" xml:space="preserve">
+    <value>Nie udało się zmienić statusu magazynu.</value>
+  </data>
 </root>

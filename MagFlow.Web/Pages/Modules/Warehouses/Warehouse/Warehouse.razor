@@ -35,7 +35,7 @@
                 <div class="d-flex align-items-center align-self-stretch justify-content-end" style="gap: 8px;">
                     <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_EDIT">
                         <Authorized>
-                            <LoadingButton Loading="_loadingChangeStatus" Color="Color.Secondary" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.MoveUp" OnClick="ChangeStatus">@Localizer[Langs.ChangeStatus]</LoadingButton>
+                            <LoadingButton Loading="_loadingChangeStatus" Disabled="@(_isBusy || _warehouse == null)" Color="Color.Secondary" Variant="Variant.Filled" StartIcon="@Icons.Material.Outlined.MoveUp" OnClick="ChangeStatus">@Localizer[Langs.ChangeStatus]</LoadingButton>
                         </Authorized>
                     </AuthorizeView>
                     <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WARES_DELETE" Context="authorizedContext">

@@ -61,6 +61,29 @@ namespace MagFlow.BLL.Services
         public Task<WarehouseLocationsSaveResult> UpdateLocations(int warehouseId, List<SectorDTO> sectors)
             => SaveLocations(warehouseId, sectors, null);
 
+        public async Task<Enums.Result> ChangeWarehouseStatuses(List<int> warehouseIds, Enums.EntityStatus status)
+        {
+            if (warehouseIds == null || warehouseIds.Count == 0 || warehouseIds.Any(x => x <= 0) ||
+                status is not (Enums.EntityStatus.Active or Enums.EntityStatus.Restricted or Enums.EntityStatus.Blocked))
+            {
+                return Enums.Result.Error;
+            }
+
+            var ids = warehouseIds.Distinct().ToList();
+            var warehouses = (await _warehouseRepository.GetAllAsync(x => ids.Contains(x.Id))).ToList();
+            if (warehouses.Count != ids.Count)
+            {
+                return Enums.Result.Error;
+            }
+
+            foreach (var warehouse in warehouses)
+            {
+                warehouse.ChangeStatus(status);
+            }
+
+            return await _warehouseRepository.UpdateRangeAsync(warehouses);
+        }
+
         public Task<WarehouseLocationsSaveResult> UpdateSector(int warehouseId, SectorDTO sector)
         {
             if (sector == null || sector.Id <= 0)

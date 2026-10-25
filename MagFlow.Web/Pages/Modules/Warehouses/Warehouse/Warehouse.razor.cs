@@ -113,6 +113,51 @@ namespace MagFlow.Web.Pages.Modules.Warehouses.Warehouse
 
         private async Task ChangeStatus()
         {
+            if (!HasModulePermission("Warehouses", PermissionFlags.Edit) ||
+                _warehouse == null || _isBusy || _loadingChangeStatus)
+            {
+                return;
+            }
+
+            try
+            {
+                _isBusy = true;
+                _loadingChangeStatus = true;
+
+                var parameters = new DialogParameters<ChangeWarehouseStatusDialog>
+                {
+                    { x => x.InitialStatus, _warehouse.Status }
+                };
+                var dialog = await DialogService.ShowAsync<ChangeWarehouseStatusDialog>(
+                    Localizer[Langs.ChangeStatus], parameters,
+                    new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true });
+                var confirmation = await dialog.Result;
+                if (confirmation == null || confirmation.Canceled ||
+                    confirmation.Data is not Enums.EntityStatus status)
+                {
+                    return;
+                }
+
+                var result = await WarehouseService.ChangeWarehouseStatuses([_warehouse.Id], status);
+                if (result == Enums.Result.Success)
+                {
+                    _warehouse.Status = status;
+                    Snackbar.Add(Localizer[Langs.ChangesSaved], Severity.Success);
+                }
+                else
+                {
+                    Snackbar.Add(Localizer[Langs.WarehouseStatusChangeFailed], Severity.Error);
+                }
+            }
+            catch (Exception)
+            {
+                Snackbar.Add(Localizer[Langs.WarehouseStatusChangeFailed], Severity.Error);
+            }
+            finally
+            {
+                _isBusy = false;
+                _loadingChangeStatus = false;
+            }
 
         }
     }

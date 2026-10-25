@@ -1872,4 +1872,10 @@
   <data name="NoWarehouseSlots" xml:space="preserve">
     <value>No storage slots.</value>
   </data>
+  <data name="Restricted" xml:space="preserve">
+    <value>Restricted</value>
+  </data>
+  <data name="WarehouseStatusChangeFailed" xml:space="preserve">
+    <value>Failed to change warehouse status.</value>
+  </data>
 </root>
