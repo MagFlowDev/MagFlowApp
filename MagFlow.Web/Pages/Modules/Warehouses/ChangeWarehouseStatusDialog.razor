@@ -1,0 +1,56 @@
+@using MagFlow.Shared.Models
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <MudRadioGroup T="Enums.EntityStatus?" @bind-Value="_selectedStatus">
+            <MudStack Spacing="0">
+                <MudRadio T="Enums.EntityStatus?" Value="@((Enums.EntityStatus?)Enums.EntityStatus.Active)">
+                    @Localizer[Langs.Active]
+                </MudRadio>
+                <MudRadio T="Enums.EntityStatus?" Value="@((Enums.EntityStatus?)Enums.EntityStatus.Restricted)">
+                    @Localizer[Langs.Restricted]
+                </MudRadio>
+                <MudRadio T="Enums.EntityStatus?" Value="@((Enums.EntityStatus?)Enums.EntityStatus.Blocked)">
+                    @Localizer[Langs.Blocked]
+                </MudRadio>
+            </MudStack>
+        </MudRadioGroup>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@Localizer[Langs.Cancel]</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" Disabled="@(!_selectedStatus.HasValue)" OnClick="Submit">
+            @Localizer[Langs.Save]
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public Enums.EntityStatus? InitialStatus { get; set; }
+
+    private Enums.EntityStatus? _selectedStatus;
+
+    protected override void OnInitialized()
+    {
+        _selectedStatus = InitialStatus is
+            Enums.EntityStatus.Active or
+            Enums.EntityStatus.Restricted or
+            Enums.EntityStatus.Blocked
+                ? InitialStatus
+                : null;
+    }
+
+    private void Submit()
+    {
+        if (_selectedStatus.HasValue)
+        {
+            MudDialog.Close(DialogResult.Ok(_selectedStatus.Value));
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

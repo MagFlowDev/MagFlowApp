@@ -5154,5 +5154,23 @@ namespace MagFlow.Web.Resources {
                 return ResourceManager.GetString("ZipCode", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Ograniczony.
+        /// </summary>
+        public static string Restricted {
+            get {
+                return ResourceManager.GetString("Restricted", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Nie udało się zmienić statusu magazynu..
+        /// </summary>
+        public static string WarehouseStatusChangeFailed {
+            get {
+                return ResourceManager.GetString("WarehouseStatusChangeFailed", resourceCulture);
+            }
+        }
     }
 }

@@ -181,12 +181,47 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
             if (_isBusy || _loadingChangeStatus)
                 return;
 
+            var warehouses = _warehousesDataGrid?.Selection?.ToList();
+            if (warehouses == null || warehouses.Count == 0)
+            {
+                return;
+            }
+
             try
             {
                 _isBusy = true;
                 _loadingChangeStatus = true;
 
+                var statuses = warehouses.Select(x => x.Status).Distinct().ToList();
+                var parameters = new DialogParameters<ChangeWarehouseStatusDialog>
+                {
+                    { x => x.InitialStatus, statuses.Count == 1 ? statuses[0] : null }
+                };
+                var dialog = await DialogService.ShowAsync<ChangeWarehouseStatusDialog>(
+                    Localizer[Langs.ChangeStatus], parameters,
+                    new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true });
+                var confirmation = await dialog.Result;
+                if (confirmation == null || confirmation.Canceled ||
+                    confirmation.Data is not Enums.EntityStatus status)
+                {
+                    return;
+                }
 
+                var result = await WarehouseService.ChangeWarehouseStatuses(
+                    warehouses.Select(x => x.Id).ToList(), status);
+                if (result != Enums.Result.Success)
+                {
+                    Snackbar.Add(Localizer[Langs.WarehouseStatusChangeFailed], Severity.Error);
+                    return;
+                }
+
+                _warehousesDataGrid.Selection.Clear();
+                await _warehousesDataGrid.ReloadServerData();
+                Snackbar.Add(Localizer[Langs.ChangesSaved], Severity.Success);
+            }
+            catch (Exception)
+            {
+                Snackbar.Add(Localizer[Langs.WarehouseStatusChangeFailed], Severity.Error);
             }
             finally
             {

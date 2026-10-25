@@ -215,6 +215,9 @@ namespace MagFlow.Shared.Models
 
             [Display(Name = "Confirmed")]
             Confirmed = 9,
+
+            [Display(Name = "Restricted")]
+            Restricted = 10,
         }
 
         public enum OverallState

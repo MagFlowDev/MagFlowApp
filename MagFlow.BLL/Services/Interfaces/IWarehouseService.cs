@@ -12,6 +12,7 @@ namespace MagFlow.BLL.Services.Interfaces
     {
         Task<WarehouseDTO?> GetWarehouse(int id);
         Task<Enums.Result> AddWarehouse(WarehouseFormModel model);
+        Task<Enums.Result> ChangeWarehouseStatuses(List<int> warehouseIds, Enums.EntityStatus status);
         Task<WarehouseLocationsSaveResult> UpdateLocations(int warehouseId, List<SectorDTO> sectors);
         Task<WarehouseLocationsSaveResult> UpdateSector(int warehouseId, SectorDTO sector);
     }
