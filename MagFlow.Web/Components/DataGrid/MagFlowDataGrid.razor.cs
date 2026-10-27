@@ -11,6 +11,11 @@ namespace MagFlow.Web.Components.DataGrid
 {
     public class MagFlowDataGrid<T> : MudDataGrid<T>
     {
+        public MagFlowDataGrid()
+        {
+            Dense = true;
+        }
+
         [Inject] public ILocalCacheService LocalCacheService { get; set; } = default!;
 
         [CascadingParameter(Name = "SessionId")]
@@ -55,7 +60,6 @@ namespace MagFlow.Web.Components.DataGrid
 
             FixedHeader = true;
             Virtualize = true;
-            Dense = true;
             RowsPerPage = 25;
             if (string.IsNullOrEmpty(Class))
                 Class = "align-self-stretch mud-table-overflow-hidden flex-grow-1 dg-fixed-pager striped-grid overflow-x-auto";

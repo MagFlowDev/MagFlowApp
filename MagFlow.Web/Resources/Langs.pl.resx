@@ -1879,4 +1879,70 @@ i uprawnieniami użytkowników</value>
   <data name="WarehouseStatusChangeFailed" xml:space="preserve">
     <value>Nie udało się zmienić statusu magazynu.</value>
   </data>
+  <data name="StocktakePrepareTitle" xml:space="preserve">
+    <value>Przygotuj inwentaryzację</value>
+  </data>
+  <data name="StocktakePrepare" xml:space="preserve">
+    <value>Przygotuj</value>
+  </data>
+  <data name="StocktakeType" xml:space="preserve">
+    <value>Typ</value>
+  </data>
+  <data name="StocktakeDate" xml:space="preserve">
+    <value>Data przeprowadzenia</value>
+  </data>
+  <data name="StocktakeSectors" xml:space="preserve">
+    <value>Lista sektorów</value>
+  </data>
+  <data name="StocktakeIncludeItemsWithoutSector" xml:space="preserve">
+    <value>Uwzględnij towary bez przypisanego sektora</value>
+  </data>
+  <data name="StocktakeNoSectors" xml:space="preserve">
+    <value>Ten magazyn nie ma sektorów.</value>
+  </data>
+  <data name="StocktakeLoadFailed" xml:space="preserve">
+    <value>Nie udało się pobrać magazynu lub listy magazynów.</value>
+  </data>
+  <data name="StocktakePrepareFailed" xml:space="preserve">
+    <value>Nie udało się przygotować inwentaryzacji. Odśwież dane i spróbuj ponownie.</value>
+  </data>
+  <data name="StocktakePrepared" xml:space="preserve">
+    <value>Inwentaryzacja została przygotowana.</value>
+  </data>
+  <data name="StocktakesLoadFailed" xml:space="preserve">
+    <value>Nie udało się pobrać inwentaryzacji.</value>
+  </data>
+  <data name="StocktakeNumber" xml:space="preserve">
+    <value>Numer</value>
+  </data>
+  <data name="StocktakeCreatedAt" xml:space="preserve">
+    <value>Data utworzenia</value>
+  </data>
+  <data name="StocktakeCreatedBy" xml:space="preserve">
+    <value>Utworzył</value>
+  </data>
+  <data name="NoStocktakes" xml:space="preserve">
+    <value>Brak inwentaryzacji.</value>
+  </data>
+  <data name="Prepared" xml:space="preserve">
+    <value>Przygotowana</value>
+  </data>
+  <data name="StocktakeType_Audit" xml:space="preserve">
+    <value>Kontrolna</value>
+  </data>
+  <data name="StocktakeType_Partial" xml:space="preserve">
+    <value>Częściowa</value>
+  </data>
+  <data name="StocktakeType_Cycle" xml:space="preserve">
+    <value>Cykliczna</value>
+  </data>
+  <data name="StocktakeType_Montly" xml:space="preserve">
+    <value>Miesięczna</value>
+  </data>
+  <data name="StocktakeType_Quartal" xml:space="preserve">
+    <value>Kwartalna</value>
+  </data>
+  <data name="StocktakeType_Annual" xml:space="preserve">
+    <value>Roczna</value>
+  </data>
 </root>

@@ -36,6 +36,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                         return (TDTO)(object)ContractorMapper.ToDTO((Contractor)(object)entity);
                     case nameof(StockMovement):
                         return (TDTO)(object)StockMovementMapper.ToDTO((StockMovement)(object)entity);
+                    case nameof(Stocktake):
+                        return (TDTO)(object)StocktakeMapper.ToDTO((Stocktake)(object)entity);
                     default:
                         return default(TDTO);
                 }

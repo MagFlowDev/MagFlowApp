@@ -46,7 +46,7 @@
         <div class="d-flex overflow-hidden" style="flex: 1 1 0; min-height: 0;">
             <MagFlowDataGrid @key="_warehouse" T="SectorDTO" Items="@_warehouse.Sectors"
                              DataGridId="@DataGridID.WAREHOUSES_LOCATIONS_LIST" DisableFiltering="true"
-                             SortMode="SortMode.None" ReadOnly="true" ShowMenuIcon="false">
+                             SortMode="SortMode.None" ReadOnly="true" ShowMenuIcon="false" Dense="false">
                 <Columns>
                     <HierarchyColumn T="SectorDTO" HeaderStyle="width: 1%; white-space: nowrap;" />
                     <PropertyColumn T="SectorDTO" TProperty="string"

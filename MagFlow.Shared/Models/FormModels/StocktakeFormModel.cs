@@ -7,9 +7,10 @@ namespace MagFlow.Shared.Models.FormModels
 {
     public class StocktakeFormModel
     {
-        public WarehouseDTO Warehouse { get; set; }
-        public List<SectorDTO> SelectedSectors { get; set; }
-        public Enums.StocktakeType Type { get; set; }
-        public DateTime PlannedDate { get; set; }
+        public int WarehouseId { get; set; }
+        public List<int> SelectedSectorIds { get; set; } = [];
+        public bool IncludeItemsWithoutSector { get; set; }
+        public Enums.StocktakeType? Type { get; set; }
+        public DateTime? PlannedDate { get; set; }
     }
 }

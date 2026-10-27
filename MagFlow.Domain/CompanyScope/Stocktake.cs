@@ -39,6 +39,7 @@ namespace MagFlow.Domain.CompanyScope
         private static readonly HashSet<Enums.EntityStatus> _allowedStatuses = new()
         {
             Enums.EntityStatus.Unknown,
+            Enums.EntityStatus.Prepared,
             Enums.EntityStatus.InProgress,
             Enums.EntityStatus.Confirmed,
         };

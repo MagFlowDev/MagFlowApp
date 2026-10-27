@@ -16,6 +16,9 @@ Jawna edycja dokumentów AI i instrukcji nie jest zmianą aplikacji objętą tym
 ## 1. Poznaj kontekst bez zmieniania plików
 
 Przeczytaj główny AGENTS.md i właściwe elementy aktualnej implementacji.
+Dla stron i akcji wymagających uprawnień stosuj również
+`../magflow-authorization/SKILL.md`, a dla tekstów UI
+`../magflow-localization/SKILL.md`. Te konwencje obowiązują już w proponowanym kodzie.
 Ustal, czy funkcja już częściowo istnieje i jakie komponenty można wykorzystać.
 Jeśli brakuje informacji o działaniu, zapytaj o konkretną regułę lub oznacz
 rozsądne założenie do oceny. Nie wymagaj od użytkownika wyboru szczegółów technicznych,

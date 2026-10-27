@@ -2,6 +2,7 @@
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.Shared.DTOs.CompanyScope;
 using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.Enumerators;
 using MagFlow.Shared.Models.FormModels;
 using MagFlow.Web.Components.Dialogs;
 using MagFlow.Web.Components.TreeViews;
@@ -76,6 +77,9 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
         protected override async Task Save()
         {
             if (_isBusy)
+                return;
+
+            if (!HasModulePermission("Warehouses", PermissionFlags.Add))
                 return;
 
             var sectors = _warehouseTreeItems

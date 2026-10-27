@@ -37,6 +37,12 @@ rozpoczyna uzgadnianie propozycji, nie implementację. Dotyczy to także próśb
 - Dostępny skill: `magflow-propose-change` — `AI/skills/magflow-propose-change/SKILL.md`.
   Stosuj przy nowych funkcjach, poprawkach i omawianiu zmian: prototyp oraz kod
   w czacie, a implementacja wyłącznie po wyraźnej akceptacji propozycji.
+- Dostępny skill: `magflow-authorization` — `AI/skills/magflow-authorization/SKILL.md`.
+  Stosuj przy stronach i akcjach wymagających uprawnień: istniejące Authorize,
+  AuthorizeView i HasModulePermission, bez własnej autoryzacji w BLL/DAL.
+- Dostępny skill: `magflow-localization` — `AI/skills/magflow-localization/SKILL.md`.
+  Stosuj przy tekstach UI: zasoby wszystkich języków, wygenerowane Langs oraz
+  Localizer[Langs.Nazwa]. Oba skille obowiązują także w propozycjach kodu w czacie.
 - Odczytuj właściwy SKILL.md bezpośrednio zwykłym narzędziem odczytu plików.
   Przy szukaniu kolejnych skilli wystarczy lista plików w `AI/skills/`;
   nie ma osobnego skryptu ani obowiązku skanowania skilli przed każdym zadaniem.

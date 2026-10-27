@@ -1,0 +1,73 @@
+@using MagFlow.BLL.Helpers
+@using MagFlow.Shared.Models
+@using MudBlazor
+@inherits AuthComponentBase
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudSelect T="Enums.StocktakeType?" @bind-Value="_model.Type" Label="@Localizer[Langs.StocktakeType]"
+                       Variant="Variant.Outlined" Disabled="@Busy">
+                @foreach (var type in Enum.GetValues<Enums.StocktakeType>())
+                {
+                    <MudSelectItem T="Enums.StocktakeType?" Value="@((Enums.StocktakeType?)type)">
+                        @type.GetDisplayName(Localizer)
+                    </MudSelectItem>
+                }
+            </MudSelect>
+            <MudDatePicker @bind-Date="_model.PlannedDate" Label="@Localizer[Langs.StocktakeDate]"
+                           Variant="Variant.Outlined" Disabled="@Busy" />
+            @if (!WarehouseId.HasValue)
+            {
+                <MudSelect T="int" Value="_model.WarehouseId" ValueChanged="SelectWarehouse"
+                           Label="@Localizer[Langs.WarehouseSelector]" Variant="Variant.Outlined" Disabled="@Busy">
+                    @foreach (var warehouse in _warehouses)
+                    {
+                        <MudSelectItem T="int" Value="@warehouse.Id">@warehouse.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            }
+            @if (_loading)
+            {
+                <MudProgressLinear Indeterminate="true" />
+            }
+            @if (_warehouse != null)
+            {
+                <MudText Typo="Typo.subtitle2">@Localizer[Langs.StocktakeSectors]</MudText>
+                <div style="max-height: 240px; overflow-y: auto;">
+                    @foreach (var sector in _warehouse.Sectors)
+                    {
+                        <MudCheckBox T="bool" Value="@_model.SelectedSectorIds.Contains(sector.Id)"
+                                     ValueChanged="@((bool value) => SetSectorSelected(sector.Id, value))"
+                                     Label="@sector.Name" Disabled="@Busy" />
+                    }
+                </div>
+                @if (_warehouse.Sectors.Count == 0)
+                {
+                    <MudText Typo="Typo.body2">@Localizer[Langs.StocktakeNoSectors]</MudText>
+                }
+                <MudCheckBox T="bool" @bind-Value="_model.IncludeItemsWithoutSector"
+                             Label="@Localizer[Langs.StocktakeIncludeItemsWithoutSector]" Disabled="@Busy" />
+            }
+            @if (_loadFailed)
+            {
+                <MudAlert Severity="Severity.Error">@Localizer[Langs.StocktakeLoadFailed]</MudAlert>
+                <MudButton OnClick="Load" Disabled="@Busy">@Localizer[Langs.Refresh]</MudButton>
+            }
+            @if (_noWarehouses)
+            {
+                <MudAlert Severity="Severity.Info">@Localizer[Langs.NoWarehousesAvailable]</MudAlert>
+            }
+            @if (_saveFailed)
+            {
+                <MudAlert Severity="Severity.Error">@Localizer[Langs.StocktakePrepareFailed]</MudAlert>
+            }
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Disabled="@_saving">@Localizer[Langs.Cancel]</MudButton>
+        <MudButton OnClick="Submit" Color="Color.Primary" Variant="Variant.Filled" Disabled="@(!CanSubmit)">
+            @Localizer[Langs.StocktakePrepare]
+        </MudButton>
+    </DialogActions>
+</MudDialog>
