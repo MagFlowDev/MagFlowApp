@@ -117,47 +117,28 @@ namespace MagFlow.BLL.Services
                 : await _warehouseRepository.UpdateLocations(warehouseId, sectors, userId.Value, companyId, isSuperAdmin);
         }
 
-        public async Task<Enums.Result> CreateStocktake(StocktakeFormModel model)
+        public async Task<Enums.Result> PrepareStocktake(StocktakeFormModel model)
         {
             var userId = _networkService.GetUserId();
             if (!userId.HasValue)
+            {
                 return Enums.Result.Error;
-            try
-            {
-                var stocktake = model.Warehouse.CreateStocktake(model.Type, model.PlannedDate, userId.Value);
-                var result = await _stocktakeRepository.AddAsync(stocktake);
-                if (result != Enums.Result.Success)
-                    return result;
-
-                var warehouseItems = await _itemRepository.GetAllAsync(x =>
-                    x.WarehouseId == model.Warehouse.Id &&
-                    x.SectorId == null &&
-                    x.RowId == null &&
-                    x.SlotId == null);
-                
-                if(warehouseItems.Any())
-                {
-                    var stocktakeItems = warehouseItems.CreateStocktakeItems(stocktake.Id);
-                    // Add items to stocktake
-                }
-
-                foreach(var sector in model.SelectedSectors)
-                {
-                    var sectorItems = await _itemRepository.GetAllAsync(x =>
-                        x.WarehouseId == model.Warehouse.Id &&
-                        x.SectorId == sector.Id);
-                    if(sectorItems.Any())
-                    {
-                        var stocktakeItems = sectorItems.CreateStocktakeItems(stocktake.Id);
-                        // Add items to stocktake
-                    }
-                }
             }
-            catch (Exception ex)
+            return await _stocktakeRepository.PrepareStocktake(model, userId.Value);
+        }
+
+        public async Task<QueryResponse<StocktakeDTO>> GetStocktakes(QueryOptions<Stocktake> options)
+        {
+            var response = await _stocktakeRepository.GetAsync(options, include: options.Includes);
+            if (response == null)
             {
-                _logger.LogError(ex, "Error occured while creating stocktake.");
+                throw new InvalidOperationException("Could not load stocktakes.");
             }
-            return Enums.Result.Error;
+            return new QueryResponse<StocktakeDTO>
+            {
+                Elements = response.Elements.Select(x => x.ToDTO()).ToList(),
+                TotalCount = response.TotalCount
+            };
         }
     }
 }

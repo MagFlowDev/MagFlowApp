@@ -10,11 +10,17 @@ namespace MagFlow.Shared.Models
     {
         public enum StocktakeType
         {
+            [Display(Name = "StocktakeType_Audit")]
             Audit, // kontrolna
+            [Display(Name = "StocktakeType_Partial")]
             Partial, // częściowa
+            [Display(Name = "StocktakeType_Cycle")]
             Cycle, // cykliczna
+            [Display(Name = "StocktakeType_Montly")]
             Montly, // miesięczna
+            [Display(Name = "StocktakeType_Quartal")]
             Quartal, // kwartalna
+            [Display(Name = "StocktakeType_Annual")]
             Annual // roczna
         }
 
@@ -218,6 +224,9 @@ namespace MagFlow.Shared.Models
 
             [Display(Name = "Restricted")]
             Restricted = 10,
+
+            [Display(Name = "Prepared")]
+            Prepared = 11,
         }
 
         public enum OverallState

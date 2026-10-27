@@ -1,7 +1,12 @@
-﻿@inherits AuthComponentBase
+@using MagFlow.Shared.DTOs.CompanyScope
+@inherits AuthComponentBase
 
-<h3>Inventories</h3>
+@if (_warehouse != null)
+{
+    <StocktakesList @key="_warehouse.Id" WarehouseId="@_warehouse.Id" />
+}
 
 @code {
-
+    [CascadingParameter(Name = "Warehouse")]
+    private WarehouseDTO? _warehouse { get; set; }
 }

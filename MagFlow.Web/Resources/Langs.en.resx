@@ -1878,4 +1878,70 @@
   <data name="WarehouseStatusChangeFailed" xml:space="preserve">
     <value>Failed to change warehouse status.</value>
   </data>
+  <data name="StocktakePrepareTitle" xml:space="preserve">
+    <value>Prepare stocktake</value>
+  </data>
+  <data name="StocktakePrepare" xml:space="preserve">
+    <value>Prepare</value>
+  </data>
+  <data name="StocktakeType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="StocktakeDate" xml:space="preserve">
+    <value>Stocktake date</value>
+  </data>
+  <data name="StocktakeSectors" xml:space="preserve">
+    <value>Sectors</value>
+  </data>
+  <data name="StocktakeIncludeItemsWithoutSector" xml:space="preserve">
+    <value>Include items not assigned to a sector</value>
+  </data>
+  <data name="StocktakeNoSectors" xml:space="preserve">
+    <value>This warehouse has no sectors.</value>
+  </data>
+  <data name="StocktakeLoadFailed" xml:space="preserve">
+    <value>Could not load the warehouse or warehouse list.</value>
+  </data>
+  <data name="StocktakePrepareFailed" xml:space="preserve">
+    <value>Could not prepare the stocktake. Refresh the data and try again.</value>
+  </data>
+  <data name="StocktakePrepared" xml:space="preserve">
+    <value>The stocktake has been prepared.</value>
+  </data>
+  <data name="StocktakesLoadFailed" xml:space="preserve">
+    <value>Could not load stocktakes.</value>
+  </data>
+  <data name="StocktakeNumber" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="StocktakeCreatedAt" xml:space="preserve">
+    <value>Created at</value>
+  </data>
+  <data name="StocktakeCreatedBy" xml:space="preserve">
+    <value>Created by</value>
+  </data>
+  <data name="NoStocktakes" xml:space="preserve">
+    <value>No stocktakes.</value>
+  </data>
+  <data name="Prepared" xml:space="preserve">
+    <value>Prepared</value>
+  </data>
+  <data name="StocktakeType_Audit" xml:space="preserve">
+    <value>Audit</value>
+  </data>
+  <data name="StocktakeType_Partial" xml:space="preserve">
+    <value>Partial</value>
+  </data>
+  <data name="StocktakeType_Cycle" xml:space="preserve">
+    <value>Cycle</value>
+  </data>
+  <data name="StocktakeType_Montly" xml:space="preserve">
+    <value>Monthly</value>
+  </data>
+  <data name="StocktakeType_Quartal" xml:space="preserve">
+    <value>Quarterly</value>
+  </data>
+  <data name="StocktakeType_Annual" xml:space="preserve">
+    <value>Annual</value>
+  </data>
 </root>

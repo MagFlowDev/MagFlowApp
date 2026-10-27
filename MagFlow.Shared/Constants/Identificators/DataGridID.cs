@@ -19,6 +19,8 @@ namespace MagFlow.Shared.Constants.Identificators
         public const string WAREHOUSES_STOCK_MOVEMENTS_LIST = "WAREHOUSES_STOCK_MOVEMENTS_LIST";
         public const string WAREHOUSE_STOCK_MOVEMENTS_LIST = "WAREHOUSE_STOCK_MOVEMENTS_LIST";
         public const string WAREHOUSE_HISTORY = "WAREHOUSE_HISTORY";
+        public const string WAREHOUSES_STOCKTAKES_LIST = "WAREHOUSES_STOCKTAKES_LIST";
+        public const string WAREHOUSE_STOCKTAKES_LIST = "WAREHOUSE_STOCKTAKES_LIST";
 
         public const string WARES_LIST = "WARES_LIST";
         public const string WARES_ARCHIVE = "WARES_ARCHIVE";

@@ -23,6 +23,8 @@ Główny AGENTS.md wskazuje dostępne skille i ich przeznaczenie.
 | --- | --- |
 | [magflow-analysis](skills/magflow-analysis/SKILL.md) | Pytania o obecne działanie i architekturę; analiza bez zmian kodu |
 | [magflow-propose-change](skills/magflow-propose-change/SKILL.md) | Nowe funkcje, poprawki i omawianie zmian; prototyp oraz proponowany kod w czacie, implementacja po wyraźnej akceptacji |
+| [magflow-authorization](skills/magflow-authorization/SKILL.md) | Authorize na trasie, AuthorizeView w widoku i HasModulePermission w handlerach; bez własnej autoryzacji |
+| [magflow-localization](skills/magflow-localization/SKILL.md) | Zasoby wszystkich języków, generowanie Langs i Localizer[Langs.Nazwa] |
 
 Przykład: „Użyj magflow-analysis, żeby wyjaśnić, jak działa zapis towaru”.
 
