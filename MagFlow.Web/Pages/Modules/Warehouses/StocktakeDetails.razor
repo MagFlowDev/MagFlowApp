@@ -1,0 +1,208 @@
+@page "/stocktake/{StocktakeId:int}"
+@using MagFlow.BLL.Helpers
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Components.DataGrid
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+@layout TabsLayout
+@inherits AuthComponentBase
+@attribute [Authorize(Policy = MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_READ)]
+
+@if (_loading)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+else if (_details == null)
+{
+    <MudAlert Severity="Severity.Error">@Localizer[Langs.StocktakeDetailsLoadFailed]</MudAlert>
+    <MudButton OnClick="Load">@Localizer[Langs.Refresh]</MudButton>
+}
+else
+{
+    <div class="d-flex flex-column w-100 flex-grow-1 overflow-visible" style="min-height: 0;">
+        <div class="d-flex align-items-center align-self-stretch justify-content-between w-100 overflow-visible"
+             style="padding: 0; margin-bottom: 8px; position: relative; flex-shrink: 0;">
+            <ReturnFab OnClick="@(() => NavigationManager.NavigateTo("/"))" />
+            <div class="d-flex align-self-stretch align-items-center mud-height-full w-100"
+                 style="min-height: 64px; height: 64px; border-radius: 4px; background: var(--mud-palette-primary-text);">
+                <div class="d-flex align-self-stretch align-items-center justify-content-between w-100 px-4"
+                     style="margin-left: 48px;">
+                    <div class="d-flex align-items-center justify-content-start" style="gap: 24px;">
+                        <MudText Typo="Typo.h6" Style="font-weight: 500">@Localizer[Langs.StocktakeTitle] @_details.Stocktake.Code</MudText>
+                        <MudIcon Icon="@Icons.Material.Outlined.Event" />
+                        <MudText>@_details.Stocktake.PlannedDate.ToShortDateString()</MudText>
+                        <MudIcon Icon="@Icons.Material.Outlined.Warehouse" />
+                        <MudText>@_details.Stocktake.WarehouseName</MudText>
+                    </div>
+                    <div class="d-flex align-center" style="gap: .5rem;">
+                        <MudChip T="string" Color="@(_details.Stocktake.Status == Enums.EntityStatus.Canceled ? Color.Error : Color.Info)"
+                                 Class="m-0" Variant="Variant.Filled">@_details.Stocktake.Status.GetDisplayName(Localizer)</MudChip>
+                        <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_DELETE">
+                            <Authorized>
+                                @if (_details.Stocktake.Status == Enums.EntityStatus.Prepared)
+                                {
+                                    <MudButton Color="Color.Error" Disabled="@(_busy || _editingCells > 0)"
+                                               OnClick="@(() => DeleteOrCancel(true))">@Localizer[Langs.Delete]</MudButton>
+                                }
+                                else if (_details.Stocktake.Status is Enums.EntityStatus.InProgress or Enums.EntityStatus.AwaitingApproval)
+                                {
+                                    <MudButton Color="Color.Error" Disabled="@(_busy || _editingCells > 0)"
+                                               OnClick="@(() => DeleteOrCancel(false))">@Localizer[Langs.StocktakeCancel]</MudButton>
+                                }
+                            </Authorized>
+                        </AuthorizeView>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <MudPaper Elevation="0" Class="d-flex flex-column w-100"
+                  Style="flex: 1 1 0; min-height: 0; overflow: hidden; background: var(--mud-palette-primary-text);">
+            <div class="stocktake-workspace">
+                <div class="stocktake-summary">
+                    <MudPaper Elevation="1" Class="pa-3">
+                        <div class="d-flex align-center justify-space-between">
+                            <MudText Typo="Typo.caption">@Localizer[Langs.StocktakeChecked]</MudText>
+                            <MudIcon Icon="@Icons.Material.Outlined.CheckCircle" Color="Color.Success" Size="Size.Small" />
+                        </div>
+                        <MudText Typo="Typo.h6" Style="font-weight: 600;">@Count(Enums.StocktakeItemCheckStatus.Checked)/@_details.Items.Count</MudText>
+                    </MudPaper>
+                    <MudPaper Elevation="1" Class="pa-3">
+                        <div class="d-flex align-center justify-space-between">
+                            <MudText Typo="Typo.caption">@Localizer[Langs.StocktakeCorrected]</MudText>
+                            <MudIcon Icon="@Icons.Material.Outlined.EditNote" Color="Color.Info" Size="Size.Small" />
+                        </div>
+                        <MudText Typo="Typo.h6" Style="font-weight: 600;">@Count(Enums.StocktakeItemCheckStatus.Corrected)/@_details.Items.Count</MudText>
+                    </MudPaper>
+                    <MudPaper Elevation="1" Class="pa-3">
+                        <div class="d-flex align-center justify-space-between">
+                            <MudText Typo="Typo.caption">@Localizer[Langs.StocktakeMissing]</MudText>
+                            <MudIcon Icon="@Icons.Material.Outlined.VisibilityOff" Color="Color.Warning" Size="Size.Small" />
+                        </div>
+                        <MudText Typo="Typo.h6" Style="font-weight: 600;">@Count(Enums.StocktakeItemCheckStatus.Missing)/@_details.Items.Count</MudText>
+                    </MudPaper>
+                </div>
+                @if (_operationFailed)
+                {
+                    <MudAlert Severity="Severity.Error" Class="mb-3">@Localizer[Langs.StocktakeSaveFailed]</MudAlert>
+                }
+                <div class="stocktake-table-region">
+                    <MudTable T="StocktakeItemDTO" Items="@_details.Items" Dense="true" Elevation="0"
+                              FixedHeader="true" Height="100%" Class="stocktake-table" RowClassFunc="ItemRowClass">
+                        <HeaderContent>
+                            <MudTh Style="width: 48px;"></MudTh>
+                            <MudTh>@Localizer[Langs.Name]</MudTh>
+                            <MudTh>@Localizer[Langs.Code]</MudTh>
+                            <MudTh>@Localizer[Langs.Status]</MudTh>
+                            <MudTh>@Localizer[Langs.Type]</MudTh>
+                            <MudTh>@Localizer[Langs.Category]</MudTh>
+                            <MudTh>@Localizer[Langs.Unit]</MudTh>
+                            <MudTh>@Localizer[Langs.StockQuantity]</MudTh>
+                        </HeaderContent>
+                        <RowTemplate Context="item">
+                            <MudTd>
+                                <MudTooltip Text="@item.CheckStatus.GetDisplayName(Localizer)">
+                                    @if (EditableStage && HasModulePermission("Warehouses", MagFlow.Shared.Models.Enumerators.PermissionFlags.Edit))
+                                    {
+                                        <MudMenu Icon="@StatusIcon(item.CheckStatus)" Color="@StatusColor(item.CheckStatus)"
+                                                 Disabled="@(_busy || _editingCells > 0)" Size="Size.Small">
+                                            <MudMenuItem OnClick="@(() => Mark(item, Enums.StocktakeItemCheckStatus.Checked))">@Localizer[Langs.StocktakeMarkChecked]</MudMenuItem>
+                                            <MudMenuItem OnClick="@(() => Mark(item, Enums.StocktakeItemCheckStatus.Missing))">@Localizer[Langs.StocktakeMarkMissing]</MudMenuItem>
+                                            <MudMenuItem OnClick="@(() => Mark(item, Enums.StocktakeItemCheckStatus.Unchecked))">@Localizer[Langs.StocktakeClearMark]</MudMenuItem>
+                                        </MudMenu>
+                                    }
+                                    else
+                                    {
+                                        <MudIcon Icon="@StatusIcon(item.CheckStatus)" Color="@StatusColor(item.CheckStatus)" Size="Size.Small" />
+                                    }
+                                </MudTooltip>
+                            </MudTd>
+                            <MudTd>@item.ProductName</MudTd>
+                            <MudTd><MudText Color="Color.Primary" Typo="Typo.body2">@item.Code</MudText></MudTd>
+                            <MudTd>
+                                <MudChip T="string" Class="m-0" Size="Size.Small" Color="@item.ProductStatus.ToColor()">
+                                    @item.ProductStatus.GetDisplayName(Localizer)
+                                </MudChip>
+                            </MudTd>
+                            <MudTd>@item.ProductType</MudTd>
+                            <MudTd>@item.Category</MudTd>
+                            <MudTd>@item.Unit</MudTd>
+                            <MudTd>
+                                <StocktakeCell @key="item.Id" Value="@item.Values.Quantity.ToString("0.####")"
+                                               ValueType="Enums.ValueType.Decimal" ReadOnly="@(!CanEdit)" EditingChanged="EditingChanged"
+                                               Corrected="@(item.Values.Quantity != item.OriginalQuantity)"
+                                               ValueCommitted="@(value => SaveValues(item, values => values.Quantity = decimal.Parse(value)))" />
+                            </MudTd>
+                        </RowTemplate>
+                        <ChildRowContent Context="row">
+                            @if (EditableStage)
+                            {
+                                <MudTr Class="stocktake-parameters-row">
+                                    <MudTd colspan="8">
+                                        <MudButton Variant="Variant.Text" Size="Size.Small" Class="stocktake-parameters-toggle"
+                                                   StartIcon="@(_expandedItems.Contains(row.Id) ? Icons.Material.Outlined.ExpandMore : Icons.Material.Outlined.ChevronRight)"
+                                                   Disabled="@(_busy || _editingCells > 0)" OnClick="@(() => ToggleParameters(row.Id))">
+                                            @Localizer[Langs.Parameters]
+                                        </MudButton>
+                                    </MudTd>
+                                </MudTr>
+                                @if (_expandedItems.Contains(row.Id))
+                                {
+                                    <MudTr Class="stocktake-parameter-details">
+                                        <MudTd colspan="8">
+                                            <MudSimpleTable Dense="true" Elevation="0" Class="stocktake-parameter-table">
+                                                <thead><tr><th>@Localizer[Langs.Name]</th><th>@Localizer[Langs.Value]</th></tr></thead>
+                                                <tbody>
+                                                    @foreach (var parameter in row.Parameters)
+                                                    {
+                                                        <tr @key="parameter.Id">
+                                                            <td>@parameter.Name</td>
+                                                            <td>
+                                                                <div class="d-flex align-center" style="gap: 4px;">
+                                                                    <StocktakeCell Value="@row.Values.Parameters[parameter.Id]" ValueType="@parameter.ValueType"
+                                                                                   ReadOnly="@(!CanEdit)" EditingChanged="EditingChanged"
+                                                                                   Corrected="@IsParameterChanged(row, parameter)"
+                                                                                   ValueCommitted="@(value => SaveValues(row, values => values.Parameters[parameter.Id] = value))" />
+                                                                    @if (IsParameterChanged(row, parameter) && CanEdit)
+                                                                    {
+                                                                        <MudTooltip Text="@Localizer[Langs.StocktakeRestoreParameter]">
+                                                                            <MudIconButton Icon="@Icons.Material.Outlined.Undo" Size="Size.Small"
+                                                                                           Disabled="@(_editingCells > 0)" OnClick="@(() => RestoreParameter(row, parameter))" />
+                                                                        </MudTooltip>
+                                                                    }
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </MudSimpleTable>
+                                        </MudTd>
+                                    </MudTr>
+                                }
+                            }
+                        </ChildRowContent>
+                        <NoRecordsContent><MudText Class="pa-4">@Localizer[Langs.StocktakeNoItems]</MudText></NoRecordsContent>
+                    </MudTable>
+                </div>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_EDIT">
+                    <Authorized>
+                        <div class="d-flex justify-end py-4" style="flex-shrink: 0; gap: 8px;">
+                            @if (EditableStage)
+                            {
+                                <MudButton Variant="Variant.Outlined" Disabled="@(_busy || _editingCells > 0)"
+                                           OnClick="FinishCounting">@Localizer[Langs.StocktakeFinishCounting]</MudButton>
+                            }
+                            else if (_details.Stocktake.Status == Enums.EntityStatus.AwaitingApproval)
+                            {
+                                <MudButton Variant="Variant.Outlined" Disabled="@_busy" OnClick="ResumeEditing">@Localizer[Langs.Edit]</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@_busy" OnClick="Approve">@Localizer[Langs.StocktakeApprove]</MudButton>
+                            }
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+        </MudPaper>
+    </div>
+}

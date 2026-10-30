@@ -1,0 +1,31 @@
+@using MagFlow.Shared.Models.Enumerators
+@using MudBlazor
+@inherits AuthComponentBase
+
+<MudDialog>
+    <DialogContent>
+        <MudText>@string.Format(Localizer[DeleteMode ? Langs.StocktakeDeleteConfirmation : Langs.StocktakeCancelConfirmation], StocktakeCode)</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Back">@Localizer[Langs.Back]</MudButton>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="Submit">
+            @Localizer[DeleteMode ? Langs.Delete : Langs.StocktakeCancel]
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public bool DeleteMode { get; set; }
+    [Parameter] public string StocktakeCode { get; set; } = string.Empty;
+
+    private void Back() => MudDialog.Cancel();
+
+    private void Submit()
+    {
+        if (!HasModulePermission("Warehouses", PermissionFlags.Delete))
+            return;
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+}

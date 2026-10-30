@@ -466,6 +466,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do zatwierdzenia.
+        /// </summary>
+        public static string AwaitingApproval {
+            get {
+                return ResourceManager.GetString("AwaitingApproval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wstecz.
         /// </summary>
         public static string Back {
@@ -588,6 +597,15 @@ namespace MagFlow.Web.Resources {
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anulowane.
+        /// </summary>
+        public static string Canceled {
+            get {
+                return ResourceManager.GetString("Canceled", resourceCulture);
             }
         }
         
@@ -777,6 +795,15 @@ namespace MagFlow.Web.Resources {
         public static string Components {
             get {
                 return ResourceManager.GetString("Components", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zatwierdzone.
+        /// </summary>
+        public static string Confirmed {
+            get {
+                return ResourceManager.GetString("Confirmed", resourceCulture);
             }
         }
         
@@ -2122,6 +2149,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to W trakcie.
+        /// </summary>
+        public static string InProgress {
+            get {
+                return ResourceManager.GetString("InProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Liczba całkowita.
         /// </summary>
         public static string Integer {
@@ -3346,7 +3382,7 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Przygotowana.
+        ///   Looks up a localized string similar to Przygotowane.
         /// </summary>
         public static string Prepared {
             get {
@@ -4327,6 +4363,114 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Procent zgodności.
+        /// </summary>
+        public static string StocktakeAgreement {
+            get {
+                return ResourceManager.GetString("StocktakeAgreement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zatwierdź.
+        /// </summary>
+        public static string StocktakeApprove {
+            get {
+                return ResourceManager.GetString("StocktakeApprove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anuluj inwentaryzację.
+        /// </summary>
+        public static string StocktakeCancel {
+            get {
+                return ResourceManager.GetString("StocktakeCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czy anulować inwentaryzację {0}? Po anulowaniu nie będzie można jej edytować..
+        /// </summary>
+        public static string StocktakeCancelConfirmation {
+            get {
+                return ResourceManager.GetString("StocktakeCancelConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inwentaryzacja została anulowana..
+        /// </summary>
+        public static string StocktakeCanceled {
+            get {
+                return ResourceManager.GetString("StocktakeCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nie udało się anulować inwentaryzacji..
+        /// </summary>
+        public static string StocktakeCancelFailed {
+            get {
+                return ResourceManager.GetString("StocktakeCancelFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sprawdzone.
+        /// </summary>
+        public static string StocktakeChecked {
+            get {
+                return ResourceManager.GetString("StocktakeChecked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cofnij oznaczenie.
+        /// </summary>
+        public static string StocktakeClearMark {
+            get {
+                return ResourceManager.GetString("StocktakeClearMark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stan jakościowy.
+        /// </summary>
+        public static string StocktakeCondition {
+            get {
+                return ResourceManager.GetString("StocktakeCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data zatwierdzenia.
+        /// </summary>
+        public static string StocktakeConfirmedAt {
+            get {
+                return ResourceManager.GetString("StocktakeConfirmedAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data przydatności.
+        /// </summary>
+        public static string StocktakeConsumptionDate {
+            get {
+                return ResourceManager.GetString("StocktakeConsumptionDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skorygowane.
+        /// </summary>
+        public static string StocktakeCorrected {
+            get {
+                return ResourceManager.GetString("StocktakeCorrected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data utworzenia.
         /// </summary>
         public static string StocktakeCreatedAt {
@@ -4354,6 +4498,42 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Czy usunąć inwentaryzację {0}?.
+        /// </summary>
+        public static string StocktakeDeleteConfirmation {
+            get {
+                return ResourceManager.GetString("StocktakeDeleteConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nie udało się pobrać inwentaryzacji..
+        /// </summary>
+        public static string StocktakeDetailsLoadFailed {
+            get {
+                return ResourceManager.GetString("StocktakeDetailsLoadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Identyfikator zewnętrzny.
+        /// </summary>
+        public static string StocktakeExternalId {
+            get {
+                return ResourceManager.GetString("StocktakeExternalId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zakończ spis.
+        /// </summary>
+        public static string StocktakeFinishCounting {
+            get {
+                return ResourceManager.GetString("StocktakeFinishCounting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Uwzględnij towary bez przypisanego sektora.
         /// </summary>
         public static string StocktakeIncludeItemsWithoutSector {
@@ -4363,11 +4543,56 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wprowadź poprawną wartość..
+        /// </summary>
+        public static string StocktakeInvalidValue {
+            get {
+                return ResourceManager.GetString("StocktakeInvalidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nie udało się pobrać magazynu lub listy magazynów..
         /// </summary>
         public static string StocktakeLoadFailed {
             get {
                 return ResourceManager.GetString("StocktakeLoadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oznacz jako sprawdzony.
+        /// </summary>
+        public static string StocktakeMarkChecked {
+            get {
+                return ResourceManager.GetString("StocktakeMarkChecked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oznacz jako brakujący.
+        /// </summary>
+        public static string StocktakeMarkMissing {
+            get {
+                return ResourceManager.GetString("StocktakeMarkMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brakujące.
+        /// </summary>
+        public static string StocktakeMissing {
+            get {
+                return ResourceManager.GetString("StocktakeMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brak towarów w inwentaryzacji..
+        /// </summary>
+        public static string StocktakeNoItems {
+            get {
+                return ResourceManager.GetString("StocktakeNoItems", resourceCulture);
             }
         }
         
@@ -4426,6 +4651,42 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data produkcji.
+        /// </summary>
+        public static string StocktakeProductionDate {
+            get {
+                return ResourceManager.GetString("StocktakeProductionDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data przyjęcia.
+        /// </summary>
+        public static string StocktakeReceivedAt {
+            get {
+                return ResourceManager.GetString("StocktakeReceivedAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Przywróć początkową wartość.
+        /// </summary>
+        public static string StocktakeRestoreParameter {
+            get {
+                return ResourceManager.GetString("StocktakeRestoreParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nie udało się zapisać zmiany. Sprawdź dane i aktualny etap inwentaryzacji..
+        /// </summary>
+        public static string StocktakeSaveFailed {
+            get {
+                return ResourceManager.GetString("StocktakeSaveFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lista sektorów.
         /// </summary>
         public static string StocktakeSectors {
@@ -4440,6 +4701,15 @@ namespace MagFlow.Web.Resources {
         public static string StocktakesLoadFailed {
             get {
                 return ResourceManager.GetString("StocktakesLoadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inwentaryzacja.
+        /// </summary>
+        public static string StocktakeTitle {
+            get {
+                return ResourceManager.GetString("StocktakeTitle", resourceCulture);
             }
         }
         
@@ -4503,6 +4773,15 @@ namespace MagFlow.Web.Resources {
         public static string StocktakeType_Quartal {
             get {
                 return ResourceManager.GetString("StocktakeType_Quartal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Niesprawdzony.
+        /// </summary>
+        public static string StocktakeUnchecked {
+            get {
+                return ResourceManager.GetString("StocktakeUnchecked", resourceCulture);
             }
         }
         

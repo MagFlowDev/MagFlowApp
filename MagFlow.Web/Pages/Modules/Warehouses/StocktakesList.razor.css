@@ -1,0 +1,17 @@
+.stocktake-agreement {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 6ch;
+    align-items: center;
+    gap: .5rem;
+    width: 100%;
+}
+
+.stocktake-agreement ::deep .mud-progress-linear-bar {
+    border-radius: 1rem;
+}
+
+.stocktake-agreement ::deep .mud-typography {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}

@@ -8,9 +8,10 @@
 
 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_READ">
     <Authorized Context="readContext">
-        <MagFlowDataGrid @ref="_stocktakesDataGrid" T="StocktakeDTO" ServerData="ServerReloadStocktakes" DataGridId="@GridId">
+        <MagFlowDataGrid @ref="_stocktakesDataGrid" T="StocktakeDTO" ServerData="ServerReloadStocktakes" DataGridId="@GridId" OnRowClicked="OpenStocktake"
+>
             <ToolBarContent>
-                <MudText Typo="Typo.h6">@Localizer[Langs.Inventories]</MudText>
+                <MudText Typo="Typo.subtitle1" Style="font-family: Inter, sans-serif; font-weight: 500;">@Localizer[Langs.Inventories]</MudText>
                 <MudSpacer />
                 <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.WAREHOUSES_ADD" Context="addContext">
                     <Authorized>
@@ -22,8 +23,8 @@
                                OnClick="Refresh" Class="mr-2" />
             </ToolBarContent>
             <Columns>
-                <MagFlowPropertyColumn T="StocktakeDTO" TProperty="int" TFilter="int"
-                                       Title="@Localizer[Langs.StocktakeNumber]" Property="x => x.Id" Tag="@("Id")" MagFlowSortable="true" />
+                <MagFlowPropertyColumn T="StocktakeDTO" TProperty="string" TFilter="string"
+                                       Title="@Localizer[Langs.Code]" Property="x => x.Code" Tag="@(nameof(StocktakeDTO.Code))" MagFlowSortable="true" />
                 @if (!WarehouseId.HasValue)
                 {
                     <MagFlowPropertyColumn T="StocktakeDTO" TProperty="string" TFilter="string"
@@ -35,28 +36,33 @@
                     <CellTemplate>@context.Item.Type.GetDisplayName(Localizer)</CellTemplate>
                 </MagFlowTemplateColumn>
                 <MagFlowTemplateColumn T="StocktakeDTO" TFilter="Enums.EntityStatus" Title="@Localizer[Langs.Status]"
-                                       Tag="@("Status")" IncludedEnumValues="@(new[] { Enums.EntityStatus.Prepared, Enums.EntityStatus.InProgress, Enums.EntityStatus.Confirmed, Enums.EntityStatus.Unknown })">
+                                       Tag="@("Status")" IncludedEnumValues="@(new[] { Enums.EntityStatus.Prepared, Enums.EntityStatus.AwaitingApproval, Enums.EntityStatus.InProgress, Enums.EntityStatus.Confirmed, Enums.EntityStatus.Canceled, Enums.EntityStatus.Unknown })">
                     <CellTemplate>
-                        <MudChip T="string" Color="Color.Info" Class="m-0">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
+                        <MudChip T="string" Color="@StocktakeStatusColor(context.Item.Status)" Size="Size.Medium" Variant="Variant.Filled" Class="m-0">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
                     </CellTemplate>
                 </MagFlowTemplateColumn>
+                <TemplateColumn T="StocktakeDTO" Title="@Localizer[Langs.StocktakeAgreement]"
+                                Sortable="false" Filterable="false" HeaderStyle="width: 22%;" CellStyle="width: 22%;">
+                    <CellTemplate>
+                        <div class="stocktake-agreement">
+                            <MudProgressLinear Value="@((double)context.Item.AgreementPercent)" Color="Color.Primary"
+                                               Style="--mud-palette-primary: #ff4081; width: 100%; height: .375rem; border-radius: 1rem;" />
+                            <MudText Typo="Typo.body2">@($"{context.Item.AgreementPercent:0.#}%")</MudText>
+                        </div>
+                    </CellTemplate>
+                </TemplateColumn>
                 <PropertyColumn T="StocktakeDTO" TProperty="DateTime" Title="@Localizer[Langs.StocktakeDate]"
                                 Property="x => x.PlannedDate" Tag="@("PlannedDate")" Format="d" Sortable="true" Filterable="false" />
-                <PropertyColumn T="StocktakeDTO" TProperty="DateTime" Title="@Localizer[Langs.StocktakeCreatedAt]"
-                                Property="x => x.CreatedAt.ToLocalTime()" Tag="@("CreatedAt")" Format="g" Sortable="true" Filterable="false" />
+                <TemplateColumn T="StocktakeDTO" Title="@Localizer[Langs.StocktakeConfirmedAt]"
+                                Tag="@("ConfirmedAt")" Sortable="true" Filterable="false" SortBy="x => x.ConfirmedAt">
+                    <CellTemplate>@(context.Item.ConfirmedAt?.ToLocalTime().ToString("g") ?? "—")</CellTemplate>
+                </TemplateColumn>
                 <MagFlowPropertyColumn T="StocktakeDTO" TProperty="string" TFilter="string"
-                                       Title="@Localizer[Langs.StocktakeCreatedBy]" Property="x => x.CreatedByName"
+                                       Title="@Localizer[Langs.User]" Property="x => x.CreatedByName"
                                        Tag="@("CreatedBy.FirstName | CreatedBy.LastName")" MagFlowSortable="true" />
             </Columns>
             <NoRecordsContent>
-                @if (_loadFailed)
-                {
-                    <MudAlert Severity="Severity.Error">@Localizer[Langs.StocktakesLoadFailed]</MudAlert>
-                }
-                else
-                {
-                    <MudText Class="pa-4">@Localizer[Langs.NoStocktakes]</MudText>
-                }
+                <MudText Class="pa-4">@Localizer[Langs.NoStocktakes]</MudText>
             </NoRecordsContent>
         </MagFlowDataGrid>
     </Authorized>

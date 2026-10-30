@@ -1,4 +1,4 @@
-﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +17,9 @@ namespace MagFlow.Domain.CompanyScope
         public int Id { get; set; }
         [Required]
         public int StocktakeId { get; set; }
+        public Enums.StocktakeItemCheckStatus CheckStatus { get; set; }
+        // Captured before the first correction. Existing copies also retain their baseline.
+        public string? OriginalValuesJson { get; set; }
         public string Code { get; private set; }
         public string? ExternalId { get; set; }
         [Required]
@@ -67,6 +70,23 @@ namespace MagFlow.Domain.CompanyScope
 
         public ICollection<StocktakeItemParameter> Parameters { get; set; } = [];
 
+
+        public MagFlow.Shared.Models.FormModels.StocktakeItemValues GetValues()
+        {
+            return new MagFlow.Shared.Models.FormModels.StocktakeItemValues
+            {
+                Quantity = Quantity, ExternalId = ExternalId, Location = Location,
+                WarehouseId = WarehouseId, SectorId = SectorId, RowId = RowId, SlotId = SlotId,
+                ReceivedAt = ReceivedAt, ProductionDate = ProductionDate,
+                ConsumptionDate = ConsumptionDate, Condition = Condition,
+                Parameters = Parameters.OrderBy(x => x.Id).ToDictionary(x => x.Id, x => x.Value)
+            };
+        }
+
+        public string SerializeValues() => System.Text.Json.JsonSerializer.Serialize(GetValues());
+
+        [NotMapped]
+        public bool HasCorrections => OriginalValuesJson != null && OriginalValuesJson != SerializeValues();
 
         public static StocktakeItem CreateItemCopy(Item item, int stocktakeId = 0)
         {

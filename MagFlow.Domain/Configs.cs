@@ -1,4 +1,4 @@
-﻿using MagFlow.Domain.CompanyScope;
+using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Interfaces;
 using System;
@@ -51,6 +51,7 @@ namespace MagFlow.Domain
 
             { typeof(Process), Code("PRC", includeYear: true) },
             { typeof(Document), Code("DOC", includeYear: true) },
+            { typeof(Stocktake), Code("INV", includeYear: true) },
             { typeof(Order), Code("ORD", includeYear: true) },
 
             { typeof(DocumentType), Code("DT") },

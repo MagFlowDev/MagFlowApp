@@ -1,4 +1,4 @@
-﻿using Castle.Core.Logging;
+using Castle.Core.Logging;
 using MagFlow.BLL.Mappers.Domain.CompanyScope;
 using MagFlow.BLL.Services.Interfaces;
 using MagFlow.DAL.Repositories;
@@ -134,11 +134,86 @@ namespace MagFlow.BLL.Services
             {
                 throw new InvalidOperationException("Could not load stocktakes.");
             }
+            var counts = await _stocktakeRepository.GetStocktakeCounts(
+                response.Elements.Select(x => x.Id).ToArray());
+            var elements = response.Elements.Select(stocktake =>
+            {
+                var dto = stocktake.ToDTO();
+                if (counts.TryGetValue(stocktake.Id, out var count))
+                {
+                    dto.TotalItems = count.Total;
+                    dto.CheckedItems = count.Checked;
+                }
+                return dto;
+            }).ToList();
             return new QueryResponse<StocktakeDTO>
             {
-                Elements = response.Elements.Select(x => x.ToDTO()).ToList(),
+                Elements = elements,
                 TotalCount = response.TotalCount
             };
+        }
+
+        public async Task<StocktakeDetailsDTO?> GetStocktakeDetails(int stocktakeId)
+        {
+            var stocktake = await _stocktakeRepository.GetByIdAsync(stocktakeId, query => query.AsNoTracking()
+                .Include(x => x.Warehouse).Include(x => x.CreatedBy)
+                .Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Type)
+                .Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Category)
+                .Include(x => x.Items).ThenInclude(x => x.DefaultUnit)
+                .Include(x => x.Items).ThenInclude(x => x.Warehouse)
+                .Include(x => x.Items).ThenInclude(x => x.Sector)
+                .Include(x => x.Items).ThenInclude(x => x.Row)
+                .Include(x => x.Items).ThenInclude(x => x.Slot)
+                .Include(x => x.Items).ThenInclude(x => x.Parameters).ThenInclude(x => x.Parameter).ThenInclude(x => x.Unit)
+                .AsSplitQuery());
+            if (stocktake == null || stocktake.RemovedAt.HasValue)
+            {
+                return null;
+            }
+            return stocktake.ToDetailsDTO();
+        }
+
+        public async Task<Enums.Result> FinishStocktake(int stocktakeId)
+        {
+            var userId = _networkService.GetUserId();
+            return userId.HasValue ? await _stocktakeRepository.FinishStocktake(stocktakeId, userId.Value)
+                : Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> ResumeStocktake(int stocktakeId)
+        {
+            var userId = _networkService.GetUserId();
+            return userId.HasValue ? await _stocktakeRepository.ResumeStocktake(stocktakeId, userId.Value)
+                : Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> ApproveStocktake(int stocktakeId)
+        {
+            var userId = _networkService.GetUserId();
+            return userId.HasValue ? await _stocktakeRepository.ApproveStocktake(stocktakeId, userId.Value)
+                : Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> DeleteStocktake(int stocktakeId)
+        {
+            var userId = _networkService.GetUserId();
+            return userId.HasValue ? await _stocktakeRepository.DeleteStocktake(stocktakeId, userId.Value)
+                : Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> CancelStocktake(int stocktakeId)
+        {
+            var userId = _networkService.GetUserId();
+            return userId.HasValue ? await _stocktakeRepository.CancelStocktake(stocktakeId, userId.Value)
+                : Enums.Result.Error;
+        }
+
+        public async Task<Enums.Result> SaveStocktakeItem(int stocktakeId, int itemId,
+            StocktakeItemValues? values, Enums.StocktakeItemCheckStatus? mark)
+        {
+            var userId = _networkService.GetUserId();
+            return userId.HasValue ? await _stocktakeRepository.SaveStocktakeItem(
+                stocktakeId, itemId, values, mark, userId.Value) : Enums.Result.Error;
         }
     }
 }
