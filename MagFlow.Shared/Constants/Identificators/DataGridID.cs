@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,6 +18,7 @@ namespace MagFlow.Shared.Constants.Identificators
         public const string WAREHOUSES_ARCHIVE = "WAREHOUSES_ARCHIVE";
         public const string WAREHOUSES_STOCK_MOVEMENTS_LIST = "WAREHOUSES_STOCK_MOVEMENTS_LIST";
         public const string WAREHOUSE_STOCK_MOVEMENTS_LIST = "WAREHOUSE_STOCK_MOVEMENTS_LIST";
+        public const string STOCKTAKE_ITEMS = "STOCKTAKE_ITEMS";
         public const string WAREHOUSE_HISTORY = "WAREHOUSE_HISTORY";
         public const string WAREHOUSES_STOCKTAKES_LIST = "WAREHOUSES_STOCKTAKES_LIST";
         public const string WAREHOUSE_STOCKTAKES_LIST = "WAREHOUSE_STOCKTAKES_LIST";

@@ -1,0 +1,90 @@
+@implements IAsyncDisposable
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.Web
+@using MagFlow.Shared.Models
+@using MudBlazor
+
+@if (_editing)
+{
+    <MudTextField T="string" @bind-Value="_draft" Immediate="true" AutoFocus="true"
+                  InputType="@InputType" Variant="Variant.Text" Margin="Margin.Dense"
+                  OnBlur="Commit" OnKeyDown="KeyDown" Error="@_invalid"
+                  ErrorText="@Localizer[Langs.StocktakeInvalidValue]" />
+}
+else
+{
+    <MudText @onclick="BeginEdit" Color="@(Corrected ? Color.Warning : Color.Default)" Style="@(ReadOnly ? null : "cursor: text; min-width: 40px;")">
+        @(string.IsNullOrEmpty(Value) ? "—" : Value)
+    </MudText>
+}
+
+@code {
+    [Parameter] public string Value { get; set; } = string.Empty;
+    [Parameter] public bool ReadOnly { get; set; }
+    [Parameter] public bool Corrected { get; set; }
+    [Parameter] public Enums.ValueType ValueType { get; set; } = Enums.ValueType.Text;
+    [Parameter] public InputType InputType { get; set; } = InputType.Text;
+    [Parameter] public EventCallback<string> ValueCommitted { get; set; }
+    [Parameter] public EventCallback<bool> EditingChanged { get; set; }
+    private string _draft = string.Empty;
+    private bool _editing;
+    private bool _invalid;
+
+    private async Task BeginEdit()
+    {
+        if (ReadOnly || _editing)
+        {
+            return;
+        }
+        _draft = Value;
+        _invalid = false;
+        _editing = true;
+        await EditingChanged.InvokeAsync(true);
+    }
+
+    private async Task Commit()
+    {
+        if (!_editing)
+        {
+            return;
+        }
+        _invalid = (ValueType == Enums.ValueType.Integer && !long.TryParse(_draft, out _)) ||
+            (ValueType == Enums.ValueType.Decimal && !decimal.TryParse(_draft, out _)) ||
+            (InputType == InputType.Date && !string.IsNullOrEmpty(_draft) &&
+                !DateTime.TryParseExact(_draft, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out _));
+        if (_invalid)
+        {
+            return;
+        }
+        _editing = false;
+        await EditingChanged.InvokeAsync(false);
+        if (!ReadOnly && _draft != Value)
+        {
+            await ValueCommitted.InvokeAsync(_draft);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_editing)
+        {
+            _editing = false;
+            await EditingChanged.InvokeAsync(false);
+        }
+    }
+
+    private async Task KeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            await Commit();
+        }
+        else if (args.Key == "Escape" && _editing)
+        {
+            _editing = false;
+            _invalid = false;
+            await EditingChanged.InvokeAsync(false);
+        }
+    }
+}

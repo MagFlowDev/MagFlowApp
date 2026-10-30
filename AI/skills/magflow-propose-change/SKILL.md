@@ -73,3 +73,20 @@ Sama akceptacja funkcji nie upoważnia do niezwiązanych napraw, wdrożenia na p
 ani destrukcyjnych operacji na bazie.
 
 Wynik opisz jako wykonane zmiany i rzeczywiście przeprowadzoną weryfikację.
+
+## Nazwy migracji EF Core
+
+Nowe migracje nazywaj kolejno `Update1`, `Update2`, `Update3` itd.
+Numerację prowadź **osobno dla każdego kontekstu**:
+
+- `CompanyDbContext`: `MagFlow.EF/Migrations/CompanyDb` i jego snapshot.
+- `CoreDbContext`: `MagFlow.EF/Migrations` i jego snapshot (bez podkatalogu CompanyDb).
+
+Przed dodaniem migracji odczytaj istniejące nazwy w katalogu właściwego kontekstu,
+wyznacz największy numer UpdateN i użyj N+1. Nie wyznaczaj numeru liczbą plików
+ani nie uwzględniaj plików `.Designer.cs`, snapshotów i migracji drugiego kontekstu.
+Przykład: przy CompanyDb Update1–Update5 następna nazwa to Update6,
+niezależnie od tego, ile aktualizacji ma CoreDb. Zachowaj generowany prefiks
+czasowy i jawnie wskaż kontekst oraz katalog migracji. Nie używaj opisowych nazw
+zamiast UpdateN, nie zmieniaj nazw istniejących migracji i nie restartuj numeracji.
+Samo dodanie migracji nie oznacza zgody na jej wykonanie na bazie.

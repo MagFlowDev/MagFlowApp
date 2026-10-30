@@ -1944,4 +1944,97 @@
   <data name="StocktakeType_Annual" xml:space="preserve">
     <value>Annual</value>
   </data>
+  <data name="StocktakeUnchecked" xml:space="preserve">
+    <value>Unchecked</value>
+  </data>
+  <data name="StocktakeChecked" xml:space="preserve">
+    <value>Checked</value>
+  </data>
+  <data name="StocktakeMissing" xml:space="preserve">
+    <value>Missing</value>
+  </data>
+  <data name="StocktakeCorrected" xml:space="preserve">
+    <value>Corrected</value>
+  </data>
+  <data name="AwaitingApproval" xml:space="preserve">
+    <value>For approval</value>
+  </data>
+  <data name="StocktakeFinishCounting" xml:space="preserve">
+    <value>Finish count</value>
+  </data>
+  <data name="StocktakeApprove" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="StocktakeMarkChecked" xml:space="preserve">
+    <value>Mark as checked</value>
+  </data>
+  <data name="StocktakeMarkMissing" xml:space="preserve">
+    <value>Mark as missing</value>
+  </data>
+  <data name="StocktakeClearMark" xml:space="preserve">
+    <value>Clear marking</value>
+  </data>
+  <data name="StocktakeDetailsLoadFailed" xml:space="preserve">
+    <value>Could not load the stocktake.</value>
+  </data>
+  <data name="StocktakeSaveFailed" xml:space="preserve">
+    <value>Could not save the change. Check the values and current stocktake stage.</value>
+  </data>
+  <data name="StocktakeInvalidValue" xml:space="preserve">
+    <value>Enter a valid value.</value>
+  </data>
+  <data name="StocktakeExternalId" xml:space="preserve">
+    <value>External ID</value>
+  </data>
+  <data name="StocktakeReceivedAt" xml:space="preserve">
+    <value>Received date</value>
+  </data>
+  <data name="StocktakeProductionDate" xml:space="preserve">
+    <value>Production date</value>
+  </data>
+  <data name="StocktakeConsumptionDate" xml:space="preserve">
+    <value>Expiry date</value>
+  </data>
+  <data name="StocktakeCondition" xml:space="preserve">
+    <value>Condition</value>
+  </data>
+  <data name="InProgress" xml:space="preserve">
+    <value>In progress</value>
+  </data>
+  <data name="Confirmed" xml:space="preserve">
+    <value>Confirmed</value>
+  </data>
+  <data name="StocktakeAgreement" xml:space="preserve">
+    <value>Agreement percentage</value>
+  </data>
+  <data name="StocktakeRestoreParameter" xml:space="preserve">
+    <value>Restore original value</value>
+  </data>
+  <data name="StocktakeNoItems" xml:space="preserve">
+    <value>No items in this stocktake.</value>
+  </data>
+  <data name="StocktakeTitle" xml:space="preserve">
+    <value>Stocktake</value>
+  </data>
+  <data name="StocktakeConfirmedAt" xml:space="preserve">
+    <value>Approval date</value>
+  </data>
+  <data name="Canceled" xml:space="preserve">
+    <value>Canceled</value>
+  </data>
+  <data name="StocktakeCancel" xml:space="preserve">
+    <value>Cancel stocktake</value>
+  </data>
+  <data name="StocktakeDeleteConfirmation" xml:space="preserve">
+    <value>Delete stocktake {0}?</value>
+  </data>
+  <data name="StocktakeCancelConfirmation" xml:space="preserve">
+    <value>Cancel stocktake {0}? It will become read-only.</value>
+  </data>
+  <data name="StocktakeCanceled" xml:space="preserve">
+    <value>The stocktake has been canceled.</value>
+  </data>
+  <data name="StocktakeCancelFailed" xml:space="preserve">
+    <value>Could not cancel the stocktake.</value>
+  </data>
 </root>

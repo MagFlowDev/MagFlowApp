@@ -1,4 +1,4 @@
-﻿using MagFlow.Shared.Models;
+using MagFlow.Shared.Models;
 using MagFlow.Shared.Models.Domain.CompanyScope;
 using MagFlow.Shared.Models.Interfaces;
 using System;
@@ -9,17 +9,19 @@ using System.Text;
 
 namespace MagFlow.Domain.CompanyScope
 {
-    public class Stocktake : StatusEntity, IBaseEntity, ISoftDeletable, IHistoryEntity
+    public class Stocktake : StatusEntity, IBaseEntity, ICodeEntity, ISoftDeletable, IHistoryEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public override int Id { get; set; }
+        public string Code { get; private set; } = string.Empty;
         public Enums.StocktakeType Type { get; set; }
         public DateTime PlannedDate { get; set; }
         [Required]
         public int WarehouseId { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
+        public DateTime? ConfirmedAt { get; set; }
         [Required]
         public Guid CreatedById { get; set; }
         public DateTime? RemovedAt { get; set; }
@@ -40,9 +42,17 @@ namespace MagFlow.Domain.CompanyScope
         {
             Enums.EntityStatus.Unknown,
             Enums.EntityStatus.Prepared,
+            Enums.EntityStatus.AwaitingApproval,
             Enums.EntityStatus.InProgress,
             Enums.EntityStatus.Confirmed,
+            Enums.EntityStatus.Deleted,
+            Enums.EntityStatus.Canceled,
         };
+
+        [NotMapped]
+        public bool IsEditable => Status is Enums.EntityStatus.Prepared or Enums.EntityStatus.InProgress;
+
+        public ICollection<StocktakeItem> Items { get; set; } = [];
 
         public Stocktake() : base(_allowedStatuses) { }
     }

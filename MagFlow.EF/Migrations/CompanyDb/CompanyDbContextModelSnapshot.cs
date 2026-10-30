@@ -17,7 +17,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.8")
+                .HasAnnotation("ProductVersion", "10.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -1631,6 +1631,12 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ConfirmedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -1679,6 +1685,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CheckStatus")
+                        .HasColumnType("int");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1702,6 +1711,9 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OriginalValuesJson")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
@@ -3046,7 +3058,7 @@ namespace MagFlow.EF.Migrations.CompanyDb
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("MagFlow.Domain.CompanyScope.Stocktake", "Stocktake")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("StocktakeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -3265,6 +3277,11 @@ namespace MagFlow.EF.Migrations.CompanyDb
                     b.Navigation("Conversions");
 
                     b.Navigation("Parameters");
+                });
+
+            modelBuilder.Entity("MagFlow.Domain.CompanyScope.Stocktake", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("MagFlow.Domain.CompanyScope.StocktakeItem", b =>

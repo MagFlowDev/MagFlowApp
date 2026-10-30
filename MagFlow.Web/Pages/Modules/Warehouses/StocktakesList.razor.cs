@@ -18,11 +18,11 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
         [Inject] private IWarehouseService WarehouseService { get; set; } = default!;
         [Inject] private IDialogService DialogService { get; set; } = default!;
         [Inject] private ISnackbar Snackbar { get; set; } = default!;
+        [Inject] private NavigationManager NavigationManager { get; set; } = default!;
         [Parameter] public int? WarehouseId { get; set; }
 
         private MudDataGrid<StocktakeDTO> _stocktakesDataGrid = default!;
         private bool _openingDialog;
-        private bool _loadFailed;
         private bool _disposed;
         private string GridId => WarehouseId.HasValue
             ? DataGridID.WAREHOUSE_STOCKTAKES_LIST : DataGridID.WAREHOUSES_STOCKTAKES_LIST;
@@ -30,46 +30,44 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
         private async Task<GridData<StocktakeDTO>> ServerReloadStocktakes(
             GridState<StocktakeDTO> state, CancellationToken token)
         {
-            _loadFailed = false;
-            var sort = state.SortDefinitions.FirstOrDefault();
-            var column = sort == null ? null : _stocktakesDataGrid.RenderedColumns
-                .FirstOrDefault(x => x.PropertyName == sort.SortBy);
-            var options = new QueryOptions<Stocktake>
+            var sortDefinition = state.SortDefinitions.FirstOrDefault();
+            string? sortBy = sortDefinition?.SortBy;
+            if (Guid.TryParse(sortBy, out _))
+            {
+                var column = _stocktakesDataGrid.RenderedColumns
+                    .FirstOrDefault(c => c.PropertyName == sortBy);
+                sortBy = column?.Tag?.ToString();
+            }
+            sortBy = sortBy ?? nameof(StocktakeDTO.Code);
+
+            var queryOptions = new QueryOptions<Stocktake>()
             {
                 PageNumber = state.Page,
                 PageSize = state.PageSize,
-                SortBy = column?.Tag?.ToString()?.Split('|')[0].Trim() ?? nameof(Stocktake.CreatedAt),
-                Descending = sort?.Descending ?? true,
-                Includes = query => query.Include(x => x.Warehouse).Include(x => x.CreatedBy)
+                SortBy = sortBy,
+                Descending = sortDefinition?.Descending ?? true,
+                Includes = query => query
+                    .Include(x => x.Warehouse)
+                    .Include(x => x.CreatedBy)
             };
-            options.ApplyFilters(state.FilterDefinitions);
+            queryOptions.ApplyFilters(state.FilterDefinitions);
+
             if (WarehouseId.HasValue)
             {
-                options.ColumnFilters ??= [];
-                options.ColumnFilters.Add(ColumnFilter.Create(
-                    nameof(Stocktake.WarehouseId), MagFlow.Shared.Models.FilterOperator.Equals, WarehouseId.Value));
+                queryOptions.ColumnFilters ??= [];
+                queryOptions.ColumnFilters.Add(ColumnFilter.Create(
+                    nameof(Stocktake.WarehouseId),
+                    MagFlow.Shared.Models.FilterOperator.Equals,
+                    WarehouseId.Value));
             }
-            try
+
+            var response = await WarehouseService.GetStocktakes(queryOptions);
+
+            return new GridData<StocktakeDTO>
             {
-                var response = await WarehouseService.GetStocktakes(options);
-                token.ThrowIfCancellationRequested();
-                return new GridData<StocktakeDTO>
-                {
-                    Items = response.Elements, TotalItems = response.TotalCount
-                };
-            }
-            catch (OperationCanceledException) when (token.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch
-            {
-                if (!_disposed)
-                {
-                    _loadFailed = true;
-                }
-                return new GridData<StocktakeDTO> { Items = [], TotalItems = 0 };
-            }
+                Items = response.Elements,
+                TotalItems = response.TotalCount,
+            };
         }
 
         private async Task PrepareStocktake()
@@ -108,6 +106,24 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
                 _openingDialog = false;
             }
         }
+
+        private void OpenStocktake(StocktakeDTO stocktake)
+        {
+            if (!HasModulePermission("Warehouses", PermissionFlags.Read))
+            {
+                return;
+            }
+            NavigationManager.NavigateTo($"/stocktake/{stocktake.Id}");
+        }
+
+        private static Color StocktakeStatusColor(Enums.EntityStatus status) => status switch
+        {
+            Enums.EntityStatus.InProgress => Color.Info,
+            Enums.EntityStatus.AwaitingApproval => Color.Warning,
+            Enums.EntityStatus.Confirmed => Color.Success,
+            Enums.EntityStatus.Canceled => Color.Error,
+            _ => Color.Default
+        };
 
         private Task Refresh() => _stocktakesDataGrid.ReloadServerData();
 

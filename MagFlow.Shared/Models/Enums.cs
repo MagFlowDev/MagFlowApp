@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -8,6 +8,14 @@ namespace MagFlow.Shared.Models
 {
     public static class Enums
     {
+        public enum StocktakeItemCheckStatus
+        {
+            [Display(Name = "StocktakeUnchecked")] Unchecked = 0,
+            [Display(Name = "StocktakeChecked")] Checked = 1,
+            [Display(Name = "StocktakeMissing")] Missing = 2,
+            [Display(Name = "StocktakeCorrected")] Corrected = 3
+        }
+
         public enum StocktakeType
         {
             [Display(Name = "StocktakeType_Audit")]
@@ -227,6 +235,12 @@ namespace MagFlow.Shared.Models
 
             [Display(Name = "Prepared")]
             Prepared = 11,
+
+            [Display(Name = "AwaitingApproval")]
+            AwaitingApproval = 12,
+
+            [Display(Name = "Canceled")]
+            Canceled = 13,
         }
 
         public enum OverallState

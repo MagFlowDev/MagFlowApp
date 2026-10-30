@@ -1925,7 +1925,7 @@ i uprawnieniami użytkowników</value>
     <value>Brak inwentaryzacji.</value>
   </data>
   <data name="Prepared" xml:space="preserve">
-    <value>Przygotowana</value>
+    <value>Przygotowane</value>
   </data>
   <data name="StocktakeType_Audit" xml:space="preserve">
     <value>Kontrolna</value>
@@ -1944,5 +1944,98 @@ i uprawnieniami użytkowników</value>
   </data>
   <data name="StocktakeType_Annual" xml:space="preserve">
     <value>Roczna</value>
+  </data>
+  <data name="StocktakeUnchecked" xml:space="preserve">
+    <value>Niesprawdzony</value>
+  </data>
+  <data name="StocktakeChecked" xml:space="preserve">
+    <value>Sprawdzone</value>
+  </data>
+  <data name="StocktakeMissing" xml:space="preserve">
+    <value>Brakujące</value>
+  </data>
+  <data name="StocktakeCorrected" xml:space="preserve">
+    <value>Skorygowane</value>
+  </data>
+  <data name="AwaitingApproval" xml:space="preserve">
+    <value>Do zatwierdzenia</value>
+  </data>
+  <data name="StocktakeFinishCounting" xml:space="preserve">
+    <value>Zakończ spis</value>
+  </data>
+  <data name="StocktakeApprove" xml:space="preserve">
+    <value>Zatwierdź</value>
+  </data>
+  <data name="StocktakeMarkChecked" xml:space="preserve">
+    <value>Oznacz jako sprawdzony</value>
+  </data>
+  <data name="StocktakeMarkMissing" xml:space="preserve">
+    <value>Oznacz jako brakujący</value>
+  </data>
+  <data name="StocktakeClearMark" xml:space="preserve">
+    <value>Cofnij oznaczenie</value>
+  </data>
+  <data name="StocktakeDetailsLoadFailed" xml:space="preserve">
+    <value>Nie udało się pobrać inwentaryzacji.</value>
+  </data>
+  <data name="StocktakeSaveFailed" xml:space="preserve">
+    <value>Nie udało się zapisać zmiany. Sprawdź dane i aktualny etap inwentaryzacji.</value>
+  </data>
+  <data name="StocktakeInvalidValue" xml:space="preserve">
+    <value>Wprowadź poprawną wartość.</value>
+  </data>
+  <data name="StocktakeExternalId" xml:space="preserve">
+    <value>Identyfikator zewnętrzny</value>
+  </data>
+  <data name="StocktakeReceivedAt" xml:space="preserve">
+    <value>Data przyjęcia</value>
+  </data>
+  <data name="StocktakeProductionDate" xml:space="preserve">
+    <value>Data produkcji</value>
+  </data>
+  <data name="StocktakeConsumptionDate" xml:space="preserve">
+    <value>Data przydatności</value>
+  </data>
+  <data name="StocktakeCondition" xml:space="preserve">
+    <value>Stan jakościowy</value>
+  </data>
+  <data name="InProgress" xml:space="preserve">
+    <value>W trakcie</value>
+  </data>
+  <data name="Confirmed" xml:space="preserve">
+    <value>Zatwierdzone</value>
+  </data>
+  <data name="StocktakeAgreement" xml:space="preserve">
+    <value>Procent zgodności</value>
+  </data>
+  <data name="StocktakeRestoreParameter" xml:space="preserve">
+    <value>Przywróć początkową wartość</value>
+  </data>
+  <data name="StocktakeNoItems" xml:space="preserve">
+    <value>Brak towarów w inwentaryzacji.</value>
+  </data>
+  <data name="StocktakeTitle" xml:space="preserve">
+    <value>Inwentaryzacja</value>
+  </data>
+  <data name="StocktakeConfirmedAt" xml:space="preserve">
+    <value>Data zatwierdzenia</value>
+  </data>
+  <data name="Canceled" xml:space="preserve">
+    <value>Anulowane</value>
+  </data>
+  <data name="StocktakeCancel" xml:space="preserve">
+    <value>Anuluj inwentaryzację</value>
+  </data>
+  <data name="StocktakeDeleteConfirmation" xml:space="preserve">
+    <value>Czy usunąć inwentaryzację {0}?</value>
+  </data>
+  <data name="StocktakeCancelConfirmation" xml:space="preserve">
+    <value>Czy anulować inwentaryzację {0}? Po anulowaniu nie będzie można jej edytować.</value>
+  </data>
+  <data name="StocktakeCanceled" xml:space="preserve">
+    <value>Inwentaryzacja została anulowana.</value>
+  </data>
+  <data name="StocktakeCancelFailed" xml:space="preserve">
+    <value>Nie udało się anulować inwentaryzacji.</value>
   </data>
 </root>
