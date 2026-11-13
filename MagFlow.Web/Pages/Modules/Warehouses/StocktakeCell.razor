@@ -6,10 +6,29 @@
 
 @if (_editing)
 {
-    <MudTextField T="string" @bind-Value="_draft" Immediate="true" AutoFocus="true"
-                  InputType="@InputType" Variant="Variant.Text" Margin="Margin.Dense"
-                  OnBlur="Commit" OnKeyDown="KeyDown" Error="@_invalid"
-                  ErrorText="@Localizer[Langs.StocktakeInvalidValue]" />
+    <div data-stocktake-editor @onstocktakeeditorfocusout="EditorFocusOut">
+        <MudTextField T="string" @bind-Value="_draft" Immediate="true" AutoFocus="true"
+                      InputType="@InputType" Variant="Variant.Text" Margin="Margin.Dense"
+                      OnKeyDown="KeyDown" Error="@_invalid"
+                      ErrorText="@Localizer[Langs.StocktakeInvalidValue]"
+                      Adornment="@(CanRestore ? Adornment.End : Adornment.None)"
+                      AdornmentIcon="@Icons.Material.Outlined.Replay" IconSize="Size.Small"
+                      AdornmentAriaLabel="@Localizer[Langs.StocktakeRestoreParameter]"
+                      OnAdornmentClick="Restore" />
+    </div>
+}
+else if (CanRestore)
+{
+    <div data-stocktake-editor>
+        <MudField Variant="Variant.Text" Margin="Margin.Dense" Underline="false"
+                  Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Outlined.Replay"
+                  IconSize="Size.Small" OnAdornmentClick="Restore"
+                  AdornmentAriaLabel="@Localizer[Langs.StocktakeRestoreParameter]">
+            <MudText @onclick="BeginEdit" Color="Color.Warning" Style="cursor: text;">
+                @(string.IsNullOrEmpty(Value) ? "—" : Value)
+            </MudText>
+        </MudField>
+    </div>
 }
 else
 {
@@ -25,10 +44,30 @@ else
     [Parameter] public Enums.ValueType ValueType { get; set; } = Enums.ValueType.Text;
     [Parameter] public InputType InputType { get; set; } = InputType.Text;
     [Parameter] public EventCallback<string> ValueCommitted { get; set; }
+    [Parameter] public EventCallback RestoreOriginal { get; set; }
     [Parameter] public EventCallback<bool> EditingChanged { get; set; }
     private string _draft = string.Empty;
     private bool _editing;
     private bool _invalid;
+    private bool CanRestore => Corrected && !ReadOnly && RestoreOriginal.HasDelegate;
+
+    private Task EditorFocusOut(StocktakeEditorFocusEventArgs args) =>
+        args.StaysInsideEditor ? Task.CompletedTask : Commit();
+
+    private async Task Restore()
+    {
+        if (!CanRestore)
+        {
+            return;
+        }
+        if (_editing)
+        {
+            _editing = false;
+            _invalid = false;
+            await EditingChanged.InvokeAsync(false);
+        }
+        await RestoreOriginal.InvokeAsync();
+    }
 
     private async Task BeginEdit()
     {

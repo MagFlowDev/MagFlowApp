@@ -2037,4 +2037,25 @@
   <data name="StocktakeCancelFailed" xml:space="preserve">
     <value>Could not cancel the stocktake.</value>
   </data>
+  <data name="StocktakeVerificationRequired" xml:space="preserve">
+    <value>Products require verification</value>
+  </data>
+  <data name="StocktakeUncheckedCount" xml:space="preserve">
+    <value>Products remaining unchecked in this stocktake: {0}</value>
+  </data>
+  <data name="StocktakeUncheckedInstructions" xml:space="preserve">
+    <value>Choose how to mark them or return to verification.</value>
+  </data>
+  <data name="StocktakeApproveAllUnchecked" xml:space="preserve">
+    <value>Approve all</value>
+  </data>
+  <data name="StocktakeBackToVerification" xml:space="preserve">
+    <value>Return to verification</value>
+  </data>
+  <data name="StocktakeFinish" xml:space="preserve">
+    <value>Finish</value>
+  </data>
+  <data name="StocktakeMarkAllUncheckedMissing" xml:space="preserve">
+    <value>Mark as missing</value>
+  </data>
 </root>

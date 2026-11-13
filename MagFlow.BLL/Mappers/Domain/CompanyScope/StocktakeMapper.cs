@@ -53,7 +53,8 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
                 Id = stocktake.Id,
                 Code = stocktake.Code,
                 TotalItems = stocktake.Items.Count,
-                CheckedItems = stocktake.Items.Count(x => x.CheckStatus == Enums.StocktakeItemCheckStatus.Checked),
+                MatchingItems = stocktake.Items.Count(x => x.CheckStatus == Enums.StocktakeItemCheckStatus.Checked ||
+                    x.CheckStatus == Enums.StocktakeItemCheckStatus.Corrected),
                 WarehouseId = stocktake.WarehouseId,
                 WarehouseName = stocktake.Warehouse?.Name ?? string.Empty,
                 Type = stocktake.Type,

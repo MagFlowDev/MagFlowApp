@@ -27,6 +27,8 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
         private readonly HashSet<int> _expandedItems = [];
         private bool EditableStage => _details?.Stocktake.Status is
             Enums.EntityStatus.Prepared or Enums.EntityStatus.InProgress;
+        private bool CanViewParameters => EditableStage ||
+            _details?.Stocktake.Status is Enums.EntityStatus.AwaitingApproval or Enums.EntityStatus.Confirmed;
         private bool CanEdit => EditableStage && !_busy &&
             HasModulePermission("Warehouses", PermissionFlags.Edit);
 
@@ -133,10 +135,11 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
             {
                 return;
             }
-            if (!CanEdit || _editingCells > 0)
+            if (!CanEdit || _editingCells > 0 || _disposed)
             {
                 return;
             }
+
             await Write(WarehouseService.FinishStocktake);
         }
 
@@ -155,7 +158,73 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
             {
                 return;
             }
-            await Write(WarehouseService.ApproveStocktake);
+            if (_busy || _disposed || _details?.Stocktake.Status != Enums.EntityStatus.AwaitingApproval)
+            {
+                return;
+            }
+
+            var id = StocktakeId;
+            var uncheckedCount = Count(Enums.StocktakeItemCheckStatus.Unchecked);
+            Enums.StocktakeItemCheckStatus? uncheckedStatus = null;
+            var returnToVerification = false;
+            if (uncheckedCount > 0)
+            {
+                _busy = true;
+                _operationFailed = false;
+                try
+                {
+                    var parameters = new DialogParameters<ApproveStocktakeDialog>
+                    {
+                        { x => x.UncheckedCount, uncheckedCount }
+                    };
+                    var dialog = await DialogService.ShowAsync<ApproveStocktakeDialog>(
+                        Localizer[Langs.StocktakeVerificationRequired], parameters,
+                        new DialogOptions { FullWidth = false, MaxWidth = MaxWidth.Small, CloseButton = true });
+                    var result = await dialog.Result;
+                    if (result?.Canceled != false)
+                    {
+                        return;
+                    }
+
+                    if (result.Data is Enums.StocktakeItemCheckStatus selected)
+                    {
+                        uncheckedStatus = selected;
+                    }
+                    else if (result.Data is ApproveStocktakeDialog.Action.ReturnToVerification)
+                    {
+                        returnToVerification = true;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                catch
+                {
+                    if (!_disposed && id == StocktakeId)
+                    {
+                        _operationFailed = true;
+                    }
+                    return;
+                }
+                finally
+                {
+                    _busy = false;
+                }
+            }
+
+            if (!_disposed && id == StocktakeId &&
+                _details?.Stocktake.Status == Enums.EntityStatus.AwaitingApproval)
+            {
+                if (returnToVerification)
+                {
+                    await ResumeEditing();
+                }
+                else
+                {
+                    await Write(stocktakeId => WarehouseService.ApproveStocktake(stocktakeId, uncheckedStatus));
+                }
+            }
         }
 
         private async Task DeleteOrCancel(bool delete)
@@ -254,7 +323,7 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
 
         private void ToggleParameters(int itemId)
         {
-            if (_busy || _editingCells > 0 || !EditableStage)
+            if (_busy || _editingCells > 0 || !CanViewParameters)
             {
                 return;
             }
@@ -266,19 +335,6 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
 
         private static bool IsParameterChanged(StocktakeItemDTO item, StocktakeParameterDTO parameter) =>
             item.Values.Parameters[parameter.Id] != parameter.OriginalValue;
-
-        private async Task RestoreParameter(StocktakeItemDTO item, StocktakeParameterDTO parameter)
-        {
-            if (!HasModulePermission("Warehouses", PermissionFlags.Edit))
-            {
-                return;
-            }
-            if (!CanEdit || _editingCells > 0)
-            {
-                return;
-            }
-            await SaveValues(item, values => values.Parameters[parameter.Id] = parameter.OriginalValue);
-        }
 
         private static string ItemRowClass(StocktakeItemDTO item, int index) => index % 2 == 0
             ? "stocktake-data-row-shaded" : string.Empty;

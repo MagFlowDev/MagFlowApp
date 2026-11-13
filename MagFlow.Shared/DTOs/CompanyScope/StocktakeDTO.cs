@@ -8,9 +8,9 @@ namespace MagFlow.Shared.DTOs.CompanyScope
         public int Id { get; set; }
         public string Code { get; init; } = string.Empty;
         public int TotalItems { get; set; }
-        public int CheckedItems { get; set; }
+        public int MatchingItems { get; set; }
         public decimal AgreementPercent => TotalItems == 0 ? 0m
-            : decimal.Round(100m * CheckedItems / TotalItems, 1);
+            : decimal.Round(100m * MatchingItems / TotalItems, 1);
         public int WarehouseId { get; set; }
         public string WarehouseName { get; set; } = string.Empty;
         public Enums.StocktakeType Type { get; set; }

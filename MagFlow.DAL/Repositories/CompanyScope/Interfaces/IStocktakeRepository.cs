@@ -10,10 +10,10 @@ namespace MagFlow.DAL.Repositories.CompanyScope.Interfaces
 {
     public interface IStocktakeRepository : IRepository<Stocktake, CompanyDbContext>
     {
-        Task<Dictionary<int, (int Total, int Checked)>> GetStocktakeCounts(IReadOnlyCollection<int> stocktakeIds);
+        Task<Dictionary<int, (int Total, int Matching)>> GetStocktakeCounts(IReadOnlyCollection<int> stocktakeIds);
         Task<Enums.Result> FinishStocktake(int stocktakeId, Guid userId);
         Task<Enums.Result> ResumeStocktake(int stocktakeId, Guid userId);
-        Task<Enums.Result> ApproveStocktake(int stocktakeId, Guid userId);
+        Task<Enums.Result> ApproveStocktake(int stocktakeId, Guid userId, Enums.StocktakeItemCheckStatus? uncheckedStatus);
         Task<Enums.Result> DeleteStocktake(int stocktakeId, Guid userId);
         Task<Enums.Result> CancelStocktake(int stocktakeId, Guid userId);
         Task<Enums.Result> SaveStocktakeItem(int stocktakeId, int itemId,

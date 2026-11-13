@@ -142,7 +142,7 @@ namespace MagFlow.BLL.Services
                 if (counts.TryGetValue(stocktake.Id, out var count))
                 {
                     dto.TotalItems = count.Total;
-                    dto.CheckedItems = count.Checked;
+                    dto.MatchingItems = count.Matching;
                 }
                 return dto;
             }).ToList();
@@ -187,10 +187,10 @@ namespace MagFlow.BLL.Services
                 : Enums.Result.Error;
         }
 
-        public async Task<Enums.Result> ApproveStocktake(int stocktakeId)
+        public async Task<Enums.Result> ApproveStocktake(int stocktakeId, Enums.StocktakeItemCheckStatus? uncheckedStatus)
         {
             var userId = _networkService.GetUserId();
-            return userId.HasValue ? await _stocktakeRepository.ApproveStocktake(stocktakeId, userId.Value)
+            return userId.HasValue ? await _stocktakeRepository.ApproveStocktake(stocktakeId, userId.Value, uncheckedStatus)
                 : Enums.Result.Error;
         }
 

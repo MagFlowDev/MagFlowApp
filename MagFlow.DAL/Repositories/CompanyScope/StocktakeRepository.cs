@@ -101,7 +101,7 @@ namespace MagFlow.DAL.Repositories.CompanyScope
             }
         }
 
-        public async Task<Dictionary<int, (int Total, int Checked)>> GetStocktakeCounts(
+        public async Task<Dictionary<int, (int Total, int Matching)>> GetStocktakeCounts(
             IReadOnlyCollection<int> stocktakeIds)
         {
             var ids = stocktakeIds.Distinct().ToArray();
@@ -117,9 +117,10 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     Id = group.Key,
                     Total = group.Count(),
-                    Checked = group.Count(x => x.CheckStatus == Enums.StocktakeItemCheckStatus.Checked)
+                    Matching = group.Count(x => x.CheckStatus == Enums.StocktakeItemCheckStatus.Checked ||
+                        x.CheckStatus == Enums.StocktakeItemCheckStatus.Corrected)
                 }).ToListAsync();
-            return counts.ToDictionary(x => x.Id, x => (x.Total, x.Checked));
+            return counts.ToDictionary(x => x.Id, x => (x.Total, x.Matching));
         }
 
         public Task<Enums.Result> FinishStocktake(int stocktakeId, Guid userId)
@@ -128,8 +129,15 @@ namespace MagFlow.DAL.Repositories.CompanyScope
         public Task<Enums.Result> ResumeStocktake(int stocktakeId, Guid userId)
             => ChangeStage(stocktakeId, Enums.EntityStatus.InProgress, userId);
 
-        public Task<Enums.Result> ApproveStocktake(int stocktakeId, Guid userId)
-            => ChangeStage(stocktakeId, Enums.EntityStatus.Confirmed, userId);
+        public Task<Enums.Result> ApproveStocktake(int stocktakeId, Guid userId, Enums.StocktakeItemCheckStatus? uncheckedStatus)
+        {
+            if (uncheckedStatus is not (null or Enums.StocktakeItemCheckStatus.Checked or Enums.StocktakeItemCheckStatus.Missing))
+            {
+                return Task.FromResult(Enums.Result.Error);
+            }
+
+            return ChangeStage(stocktakeId, Enums.EntityStatus.Confirmed, userId, uncheckedStatus);
+        }
 
         public Task<Enums.Result> DeleteStocktake(int stocktakeId, Guid userId)
             => ChangeStage(stocktakeId, Enums.EntityStatus.Deleted, userId);
@@ -137,7 +145,8 @@ namespace MagFlow.DAL.Repositories.CompanyScope
         public Task<Enums.Result> CancelStocktake(int stocktakeId, Guid userId)
             => ChangeStage(stocktakeId, Enums.EntityStatus.Canceled, userId);
 
-        private async Task<Enums.Result> ChangeStage(int stocktakeId, Enums.EntityStatus target, Guid userId)
+        private async Task<Enums.Result> ChangeStage(int stocktakeId, Enums.EntityStatus target, Guid userId,
+            Enums.StocktakeItemCheckStatus? uncheckedStatus = null)
         {
             if (stocktakeId <= 0)
             {
@@ -171,12 +180,19 @@ namespace MagFlow.DAL.Repositories.CompanyScope
                 {
                     return Enums.Result.Error;
                 }
-                if (target == Enums.EntityStatus.AwaitingApproval)
+                if (target == Enums.EntityStatus.Confirmed)
                 {
-                    await context.StocktakeItems.Where(x => x.StocktakeId == stocktakeId &&
-                        x.CheckStatus == Enums.StocktakeItemCheckStatus.Unchecked)
-                        .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.CheckStatus,
-                            Enums.StocktakeItemCheckStatus.Missing));
+                    var uncheckedItems = context.StocktakeItems.Where(x => x.StocktakeId == stocktakeId &&
+                        x.CheckStatus == Enums.StocktakeItemCheckStatus.Unchecked);
+                    if (uncheckedStatus is { } status)
+                    {
+                        await uncheckedItems.ExecuteUpdateAsync(setters =>
+                            setters.SetProperty(x => x.CheckStatus, status));
+                    }
+                    else if (await uncheckedItems.AnyAsync())
+                    {
+                        return Enums.Result.Error;
+                    }
                 }
                 var now = DateTime.UtcNow;
                 stocktake.ChangeStatus(target);
