@@ -4,9 +4,15 @@
     {
       "src": [
         {
-          "src": "../.",
+          "src": "..",
           "files": [
-            "**/*.csproj"
+            "MagFlow.API/bin/Release/net10.0/MagFlow.API.dll",
+            "MagFlow.BLL/bin/Release/net10.0/MagFlow.BLL.dll",
+            "MagFlow.DAL/bin/Release/net10.0/MagFlow.DAL.dll",
+            "MagFlow.Domain/bin/Release/net10.0/MagFlow.Domain.dll",
+            "MagFlow.EF/bin/Release/net10.0/MagFlow.EF.dll",
+            "MagFlow.Shared/bin/Release/net10.0/MagFlow.Shared.dll",
+            "MagFlow.Web/bin/Release/net10.0/MagFlow.Web.dll"
           ]
         }
       ],
