@@ -1,0 +1,31 @@
+[data-stocktake-editor] {
+    display: flex;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+}
+
+[data-stocktake-editor] ::deep .mud-input-control.mud-input-control-margin-dense {
+    margin-block: 0;
+}
+
+[data-stocktake-editor] ::deep .mud-input {
+    font-size: var(--mud-typography-body1-size);
+    line-height: var(--mud-typography-body1-lineheight);
+}
+
+[data-stocktake-editor] ::deep .mud-input > :is(input, div).mud-input-root {
+    padding-block: 0;
+}
+
+[data-stocktake-editor] ::deep .mud-input > input.mud-input-root {
+    width: auto;
+    field-sizing: content;
+    min-inline-size: 5ch;
+    max-inline-size: 40ch;
+    padding-inline-end: .5rem;
+}
+
+[data-stocktake-editor] ::deep .mud-input-adornment-end {
+    margin-inline-start: .25rem;
+    flex-shrink: 0;
+}

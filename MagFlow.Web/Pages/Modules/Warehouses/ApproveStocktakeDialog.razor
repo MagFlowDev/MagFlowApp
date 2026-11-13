@@ -1,0 +1,63 @@
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Enumerators
+@using MudBlazor
+@inherits AuthComponentBase
+
+<MudDialog>
+    <DialogContent>
+        <MudText>@string.Format(Localizer[Langs.StocktakeUncheckedCount], UncheckedCount)</MudText>
+        <MudText Class="mb-3">@Localizer[Langs.StocktakeUncheckedInstructions]</MudText>
+
+        <MudRadioGroup T="Enums.StocktakeItemCheckStatus" @bind-Value="_selected"
+                       InputClass="flex-column justify-content-center align-items-start align-self-stretch" InputStyle="gap: 16px; padding: 16px 0px;">
+            <MudPaper Elevation="1" Class="rounded-lg flex-grow-1 align-self-stretch" style="padding: 8px">
+                <MudRadio T="Enums.StocktakeItemCheckStatus" Value="Enums.StocktakeItemCheckStatus.Checked"
+                          Color="Color.Dark" Class="w-100">
+                    @Localizer[Langs.StocktakeApproveAllUnchecked]
+                </MudRadio>
+            </MudPaper>
+            <MudPaper Elevation="1" Class="rounded-lg flex-grow-1 align-self-stretch" style="padding: 8px;">
+                <MudRadio T="Enums.StocktakeItemCheckStatus" Value="Enums.StocktakeItemCheckStatus.Missing"
+                          Color="Color.Dark" Class="w-100">
+                    @Localizer[Langs.StocktakeMarkAllUncheckedMissing]
+                </MudRadio>
+            </MudPaper>
+        </MudRadioGroup>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Back">
+            @Localizer[Langs.StocktakeBackToVerification]
+        </MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">
+            @Localizer[Langs.StocktakeFinish]
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public int UncheckedCount { get; set; }
+
+    private Enums.StocktakeItemCheckStatus _selected = Enums.StocktakeItemCheckStatus.Checked;
+
+    internal enum Action
+    {
+        ReturnToVerification
+    }
+
+    private void Back()
+    {
+        if (HasModulePermission("Warehouses", PermissionFlags.Edit))
+        {
+            MudDialog.Close(DialogResult.Ok(Action.ReturnToVerification));
+        }
+    }
+
+    private void Submit()
+    {
+        if (HasModulePermission("Warehouses", PermissionFlags.Edit))
+        {
+            MudDialog.Close(DialogResult.Ok(_selected));
+        }
+    }
+}

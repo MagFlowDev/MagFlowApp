@@ -15,7 +15,7 @@ namespace MagFlow.BLL.Services.Interfaces
         Task<StocktakeDetailsDTO?> GetStocktakeDetails(int stocktakeId);
         Task<Enums.Result> FinishStocktake(int stocktakeId);
         Task<Enums.Result> ResumeStocktake(int stocktakeId);
-        Task<Enums.Result> ApproveStocktake(int stocktakeId);
+        Task<Enums.Result> ApproveStocktake(int stocktakeId, Enums.StocktakeItemCheckStatus? uncheckedStatus);
         Task<Enums.Result> DeleteStocktake(int stocktakeId);
         Task<Enums.Result> CancelStocktake(int stocktakeId);
         Task<Enums.Result> SaveStocktakeItem(int stocktakeId, int itemId,

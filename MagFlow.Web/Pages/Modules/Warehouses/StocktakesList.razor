@@ -2,6 +2,7 @@
 @using MagFlow.Shared.DTOs.CompanyScope
 @using MagFlow.Shared.Models
 @using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Helpers
 @using Microsoft.AspNetCore.Components.Authorization
 @using MudBlazor
 @inherits AuthComponentBase
@@ -38,7 +39,7 @@
                 <MagFlowTemplateColumn T="StocktakeDTO" TFilter="Enums.EntityStatus" Title="@Localizer[Langs.Status]"
                                        Tag="@("Status")" IncludedEnumValues="@(new[] { Enums.EntityStatus.Prepared, Enums.EntityStatus.AwaitingApproval, Enums.EntityStatus.InProgress, Enums.EntityStatus.Confirmed, Enums.EntityStatus.Canceled, Enums.EntityStatus.Unknown })">
                     <CellTemplate>
-                        <MudChip T="string" Color="@StocktakeStatusColor(context.Item.Status)" Size="Size.Medium" Variant="Variant.Filled" Class="m-0">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
+                        <MudChip T="string" Color="@StocktakeStatusColors.Get(context.Item.Status)" Size="Size.Medium" Variant="Variant.Filled" Class="m-0">@context.Item.Status.GetDisplayName(Localizer)</MudChip>
                     </CellTemplate>
                 </MagFlowTemplateColumn>
                 <TemplateColumn T="StocktakeDTO" Title="@Localizer[Langs.StocktakeAgreement]"
@@ -46,7 +47,7 @@
                     <CellTemplate>
                         <div class="stocktake-agreement">
                             <MudProgressLinear Value="@((double)context.Item.AgreementPercent)" Color="Color.Primary"
-                                               Style="--mud-palette-primary: #ff4081; width: 100%; height: .375rem; border-radius: 1rem;" />
+                                               Style="width: 100%; height: .375rem; border-radius: 1rem;" />
                             <MudText Typo="Typo.body2">@($"{context.Item.AgreementPercent:0.#}%")</MudText>
                         </div>
                     </CellTemplate>

@@ -2038,4 +2038,25 @@ i uprawnieniami użytkowników</value>
   <data name="StocktakeCancelFailed" xml:space="preserve">
     <value>Nie udało się anulować inwentaryzacji.</value>
   </data>
+  <data name="StocktakeVerificationRequired" xml:space="preserve">
+    <value>Produkty wymagają weryfikacji</value>
+  </data>
+  <data name="StocktakeUncheckedCount" xml:space="preserve">
+    <value>W inwentaryzacji pozostało niesprawdzonych produktów: {0}</value>
+  </data>
+  <data name="StocktakeUncheckedInstructions" xml:space="preserve">
+    <value>Wybierz, jak chcesz je oznaczyć, lub wróć do ich weryfikacji.</value>
+  </data>
+  <data name="StocktakeApproveAllUnchecked" xml:space="preserve">
+    <value>Zatwierdź wszystkie</value>
+  </data>
+  <data name="StocktakeBackToVerification" xml:space="preserve">
+    <value>Wróć do weryfikacji</value>
+  </data>
+  <data name="StocktakeFinish" xml:space="preserve">
+    <value>Zakończ</value>
+  </data>
+  <data name="StocktakeMarkAllUncheckedMissing" xml:space="preserve">
+    <value>Oznacz jako brakujące</value>
+  </data>
 </root>

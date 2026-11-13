@@ -116,15 +116,6 @@ namespace MagFlow.Web.Pages.Modules.Warehouses
             NavigationManager.NavigateTo($"/stocktake/{stocktake.Id}");
         }
 
-        private static Color StocktakeStatusColor(Enums.EntityStatus status) => status switch
-        {
-            Enums.EntityStatus.InProgress => Color.Info,
-            Enums.EntityStatus.AwaitingApproval => Color.Warning,
-            Enums.EntityStatus.Confirmed => Color.Success,
-            Enums.EntityStatus.Canceled => Color.Error,
-            _ => Color.Default
-        };
-
         private Task Refresh() => _stocktakesDataGrid.ReloadServerData();
 
         public new void Dispose()
