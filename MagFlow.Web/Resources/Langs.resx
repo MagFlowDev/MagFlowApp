@@ -2059,4 +2059,19 @@ i uprawnieniami użytkowników</value>
   <data name="StocktakeMarkAllUncheckedMissing" xml:space="preserve">
     <value>Oznacz jako brakujące</value>
   </data>
+  <data name="DeleteContractorConfirmation" xml:space="preserve">
+    <value>Potwierdź usunięcie kontrahenta</value>
+  </data>
+  <data name="DeleteContractorConfirmation_Few" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} kontrahentów?</value>
+  </data>
+  <data name="DeleteContractorConfirmation_Many" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć {0} kontrahentów?</value>
+  </data>
+  <data name="DeleteContractorConfirmation_One" xml:space="preserve">
+    <value>Czy na pewno chcesz usunąć kontrahenta '{0}'?</value>
+  </data>
+  <data name="AddContractor" xml:space="preserve">
+    <value>Dodaj kontrahenta</value>
+  </data>
 </root>

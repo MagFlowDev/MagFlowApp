@@ -2058,4 +2058,19 @@
   <data name="StocktakeMarkAllUncheckedMissing" xml:space="preserve">
     <value>Mark as missing</value>
   </data>
+  <data name="DeleteContractorConfirmation" xml:space="preserve">
+    <value>Confirm contractor deletion</value>
+  </data>
+  <data name="DeleteContractorConfirmation_Few" xml:space="preserve">
+    <value>Are you sure you want to delete {0} contractors?</value>
+  </data>
+  <data name="DeleteContractorConfirmation_Many" xml:space="preserve">
+    <value>Are you sure you want to delete {0} contractors?</value>
+  </data>
+  <data name="DeleteContractorConfirmation_One" xml:space="preserve">
+    <value>Are you sure you want to delete contractor '{0}'?</value>
+  </data>
+  <data name="AddContractor" xml:space="preserve">
+    <value>Add contractor</value>
+  </data>
 </root>
