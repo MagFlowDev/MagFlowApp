@@ -1,5 +1,98 @@
-﻿<h3>Archive</h3>
+﻿@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.DTOs.CompanyScope
+@using MagFlow.Shared.Models
+@using MagFlow.Web.Components.Buttons
+@using MagFlow.Web.Components.DataGrid
+@using MagFlow.Web.Helpers
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
 
-@code {
+@inject IContractorService ContractorService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inherits AuthComponentBase
 
-}
+<MagFlowDataGrid @ref="_archiveGrid" T="ContractorDTO" ServerData="LoadArchiveAsync"
+                 DataGridId="@MagFlow.Shared.Constants.Identificators.DataGridID.CONTRACTORS_ARCHIVE"
+                 MultiSelection="true" SelectedItemsChanged="@((HashSet<ContractorDTO> _) => StateHasChanged())">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">@Localizer[Langs.Archive]</MudText>
+        <MudSpacer />
+        <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.CONTRACTORS_EDIT">
+            <Authorized>
+                <LoadingButton Loading="@(_isRestoring && _restoringId is null)"
+                               Disabled="@(_isRestoring || _archiveGrid?.Selection?.Any() != true)"
+                               Color="Color.Secondary" Variant="Variant.Filled"
+                               StartIcon="@Icons.Material.Outlined.RestartAlt"
+                               Class="mr-2" OnClick="() => RestoreContractorsAsync()">
+                    @Localizer[Langs.Restore]
+                </LoadingButton>
+            </Authorized>
+        </AuthorizeView>
+        <MudIconButton Color="Color.Primary" OnClick="() => _archiveGrid.ReloadServerData()"
+                       Class="mr-2" Icon="@Icons.Material.Outlined.Refresh" aria-label="@Localizer[Langs.Refresh]" />
+    </ToolBarContent>
+    <Columns>
+        <SelectColumn T="ContractorDTO" HeaderStyle="width: 1%" />
+        <MagFlowTemplateColumn T="ContractorDTO" TFilter="Enums.EntityStatus"
+                               Title="@Localizer[Langs.Status]" Tag="@(nameof(ContractorDTO.Status))"
+                               IncludedEnumValues="@(new[] { Enums.EntityStatus.Deleted })">
+            <CellTemplate>
+                <MudChip T="string" Class="m-0" Size="Size.Small"
+                         Variant="Variant.Filled" Color="@context.Item.Status.ToColor()">
+                    @context.Item.Status.GetDisplayName(Localizer)
+                </MudChip>
+            </CellTemplate>
+        </MagFlowTemplateColumn>
+        <MagFlowPropertyColumn T="ContractorDTO" TProperty="string" TFilter="string"
+                               Title="@Localizer[Langs.Name]" MagFlowSortable="true"
+                               Property="contractor => contractor.Name" Tag="@(nameof(ContractorDTO.Name))" />
+        <MagFlowPropertyColumn T="ContractorDTO" TProperty="string" TFilter="string"
+                               Title="@Localizer[Langs.Code]" MagFlowSortable="true"
+                               Property="contractor => contractor.Code" Tag="@(nameof(ContractorDTO.Code))" />
+        <MagFlowPropertyColumn T="ContractorDTO" TProperty="string?" TFilter="string"
+                               Title="@Localizer[Langs.TaxNumber]" MagFlowSortable="true"
+                               Property="contractor => contractor.TaxNumber" Tag="@(nameof(ContractorDTO.TaxNumber))" />
+        <MagFlowPropertyColumn T="ContractorDTO" TProperty="string?" TFilter="string"
+                               Title="@Localizer[Langs.Address]" MagFlowSortable="true"
+                               Property="contractor => contractor.Address" Tag="@(nameof(ContractorDTO.Address))" />
+        <MagFlowPropertyColumn T="ContractorDTO" TProperty="string?" TFilter="string"
+                               Title="@Localizer[Langs.Country]" MagFlowSortable="true"
+                               Property="contractor => contractor.Country" Tag="@(nameof(ContractorDTO.Country))" />
+        <MagFlowPropertyColumn T="ContractorDTO" TProperty="string?" TFilter="string"
+                               Title="@Localizer[Langs.Phone]" MagFlowSortable="true"
+                               Property="contractor => contractor.ContactPhone" Tag="@(nameof(ContractorDTO.ContactPhone))" />
+        <MagFlowTemplateColumn T="ContractorDTO" TFilter="string"
+                               Title="@Localizer[Langs.Email]" Tag="@(nameof(ContractorDTO.ContactEmail))">
+            <CellTemplate>
+                @if (!string.IsNullOrWhiteSpace(context.Item.ContactEmail))
+                {
+                    var email = context.Item.ContactEmail.Trim();
+                    var address = Uri.EscapeDataString(email).Replace("%40", "@");
+                    <MudLink Href="@($"mailto:{address}")">@email</MudLink>
+                }
+            </CellTemplate>
+        </MagFlowTemplateColumn>
+        <PropertyColumn T="ContractorDTO" TProperty="DateTime?"
+                        Title="@Localizer[Langs.DeletionDate]" Property="contractor => contractor.RemovedAt"
+                        Sortable="true" Filterable="false">
+            <CellTemplate>
+                @context.Item.RemovedAt?.ToLocalTime().ToShortDateString()
+            </CellTemplate>
+        </PropertyColumn>
+        <MagFlowActionColumn T="ContractorDTO" Title="@Localizer[Langs.Actions]">
+            <CellTemplate>
+                <AuthorizeView Policy="@MagFlow.Shared.Constants.Policies.Claims.CONTRACTORS_EDIT">
+                    <Authorized Context="authorization">
+                        <MudTooltip Text="@Localizer[Langs.Restore]" Delay="@Constants.Tooltip.DELAY">
+                            <LoadingIconButton Size="Size.Small" Icon="@Icons.Material.Outlined.RestartAlt"
+                                               Loading="@(_restoringId == context.Item.Id)" Disabled="@_isRestoring"
+                                               OnClick="() => RestoreContractorsAsync(context.Item)" />
+                        </MudTooltip>
+                    </Authorized>
+                </AuthorizeView>
+            </CellTemplate>
+        </MagFlowActionColumn>
+    </Columns>
+</MagFlowDataGrid>

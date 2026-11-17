@@ -4,7 +4,7 @@ using MagFlow.Shared.Validators.Resources;
 using Microsoft.Extensions.Localization;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Net.Mail;
 
 namespace MagFlow.Shared.Validators.Company
 {
@@ -12,7 +12,10 @@ namespace MagFlow.Shared.Validators.Company
     {
         public ContractorFormValidator(IStringLocalizer<Validations> localizer)
         {
-
+            RuleFor(x => x.GeneralInformation)
+                .NotNull()
+                .WithMessage(localizer[Validations.NameRequired])
+                .SetValidator(new ContractorGeneralInformationValidator(localizer));
         }
     }
 
@@ -21,6 +24,14 @@ namespace MagFlow.Shared.Validators.Company
         public ContractorGeneralInformationValidator(IStringLocalizer<Validations> localizer)
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizer[Validations.NameRequired]);
+            RuleFor(x => x.ContactEmail)
+                .Must(value =>
+                {
+                    var email = value?.Trim();
+                    return MailAddress.TryCreate(email, out var address) && address.Address == email;
+                })
+                .WithMessage(localizer[Validations.InvalidEmail])
+                .When(x => !string.IsNullOrWhiteSpace(x.ContactEmail));
         }
     }
 }

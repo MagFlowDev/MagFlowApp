@@ -862,6 +862,15 @@ namespace MagFlow.Web.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu example@gmail.com.
+        /// </summary>
+        public static string ContractorEmailExample {
+            get {
+                return ResourceManager.GetString("ContractorEmailExample", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Lista kontrahentów.
         /// </summary>
         public static string ContractorsList {
@@ -888,6 +897,33 @@ namespace MagFlow.Web.Resources {
             }
         }
         
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Ulica 12.
+        /// </summary>
+        public static string ContractorStreetExample {
+            get {
+                return ResourceManager.GetString("ContractorStreetExample", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu 123-123-12-12.
+        /// </summary>
+        public static string ContractorTaxNumberExample {
+            get {
+                return ResourceManager.GetString("ContractorTaxNumberExample", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu 12-123.
+        /// </summary>
+        public static string ContractorZipCodeExample {
+            get {
+                return ResourceManager.GetString("ContractorZipCodeExample", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Przelicznik.
         /// </summary>
@@ -1113,6 +1149,15 @@ namespace MagFlow.Web.Resources {
             }
         }
         
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Dezaktywuj.
+        /// </summary>
+        public static string Deactivate {
+            get {
+                return ResourceManager.GetString("Deactivate", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Liczba dziesiętna.
         /// </summary>
@@ -1545,6 +1590,15 @@ namespace MagFlow.Web.Resources {
             }
         }
         
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Data usunięcia.
+        /// </summary>
+        public static string DeletionDate {
+            get {
+                return ResourceManager.GetString("DeletionDate", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Jednostka pochodna.
         /// </summary>
@@ -3813,6 +3867,24 @@ namespace MagFlow.Web.Resources {
             }
         }
         
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Czy chcesz przywrócić kontrahenta „{0}”?.
+        /// </summary>
+        public static string RestoreContractorPrompt {
+            get {
+                return ResourceManager.GetString("RestoreContractorPrompt", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Czy chcesz przywrócić zaznaczonych kontrahentów ({0})?.
+        /// </summary>
+        public static string RestoreContractorsPrompt {
+            get {
+                return ResourceManager.GetString("RestoreContractorsPrompt", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Nie udało się przywrócić zasobu. Spróbuj później.
         /// </summary>

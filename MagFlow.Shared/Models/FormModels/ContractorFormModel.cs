@@ -16,6 +16,13 @@ namespace MagFlow.Shared.Models.FormModels
 
     public class ContractorFormGeneralInformation
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string? TaxNumber { get; set; }
+        public string? ContactPhone { get; set; }
+        public string? ContactEmail { get; set; }
+        public string? Address { get; set; }
+        public string? PostalCode { get; set; }
+        public string? City { get; set; }
+        public string? Country { get; set; }
     }
 }

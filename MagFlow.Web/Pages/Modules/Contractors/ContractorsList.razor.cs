@@ -15,6 +15,42 @@ namespace MagFlow.Web.Pages.Modules.Contractors
     {
         MudDataGrid<ContractorDTO> _contractorsDataGrid;
         bool _isBusy = false;
+        private Enums.EntityStatus _targetStatus = Enums.EntityStatus.Inactive;
+        private bool IsActivationSelected => _targetStatus == Enums.EntityStatus.Active;
+        private bool StatusChangeDisabled => _isBusy || _contractorsDataGrid?.Selection?.Any() != true;
+
+        private void ToggleStatusAction()
+        {
+            _targetStatus = IsActivationSelected
+                ? Enums.EntityStatus.Inactive
+                : Enums.EntityStatus.Active;
+        }
+
+        private async Task ChangeSelectedStatuses(Enums.EntityStatus status)
+        {
+            if (!HasModulePermission("Contractors", PermissionFlags.Edit) || StatusChangeDisabled)
+                return;
+
+            var ids = _contractorsDataGrid.Selection.Select(contractor => contractor.Id).ToArray();
+            _isBusy = true;
+            try
+            {
+                var result = await ContractorService.ChangeStatuses(ids, status);
+                if (result != Enums.Result.Success)
+                {
+                    Snackbar.Add(Localizer[Langs.FailedUpdate], Severity.Error);
+                    return;
+                }
+
+                _contractorsDataGrid.Selection.Clear();
+                await _contractorsDataGrid.ReloadServerData();
+                Snackbar.Add(Localizer[Langs.ChangesSaved], Severity.Success);
+            }
+            finally
+            {
+                _isBusy = false;
+            }
+        }
 
         private async Task<GridData<ContractorDTO>> ServerReloadContractors(GridState<ContractorDTO> state, CancellationToken token)
         {
@@ -43,28 +79,23 @@ namespace MagFlow.Web.Pages.Modules.Contractors
             };
         }
 
-        private async Task OpenAddContractorWizard()
+        private async Task OpenAddContractorDialog()
         {
             if (!HasModulePermission("Contractors", PermissionFlags.Add))
                 return;
 
-            NavigationManager.NavigateTo($"/contractor/add");
-        }
-
-        private async Task OpenAddContractorWizard(ContractorDTO contractor)
-        {
-            if (!HasModulePermission("Contractors", PermissionFlags.Add))
-                return;
-
-            try
-            {
-                var result = await LocalCacheService.CopyItem(contractor, typeof(ContractorDTO).Name);
-                if (result == Enums.Result.Success)
+            var dialog = await DialogService.ShowAsync<AddContractorDialog>(
+                Localizer[Langs.AddContractor],
+                new DialogOptions
                 {
-                    NavigationManager.NavigateTo($"/contractor/add");
-                }
-            }
-            catch { }
+                    FullWidth = true,
+                    MaxWidth = MaxWidth.ExtraSmall,
+                    BackdropClick = false,
+                    CloseOnEscapeKey = false
+                });
+
+            if (await dialog.Result is { Canceled: false, Data: true })
+                await _contractorsDataGrid.ReloadServerData();
         }
 
         private void OpenContractorDetails(ContractorDTO contractor)

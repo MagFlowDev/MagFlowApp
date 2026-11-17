@@ -36,6 +36,7 @@ namespace MagFlow.Shared.Constants.Identificators
         public const string WARES_WARE_HISTORY = "WARES_WARE_HISTORY";
 
         public const string CONTRACTORS_LIST = "CONTRACTORS_LIST";
+        public const string CONTRACTORS_ARCHIVE = "CONTRACTORS_ARCHIVE";
 
     }
 }
