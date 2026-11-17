@@ -8,6 +8,7 @@
             {
                 case "item": return "wares";
                 case "product": return "wares";
+                case "stocktake": return "warehouse";
                 default: return moduleName;
             }
         }

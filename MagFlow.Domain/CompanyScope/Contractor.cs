@@ -47,6 +47,7 @@ namespace MagFlow.Domain.CompanyScope
         {
             Enums.EntityStatus.Unknown,
             Enums.EntityStatus.Active,
+            Enums.EntityStatus.Inactive,
             Enums.EntityStatus.Deleted,
         };
 

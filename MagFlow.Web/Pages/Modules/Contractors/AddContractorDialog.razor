@@ -1,0 +1,129 @@
+﻿@using FluentValidation
+@using MagFlow.BLL.Helpers
+@using MagFlow.BLL.Services.Interfaces
+@using MagFlow.Shared.Models
+@using MagFlow.Shared.Models.Enumerators
+@using MagFlow.Shared.Models.FormModels
+@using MagFlow.Web.Components.Buttons
+@using MudBlazor
+
+@inject IContractorService ContractorService
+@inject IValidator<ContractorFormModel> Validator
+@inject ISnackbar Snackbar
+@inherits AuthComponentBase
+
+<MudDialog>
+    <TitleContent>
+        <div class="d-flex align-center justify-space-between">
+            <MudText Typo="Typo.h6">@Localizer[Langs.AddContractor]</MudText>
+            <MudIconButton Icon="@Icons.Material.Outlined.Close" Size="Size.Small"
+                           OnClick="Cancel" Disabled="@_saving" aria-label="@Localizer[Langs.Cancel]" />
+        </div>
+    </TitleContent>
+    <DialogContent>
+        <EditForm id="@_formId" EditContext="@_editContext" OnSubmit="SaveAsync" novalidate="novalidate">
+            <fieldset disabled="@_saving" class="border-0 ma-0 pa-0" style="min-width: 0">
+                <MudStack Spacing="2">
+                    <MudText Typo="Typo.subtitle2" class="mb-2">@Localizer[Langs.GeneralInformation]</MudText>
+                    <MudTextField T="string" Label="@Localizer[Langs.Name]" Placeholder="@Localizer[Langs.Name]"
+                                  Variant="Variant.Outlined" ShrinkLabel="true" Immediate="true" AutoFocus="true"
+                                  @bind-Value="_model.GeneralInformation.Name" For="@(() => _model.GeneralInformation.Name)" />
+                    <MudTextField T="string?" Label="@Localizer[Langs.TaxNumber]" Placeholder="@Localizer[Langs.ContractorTaxNumberExample]"
+                                  Variant="Variant.Outlined" ShrinkLabel="true" Immediate="true"
+                                  @bind-Value="_model.GeneralInformation.TaxNumber" For="@(() => _model.GeneralInformation.TaxNumber)" />
+                    <MudTextField T="string?" Label="@Localizer[Langs.Phone]" Placeholder="@Localizer[Langs.ExamplePhoneNumber]"
+                                  Variant="Variant.Outlined" ShrinkLabel="true" Immediate="true" InputType="InputType.Telephone"
+                                  @bind-Value="_model.GeneralInformation.ContactPhone" For="@(() => _model.GeneralInformation.ContactPhone)" />
+                    <MudTextField T="string?" Label="@Localizer[Langs.Email]" Placeholder="@Localizer[Langs.ContractorEmailExample]"
+                                  Variant="Variant.Outlined" ShrinkLabel="true" Immediate="true" InputType="InputType.Email"
+                                  @bind-Value="_model.GeneralInformation.ContactEmail" For="@(() => _model.GeneralInformation.ContactEmail)" />
+                    <MudText Typo="Typo.subtitle2" Class="mt-2">@Localizer[Langs.Address]</MudText>
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" sm="6">
+                            <MudTextField T="string?" Label="@Localizer[Langs.StreetAndNumber]" Placeholder="@Localizer[Langs.ContractorStreetExample]"
+                                          Variant="Variant.Outlined" ShrinkLabel="true" Immediate="true"
+                                          @bind-Value="_model.GeneralInformation.Address" For="@(() => _model.GeneralInformation.Address)" />
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudTextField T="string?" Label="@Localizer[Langs.ZipCode]" Placeholder="@Localizer[Langs.ContractorZipCodeExample]"
+                                          Variant="Variant.Outlined" ShrinkLabel="true" Immediate="true"
+                                          @bind-Value="_model.GeneralInformation.PostalCode" For="@(() => _model.GeneralInformation.PostalCode)" />
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudTextField T="string?" Label="@Localizer[Langs.City]" Placeholder="@Localizer[Langs.City]"
+                                          Variant="Variant.Outlined" ShrinkLabel="true" Immediate="true"
+                                          @bind-Value="_model.GeneralInformation.City" For="@(() => _model.GeneralInformation.City)" />
+                        </MudItem>
+                        <MudItem xs="12" sm="6">
+                            <MudTextField T="string?" Label="@Localizer[Langs.Country]" Placeholder="@Localizer[Langs.Country]"
+                                          Variant="Variant.Outlined" ShrinkLabel="true" Immediate="true"
+                                          @bind-Value="_model.GeneralInformation.Country" For="@(() => _model.GeneralInformation.Country)" />
+                        </MudItem>
+                    </MudGrid>
+                </MudStack>
+            </fieldset>
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Disabled="@_saving">@Localizer[Langs.Cancel]</MudButton>
+        <LoadingButton Loading="_saving" Color="Color.Primary" Variant="Variant.Filled"
+                       ButtonType="ButtonType.Submit" UserAttributes="_saveButtonAttributes">
+            @Localizer[Langs.Save]
+        </LoadingButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    private readonly ContractorFormModel _model = new();
+    private readonly string _formId = $"add-contractor-{Guid.NewGuid():N}";
+    private EditContext _editContext = default!;
+    private ValidationMessageStore _messages = default!;
+    private Dictionary<string, object> _saveButtonAttributes = default!;
+    private bool _saving;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _editContext = new EditContext(_model);
+        _messages = new ValidationMessageStore(_editContext);
+        _saveButtonAttributes = new() { ["form"] = _formId };
+    }
+
+    private async Task SaveAsync()
+    {
+        if (_saving || !HasModulePermission("Contractors", PermissionFlags.Add))
+            return;
+
+        _saving = true;
+        try
+        {
+            var valid = await _messages.IsFormValid(Validator, _model);
+            _editContext.NotifyValidationStateChanged();
+            if (!valid)
+                return;
+
+            var result = await ContractorService.AddContractor(_model);
+            if (result != Enums.Result.Success)
+            {
+                Snackbar.Add(Localizer[Langs.ErrorOccured], MudBlazor.Severity.Error);
+                return;
+            }
+
+            Snackbar.Add(Localizer[Langs.ResourceCreated], MudBlazor.Severity.Success);
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        if (!_saving)
+            MudDialog.Cancel();
+    }
+}

@@ -129,6 +129,9 @@
   <data name="ProvideExpirationDate" xml:space="preserve">
     <value>Podaj datę wygaśnięcia modułów wybranych do aktywacji.</value>
   </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Podaj prawidłowy adres e-mail.</value>
+  </data>
   <data name="EmailRequired" xml:space="preserve">
     <value>Email jest wymagany.</value>
   </data>

@@ -1,5 +1,7 @@
 ﻿using MagFlow.Domain.CompanyScope;
 using MagFlow.Shared.DTOs.CompanyScope;
+using MagFlow.Shared.Models;
+using MagFlow.Shared.Models.FormModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
@@ -9,6 +11,28 @@ namespace MagFlow.BLL.Mappers.Domain.CompanyScope
 {
     public static class ContractorMapper
     {
+        public static Contractor ToEntity(this ContractorFormModel model, Guid createdById)
+        {
+            var info = model.GeneralInformation;
+            return new Contractor
+            {
+                Name = info.Name.Trim(),
+                TaxNumber = TrimOptional(info.TaxNumber),
+                ContactPhone = TrimOptional(info.ContactPhone),
+                ContactEmail = TrimOptional(info.ContactEmail),
+                Address = TrimOptional(info.Address),
+                PostalCode = TrimOptional(info.PostalCode),
+                City = TrimOptional(info.City),
+                Country = TrimOptional(info.Country),
+                CreatedAt = DateTime.UtcNow,
+                CreatedById = createdById,
+                Status = Enums.EntityStatus.Active
+            };
+
+            static string? TrimOptional(string? value) =>
+                string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+        }
+
         public static ContractorDTO ToDTO(this Contractor contractor)
         {
             if (contractor == null)

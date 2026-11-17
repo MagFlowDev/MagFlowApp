@@ -133,6 +133,15 @@ namespace MagFlow.Shared.Validators.Resources {
         }
         
         /// <summary>
+        /// Wyszukuje zlokalizowany ciąg podobny do ciągu Podaj prawidłowy adres e-mail..
+        /// </summary>
+        public static string InvalidEmail {
+            get {
+                return ResourceManager.GetString("InvalidEmail", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Nazwisko jest wymagane..
         /// </summary>
         public static string LastNameRequired {
